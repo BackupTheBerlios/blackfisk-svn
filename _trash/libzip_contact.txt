@@ -1,3 +1,0 @@
-struct zip_source * zip_source_file(struct zip *archive, const char *fname, off_t start, off_t len)
-
-start und len defaultmäßig mit 0 und -1 belegen
