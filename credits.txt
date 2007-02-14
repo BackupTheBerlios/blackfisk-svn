@@ -1,0 +1,6 @@
+Thanks to...
+- wxWidget community
+- Code::Blocks community
+- Jorgen Bode (wxArchiv) http://wastebucket.solidsteel.nl/cms/modules/PDdownloads/viewcat.php?cid=7
+- persons created some stuff that is not in the release-version
+- all others I forgot (please mail me)

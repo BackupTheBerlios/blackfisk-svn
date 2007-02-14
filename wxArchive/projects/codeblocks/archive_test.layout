@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_layout_file>
+<CodeBlocks_layout_file>
+	<File name="../../include/wx/wxArchive.h" open="1" top="0">
+		<Cursor position="31426" topLine="747"/>
+	</File>
+	<File name="../../samples/archive_test/archive_test.cpp" open="1" top="0">
+		<Cursor position="12499" topLine="371"/>
+	</File>
+	<File name="../../src/wxArchive.cpp" open="1" top="1">
+		<Cursor position="1029" topLine="0"/>
+	</File>
+	<Expand folder="/Sources/samples/archive_test"/>
+	<Expand folder="/Sources/samples"/>
+	<Expand folder="/Sources/src"/>
+	<Expand folder="/Sources"/>
+	<Expand folder="/Headers/include/wx"/>
+	<Expand folder="/Headers/include"/>
+	<Expand folder="/Headers"/>
+</CodeBlocks_layout_file>

@@ -1,0 +1,12 @@
+- log backup
+- OBTaskProgressWindow (tasklist, totalprg, taskwiseprg, etc)
+- cancel/pause task, redo task on errors
+- serialize data with wxArchiv
+- animate progress
+- GUI: splitted window, only by drag&drop
+- handle process-priority (do not freeze the hole system)
+- check for enough free space on destination drive
+- backup to password-protected-samba
+- backup to ftp
+- using commandline without gui (controlable by things like cronjob)
+- MAC OS, linux/unix (debian)
