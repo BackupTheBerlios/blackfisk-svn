@@ -3,33 +3,25 @@
  * 2006-02-17
  ***/
 
-#include <wx/wx.h>
-#include <wx/string.h>
+#include "OBCore.h"
+
 #include <wx/dir.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
-#include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <wx/ptr_scpd.h>
+
 #include <../../src/zlib/zlib.h>
+
 #include "Progress.h"
-
 #include "OctopusBackup.h"
-#include "OBCore.h"
+#include "OBundef.h"
 
-void OBCore::Init ()
+/*void OBCore::Init ()
 {
     // set strCurrentDate_
     ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
-
-    // check log-file size
-    if (fileLog_.Length() > OB_LOGFILE_MAXSIZE)
-    {
-        fileLog_.Close();
-        MoveFile(OB_LOGFILE_NAME, OB_LOGFILE_BAKNAME, true);
-        fileLog_.Open(OB_LOGFILE_NAME, wxFile::write_append);
-    }
-}
+}*/
 
 wxDEFINE_SCOPED_PTR_TYPE(wxZipEntry);
 
@@ -47,9 +39,9 @@ OBCore& OBCore::Instance ()
 
 
 OBCore::OBCore ()
-      : fileLog_(OB_LOGFILE_NAME, wxFile::write_append)
 {
-    Init();
+    // remember current date in a string
+    ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
 }
 
 
@@ -57,52 +49,6 @@ OBCore::OBCore ()
 {
 }
 
-
-void OBCore::Log(OBLogType type, const wxChar* strMessage)
-{
-    // check arguments
-    if (strMessage == NULL)
-        return;
-
-    // create timestamp
-    wxString str(wxDateTime::Now().Format(_T("%Y-%m-%d %H:%M:%S")));
-
-    // handle different message types
-    switch (type)
-    {
-    	case LogINFO:
-            str += _T(" INFO: ");
-    		break;
-
-        case LogERROR:
-            str += _T(" ERROR: ");
-            break;
-
-        case LogFATAL:
-            str += _T(" !!! FATAL ERROR !!!: ");
-            break;
-
-        case LogDEBUG:
-            str += _T(" DEBUG: ");
-            break;
-
-    	default:
-            str += _T(" UNKNOWN: ");
-    		break;
-    }
-
-    // log message
-    str << strMessage << _T('\n');
-    fileLog_.Write(str);
-
-    // remember message
-    strLastLog_ = str;
-}
-
-const wxChar* OBCore::GetLastLogMessage ()
-{
-    return strLastLog_;
-}
 
 wxArrayString& OBCore::GetDirListing (const wxChar* dir, wxArrayString& arr, wxArrayString* pExcludeListing /*= NULL*/)
 {

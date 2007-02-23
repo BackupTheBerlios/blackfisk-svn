@@ -85,7 +85,7 @@ void OBBackupTree::OnItemActivated(wxTreeEvent& event)
 
     if (pTask == NULL)
     {
-        OBApp::MainFrame()->Message(MsgFATAL, _("OBBackupTree::OnItemActivated() => no task object found for the specified OID"));
+        OBSystem::Fatal(_("no task object found for the specified OID"), _T("OBBackupTree::OnItemActivated()"));
         return;
     }
 
@@ -257,7 +257,7 @@ void OBBackupTree::OnBackupCopy (wxCommandEvent& event)
     {
         case OBID_BACKUPCTRL_COPY_DIR:
             type = TaskDIRCOPY;
-            OBMainFrame::Instance()->Message(_T("copy dir"));
+            OBSystem::Info(_T("copy dir"));
             break;
 
         case OBID_BACKUPCTRL_COPY_FILE:
@@ -265,7 +265,7 @@ void OBBackupTree::OnBackupCopy (wxCommandEvent& event)
             break;
 
         default:
-            OBMainFrame::Instance()->Message(_T("OBBackupTree::OnBackupCopy() copy ERROR"));
+            OBSystem::Error((_T("copy ERROR")), _T("OBBackupTree::OnBackupCopy()"));
             return;
             break;
     };  // switch

@@ -8,7 +8,6 @@
 #ifndef OBTASKPROGRESSDLG_H
 #define OBTASKPROGRESSDLG_H
 
-#include <wx/wx.h>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/gauge.h>
@@ -16,6 +15,7 @@
 #include <wx/button.h>
 #include <wx/control.h>
 #include <wx/panel.h>
+
 #include "ObserverPattern.h"
 
 // forwarde declarations

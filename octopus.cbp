@@ -124,23 +124,31 @@
 		<Unit filename="OBDirCtrl.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="OBLog.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="OBLog.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="OBMainFrame.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="OBMainFrame.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
-		<Unit filename="OBMessageWindow.cpp">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="OBMessageWindow.h">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
+		<Unit filename="OBMessageDlg.cpp" />
+		<Unit filename="OBMessageDlg.h" />
 		<Unit filename="OBRootTask.cpp">
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
 		<Unit filename="OBRootTask.h">
 			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="OBSystem.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="OBSystem.h">
+			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="OBTask.cpp">
 			<Option virtualFolder="DataLayer\" />
@@ -166,7 +174,9 @@
 		<Unit filename="OBTaskProgressDlg.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
-		<Unit filename="OBundef.h" />
+		<Unit filename="OBundef.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="ObserverPattern.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>

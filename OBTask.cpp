@@ -211,7 +211,7 @@ bool OBTask::Serialize (jbArchive& rA)
 
         if ( !(SetOID(oid)) )
         {
-            OBCore::Instance().Log(LogFATAL, _("Unable to set an OID while loading a project file.\nThe file is corrupt!"));
+            OBSystem::Fatal(_("Unable to set an OID while loading a project file.\nThe file is corrupt!"), _T("OBTask::Serialize()"));
             return false;
         }
     }
@@ -291,7 +291,7 @@ bool OBTask::RunForArchive (ProgressWithMessage& rProgress)
         break;
 
         default:
-            Core().Log(LogFATAL, _T("unknown archive type in OBTask::RunForArchive()"));
+            OBSystem::Fatal(_T("unknown archive type"), _T("OBTask::RunForArchive()"));
             break;
     }
 

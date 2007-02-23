@@ -3637,3 +3637,277 @@
 	<iterator>
 	<utility>
 
+1172194630 source:e:\garage\projekte\octopus\prj\obapp.cpp
+	"OBApp.h"
+	<wx/wx.h>
+	<wx/file.h>
+	<wx/dir.h>
+	<wx/sound.h>
+	<wx/wfstream.h>
+	<wx/zipstrm.h>
+	"OctopusBackup.h"
+	"OBMainFrame.h"
+	"OBTaskProgressDlg.h"
+	"OBTaskDlg.h"
+	"OBRootTask.h"
+	"Progress.h"
+
+1171477156 e:\garage\projekte\octopus\prj\obapp.h
+	<wx/wx.h>
+	<wx/intl.h>
+	"OBCore.h"
+
+1172084328 e:\garage\projekte\octopus\prj\obcore.h
+	<cstdio>
+	<vector>
+	<wx/filesys.h>
+	<wx/arrstr.h>
+	<wx/dir.h>
+	<wx/string.h>
+	<wx/file.h>
+	<wx/imaglist.h>
+	"OBLog.h"
+	"OBundef.h"
+
+1171477156 e:\garage\projekte\octopus\prj\obundef.h
+
+1172085054 e:\garage\projekte\octopus\prj\octopusbackup.h
+
+1172197012 e:\garage\projekte\octopus\prj\obmainframe.h
+	<wx/wx.h>
+	"OBApp.h"
+	"OBMessageDlg.h"
+
+1172084604 e:\garage\projekte\octopus\prj\obtaskprogressdlg.h
+	<wx/dialog.h>
+	<wx/listbox.h>
+	<wx/gauge.h>
+	<wx/stattext.h>
+	<wx/button.h>
+	<wx/control.h>
+	<wx/panel.h>
+	"ObserverPattern.h"
+
+1171477156 e:\garage\projekte\octopus\prj\observerpattern.h
+	<vector>
+
+1171477156 e:\garage\projekte\octopus\prj\obroottask.h
+	<wx/wx.h>
+	<wx/listbox.h>
+	"OBTaskBase.h"
+	"OBTask.h"
+	"OBMainFrame.h"
+	"ObserverPattern.h"
+	"OBBackupTree.h"
+
+1171477156 e:\garage\projekte\octopus\prj\obtaskbase.h
+	"OBCore.h"
+	"wxArchive\include\wx\wxArchive.h"
+
+1171477152 e:\garage\projekte\octopus\prj\wxarchive\include\wx\wxarchive.h
+	<wx/sstream.h>
+	<wx/buffer.h>
+	<wx/math.h>
+
+1171477156 e:\garage\projekte\octopus\prj\obtask.h
+	<vector>
+	"OBTaskBase.h"
+
+1171477156 e:\garage\projekte\octopus\prj\obbackuptree.h
+	<wx/wx.h>
+	<wx/window.h>
+	<wx/treectrl.h>
+	<wx/dnd.h>
+	"ObserverPattern.h"
+	"OBMainFrame.h"
+	"OBTask.h"
+
+1171477156 e:\garage\projekte\octopus\prj\obtaskdlg.h
+	<wx/wx.h>
+	<wx/dialog.h>
+	<wx/textctrl.h>
+	<wx/checkbox.h>
+	<wx/listbox.h>
+	<wx/button.h>
+	"OBTask.h"
+
+1171477156 e:\garage\projekte\octopus\prj\progress.h
+	"ObserverPattern.h"
+	<wx/string.h>
+
+1171477156 source:e:\garage\projekte\octopus\prj\obbackupctrl.cpp
+	"OBBackupCtrl.h"
+	"OBBackupTree.h"
+	<wx/image.h>
+
+1171477156 e:\garage\projekte\octopus\prj\obbackupctrl.h
+	<wx/panel.h>
+
+1172197614 source:e:\garage\projekte\octopus\prj\obbackuptree.cpp
+	"OctopusBackup.h"
+	"OBApp.h"
+	"OBMainFrame.h"
+	"OBTask.h"
+	"OBBackupTree.h"
+	"OBRootTask.h"
+	"OBTaskDlg.h"
+	<wx/icon.h>
+	<wx/dnd.h>
+	<wx/tokenzr.h>
+
+1136580114 c:\wxwindows\include\wx\tokenzr.h
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+
+1172084496 source:e:\garage\projekte\octopus\prj\obcore.cpp
+	"OBCore.h"
+	<wx/dir.h>
+	<wx/wfstream.h>
+	<wx/zipstrm.h>
+	<wx/tokenzr.h>
+	<wx/ptr_scpd.h>
+	<../../src/zlib/zlib.h>
+	"Progress.h"
+	"OctopusBackup.h"
+	"OBundef.h"
+
+1127674712 c:\wxwindows\include\wx\ptr_scpd.h
+	"wx/defs.h"
+
+1126383316 c:\wxwindows\src\zlib\zlib.h
+	"zconf.h"
+
+1126383316 c:\wxwindows\src\zlib\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1171477156 source:e:\garage\projekte\octopus\prj\obdirctrl.cpp
+	"OBDirCtrl.h"
+	<wx/dnd.h>
+
+1171477156 e:\garage\projekte\octopus\prj\obdirctrl.h
+	<wx/wx.h>
+	<wx/panel.h>
+	<wx/dirctrl.h>
+	<wx/button.h>
+
+1115229118 c:\wxwindows\include\wx\dirctrl.h
+	"wx/generic/dirctrlg.h"
+
+1171051207 c:\wxwindows\include\wx\generic\dirctrlg.h
+	"wx/imaglist.h"
+	"wx/treectrl.h"
+	"wx/dialog.h"
+	"wx/dirdlg.h"
+	"wx/choice.h"
+
+1172197338 source:e:\garage\projekte\octopus\prj\obmainframe.cpp
+	"OctopusBackup.h"
+	"OBMainFrame.h"
+	"OBApp.h"
+	"Progress.h"
+	"OBDirCtrl.h"
+	"OBBackupCtrl.h"
+	<wx/wx.h>
+	<wx/version.h>
+	<wx/splitter.h>
+	<wx/listbox.h>
+	<wx/filedlg.h>
+
+1171477156 e:\garage\projekte\octopus\prj\obmessagewindow.h
+	<wx/wx.h>
+	<wx/window.h>
+
+1145029976 c:\wxwindows\include\wx\splitter.h
+	"wx/event.h"
+	"wx/generic/splitter.h"
+
+1171463033 c:\wxwindows\include\wx\generic\splitter.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1171477156 source:e:\garage\projekte\octopus\prj\obmessagewindow.cpp
+	"OBMessageWindow.h"
+	<wx/listbox.h>
+
+1172197890 source:e:\garage\projekte\octopus\prj\obroottask.cpp
+	"OBRootTask.h"
+	<wx/wfstream.h>
+	<wx/tokenzr.h>
+	"OBTaskProgressDlg.h"
+	"OBBackupTree.h"
+	"Progress.h"
+
+1172198388 source:e:\garage\projekte\octopus\prj\obtask.cpp
+	"OBTask.h"
+	"OBRootTask.h"
+	"OBundef.h"
+
+1171477156 source:e:\garage\projekte\octopus\prj\obtaskbase.cpp
+	"OBTaskBase.h"
+	<wx/wx.h>
+
+1171477156 source:e:\garage\projekte\octopus\prj\obtaskdlg.cpp
+	"OctopusBackup.h"
+	"OBTaskDlg.h"
+	"OBCore.h"
+	"OBApp.h"
+	"OBMainFrame.h"
+	"OBRootTask.h"
+	<wx/statbmp.h>
+	<wx/panel.h>
+
+1171477156 source:e:\garage\projekte\octopus\prj\obtaskprogressdlg.cpp
+	<wx/sizer.h>
+	"OBTaskProgressDlg.h"
+	"OBRootTask.h"
+	"Progress.h"
+
+1171477156 source:e:\garage\projekte\octopus\prj\observerpattern.cpp
+	"ObserverPattern.h"
+
+1171477156 source:e:\garage\projekte\octopus\prj\octopusbackup.cpp
+	<cstdio>
+	<cstdlib>
+	<memory>
+	"OctopusBackup.h"
+	"OBCore.h"
+
+1171477156 source:e:\garage\projekte\octopus\prj\progress.cpp
+	<wx/wx.h>
+	<wx/wxchar.h>
+	"Progress.h"
+
+1171477154 source:e:\garage\projekte\octopus\prj\wxarchive\src\wxarchive.cpp
+	<wx/log.h>
+	"../include/wx/wxArchive.h"
+
+1172083686 e:\garage\projekte\octopus\prj\oblog.h
+	<wx/file.h>
+	"ObserverPattern.h"
+	"OBSystem.h"
+
+1172197178 e:\garage\projekte\octopus\prj\obsystem.h
+	<wx/wx.h>
+	<wx/datetime.h>
+	"ObserverPattern.h"
+
+1172197760 source:e:\garage\projekte\octopus\prj\oblog.cpp
+	"OBLog.h"
+	"OBCore.h"
+
+1172198108 source:e:\garage\projekte\octopus\prj\obsystem.cpp
+	"OBSystem.h"
+
+1172193938 e:\garage\projekte\octopus\prj\obmessagedlg.h
+	<wx/msgdlg.h>
+	"ObserverPattern.h"
+
+1172196866 source:e:\garage\projekte\octopus\prj\obmessagedlg.cpp
+	"OBMessageDlg.h"
+	"OBSystem.h"
+	"OBMainFrame.h"
+

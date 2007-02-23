@@ -4,12 +4,6 @@
  ***/
 
 #include "OBApp.h"
-#include "OctopusBackup.h"
-#include "OBMainFrame.h"
-#include "OBTaskProgressDlg.h"
-#include "OBRootTask.h"
-#include "OBTaskDlg.h"
-#include "Progress.h"
 
 #include <wx/wx.h>
 #include <wx/file.h>
@@ -17,6 +11,13 @@
 #include <wx/sound.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
+
+#include "OctopusBackup.h"
+#include "OBMainFrame.h"
+#include "OBTaskProgressDlg.h"
+#include "OBTaskDlg.h"
+#include "OBRootTask.h"
+#include "Progress.h"
 
 
 IMPLEMENT_APP(OBApp);
@@ -35,12 +36,12 @@ OBApp::OBApp ()
 
 /*virtual*/ OBApp::~OBApp ()
 {
-    Core().Log(LogINFO, _("Octopus Backup closed\n"));
+    OBSystem::Log(wxString::Format(_("%s closed"), OB_PRGNAME).c_str());
 }
 
 bool OBApp::OnInit()
 {
-    Core().Log(LogINFO, wxString::Format(_("%s %s by %s started"), OB_PRGNAME, OB_VERSION, OB_AUTHOR).c_str());
+    OBSystem::Log(wxString::Format(_("%s %s by %s started"), OB_PRGNAME, OB_VERSION, OB_AUTHOR).c_str());
 
     // available languages
     // TODO just look at the locals directory to know what is available
@@ -174,7 +175,6 @@ void OBApp::Backup()
     // ** RUN **
     //if (rootTask.Run(pMainFrame_))
         wxSound(_T("sound\\finish.wav")).Play();
-        OBCore::Instance().Log(LogINFO, _T("Backup finished"));
 /*    }
     else
     {

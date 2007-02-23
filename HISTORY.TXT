@@ -1,5 +1,5 @@
-summer 2006
+summer 2005
 first concept
 
-autumn 2006
+summer 2006
 core implementation (basic file operations, zipping)

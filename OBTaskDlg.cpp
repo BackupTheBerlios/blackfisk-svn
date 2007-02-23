@@ -153,13 +153,13 @@ bool OBTaskDlg::IsPlausible ()
 {
     if ( pNameCtrl_->IsEmpty() )
     {
-        OBMainFrame::Instance()->Message(_("Please insert a task name!"));
+        OBSystem::Info(_("Please insert a task name!"));
         return false;
     }
 
     if ( pDestCtrl_->IsEmpty() )
     {
-        OBMainFrame::Instance()->Message(_("Please insert a destination!"));
+        OBSystem::Info(_("Please insert a destination!"));
         return false;
     }
 

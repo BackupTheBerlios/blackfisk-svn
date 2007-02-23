@@ -6,7 +6,6 @@
 #include "OctopusBackup.h"
 #include "OBMainFrame.h"
 #include "OBApp.h"
-#include "OBMessageWindow.h"
 #include "Progress.h"
 #include "OBDirCtrl.h"
 #include "OBBackupCtrl.h"
@@ -32,7 +31,8 @@ END_EVENT_TABLE()
 /*private*/ OBMainFrame::OBMainFrame (OBApp& rApp)
             : wxFrame (NULL,
                        -1,
-                       wxString::Format(_("%s %s by %s with %s"), OB_PRGNAME, OB_VERSION, OB_AUTHOR, wxVERSION_STRING))
+                       wxString::Format(_("%s %s by %s with %s"), OB_PRGNAME, OB_VERSION, OB_AUTHOR, wxVERSION_STRING)),
+                       msgDlg_(this)
 {
     spApp_ = &rApp;
 
@@ -66,9 +66,6 @@ END_EVENT_TABLE()
     pDirCtrl_       = new OBDirCtrl(pSplitter);
     pSplitter->SplitVertically(pBackupCtrl_, pDirCtrl_);
 
-    // message window (DEBUG)
-    pMsgWin_ = new OBMessageWindow(this);
-
     // GIF ani (DEBUG)
     //wxGIFAnimationCtrl* pAniCtrl = new wxGIFAnimationCtrl(this, -1, _T("graphic\\test01.gif"));
     //pAniCtrl->Play();
@@ -77,7 +74,6 @@ END_EVENT_TABLE()
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
     pSizer->Add( pSplitter, wxSizerFlags(3).Expand() );
-    pSizer->Add( pMsgWin_,  wxSizerFlags(1).Expand() );
     //pSizer->Add( pAniCtrl, wxSizerFlags(1).Expand() );
 
     CreateStatusBar();
@@ -128,7 +124,7 @@ void OBMainFrame::OnOpenProject (wxCommandEvent& event)
 
     if (dlg.ShowModal() == wxID_OK)
         if ( spApp_->OpenProject(dlg.GetPath()) == false)
-            Message(MsgFATAL, wxString::Format(_("Can not open Project %s"), dlg.GetPath().c_str()));
+            OBSystem::Fatal(wxString::Format(_("Can not open Project %s"), dlg.GetPath().c_str()), _T("OBMainFrame::OpenProject()"));
 }
 
 bool OBMainFrame::SaveProject ()
@@ -153,7 +149,7 @@ bool OBMainFrame::SaveProject ()
         }
         else
         {
-            Message(MsgFATAL, wxString::Format(_("Can not save Project %s"), dlg.GetPath().c_str()));
+            OBSystem::Fatal(wxString::Format(_("Can not save Project %s"), dlg.GetPath().c_str()), _T("OBMainFrame::SaveProject()"));
             return false;
         }
     }
@@ -191,7 +187,7 @@ void OBMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     spApp_->Backup();
 }
 
-bool OBMainFrame::QuestionYesNo (wxString strQuestion)
+bool OBMainFrame::QuestionYesNo (const wxChar* strQuestion)
 {
     wxMessageDialog dlg(this, strQuestion, _("Question"), wxYES_NO | wxICON_QUESTION);
 
@@ -203,19 +199,19 @@ bool OBMainFrame::QuestionYesNo (wxString strQuestion)
     return false;
 }
 
-int OBMainFrame::QuestionYesNoCancel (wxString strQuestion)
+int OBMainFrame::QuestionYesNoCancel (const wxChar* strQuestion)
 {
     wxMessageDialog dlg(this, strQuestion, _("Question"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
 
     return dlg.ShowModal();
 }
-
+/*
 int OBMainFrame::Message (wxString strMessage)
 {
     Message(MsgINFO, strMessage);
 }
 
-int OBMainFrame::Message (OBMessageType type, wxString strMessage, bool bLog /*= false*/)
+int OBMainFrame::Message (OBMessageType type, wxString strMessage, bool bLog /*= false*)
 {
     // init
     long                lStyle = 0;
@@ -272,5 +268,5 @@ int OBMainFrame::Message (OBMessageType type, wxString strMessage, bool bLog /*=
     wxMessageDialog dlg(this, strMessage, strCaption, lStyle);
     return dlg.ShowModal();
 }
-
+*/
 

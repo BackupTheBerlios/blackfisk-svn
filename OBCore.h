@@ -11,6 +11,7 @@
 
 #include <cstdio>
 #include <vector>
+
 #include <wx/filesys.h>
 #include <wx/arrstr.h>
 #include <wx/dir.h>
@@ -18,14 +19,9 @@
 #include <wx/file.h>
 #include <wx/imaglist.h>
 
+#include "OBLog.h"
 #include "OBundef.h"
 
-#define DEFAULT_OVERWRITE       true
-#define OB_LOGFILE_NAME         _T("ob.log")
-#define OB_LOGFILE_BAKNAME      _T("ob.log.bak")
-#define OB_LOGFILE_MAXSIZE      150000
-
-enum OBLogType { LogINFO, LogERROR, LogDEBUG, LogFATAL };
 
 typedef std::pair<wxString, wxString>   PairString;
 typedef std::vector<PairString>         MapStringPair;
@@ -42,13 +38,14 @@ class OBCore
         /** we need a static because if a backup process
             works over midnight */
         wxChar      strCurrentDate_[11];
-        /// for log information
-        wxFile      fileLog_;
-        /// the last logged message
-        wxString    strLastLog_;
+
+        /** it log messages recieving from OBSystem;
+            there is no need to touch OBLog directly
+            just use OBSystem to create messages */
+        OBLog       log_;
 
         ///
-        void Init ();
+        //void Init ();
 
         /** get attributes from a file ('rFn') and set them to a ZipEntry ('pEntry')
             this methode should be to encapsulate plattformdependend code! */
@@ -76,14 +73,14 @@ class OBCore
         virtual ~OBCore ();
 
         /** move a file */
-        bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = DEFAULT_OVERWRITE);
+        bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = OB_DEFAULT_OVERWRITE);
         /** copy a file
             'pSource' can have wildcards
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
-        bool CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = DEFAULT_OVERWRITE, bool bVerify = false);
+        bool CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = OB_DEFAULT_OVERWRITE, bool bVerify = false);
         /** delete a file */
-        bool DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection = DEFAULT_OVERWRITE);
+        bool DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection = OB_DEFAULT_OVERWRITE);
 
         /// to patch for wxWidgets
         bool IsWriteProtected (const wxChar* pFilename);
@@ -138,13 +135,7 @@ class OBCore
         const wxChar* GetDateString ();
 
         ///
-        const wxChar* GetLastLogMessage ();
-
-        ///
         wxUint32 GetFileCrc (const wxChar* pFilename);
-
-        /// log a message with timestamp and message-typ to the log-file
-        void Log(OBLogType type, const wxChar* strMessage);
 
 };    // class OBCore
 

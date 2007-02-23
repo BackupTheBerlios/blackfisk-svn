@@ -8,16 +8,15 @@
 #ifndef OBMAINFRAME_H
 #define OBMAINFRAME_H
 
-// forwarde declarations
-class OBMessageWindow;
 class Progress;
 class ProgressWithMessage;
 class OBBackupCtrl;
 class OBDirCtrl;
 
-// includes
 #include <wx/wx.h>
+
 #include "OBApp.h"
+#include "OBMessageDlg.h"
 
 ///
 enum
@@ -30,8 +29,6 @@ enum
     ID_SaveProject
 };
 
-
-enum OBMessageType { MsgINFO, MsgERROR, MsgDEBUG, MsgFATAL };
 
 ///
 class OBMainFrame : public wxFrame
@@ -47,8 +44,10 @@ class OBMainFrame : public wxFrame
         /// to display the real data-structure on HDD volumes
         OBDirCtrl*          pDirCtrl_;
 
-        /// DEBUG
-        OBMessageWindow*    pMsgWin_;
+        /** display messages from the application;
+            it is not needed to touch it directly!
+            just use OBSystem to display messages to the user */
+        OBMessageDlg        msgDlg_;
 
     protected:
         /// proteced members
@@ -87,13 +86,13 @@ class OBMainFrame : public wxFrame
         ProgressWithMessage* StartProgress ();*/
 
         /// displays a modal message-box and return the pressed button
-        int Message (OBMessageType type, wxString strMessage, bool bLog = false);
+        //int Message (OBMessageType type, wxString strMessage, bool bLog = false);
         /// displays a modal info-message-box without login the message
-        int Message (wxString strMessage);
+        //int Message (wxString strMessage);
         /// displays a modal message-box, ask a YES-NO-question and return the answer as bool
-        bool QuestionYesNo (wxString strQuestion);
+        bool QuestionYesNo (const wxChar* strQuestion);
         /// displays a modal message-box, ask a YES-NO-CANCEL-question and return the answer as button ID
-        int QuestionYesNoCancel (wxString strQuestion);
+        int QuestionYesNoCancel (const wxChar* strQuestion);
 
 
     DECLARE_EVENT_TABLE();

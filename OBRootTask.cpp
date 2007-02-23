@@ -3,9 +3,11 @@
  * 2006-05-29
  ***/
 
+#include "OBRootTask.h"
+
 #include <wx/wfstream.h>
 #include <wx/tokenzr.h>
-#include "OBRootTask.h"
+
 #include "OBTaskProgressDlg.h"
 #include "OBBackupTree.h"
 #include "Progress.h"
@@ -251,7 +253,7 @@ bool OBRootTask::Run (wxWindow* pParent)
 
     // log start
     str = wxString::Format(_("RootTask %s started"), GetName());
-    Core().Log(LogINFO, str);
+    OBSystem::Log(str);
 
     // prepare for destination directories
     for (i = 0; i < TaskVector().size(); ++i)
@@ -273,7 +275,7 @@ bool OBRootTask::Run (wxWindow* pParent)
 
     // log finished
     str = wxString::Format(_("RootTask %s finished"), GetName());
-    Core().Log(LogINFO, str);
+    OBSystem::Log(str);
 
     return true;
 }
