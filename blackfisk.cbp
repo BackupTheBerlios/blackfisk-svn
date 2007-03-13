@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="blackfisk" />
+		<Option pch_mode="0" />
+		<Option default_target="debug_unicode" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;" />
+		<Build>
+			<Target title="release_ansi">
+				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_rel" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="1" />
+				<Compiler>
+					<Add option="-D_RELEASE" />
+					<Add directory="C:\wxWindows\include" />
+					<Add directory="C:\wxWindows\contrib\include" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxexpat.a" />
+					<Add library="libwxmsw27.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libwxmsw27_animate.a" />
+					<Add directory="C:\wxWindows\lib\gcc_dll" />
+				</Linker>
+			</Target>
+			<Target title="debug_ansi">
+				<Option output=".\blackfiskD.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_deb" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add directory="C:\wxWindows\include" />
+					<Add directory="C:\wxWindows\contrib\include" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw27d.a" />
+					<Add library="libwxzlibd.a" />
+					<Add library="libwxmsw27d_animate.a" />
+					<Add directory="C:\wxWindows\lib\gcc_dll" />
+				</Linker>
+			</Target>
+			<Target title="debug_unicode">
+				<Option output=".\blackfiskDu.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_debu" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="C:\wxWindows\include" />
+					<Add directory="C:\wxWindows\contrib\include" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw29ud.a" />
+					<Add library="libwxzlibd.a" />
+					<Add directory="C:\wxWindows\lib\gcc_dll" />
+				</Linker>
+			</Target>
+			<Target title="release_unicode">
+				<Option output=".\blackfiskRu.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_relu" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="1" />
+				<Compiler>
+					<Add option="-D_RELEASE" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="C:\wxWindows\include" />
+					<Add directory="C:\wxWindows\contrib\include" />
+				</Compiler>
+				<Linker>
+					<Add library="libwxexpat.a" />
+					<Add library="libwxmsw27u.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libwxmsw27u_animate.a" />
+					<Add directory="C:\wxWindows\lib\gcc_dll" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="release_ansi;debug_ansi;debug_unicode;release_unicode;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-DWXUSINGDLL" />
+		</Compiler>
+		<Unit filename="BFApp.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFApp.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFBackupCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFBackupCtrl.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFBackupTree.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFBackupTree.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFCore.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFCore.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFDirCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFDirCtrl.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFLog.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFLog.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFMainFrame.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFMainFrame.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFMessageDlg.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFMessageDlg.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFRootTask.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFRootTask.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFSystem.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFSystem.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFTask.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFTask.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFTaskBase.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFTaskBase.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFTaskDlg.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFTaskDlg.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFTaskProgressDlg.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFTaskProgressDlg.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFundef.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="ObserverPattern.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="ObserverPattern.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="Progress.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="Progress.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="bf.log" />
+		<Unit filename="blackfisk.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="blackfisk.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="wxArchive\include\wx\wxArchive.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="wxArchive\src\wxArchive.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
