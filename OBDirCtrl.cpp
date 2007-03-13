@@ -102,6 +102,6 @@ void OBDirCtrl::OnItemMenu (wxTreeEvent& event)
 
     menu.Append(&mItem1);
 
-    PopupMenu(&menu, point);
+    pDirCtrl_->PopupMenu(&menu, point);
 }
 

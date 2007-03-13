@@ -13,6 +13,12 @@
 	<File name="OBCore.h" open="0" top="0" tabpos="0">
 		<Cursor position="1873" topLine="29" />
 	</File>
+	<File name="OBDirCtrl.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="2697" topLine="67" />
+	</File>
+	<File name="OBDirCtrl.h" open="1" top="0" tabpos="2">
+		<Cursor position="587" topLine="0" />
+	</File>
 	<File name="OBLog.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="882" topLine="27" />
 	</File>
