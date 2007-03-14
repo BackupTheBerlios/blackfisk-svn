@@ -116,7 +116,7 @@ void BFMainFrame::OnOpenProject (wxCommandEvent& event)
         wxEmptyString,
         wxEmptyString,
         _("OctopusBackup files (*.ob)|*.ob"),
-        wxOPEN
+        wxFD_OPEN
     );
 
     dlg.CentreOnParent();
@@ -136,7 +136,7 @@ bool BFMainFrame::SaveProject ()
         wxEmptyString,
         wxEmptyString,
         _("OctopusBackup files (*.ob)|*.ob"),
-        wxSAVE | wxOVERWRITE_PROMPT
+        wxFD_SAVE | wxFD_OVERWRITE_PROMPT
     );
 
     dlg.CentreOnParent();
