@@ -4,10 +4,15 @@
  ***/
 
 #include "BFDirCtrl.h"
+
 #include <wx/dnd.h>
 
+#include "BFBackupTree.h"
+#include "BFMainFrame.h"
+
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
-  EVT_BUTTON  (BFDIRCTRL_ID_FILEBUTTON, BFDirCtrl::OnButton_DirCtrl)
+  EVT_BUTTON  (BFDIRCTRL_ID_FILEBUTTON,         BFDirCtrl::OnButton_DirCtrl)
+  EVT_MENU    (BFDIRCTRL_ID_ADDDESTINATION,     BFDirCtrl::OnAddAsDestination)
 END_EVENT_TABLE()
 
 //
@@ -94,14 +99,45 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
 
 void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 {
-    wxPoint         point   (event.GetPoint());
-    wxTreeItemId    item    (event.GetItem());
-    wxMenu          menu;
+    // remember this selected item
+    lastItemId_ = event.GetItem();
 
-    wxMenuItem  mItem1(&menu, wxID_ANY, _("add destination directory"));
+    // create a menu
+    wxMenu menu;
 
+    // add a item to the menu
+    wxMenuItem  mItem1(&menu, BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
     menu.Append(&mItem1);
 
-    pDirCtrl_->PopupMenu(&menu, point);
+    // popup the menu
+    pDirCtrl_->PopupMenu(&menu, event.GetPoint());
+}
+
+void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
+{
+    // get the backup tree object
+    BFBackupTree* pBackupTree = BFMainFrame::Instance()->BackupTree();
+
+    if (pBackupTree == NULL)
+    {
+        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnAddAsDestination()"));
+        return;
+    }
+
+    // get selected item in the dir control
+    wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(lastItemId_));
+
+    if (pDirItem == NULL)
+        return;
+
+    // check if it is a dir
+    if ( !(pDirItem->m_isDir) )
+    {
+        BFSystem::Info(_("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."));
+        return;
+    }
+
+    // set and select the new added destination
+    pBackupTree->SelectItem(pBackupTree->AddDestination(pDirItem->m_path));
 }
 

@@ -22,13 +22,13 @@ class BFSystem : public Subject
 {
     private:
         /// type of the last message
-        BFMessageType       _lastType;
+        BFMessageType       lastType_;
         /// location of the last message
-        wxString            _strLastLocation;
+        wxString            strLastLocation_;
         /// the last message itself
-        wxString            _strLastMessage;
+        wxString            strLastMessage_;
         /// timestamp of the last message
-        wxDateTime          _lastTimestamp;
+        wxDateTime          lastTimestamp_;
 
         /// ctor
         BFSystem();

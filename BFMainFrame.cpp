@@ -9,6 +9,7 @@
 #include "Progress.h"
 #include "BFDirCtrl.h"
 #include "BFBackupCtrl.h"
+#include "BFBackupTree.h"
 
 #include <wx/wx.h>
 #include <wx/version.h>
@@ -84,6 +85,19 @@ END_EVENT_TABLE()
     Show(TRUE);
     SetSize(wxSize(650, 600));
     Center();
+}
+
+BFBackupCtrl* BFMainFrame::BackupCtrl ()
+{
+    return pBackupCtrl_;
+}
+
+BFBackupTree* BFMainFrame::BackupTree ()
+{
+    if (BackupCtrl())
+        return BackupCtrl()->BackupTree();
+    else
+        return NULL;
 }
 
 /*virtual*/ BFMainFrame::~BFMainFrame ()

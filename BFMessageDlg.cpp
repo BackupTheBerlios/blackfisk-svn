@@ -62,9 +62,9 @@ void BFMessageDlg::SetStyle (long style)
 
     // message and location
     if (pSys->GetLastLocation().Len() == 0)
-        SetMessage (pSys->GetLastMessage());
+        SetMessage (pSys->GetLastMessage().c_str());
     else
-        SetMessage (pSys->GetLastMessage() + _T("\nLocation: ") + pSys->GetLastLocation());
+        SetMessage ((pSys->GetLastMessage() + _T("\nLocation: ") + pSys->GetLastLocation()).c_str());
 
     /* if you need to check the return value,
        just use GetReturnCode() */

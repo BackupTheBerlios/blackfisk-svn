@@ -47,8 +47,8 @@ void BFLog::CareSize ()
     (
         pSys->GetLastType(),
         pSys->GetLastTimestamp(),
-        pSys->GetLastMessage(),
-        pSys->GetLastLocation()
+        pSys->GetLastMessage().c_str(),
+        pSys->GetLastLocation().c_str()
     );
 }
 
@@ -71,13 +71,13 @@ void BFLog::Do(BFMessageType type,
     if (type != MsgLOG)
         strLog << wxString(BFSystem::GetTypeString(type)).MakeUpper();
 
-    strLog << _T(" :");
+    strLog << _T(": ");
 
     // log message
-    if (strLocation == NULL)
+    if (wxStrlen(strLocation) == 0)
         strLog << strMessage << _T('\n');
     else
-        strLog << _T(" in ") << strLocation << _T('\n');
+        strLog << strMessage << _T(" in ") << strLocation << _T('\n');
 
     // write to the file
     fileLog_.Write(strLog);

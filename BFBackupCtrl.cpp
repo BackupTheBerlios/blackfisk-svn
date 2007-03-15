@@ -23,11 +23,11 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
     pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));
 
     // init controls
-    BFBackupTree* pBackupTree = new BFBackupTree(this);
+    pBackupTree_ = new BFBackupTree(this);
 
     // arange
     pTopSizer->Add(pTool);
-    pTopSizer->Add(pBackupTree, wxSizerFlags(1).Expand());
+    pTopSizer->Add(pBackupTree_, wxSizerFlags(1).Expand());
     SetSizer(pTopSizer);
 }
 
@@ -36,3 +36,7 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
 }
 
 
+BFBackupTree* BFBackupCtrl::BackupTree ()
+{
+    return pBackupTree_;
+}

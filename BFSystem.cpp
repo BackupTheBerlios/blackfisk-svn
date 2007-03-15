@@ -22,10 +22,12 @@ void BFSystem::Message (BFMessageType msgType,
                                    const wxChar* strMessage,
                                    const wxChar* strLocation)
 {
-    _lastTimestamp   .SetToCurrent();
-    _lastType        = msgType;
-    _strLastLocation = strLocation;
-    _strLastMessage  = strMessage;
+    lastTimestamp_   .SetToCurrent();
+    lastType_        = msgType;
+    strLastLocation_ = strLocation;
+    strLastMessage_  = strMessage;
+
+    broadcastObservers();
 }
 
 /*static*/ void BFSystem::Info (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
@@ -55,7 +57,7 @@ void BFSystem::Message (BFMessageType msgType,
 
 BFMessageType BFSystem::GetLastType ()
 {
-    return _lastType;
+    return lastType_;
 }
 
 /*static*/ const wxChar* BFSystem::GetTypeString (BFMessageType type)
@@ -126,17 +128,17 @@ BFMessageType BFSystem::GetLastType ()
 
 const wxDateTime& BFSystem::GetLastTimestamp ()
 {
-    return _lastTimestamp;
+    return lastTimestamp_;
 }
 
 const wxString& BFSystem::GetLastLocation ()
 {
-    return _strLastLocation;
+    return strLastLocation_;
 }
 
 const wxString& BFSystem::GetLastMessage ()
 {
-    return _strLastMessage;
+    return strLastMessage_;
 }
 
 BFMessageType BFSystem::GetLogLevel ()

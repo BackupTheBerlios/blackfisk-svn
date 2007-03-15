@@ -16,7 +16,9 @@
 
 #define BFDIRCTRL_FILEBUTTON_ONLYDIRS   _("show directories only")
 #define BFDIRCTRL_FILEBUTTON_WITHFILES  _("show with files")
-#define BFDIRCTRL_ID_FILEBUTTON         1 + wxID_HIGHEST
+
+#define BFDIRCTRL_ID_FILEBUTTON             1 + wxID_HIGHEST
+#define BFDIRCTRL_ID_ADDDESTINATION         2 + wxID_HIGHEST
 
 
 /** it is the complete control to handle the filesystem */
@@ -27,6 +29,10 @@ class BFDirCtrl : public wxPanel
         wxGenericDirCtrl*   pDirCtrl_;
         ///
         wxButton*           pButtonFiles_;
+
+        /** the last (by right-click) selected item;
+            is normaly set by OnItemMenu() */
+        wxTreeItemId        lastItemId_;
 
         ///
         BFDirCtrl ();
@@ -42,6 +48,8 @@ class BFDirCtrl : public wxPanel
 
         ///
         void OnButton_DirCtrl (wxCommandEvent& rEvent);
+        ///
+        void OnAddAsDestination (wxCommandEvent& event);
 
         ///
         void OnBeginDrag (wxTreeEvent& event);

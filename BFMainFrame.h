@@ -11,6 +11,7 @@
 class Progress;
 class ProgressWithMessage;
 class BFBackupCtrl;
+class BFBackupTree;
 class BFDirCtrl;
 
 #include <wx/wx.h>
@@ -61,6 +62,12 @@ class BFMainFrame : public wxFrame
         ///
         static BFMainFrame* Instance()
         { return spApp_->MainFrame(); }
+
+        ///
+        BFBackupCtrl* BackupCtrl ();
+        ///
+        BFBackupTree* BackupTree ();
+
         ///
         void OnQuit (wxCommandEvent& event);
         ///
@@ -93,7 +100,6 @@ class BFMainFrame : public wxFrame
         bool QuestionYesNo (const wxChar* strQuestion);
         /// displays a modal message-box, ask a YES-NO-CANCEL-question and return the answer as button ID
         int QuestionYesNoCancel (const wxChar* strQuestion);
-
 
     DECLARE_EVENT_TABLE();
 };    // class BFMainFrame
