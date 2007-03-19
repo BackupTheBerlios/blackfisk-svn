@@ -13,6 +13,7 @@
 #include <wx/icon.h>
 #include <wx/dnd.h>
 #include <wx/tokenzr.h>
+#include <wx/image.h>
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
@@ -68,20 +69,12 @@ void BFBackupTree::Init ()
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& event)
 {
-    // get the data object behind the tree-item-control
-    BFBackupTreeItemData* pData = (BFBackupTreeItemData*)GetItemData(event.GetItem());
-
-    // it is a no data holding item
-    if (pData == NULL)
+    // check if it is a data object behind the tree-item-control
+    if ( GetItemData(event.GetItem()) == NULL)
         return;
 
     // get the task object from the data layer
-    BFTask* pTask = NULL;
-
-    if (pData->GetOID() != BFInvalidOID)
-         pTask = BFRootTask::Instance().GetTask(pData->GetOID());
-    else
-        return;
+    BFTask* pTask = GetTaskByItem(event.GetItem());
 
     if (pTask == NULL)
     {
@@ -89,8 +82,7 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& event)
         return;
     }
 
-    // show the task
-    BFTaskDlg(GetParent(), *pTask);
+    BFTaskBaseDlg::Show (pTask);
 }
 
 void BFBackupTree::OnItemMenu(wxTreeEvent& event)
@@ -278,7 +270,7 @@ void BFBackupTree::OnBackupCopy (wxCommandEvent& event)
                         true /* DEBUG */,
                         CompressNOTUSED,
                         arrString);
-    BFTaskDlg(GetParent(), *pTask);
+    BFTaskBaseDlg::Show(pTask);
 
     // the remembered filename and destination is not needed anymore
     strDropedFilename_      = wxEmptyString;
@@ -408,4 +400,40 @@ wxDragResult BFBackupTree::BFBackupDropTarget::OnDragOver(wxCoord x, wxCoord y, 
         return def;
 
     return pBackupTree_->OnDragOver(x, y, def);
+}
+
+
+
+
+BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
+            : wxPanel(pParent, -1)
+{
+    // init sizer
+    wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
+
+    // toolbar
+    wxToolBar* pTool = new wxToolBar(this, -1);
+    pTool->AddTool(-1, _T("label 1"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
+    pTool->AddSeparator();
+    pTool->AddTool(-1, _T("label 2"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
+    pTool->Realize();
+    pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));
+
+    // init controls
+    pBackupTree_ = new BFBackupTree(this);
+
+    // arange
+    pTopSizer->Add(pTool);
+    pTopSizer->Add(pBackupTree_, wxSizerFlags(1).Expand());
+    SetSizer(pTopSizer);
+}
+
+/*virtual*/ BFBackupCtrl::~BFBackupCtrl ()
+{
+}
+
+
+BFBackupTree* BFBackupCtrl::BackupTree ()
+{
+    return pBackupTree_;
 }

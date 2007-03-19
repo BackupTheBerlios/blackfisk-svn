@@ -12,6 +12,7 @@
 #include <wx/window.h>
 #include <wx/treectrl.h>
 #include <wx/dnd.h>
+#include <wx/panel.h>
 #include "ObserverPattern.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
@@ -138,4 +139,26 @@ class BFBackupTreeItemData : public wxTreeItemData
         const wxChar* GetPath();
 
 };  // class BFBackupTreeItem
+
+
+/// contains the BFBackupTreeCtrl, toolbar, etc on the left side of the splitter
+class BFBackupCtrl : public wxPanel
+{
+    private:
+        ///
+        BFBackupTree*   pBackupTree_;
+
+    protected:
+
+    public:
+        /// constructor
+        BFBackupCtrl (wxWindow* pParent);
+
+        /// virtual destructor
+        virtual ~BFBackupCtrl ();
+
+        ///
+        BFBackupTree* BackupTree ();
+};    // class BFBackupCtrl
+
 #endif    // BFBACKUPTREE_H

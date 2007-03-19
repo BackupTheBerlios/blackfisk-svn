@@ -69,7 +69,7 @@ void BFLog::Do(BFMessageType type,
 
     // message type identifier
     if (type != MsgLOG)
-        strLog << wxString(BFSystem::GetTypeString(type)).MakeUpper();
+        strLog << _T(" ") << wxString(BFSystem::GetTypeString(type)).MakeUpper() << _T(" ");
 
     strLog << _T(": ");
 

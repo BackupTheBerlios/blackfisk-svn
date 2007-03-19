@@ -99,30 +99,32 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
 
 void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 {
-    // remember this selected item
+    // remember the item
     lastItemId_ = event.GetItem();
 
-    // create a menu
+    // select the current item
+    pDirCtrl_->GetTreeCtrl()->SelectItem(event.GetItem());
+
+    // create a menu object
     wxMenu menu;
 
-    // add a item to the menu
-    wxMenuItem  mItem1(&menu, BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
-    menu.Append(&mItem1);
+    // get selected item in the dir control
+    wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(event.GetItem()));
+    // check if it is a dir
+    if ( pDirItem != NULL && pDirItem->m_isDir )
+    {
+        // add a item to the menu
+        wxMenuItem  mItem1(&menu, BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
+        menu.Append(&mItem1);
+    }
 
     // popup the menu
-    pDirCtrl_->PopupMenu(&menu, event.GetPoint());
+    if (menu.GetMenuItemCount() > 0)
+        pDirCtrl_->PopupMenu(&menu, event.GetPoint());
 }
 
 void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
 {
-    // get the backup tree object
-    BFBackupTree* pBackupTree = BFMainFrame::Instance()->BackupTree();
-
-    if (pBackupTree == NULL)
-    {
-        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnAddAsDestination()"));
-        return;
-    }
 
     // get selected item in the dir control
     wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(lastItemId_));
@@ -133,7 +135,16 @@ void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
     // check if it is a dir
     if ( !(pDirItem->m_isDir) )
     {
-        BFSystem::Info(_("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."));
+        BFSystem::Fatal(_T("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."), _T("BFDirCtrl::OnAddAsDestination"));
+        return;
+    }
+
+    // get the backup tree object
+    BFBackupTree* pBackupTree = BFMainFrame::Instance()->BackupTree();
+
+    if (pBackupTree == NULL)
+    {
+        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnAddAsDestination()"));
         return;
     }
 

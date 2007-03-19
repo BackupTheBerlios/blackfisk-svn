@@ -8,7 +8,6 @@
 #include "BFApp.h"
 #include "Progress.h"
 #include "BFDirCtrl.h"
-#include "BFBackupCtrl.h"
 #include "BFBackupTree.h"
 
 #include <wx/wx.h>

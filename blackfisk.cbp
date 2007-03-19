@@ -100,12 +100,6 @@
 		<Unit filename="BFApp.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
-		<Unit filename="BFBackupCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="BFBackupCtrl.h">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
 		<Unit filename="BFBackupTree.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
