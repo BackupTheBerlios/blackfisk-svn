@@ -151,8 +151,10 @@ class BFTask : public BFTaskData
         ///
         bool Run (ProgressWithMessage& rProgress);
 
-        /// describe the task in words
+        /// return a describe of the task
         wxString GetTypeDescription ();
+        /// return the iconId of the task
+        int GetTypeIconId ();
         ///
         wxString GetArchiveExtension();
 

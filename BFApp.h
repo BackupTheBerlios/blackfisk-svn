@@ -43,6 +43,9 @@ class BFApp : public wxApp
 
         ///
         static BFMainFrame* MainFrame ();
+        /** it sets the static member spMainFrame_ in BFApp;
+            see the call in the BFMainFrame ctor for more details */
+        static void SetMainFrame (BFMainFrame* pMainFrame);
 
         ///
         bool OpenProject (const wxChar* filename);

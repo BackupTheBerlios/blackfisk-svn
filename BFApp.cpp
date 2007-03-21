@@ -30,6 +30,11 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     return spMainFrame_;
 }
 
+/*static*/ void BFApp::SetMainFrame (BFMainFrame* pMainFrame)
+{
+    spMainFrame_ = pMainFrame;
+}
+
 BFApp::BFApp ()
 {
 }
@@ -57,8 +62,9 @@ bool BFApp::OnInit()
     locale_.Init( langIds[2] );
     locale_.AddCatalog(_T("ob"));
 
-    // init main frame
-    spMainFrame_ = new BFMainFrame(*this);
+    /* init the main frame
+       'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
+    new BFMainFrame(*this);
 
     // DEBUG
     Backup();

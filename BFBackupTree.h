@@ -17,12 +17,6 @@
 #include "BFMainFrame.h"
 #include "BFTask.h"
 
-#define BFICON_PROJECT      0
-#define BFICON_VOLUME       1
-#define BFICON_DIR          2
-#define BFICON_TASKDC       3
-#define BFICON_TASKFC       4
-#define BFICON_TASKZIP      5
 
 #define BFID_BACKUPCTRL_ADDDESTINATION      1 + wxID_HIGHEST
 #define BFID_BACKUPCTRL_COPY_DIR            2 + wxID_HIGHEST
@@ -32,8 +26,6 @@
 class BFBackupTree : public wxTreeCtrl, public Observer
 {
     private:
-        /// application global icons
-        wxImageList     imageList_;
         /** this is the droped filename catched in OnDropFiles()
             to remember it for use in OnBackupCopy() backup-action
             is selected in the context-menu displayed after drop */

@@ -15,6 +15,7 @@
 #include <wx/splitter.h>
 #include <wx/listbox.h>
 #include <wx/filedlg.h>
+#include <wx/imaglist.h>
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_OpenProject,        BFMainFrame::OnOpenProject)
@@ -32,9 +33,18 @@ END_EVENT_TABLE()
             : wxFrame (NULL,
                        -1,
                        wxString::Format(_("%s %s by %s with %s"), BF_PRGNAME, BF_VERSION, BF_AUTHOR, wxVERSION_STRING)),
-                       msgDlg_(this)
+                       msgDlg_(this),
+              imageList_(32, 32)
 {
+    // set application variable
     spApp_ = &rApp;
+
+    /* the BFMainFrame object set its own reference in BFApp itself
+       because the reference (BFApp::spMainFrame_) is needed quite
+       early while creation time of the BFMainFrame object */
+    spApp_->SetMainFrame(this);
+
+    InitImageList ();
 
     // set as top window
     spApp_->SetTopWindow(this);
@@ -86,6 +96,16 @@ END_EVENT_TABLE()
     Center();
 }
 
+void BFMainFrame::InitImageList ()
+{
+    /* BFICON_PROJECT   */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("project.ico")),   wxBITMAP_TYPE_ICO));
+    /* BFICON_VOLUME    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("volume.ico")),    wxBITMAP_TYPE_ICO));
+    /* BFICON_DIR       */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("dir.ico")),       wxBITMAP_TYPE_ICO));
+    /* BFICON_TASKDC    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.ico")),   wxBITMAP_TYPE_ICO));
+    /* BFICON_TASKFC    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.ico")),   wxBITMAP_TYPE_ICO));
+    /* BFICON_TASKZIP   */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_zip.ico")),  wxBITMAP_TYPE_ICO));
+}
+
 BFBackupCtrl* BFMainFrame::BackupCtrl ()
 {
     return pBackupCtrl_;
@@ -97,6 +117,11 @@ BFBackupTree* BFMainFrame::BackupTree ()
         return BackupCtrl()->BackupTree();
     else
         return NULL;
+}
+
+wxImageList& BFMainFrame::GetImageList ()
+{
+    return imageList_;
 }
 
 /*virtual*/ BFMainFrame::~BFMainFrame ()

@@ -164,6 +164,32 @@ wxString BFTask::GetTypeDescription ()
     return strDesc;
 }
 
+int BFTask::GetTypeIconId ()
+{
+    int iconId = -1;
+
+    switch (GetType())
+    {
+        case TaskARCHIVE:
+            iconId = BFICON_TASKZIP;
+            break;
+
+        case TaskDIRCOPY:
+            iconId = BFICON_TASKDC;
+            break;
+
+        case TaskFILECOPY:
+            iconId = BFICON_TASKFC;
+            break;
+
+        default:
+            BFSystem::Fatal(_T("no matching TaskType"), _T("BFTask::GetTypeIconId"));
+            break;
+    };
+
+    return iconId;
+}
+
 bool BFTask::Serialize (jbArchive& rA)
 {
     // check parameters

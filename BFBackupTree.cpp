@@ -24,6 +24,8 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
     EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                          BFBackupTree::OnEndLabelEdit)
 END_EVENT_TABLE()
+
+
 //
 BFBackupTree::BFBackupTree (wxWindow* pParent)
             : wxTreeCtrl(pParent,
@@ -31,21 +33,10 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultPosition,
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
-              Observer(&(BFRootTask::Instance())),
-              imageList_(16, 16)
+              Observer(&(BFRootTask::Instance()))
 {
-    // init image list
-    /* BFICON_PROJECT   */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("project.ico")),   wxBITMAP_TYPE_ICO));
-    /* BFICON_VOLUME    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("volume.ico")),    wxBITMAP_TYPE_ICO));
-    /* BFICON_DIR       */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("dir.ico")),       wxBITMAP_TYPE_ICO));
-    /* BFICON_TASKDC    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.ico")),   wxBITMAP_TYPE_ICO));
-    /* BFICON_TASKFC    */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.ico")),   wxBITMAP_TYPE_ICO));
-    /* BFICON_TASKZIP   */ imageList_.Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_zip.ico")),  wxBITMAP_TYPE_ICO));
-
-    SetImageList( &imageList_ );
-
-    SetDropTarget ( new BFBackupDropTarget(this) );
-
+    SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
+    SetDropTarget   ( new BFBackupDropTarget(this) );
     Init();
 }
 
@@ -153,7 +144,7 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     }
 
     pItem = new wxMenuItem(&menu, idItem, str);
-    pItem->SetBitmap(imageList_.GetBitmap(idBmp));
+    pItem->SetBitmap(BFMainFrame::Instance()->GetImageList().GetBitmap(idBmp));
     menu.Append(pItem);
 
     // remember the filename for use in other methodes
@@ -359,6 +350,8 @@ wxTreeItemId BFBackupTree::FindItem (const wxChar* label)
     return FindItem(GetRootItem(), label);
 }
 
+
+
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxChar* strPath /*= NULL*/)
                 : oid_(oid),
                   strPath_(strPath)
@@ -379,12 +372,16 @@ const wxChar* BFBackupTreeItemData::GetPath ()
     return strPath_.c_str();
 }
 
+
+
 BFBackupTree::BFBackupDropTarget::BFBackupDropTarget (BFBackupTree* pBackupTree)
                                    : pBackupTree_(pBackupTree)
-{ }
+{
+}
 
 BFBackupTree::BFBackupDropTarget::~BFBackupDropTarget ()
-{ }
+{
+}
 
 bool BFBackupTree::BFBackupDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames)
 {

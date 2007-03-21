@@ -102,6 +102,24 @@ void BFTaskBaseDlg::Init ()
     GetData();
 }
 
+wxSizer* BFTaskBaseDlg::InitType ()
+{
+    wxStaticBitmap* pTypeIcon = new wxStaticBitmap
+                                    (
+                                        this,
+                                        -1,
+                                        BFMainFrame::Instance()->GetImageList().GetBitmap(rTask_.GetTypeIconId())
+                                    );
+    wxStaticText*   pTypeText = new wxStaticText(this, -1, rTask_.GetTypeDescription());
+
+    wxBoxSizer* pTypeSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    pTypeSizer->Add(pTypeIcon, wxSizerFlags(0).Border());
+    pTypeSizer->Add(pTypeText, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border());
+
+    return pTypeSizer;
+}
+
 wxSizer* BFTaskBaseDlg::InitButtons ()
 {
     wxButton* pButtonOk     = new wxButton(this, BFTASKDLG_ID_BUTTONOK, _("OK"));
@@ -222,7 +240,7 @@ void BFTaskBaseDlg::SetData ()
     switch (pTask->GetType())
     {
         case TaskFILECOPY:
-            BFTaskFileCopyDlg(NULL, *pTask);
+            new BFTaskFileCopyDlg(NULL, *pTask);
             break;
 
         case TaskINVALID:
@@ -246,15 +264,3 @@ BFTaskFileCopyDlg::~BFTaskFileCopyDlg ()
 {
 }
 
-wxSizer* BFTaskFileCopyDlg::InitType ()
-{
-    wxStaticBitmap* pTypeIcon = new wxStaticBitmap(this, -1, wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.ico")),  wxBITMAP_TYPE_ICO));
-    wxStaticText*   pTypeText = new wxStaticText(this, -1, rTask_.GetTypeDescription());
-
-    wxBoxSizer* pTypeSizer = new wxBoxSizer(wxHORIZONTAL);
-
-    pTypeSizer->Add(pTypeIcon, wxSizerFlags(0).Border());
-    pTypeSizer->Add(pTypeText, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border());
-
-    return pTypeSizer;
-}

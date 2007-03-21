@@ -53,7 +53,7 @@ class BFTaskBaseDlg : public wxDialog
 
         /** init the task type with icon and its description
             and return its wxSizer */
-        virtual wxSizer* InitType () = 0;
+        virtual wxSizer* InitType ();
 
         /** init the buttons in the dialog*/
         virtual wxSizer* InitButtons ();
@@ -82,8 +82,6 @@ class BFTaskBaseDlg : public wxDialog
 class BFTaskFileCopyDlg : public BFTaskBaseDlg
 {
     protected:
-        ///
-        virtual wxSizer* InitType ();
 
     public:
         /// constructor

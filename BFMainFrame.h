@@ -20,6 +20,15 @@ class BFDirCtrl;
 #include "BFMessageDlg.h"
 
 ///
+#define BFICON_PROJECT      0
+#define BFICON_VOLUME       1
+#define BFICON_DIR          2
+#define BFICON_TASKDC       3
+#define BFICON_TASKFC       4
+#define BFICON_TASKZIP      5
+
+
+///
 enum
 {
     ID_Quit = 1,
@@ -50,6 +59,12 @@ class BFMainFrame : public wxFrame
             just use OBSystem to display messages to the user */
         BFMessageDlg        msgDlg_;
 
+        /// global image list for all needed icons
+        wxImageList         imageList_;
+
+        ///
+        void InitImageList ();
+
     protected:
         /// proteced members
 
@@ -67,6 +82,8 @@ class BFMainFrame : public wxFrame
         BFBackupCtrl* BackupCtrl ();
         ///
         BFBackupTree* BackupTree ();
+        ///
+        wxImageList& GetImageList ();
 
         ///
         void OnQuit (wxCommandEvent& event);
