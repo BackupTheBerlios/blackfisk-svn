@@ -5,8 +5,10 @@
  ***/
 
 #include "BFTask.h"
+
 #include "BFRootTask.h"
 #include "BFundef.h"
+#include "BFIconTable.h"
 
 BFTaskData::BFTaskData (BFTaskType type,
                         const wxChar* strSource,
@@ -171,15 +173,15 @@ int BFTask::GetTypeIconId ()
     switch (GetType())
     {
         case TaskARCHIVE:
-            iconId = BFICON_TASKZIP;
+            iconId = BFIconTable::task_zip;
             break;
 
         case TaskDIRCOPY:
-            iconId = BFICON_TASKDC;
+            iconId = BFIconTable::task_dircopy;
             break;
 
         case TaskFILECOPY:
-            iconId = BFICON_TASKFC;
+            iconId = BFIconTable::task_filecopy;
             break;
 
         default:

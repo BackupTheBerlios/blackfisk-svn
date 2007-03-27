@@ -13,6 +13,8 @@
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
   EVT_BUTTON  (BFDIRCTRL_ID_FILEBUTTON,         BFDirCtrl::OnButton_DirCtrl)
   EVT_MENU    (BFDIRCTRL_ID_ADDDESTINATION,     BFDirCtrl::OnAddAsDestination)
+  EVT_MENU    (BFDIRCTRL_ID_BACKUP_FILECOPY,    BFDirCtrl::OnBackup)
+  EVT_MENU    (BFDIRCTRL_ID_BACKUP_DIRCOPY,     BFDirCtrl::OnBackup)
 END_EVENT_TABLE()
 
 //
@@ -107,15 +109,28 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 
     // create a menu object
     wxMenu menu;
+    wxMenu menu_backup;
+
+    // ** backup menu **
+    menu.AppendSubMenu(&menu_backup, _("backup"));
+    menu.AppendSeparator();
 
     // get selected item in the dir control
     wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(event.GetItem()));
+
     // check if it is a dir
     if ( pDirItem != NULL && pDirItem->m_isDir )
     {
-        // add a item to the menu
-        wxMenuItem  mItem1(&menu, BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
-        menu.Append(&mItem1);
+        // ** add destination **
+        menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
+
+        // ** backup dir copy **
+        menu_backup.Append(BFDIRCTRL_ID_BACKUP_DIRCOPY, _("directory copy"));
+    }
+    else
+    {
+        // ** backup file copy **
+        menu_backup.Append(BFDIRCTRL_ID_BACKUP_FILECOPY, _("file copy"));
     }
 
     // popup the menu
@@ -152,3 +167,23 @@ void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
     pBackupTree->SelectItem(pBackupTree->AddDestination(pDirItem->m_path));
 }
 
+void BFDirCtrl::OnBackup (wxCommandEvent& event)
+{
+    wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(lastItemId_));
+
+    if (pDirItem == NULL)
+        return;
+
+    switch (event.GetId())
+    {
+        case BFDIRCTRL_ID_BACKUP_FILECOPY:
+        case BFDIRCTRL_ID_BACKUP_DIRCOPY:
+            BFMainFrame::Instance()->BackupTree()->SetDropedFilename (pDirItem->m_path);
+            BFMainFrame::Instance()->BackupTree()->OnBackupCopy (event);
+            break;
+
+        default:
+            BFSystem::Fatal(_T("no matching menu ID"), _T("BFDirCtrl::OnBackup"));
+            break;
+    };
+}

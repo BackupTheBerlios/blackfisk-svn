@@ -9,4 +9,5 @@
 - backup to password-protected-samba
 - backup to ftp
 - using commandline without gui (controlable by things like cronjob)
-- MAC OS, linux/unix (debian)
+- supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
+- supported languages: english, german, chinese (brian)

@@ -118,6 +118,12 @@
 		<Unit filename="BFDirCtrl.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="BFIconTable.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="BFIconTable.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
 		<Unit filename="BFLog.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>

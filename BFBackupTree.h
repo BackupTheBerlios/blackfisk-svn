@@ -13,14 +13,11 @@
 #include <wx/treectrl.h>
 #include <wx/dnd.h>
 #include <wx/panel.h>
+#include <wx/artprov.h>
 #include "ObserverPattern.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
 
-
-#define BFID_BACKUPCTRL_ADDDESTINATION      1 + wxID_HIGHEST
-#define BFID_BACKUPCTRL_COPY_DIR            2 + wxID_HIGHEST
-#define BFID_BACKUPCTRL_COPY_FILE           3 + wxID_HIGHEST
 
 ///
 class BFBackupTree : public wxTreeCtrl, public Observer
@@ -70,6 +67,9 @@ class BFBackupTree : public wxTreeCtrl, public Observer
 
         ///
         virtual void ValueChanged (Subject* pSender);
+
+        /// used by BFDirCtrl to set the current handled file
+        void SetDropedFilename (wxString strDropedFilename);
 
         /** search for an item by its label and return the item-id
             for the first match. if nothing is found it returns -1 */

@@ -17,9 +17,6 @@
 #define BFDIRCTRL_FILEBUTTON_ONLYDIRS   _("show directories only")
 #define BFDIRCTRL_FILEBUTTON_WITHFILES  _("show with files")
 
-#define BFDIRCTRL_ID_FILEBUTTON             1 + wxID_HIGHEST
-#define BFDIRCTRL_ID_ADDDESTINATION         2 + wxID_HIGHEST
-
 
 /** it is the complete control to handle the filesystem */
 class BFDirCtrl : public wxPanel
@@ -50,6 +47,8 @@ class BFDirCtrl : public wxPanel
         void OnButton_DirCtrl (wxCommandEvent& rEvent);
         ///
         void OnAddAsDestination (wxCommandEvent& event);
+        ///
+        void OnBackup (wxCommandEvent& event);
 
         ///
         void OnBeginDrag (wxTreeEvent& event);

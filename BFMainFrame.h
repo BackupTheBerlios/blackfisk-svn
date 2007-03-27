@@ -20,15 +20,6 @@ class BFDirCtrl;
 #include "BFMessageDlg.h"
 
 ///
-#define BFICON_PROJECT      0
-#define BFICON_VOLUME       1
-#define BFICON_DIR          2
-#define BFICON_TASKDC       3
-#define BFICON_TASKFC       4
-#define BFICON_TASKZIP      5
-
-
-///
 enum
 {
     ID_Quit = 1,
@@ -39,6 +30,14 @@ enum
     ID_SaveProject
 };
 
+/// menuIDs for BFDirCtrl and BFBackupTree
+#define BFID_BACKUPCTRL_ADDDESTINATION      1 + wxID_HIGHEST
+#define BFID_BACKUPCTRL_COPY_DIR            2 + wxID_HIGHEST
+#define BFDIRCTRL_ID_BACKUP_DIRCOPY         BFID_BACKUPCTRL_COPY_DIR
+#define BFID_BACKUPCTRL_COPY_FILE           3 + wxID_HIGHEST
+#define BFDIRCTRL_ID_BACKUP_FILECOPY        BFID_BACKUPCTRL_COPY_FILE
+#define BFDIRCTRL_ID_FILEBUTTON             4 + wxID_HIGHEST
+#define BFDIRCTRL_ID_ADDDESTINATION         5 + wxID_HIGHEST
 
 ///
 class BFMainFrame : public wxFrame
@@ -59,12 +58,6 @@ class BFMainFrame : public wxFrame
             just use OBSystem to display messages to the user */
         BFMessageDlg        msgDlg_;
 
-        /// global image list for all needed icons
-        wxImageList         imageList_;
-
-        ///
-        void InitImageList ();
-
     protected:
         /// proteced members
 
@@ -82,8 +75,6 @@ class BFMainFrame : public wxFrame
         BFBackupCtrl* BackupCtrl ();
         ///
         BFBackupTree* BackupTree ();
-        ///
-        wxImageList& GetImageList ();
 
         ///
         void OnQuit (wxCommandEvent& event);

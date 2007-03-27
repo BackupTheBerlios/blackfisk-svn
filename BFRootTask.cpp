@@ -11,6 +11,7 @@
 #include "BFTaskProgressDlg.h"
 #include "BFBackupTree.h"
 #include "Progress.h"
+#include "BFIconTable.h"
 
 BFRootTaskData::BFRootTaskData ()
               : strName_(_("unnamed")),
@@ -293,7 +294,7 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
     wxTreeItemId    idCurr;
 
     // add root
-    wxTreeItemId    idRoot = rBackupTree.AddRoot(GetName(), BFICON_PROJECT);
+    wxTreeItemId    idRoot = rBackupTree.AddRoot(GetName(), BFIconTable::logo);
 
     // iterate throug the tasks
     for (int i = 0; i < TaskVector().size(); ++i)
@@ -306,15 +307,15 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
         switch (TaskVector()[i]->GetType())
         {
             case TaskARCHIVE:
-                iIconId = BFICON_TASKZIP;
+                iIconId = BFIconTable::task_zip;
                 break;
 
             case TaskDIRCOPY:
-                iIconId = BFICON_TASKDC;
+                iIconId = BFIconTable::task_dircopy;
                 break;
 
             case TaskFILECOPY:
-                iIconId = BFICON_TASKFC;
+                iIconId = BFIconTable::task_filecopy;
                 break;
         };  // switch(GetType)
 

@@ -3,14 +3,17 @@
  * 2006-06-05
  ***/
 
-#include "blackfisk.h"
 #include "BFTaskDlg.h"
+
+#include <wx/statbmp.h>
+#include <wx/panel.h>
+
+#include "blackfisk.h"
 #include "BFCore.h"
 #include "BFApp.h"
 #include "BFMainFrame.h"
 #include "BFRootTask.h"
-#include <wx/statbmp.h>
-#include <wx/panel.h>
+#include "BFIconTable.h"
 
 BEGIN_EVENT_TABLE(BFTaskBaseDlg, wxDialog)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONOK,       BFTaskBaseDlg::OnButton_Ok)
@@ -108,7 +111,7 @@ wxSizer* BFTaskBaseDlg::InitType ()
                                     (
                                         this,
                                         -1,
-                                        BFMainFrame::Instance()->GetImageList().GetBitmap(rTask_.GetTypeIconId())
+                                        BFIconTable::Instance()->GetIcon(rTask_.GetTypeIconId())
                                     );
     wxStaticText*   pTypeText = new wxStaticText(this, -1, rTask_.GetTypeDescription());
 

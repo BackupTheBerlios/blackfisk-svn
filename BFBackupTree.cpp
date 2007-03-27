@@ -3,17 +3,21 @@
  * 2006-05-25
  ***/
 
-#include "blackfisk.h"
-#include "BFApp.h"
-#include "BFMainFrame.h"
-#include "BFTask.h"
 #include "BFBackupTree.h"
-#include "BFRootTask.h"
-#include "BFTaskDlg.h"
+
 #include <wx/icon.h>
 #include <wx/dnd.h>
 #include <wx/tokenzr.h>
 #include <wx/image.h>
+#include <wx/volume.h>
+
+#include "blackfisk.h"
+#include "BFApp.h"
+#include "BFMainFrame.h"
+#include "BFTask.h"
+#include "BFRootTask.h"
+#include "BFTaskDlg.h"
+#include "BFIconTable.h"
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
@@ -35,7 +39,8 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
               Observer(&(BFRootTask::Instance()))
 {
-    SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
+    //SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
+    SetImageList ( BFIconTable::Instance() );
     SetDropTarget   ( new BFBackupDropTarget(this) );
     Init();
 }
@@ -56,6 +61,11 @@ void BFBackupTree::Init ()
 
     // expand all items in the treeCtlr
     ExpandAll();
+}
+
+void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
+{
+    strDropedFilename_ = strDropedFilename;
 }
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& event)
@@ -107,8 +117,12 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& event)
         int iImageId(GetItemImage(itemId));
 
         // identify the item
-        if (iImageId == BFICON_DIR
-         || iImageId == BFICON_VOLUME)
+        if (iImageId == BFIconTable::folder
+         || iImageId == BFIconTable::folder_open
+         || iImageId == BFIconTable::volume_harddisk
+         || iImageId == BFIconTable::volume_cdrom
+         || iImageId == BFIconTable::volume_floppy
+         || iImageId == BFIconTable::volume_removable)
         {
             // select it if it is not
             if (GetSelection() != itemId)
@@ -132,23 +146,23 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     // ** copy entry **
     if (wxDir::Exists(filenames[0]))
     {
-        idBmp   = BFICON_TASKDC;
+        idBmp   = BFIconTable::task_dircopy;
         idItem  = BFID_BACKUPCTRL_COPY_DIR;
         str     = _("copy directory");
     }
     else
     {
-        idBmp   = BFICON_TASKFC;
+        idBmp   = BFIconTable::task_filecopy;
         idItem  = BFID_BACKUPCTRL_COPY_FILE;
         str     = _("copy file");
     }
 
     pItem = new wxMenuItem(&menu, idItem, str);
-    pItem->SetBitmap(BFMainFrame::Instance()->GetImageList().GetBitmap(idBmp));
+    pItem->SetBitmap(BFIconTable::Instance()->GetIcon(idBmp));
     menu.Append(pItem);
 
     // remember the filename for use in other methodes
-    strDropedFilename_ = filenames[0];
+    SetDropedFilename(filenames[0]);
 
     // remember the destination directory (by draging over it) if ther is one
     BFBackupTreeItemData*   pItemData   = NULL;
@@ -202,13 +216,39 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
         }
 
         // it is a volume
-        if (strCurr[1] == ':')
+        if (strCurr[1] == _T(':'))
         {
+            // get the volume icon
+            wxFSVolume vol(strCurr + wxFILE_SEP_PATH);
+            int imageId;
+            switch(vol.GetKind())
+            {
+                case wxFS_VOL_FLOPPY:
+                    if ( strCurr.StartsWith(_T("a:")) || strCurr.StartsWith(_T("b:")) )
+                        imageId = BFIconTable::volume_floppy;
+                    else
+                        imageId = BFIconTable::volume_removable;
+                    break;
+
+                case wxFS_VOL_DVDROM:
+                case wxFS_VOL_CDROM:
+                    imageId = BFIconTable::volume_cdrom;
+                    break;
+
+                case wxFS_VOL_NETWORK:
+                case wxFS_VOL_DISK:
+                case wxFS_VOL_OTHER:
+                default:
+                    imageId = BFIconTable::volume_harddisk;
+                    break;
+            };
+
+            // append the volume item
             idLast = AppendItem
                      (
                         idCurr,
                         strCurr,
-                        BFICON_VOLUME,
+                        imageId,
                         -1,
                         new BFBackupTreeItemData ( BFInvalidOID, strPath.Left(strPath.Find(strCurr) + strCurr.Len()) )
                      );
@@ -220,10 +260,11 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
                  (
                     idCurr,
                     strCurr,
-                    BFICON_DIR,
+                    BFIconTable::folder,
                     -1,
                     new BFBackupTreeItemData ( BFInvalidOID, strPath.Left(strPath.Find(strCurr) + strCurr.Len()) )
                  );
+        SetItemImage(idLast, BFIconTable::folder_open, wxTreeItemIcon_Expanded);
     }   // while(token)
 
     return idLast;
@@ -240,7 +281,6 @@ void BFBackupTree::OnBackupCopy (wxCommandEvent& event)
     {
         case BFID_BACKUPCTRL_COPY_DIR:
             type = TaskDIRCOPY;
-            BFSystem::Info(_T("copy dir"));
             break;
 
         case BFID_BACKUPCTRL_COPY_FILE:
