@@ -9,10 +9,12 @@
 
 #include "BFBackupTree.h"
 #include "BFMainFrame.h"
+#include "BFDestinationDlg.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
-  EVT_BUTTON  (BFDIRCTRL_ID_FILEBUTTON,         BFDirCtrl::OnButton_DirCtrl)
-  EVT_MENU    (BFDIRCTRL_ID_ADDDESTINATION,     BFDirCtrl::OnAddAsDestination)
+  EVT_TOGGLEBUTTON (BFDIRCTRL_ID_FILEBUTTON,    BFDirCtrl::OnButton_DirCtrl)
+  EVT_MENU    (BFDIRCTRL_ID_ADDDESTINATION,     BFDirCtrl::OnDestination)
+  EVT_MENU    (BFDIRCTRL_ID_CREATEDESTINATION,  BFDirCtrl::OnDestination)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_FILECOPY,    BFDirCtrl::OnBackup)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_DIRCOPY,     BFDirCtrl::OnBackup)
 END_EVENT_TABLE()
@@ -26,7 +28,8 @@ BFDirCtrl::BFDirCtrl (wxWindow* pParent)
     pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() & wxDIRCTRL_DIR_ONLY);
 
     // button to show files in the DirCtrl
-    pButtonFiles_ = new wxButton(this, BFDIRCTRL_ID_FILEBUTTON, BFDIRCTRL_FILEBUTTON_ONLYDIRS);
+    pButtonFiles_ = new wxToggleButton(this, BFDIRCTRL_ID_FILEBUTTON, _("show with files"));
+    pButtonFiles_->SetValue(true);
 
     // sizer
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
@@ -65,23 +68,16 @@ BFDirCtrl::BFDirCtrl (wxWindow* pParent)
 void BFDirCtrl::OnButton_DirCtrl (wxCommandEvent& rEvent)
 {
     long style = pDirCtrl_->GetWindowStyle();
-    if ( (style & wxDIRCTRL_DIR_ONLY) == 0 )  // show dirs only ?
-    {
-        style = style | wxDIRCTRL_DIR_ONLY;
-        pButtonFiles_->SetLabel(BFDIRCTRL_FILEBUTTON_WITHFILES);
-    }
-    else
-    {
+
+    if (pButtonFiles_->GetValue())
         style = style & ~wxDIRCTRL_DIR_ONLY;
-        pButtonFiles_->SetLabel(BFDIRCTRL_FILEBUTTON_ONLYDIRS);
-    }
+    else
+        style = style | wxDIRCTRL_DIR_ONLY;
 
     pDirCtrl_->SetWindowStyle(style);
     wxString strPath(pDirCtrl_->GetPath());
     pDirCtrl_->CollapsePath(strPath);
     pDirCtrl_->ExpandPath(strPath);
-
-    pButtonFiles_->SetSize(pButtonFiles_->GetBestSize());
 }
 
 
@@ -124,6 +120,9 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
         // ** add destination **
         menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
 
+        // ** create destination **
+        menu.Append(BFDIRCTRL_ID_CREATEDESTINATION, _("create a destination here"));
+
         // ** backup dir copy **
         menu_backup.Append(BFDIRCTRL_ID_BACKUP_DIRCOPY, _("directory copy"));
     }
@@ -138,9 +137,8 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
         pDirCtrl_->PopupMenu(&menu, event.GetPoint());
 }
 
-void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
+void BFDirCtrl::OnDestination (wxCommandEvent& event)
 {
-
     // get selected item in the dir control
     wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(lastItemId_));
 
@@ -150,8 +148,18 @@ void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
     // check if it is a dir
     if ( !(pDirItem->m_isDir) )
     {
-        BFSystem::Fatal(_T("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."), _T("BFDirCtrl::OnAddAsDestination"));
-        return;
+        if (event.GetId() == BFDIRCTRL_ID_ADDDESTINATION)
+        {
+            BFSystem::Fatal(_T("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."), _T("BFDirCtrl::OnDestination"));
+            return;
+        }
+
+        if (event.GetId() == BFDIRCTRL_ID_CREATEDESTINATION)
+        {
+            BFSystem::Fatal(_T("It is not possible to create a destination here!\nIt is just a file."), _T("BFDirCtrl::OnDestination"));
+            return;
+        }
+
     }
 
     // get the backup tree object
@@ -159,12 +167,26 @@ void BFDirCtrl::OnAddAsDestination (wxCommandEvent& event)
 
     if (pBackupTree == NULL)
     {
-        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnAddAsDestination()"));
+        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnDestination"));
         return;
     }
 
-    // set and select the new added destination
-    pBackupTree->SelectItem(pBackupTree->AddDestination(pDirItem->m_path));
+    switch (event.GetId())
+    {
+        case BFDIRCTRL_ID_ADDDESTINATION:
+            // set and select the new added destination
+            pBackupTree->SelectItem(pBackupTree->AddDestination(pDirItem->m_path));
+            break;
+
+        case BFDIRCTRL_ID_CREATEDESTINATION:
+            // open the dialog
+            new BFDestinationDlg(BFMainFrame::Instance(), pDirItem->m_path);
+            break;
+
+        default:
+            BFSystem::Fatal(_T("unknown event"), _T("BFDirCtrl::OnDestination"));
+            break;
+    }
 }
 
 void BFDirCtrl::OnBackup (wxCommandEvent& event)

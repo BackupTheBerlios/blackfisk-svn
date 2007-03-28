@@ -39,6 +39,8 @@ class BFIconTable : public wxImageList
             volume_removable,
             folder,
             folder_open,
+            folder_virtual,
+            folder_virtual_open,
             task_dircopy,
             task_filecopy,
             task_zip

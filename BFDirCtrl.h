@@ -12,10 +12,7 @@
 #include <wx/panel.h>
 #include <wx/dirctrl.h>
 #include <wx/button.h>
-
-
-#define BFDIRCTRL_FILEBUTTON_ONLYDIRS   _("show directories only")
-#define BFDIRCTRL_FILEBUTTON_WITHFILES  _("show with files")
+#include <wx/tglbtn.h>
 
 
 /** it is the complete control to handle the filesystem */
@@ -25,7 +22,7 @@ class BFDirCtrl : public wxPanel
         ///
         wxGenericDirCtrl*   pDirCtrl_;
         ///
-        wxButton*           pButtonFiles_;
+        wxToggleButton*     pButtonFiles_;
 
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
@@ -46,7 +43,7 @@ class BFDirCtrl : public wxPanel
         ///
         void OnButton_DirCtrl (wxCommandEvent& rEvent);
         ///
-        void OnAddAsDestination (wxCommandEvent& event);
+        void OnDestination (wxCommandEvent& event);
         ///
         void OnBackup (wxCommandEvent& event);
 

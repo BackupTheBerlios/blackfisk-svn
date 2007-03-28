@@ -38,6 +38,7 @@ class BFMessageDlg : public wxMessageDialog, public Observer
         /// virtual destructor
         virtual ~BFMessageDlg ();
 
+        ///
         virtual void ValueChanged (Subject* pSender);
 };    // class BFMessageDlg
 

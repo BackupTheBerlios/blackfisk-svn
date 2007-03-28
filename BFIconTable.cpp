@@ -43,6 +43,8 @@ void BFIconTable::Init ()
     Add(wxArtProvider::GetIcon(wxART_REMOVABLE));
     Add(wxArtProvider::GetIcon(wxART_FOLDER));
     Add(wxArtProvider::GetIcon(wxART_FOLDER_OPEN));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual.ico")), wxBITMAP_TYPE_ICO));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_open.ico")), wxBITMAP_TYPE_ICO));
     Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.ico")),   wxBITMAP_TYPE_ICO));
     Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.ico")),   wxBITMAP_TYPE_ICO));
     Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_zip.ico")),  wxBITMAP_TYPE_ICO));

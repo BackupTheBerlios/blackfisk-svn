@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;" />
 		<Build>
 			<Target title="release_ansi">
 				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
@@ -101,10 +101,10 @@
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="BFBackupTree.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFBackupTree.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFCore.cpp">
 			<Option virtualFolder="AppLayer\" />
@@ -112,11 +112,23 @@
 		<Unit filename="BFCore.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
+		<Unit filename="BFDestinationCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFDestinationCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFDestinationDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFDestinationDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="BFDirCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFDirCtrl.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFIconTable.cpp">
 			<Option virtualFolder="PresentationLayer\" />
@@ -137,10 +149,10 @@
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="BFMessageDlg.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFMessageDlg.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFRootTask.cpp">
 			<Option virtualFolder="DataLayer\" />
@@ -167,25 +179,25 @@
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
 		<Unit filename="BFTaskDlg.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFTaskDlg.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFTaskProgressDlg.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFTaskProgressDlg.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFundef.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="ObserverPattern.cpp">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="ObserverPattern.h">
-			<Option virtualFolder="PresentationLayer\" />
+			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="Progress.cpp">
 			<Option virtualFolder="DataLayer\" />

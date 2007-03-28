@@ -58,13 +58,15 @@ class BFTaskBaseDlg : public wxDialog
         /** init the buttons in the dialog*/
         virtual wxSizer* InitButtons ();
 
-        /** set the size of the specified dialog row */
-        void SetRowSize (wxWindow* pCol1, wxWindow* pCol2);
-
     public:
         /// virtual destructor
         virtual ~BFTaskBaseDlg ();
 
+        /** set the size of the specified dialog row */
+        static void SetRowSize (wxWindow* pCol1, wxWindow* pCol2);
+
+        ///
+        void OnClose (wxCloseEvent& rEvent);
         ///
         void OnButton_Ok (wxCommandEvent& rEvent);
         ///

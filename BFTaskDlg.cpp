@@ -16,6 +16,7 @@
 #include "BFIconTable.h"
 
 BEGIN_EVENT_TABLE(BFTaskBaseDlg, wxDialog)
+  EVT_CLOSE   (BFTaskBaseDlg::OnClose)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONOK,       BFTaskBaseDlg::OnButton_Ok)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONCANCEL,   BFTaskBaseDlg::OnButton_Cancel)
 END_EVENT_TABLE()
@@ -24,7 +25,7 @@ END_EVENT_TABLE()
 BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
                               const wxString& strTitle,
                               BFTask& rTask)
-         : wxDialog(pParent, -1, strTitle),
+         : wxDialog(pParent, wxID_ANY, strTitle),
            rTask_(rTask),
            pNameCtrl_(NULL),
            pSourceCtrl_(NULL),
@@ -36,6 +37,7 @@ BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
 
 /*virtual*/ BFTaskBaseDlg::~BFTaskBaseDlg ()
 {
+    BFSystem::Debug(_("BFTaskBaseDlg dtor"));
 }
 
 void BFTaskBaseDlg::Init ()
@@ -136,7 +138,12 @@ wxSizer* BFTaskBaseDlg::InitButtons ()
     return pButtonSizer;
 }
 
-void BFTaskBaseDlg::SetRowSize (wxWindow* pCol1, wxWindow* pCol2)
+void BFTaskBaseDlg::OnClose(wxCloseEvent& rEvent)
+{
+    Destroy();
+}
+
+/*static*/ void BFTaskBaseDlg::SetRowSize (wxWindow* pCol1, wxWindow* pCol2)
 {
     if (pCol1 == NULL || pCol2 == NULL)
         return;
