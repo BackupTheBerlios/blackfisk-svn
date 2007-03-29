@@ -290,42 +290,19 @@ void BFRootTask::InitThat (wxListBox& rListBox)
 
 void BFRootTask::InitThat (BFBackupTree& rBackupTree)
 {
-    // init
-    wxTreeItemId    idCurr;
-
     // add root
-    wxTreeItemId    idRoot = rBackupTree.AddRoot(GetName(), BFIconTable::logo);
+    rBackupTree.AddRoot(GetName(), BFIconTable::logo);
 
     // iterate throug the tasks
     for (int i = 0; i < TaskVector().size(); ++i)
     {
-        idCurr = rBackupTree.AddDestination(TaskVector()[i]->GetDestination());
-
-        int iIconId;
-
-        // add the task identifier itself
-        switch (TaskVector()[i]->GetType())
-        {
-            case TaskARCHIVE:
-                iIconId = BFIconTable::task_zip;
-                break;
-
-            case TaskDIRCOPY:
-                iIconId = BFIconTable::task_dircopy;
-                break;
-
-            case TaskFILECOPY:
-                iIconId = BFIconTable::task_filecopy;
-                break;
-        };  // switch(GetType)
-
-        rBackupTree.AppendItem
+        // create all for the task needed items in the tree
+        rBackupTree.AddTask
                     (
-                        idCurr,
+                        TaskVector()[i]->GetOID(),
+                        TaskVector()[i]->GetType(),
                         TaskVector()[i]->GetName(),
-                        iIconId,
-                        -1,
-                        new BFBackupTreeItemData ( TaskVector()[i]->GetOID() )
+                        TaskVector()[i]->GetDestination()
                     );
-    }   // for (tasks)
+    }
 }

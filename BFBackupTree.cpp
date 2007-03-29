@@ -18,11 +18,13 @@
 #include "BFRootTask.h"
 #include "BFTaskDlg.h"
 #include "BFIconTable.h"
+#include "BFDestinationDlg.h"
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
     EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                          BFBackupTree::OnItemMenu)
     EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,    BFBackupTree::OnAddDestination)
+    EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION, BFBackupTree::OnCreateDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnBackupCopy)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnBackupCopy)
     EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
@@ -68,35 +70,39 @@ void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
     strDropedFilename_ = strDropedFilename;
 }
 
-void BFBackupTree::OnItemActivated(wxTreeEvent& event)
+void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
 {
     // get the task object from the data layer
-    BFTask* pTask = GetTaskByItem(event.GetItem());
+    BFTask* pTask = GetTaskByItem(rEvent.GetItem());
 
     if (pTask != NULL)
         BFTaskBaseDlg::Show (pTask);
 }
 
-void BFBackupTree::OnItemMenu(wxTreeEvent& event)
+void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 {
-    wxPoint         point   (event.GetPoint());
-    wxTreeItemId    item    (event.GetItem());
+    wxPoint         point   (rEvent.GetPoint());
     wxMenu          menu;
 
-    // right click on root item
-    if (GetRootItem() == item)
+    // remember the selected item
+    lastItemId_ = rEvent.GetItem();
+
+    if ( !(IsTask(lastItemId_)) )
     {
-        wxMenuItem  mItem1(&menu, BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
+        // right click on root item
+        if (GetRootItem() == lastItemId_)
+            menu.Append(BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
 
-        menu.Append(&mItem1);
-
-        PopupMenu(&menu, point);
+        menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
     }
+
+    if (menu.GetMenuItemCount() > 0)
+        PopupMenu(&menu, point);
 }
 
 /*virtual*/ wxDragResult BFBackupTree::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 {
-    wxTreeItemId    itemId(HitTest(wxPoint(x, y)));
+    wxTreeItemId itemId(HitTest(wxPoint(x, y)));
 
     // clean all selections
     UnselectAll();
@@ -110,6 +116,8 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& event)
         // identify the item
         if (iImageId == BFIconTable::folder
          || iImageId == BFIconTable::folder_open
+         || iImageId == BFIconTable::folder_virtual
+         || iImageId == BFIconTable::folder_virtual_open
          || iImageId == BFIconTable::volume_harddisk
          || iImageId == BFIconTable::volume_cdrom
          || iImageId == BFIconTable::volume_floppy
@@ -172,7 +180,7 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     return true;
 }
 
-void BFBackupTree::OnAddDestination (wxCommandEvent& event)
+void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
 {
     // create dir dialog
     wxDirDialog dlg(this, _T("choose a destination directory"));
@@ -185,12 +193,32 @@ void BFBackupTree::OnAddDestination (wxCommandEvent& event)
     SelectItem(AddDestination (dlg.GetPath()));
 }
 
+void BFBackupTree::OnCreateDestination (wxCommandEvent& rEvent)
+{
+    wxString strPath;
+
+    if (lastItemId_ != GetRootItem())
+    {
+        // get the data behind the last selected (by right-click) item
+        BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(lastItemId_));
+
+        if (pItemData == NULL)
+        {
+            BFSystem::Fatal(_("not tree item found"), _("BFBackupTree::OnCreateDestination"));
+            return;
+        }
+
+        strPath = pItemData->GetPath();
+    }
+
+    new BFDestinationDlg(BFMainFrame::Instance(), strPath);
+}
+
 wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 {
     // add root
     wxTreeItemId    idLast, idCurr;
-    wxString        strCurr;
-    wxString        strAdd;
+    wxString        strCurr, strAdd;
 
     wxStringTokenizer tkz(strPath, wxFILE_SEP_PATH);
     idLast = GetRootItem();
@@ -277,14 +305,38 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     return idLast;
 }
 
-void BFBackupTree::OnBackupCopy (wxCommandEvent& event)
+wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
+{
+    int iIconId;
+
+    // add the task identifier itself
+    switch (type)
+    {
+        case TaskARCHIVE:
+            iIconId = BFIconTable::task_zip;
+            break;
+
+        case TaskDIRCOPY:
+            iIconId = BFIconTable::task_dircopy;
+            break;
+
+        case TaskFILECOPY:
+            iIconId = BFIconTable::task_filecopy;
+            break;
+    };  // switch(GetType)
+
+    // add the destination items and the task item itself
+    return AppendItem (AddDestination(strDestination), strName, iIconId, -1, new BFBackupTreeItemData(oid));
+}
+
+void BFBackupTree::OnBackupCopy (wxCommandEvent& rEvent)
 {
     BFTask*         pTask       = NULL;
     BFTaskType      type;
     bool            bVerify     = true /* DEBUG: get default value */;
     wxArrayString   arrString;
 
-    switch (event.GetId())
+    switch (rEvent.GetId())
     {
         case BFBACKUPCTRL_ID_COPY_DIR:
             type = TaskDIRCOPY;
@@ -318,16 +370,16 @@ void BFBackupTree::OnBackupCopy (wxCommandEvent& event)
     BFRootTask::Instance().broadcastObservers();
 }
 
-void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& event)
+void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& rEvent)
 {
-    if (event.GetItem() != GetRootItem())
-        event.Veto();
+    if (rEvent.GetItem() != GetRootItem())
+        rEvent.Veto();
 }
 
-void BFBackupTree::OnEndLabelEdit (wxTreeEvent& event)
+void BFBackupTree::OnEndLabelEdit (wxTreeEvent& rEvent)
 {
-    if (event.GetItem() == GetRootItem())
-        BFRootTask::Instance().SetName(event.GetLabel());
+    if (rEvent.GetItem() == GetRootItem())
+        BFRootTask::Instance().SetName(rEvent.GetLabel());
 }
 
 /*virtual*/ void BFBackupTree::ValueChanged (Subject* pSender)
@@ -352,6 +404,19 @@ BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
 
     // get the task object from the data layer
     return BFRootTask::Instance().GetTask(pItemData->GetOID());
+}
+
+bool BFBackupTree::IsTask (wxTreeItemId itemId)
+{
+    BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
+
+    if (pItemData == NULL)
+        return false;
+
+    if (pItemData->GetOID() == BFInvalidOID)
+        return false;
+
+    return true;
 }
 
 wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep /*= true*/)

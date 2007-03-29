@@ -39,6 +39,7 @@ enum
 #define BFDIRCTRL_ID_FILEBUTTON             4 + wxID_HIGHEST
 #define BFDIRCTRL_ID_ADDDESTINATION         5 + wxID_HIGHEST
 #define BFDIRCTRL_ID_CREATEDESTINATION      6 + wxID_HIGHEST
+#define BFBACKUPCTRL_ID_CREATEDESTINATION   7 + wxID_HIGHEST
 
 ///
 class BFMainFrame : public wxFrame
@@ -101,10 +102,6 @@ class BFMainFrame : public wxFrame
             object, too. *
         ProgressWithMessage* StartProgress ();*/
 
-        /// displays a modal message-box and return the pressed button
-        //int Message (BFMessageType type, wxString strMessage, bool bLog = false);
-        /// displays a modal info-message-box without login the message
-        //int Message (wxString strMessage);
         /// displays a modal message-box, ask a YES-NO-question and return the answer as bool
         bool QuestionYesNo (const wxChar* strQuestion);
         /// displays a modal message-box, ask a YES-NO-CANCEL-question and return the answer as button ID

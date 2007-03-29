@@ -118,10 +118,10 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     if ( pDirItem != NULL && pDirItem->m_isDir )
     {
         // ** add destination **
-        menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination"));
+        menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination directory"));
 
         // ** create destination **
-        menu.Append(BFDIRCTRL_ID_CREATEDESTINATION, _("create a destination here"));
+        menu.Append(BFDIRCTRL_ID_CREATEDESTINATION, _("create here a destination directory"));
 
         // ** backup dir copy **
         menu_backup.Append(BFDIRCTRL_ID_BACKUP_DIRCOPY, _("directory copy"));

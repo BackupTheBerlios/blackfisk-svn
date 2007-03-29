@@ -29,6 +29,9 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         wxString        strDropedFilename_;
         /** this is the current selected destination if there is one */
         wxString        strCurrentDestination_;
+        /** the last (by right-click) selected item;
+            is normaly set by OnItemMenu() */
+        wxTreeItemId    lastItemId_;
 
         /** this private class just wrappes the drop-events from the
             dropTarget to the affeceted treeCtrl
@@ -80,23 +83,29 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             if 'bGoDeep' is true grand-child-items in all layers will be searched
             if nothing is found can be checked be wxTreeItemId::IsOk() */
         wxTreeItemId FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep = true);
+        /// if the specified item a task it returns 'true'
+        bool IsTask (wxTreeItemId itemId);
 
         /// add tree items relating to the path to the tree
         wxTreeItemId AddDestination (wxString strPath);
+        /** add a task to the tree, create all needed items for that,
+            but do not check if the specified task realy exists! */
+        wxTreeItemId AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination);
 
-
         ///
-        void OnItemActivated (wxTreeEvent& event);
+        void OnItemActivated (wxTreeEvent& rEvent);
         ///
-        void OnItemMenu (wxTreeEvent& event);
+        void OnItemMenu (wxTreeEvent& rEvent);
         ///
-        void OnAddDestination (wxCommandEvent& event);
+        void OnAddDestination (wxCommandEvent& rEvent);
         ///
-        void OnBackupCopy (wxCommandEvent& event);
+        void OnCreateDestination (wxCommandEvent& rEvent);
         ///
-        void OnBeginLabelEdit (wxTreeEvent& event);
+        void OnBackupCopy (wxCommandEvent& rEvent);
         ///
-        void OnEndLabelEdit (wxTreeEvent& event);
+        void OnBeginLabelEdit (wxTreeEvent& rEvent);
+        ///
+        void OnEndLabelEdit (wxTreeEvent& rEvent);
         ///
         bool OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filenames);
         ///
