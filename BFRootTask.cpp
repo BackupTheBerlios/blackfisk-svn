@@ -123,7 +123,7 @@ bool BFRootTaskData::Serialize (jbArchive& rA)
                 break;
         }
 
-        broadcastObserver();
+        broadcastObservers();
     }
 
     SetModified(false);

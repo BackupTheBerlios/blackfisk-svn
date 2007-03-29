@@ -21,6 +21,8 @@ BEGIN_EVENT_TABLE(BFTaskBaseDlg, wxDialog)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONCANCEL,   BFTaskBaseDlg::OnButton_Cancel)
 END_EVENT_TABLE()
 
+/*static*/ const long BFTaskBaseDlg::lWidth1_ = 100;
+/*static*/ const long BFTaskBaseDlg::lWidth2_ = 250;
 
 BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
                               const wxString& strTitle,
@@ -29,82 +31,18 @@ BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
            rTask_(rTask),
            pNameCtrl_(NULL),
            pSourceCtrl_(NULL),
-           pDestCtrl_(NULL)
+           pDestCtrl_(NULL),
+           pVerifyCheck_(NULL)
 {
-    Init();
-    ShowModal();
+    pNameCtrl_      = new wxTextCtrl(this, -1);
+    pSourceCtrl_    = new wxTextCtrl(this, -1);
+    pDestCtrl_      = new wxDirPickerCtrl(this, -1, wxEmptyString, _("select a destination folder"));
+    pVerifyCheck_   = new wxCheckBox(this, -1, wxEmptyString);
 }
 
 /*virtual*/ BFTaskBaseDlg::~BFTaskBaseDlg ()
 {
     BFSystem::Debug(_("BFTaskBaseDlg dtor"));
-}
-
-void BFTaskBaseDlg::Init ()
-{
-    wxSizer* pTypeSizer = InitType();
-
-    // name
-    wxStaticText*   pNameStatic = new wxStaticText(this, -1, _("destination name:"));
-                    pNameCtrl_  = new wxTextCtrl(this, -1);
-                    SetRowSize(pNameStatic, pNameCtrl_);
-
-    // source
-    wxStaticText*   pSourceStatic   = new wxStaticText(this, -1, _("source:"));
-                    pSourceCtrl_    = new wxTextCtrl(this, -1);
-                    pSourceCtrl_->Disable();
-                    SetRowSize(pSourceStatic, pSourceCtrl_);
-
-    // destination
-    wxStaticText*   pDestStatic = new wxStaticText(this, -1, _("destination path:"));
-                    pDestCtrl_  = new wxDirPickerCtrl(this, -1, wxEmptyString, _("select a destination folder"));
-                    SetRowSize(pDestStatic, pDestCtrl_);
-
-    // verify
-    wxStaticText*   pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
-                    pVerifyCheck_   = new wxCheckBox(this, -1, wxEmptyString);
-                    SetRowSize(pVerifyStatic, pVerifyCheck_);
-
-    // exclude
-    /*wxStaticText*   pExcludeStatic  = new wxStaticText(this, -1, _("files and directories to exclude from this task"));
-                    pExcludeStatic->SetMinSize(wxSize(lWidth1+lWidth2, pExcludeStatic->GetSize().GetHeight()));
-                    pExcludeList_   = new wxListBox(this, -1);
-                    pExcludeList_->SetMinSize(wxSize(lWidth1+lWidth2, pExcludeList_->GetSize().GetHeight()));
-*/
-
-    wxSizer* pButtonSizer = InitButtons ();
-
-    // sizer
-    wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pSourceSizer    = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pDestSizer      = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pVerifySizer    = new wxBoxSizer(wxHORIZONTAL);
-    //wxBoxSizer* pExcludeSizer   = new wxBoxSizer(wxVERTICAL);
-
-
-    // arrange
-    pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pNameSizer      ->Add(pNameCtrl_);
-    pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pSourceSizer    ->Add(pSourceCtrl_);
-    pDestSizer      ->Add(pDestStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pDestSizer      ->Add(pDestCtrl_);
-    pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pVerifySizer    ->Add(pVerifyCheck_);
-    //pExcludeSizer   ->Add(pExcludeStatic,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    //pExcludeSizer   ->Add(pExcludeList_);
-
-    pTopSizer->Add(pTypeSizer);
-    pTopSizer->Add(pSourceSizer,    wxSizerFlags(0).Border());
-    pTopSizer->Add(pDestSizer,      wxSizerFlags(0).Border());
-    pTopSizer->Add(pNameSizer,      wxSizerFlags(0).Border());
-    pTopSizer->Add(pVerifySizer,    wxSizerFlags(0).Border());
-    //pTopSizer->Add(pExcludeSizer,   wxSizerFlags(0).Border());
-    pTopSizer->Add(pButtonSizer,    wxSizerFlags(0).Center());
-    SetSizerAndFit(pTopSizer);
-
-    GetData();
 }
 
 wxSizer* BFTaskBaseDlg::InitType ()
@@ -140,6 +78,10 @@ wxSizer* BFTaskBaseDlg::InitButtons ()
 
 void BFTaskBaseDlg::OnClose(wxCloseEvent& rEvent)
 {
+    // is it a unsaved/new created task?
+    if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
+        delete &rTask_;
+
     Destroy();
 }
 
@@ -148,11 +90,8 @@ void BFTaskBaseDlg::OnClose(wxCloseEvent& rEvent)
     if (pCol1 == NULL || pCol2 == NULL)
         return;
 
-    long lWidth1 = 100;   // width of the label column
-    long lWidth2 = 250;   // width of the editable column
-
-    pCol1->SetMinSize(wxSize(lWidth1, pCol1->GetSize().GetHeight()));
-    pCol2->SetMinSize(wxSize(lWidth2, pCol2->GetSize().GetHeight()));
+    pCol1->SetMinSize(wxSize(lWidth1_, pCol1->GetSize().GetHeight()));
+    pCol2->SetMinSize(wxSize(lWidth2_, pCol2->GetSize().GetHeight()));
 }
 
 void BFTaskBaseDlg::OnButton_Ok (wxCommandEvent& rEvent)
@@ -171,11 +110,6 @@ void BFTaskBaseDlg::OnButton_Ok (wxCommandEvent& rEvent)
 
 void BFTaskBaseDlg::OnButton_Cancel (wxCommandEvent& rEvent)
 {
-    // is it a unsaved/new created task?
-    if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
-        delete &rTask_;
-
-    // close the dialog
     Close();
 }
 
@@ -239,8 +173,31 @@ void BFTaskBaseDlg::SetData ()
     // add task if needed
     if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
         BFRootTask::Instance().AppendTask(rTask_);
+    else
+        BFRootTask::Instance().broadcastObservers();
 }
 
+void BFTaskBaseDlg::Arrange(wxSizer* pBody, wxSizer* pBodyExtra /*= NULL*/)
+{
+    // main sizer
+    wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
+
+    // type
+    pMainSizer  ->Add (InitType(),  wxSizerFlags(0).Border());
+
+    // body
+    if (pBody != NULL)
+        pMainSizer  ->Add (pBody, wxSizerFlags(0));
+
+    // body extra
+    if (pBodyExtra != NULL)
+        pMainSizer  ->Add (pBodyExtra, wxSizerFlags(0));
+
+    // buttons
+    pMainSizer->Add(InitButtons(), wxSizerFlags(0).Border().Center());
+
+    SetSizerAndFit(pMainSizer);
+}
 
 /*static*/ void BFTaskBaseDlg::Show (BFTask* pTask)
 {
@@ -250,17 +207,20 @@ void BFTaskBaseDlg::SetData ()
     switch (pTask->GetType())
     {
         case TaskFILECOPY:
-            new BFTaskFileCopyDlg(NULL, *pTask);
+            new BFTaskFileCopyDlg(BFMainFrame::Instance(), *pTask);
             break;
+
+        case TaskDIRCOPY:
+            new BFTaskDirectoryCopyDlg(BFMainFrame::Instance(), *pTask);
+            break;
+
+        //case TaskINVALID:
+        //case TaskARCHIVE:
 
         case TaskINVALID:
         default:
             BFSystem::Fatal (_T("unhandled task type"), _T("BFTaskBaseDlg::Show()"));
             break;
-/*#define TaskINVALID     0
-#define TaskARCHIVE     1       // comprase backup-source to an archive
-#define TaskDIRCOPY     2       // copy a complete directory
-#define TaskFILECOPY    3       // copy a file*/
     };
 }
 
@@ -268,9 +228,114 @@ void BFTaskBaseDlg::SetData ()
 BFTaskFileCopyDlg::BFTaskFileCopyDlg (wxWindow* pParent, BFTask& rTask)
                  : BFTaskBaseDlg(pParent, _("file copy"), rTask)
 {
+    // name
+    wxStaticText* pNameStatic = new wxStaticText(this, -1, _("destination name:"));
+    SetRowSize(pNameStatic, pNameCtrl_);
+
+    // source
+    wxStaticText* pSourceStatic   = new wxStaticText(this, -1, _("source:"));
+    pSourceCtrl_->Disable();
+    SetRowSize(pSourceStatic, pSourceCtrl_);
+
+    // destination
+    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    SetRowSize(pDestStatic, pDestCtrl_);
+
+    // verify
+    wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
+    SetRowSize(pVerifyStatic, pVerifyCheck_);
+
+    // sizer
+    wxBoxSizer* pBodySizer      = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pSourceSizer    = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pDestSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pVerifySizer    = new wxBoxSizer(wxHORIZONTAL);
+
+    // arrange
+    pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSizer      ->Add(pNameCtrl_);
+    pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSourceSizer    ->Add(pSourceCtrl_);
+    pDestSizer      ->Add(pDestStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pDestSizer      ->Add(pDestCtrl_);
+    pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pVerifySizer    ->Add(pVerifyCheck_);
+
+    pBodySizer->Add(pSourceSizer,    wxSizerFlags(0).Border());
+    pBodySizer->Add(pDestSizer,      wxSizerFlags(0).Border());
+    pBodySizer->Add(pNameSizer,      wxSizerFlags(0).Border());
+    pBodySizer->Add(pVerifySizer,    wxSizerFlags(0).Border());
+
+    Arrange(pBodySizer);
+
+    GetData();
+    ShowModal();
 }
 
 BFTaskFileCopyDlg::~BFTaskFileCopyDlg ()
 {
 }
 
+
+BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask)
+                      : BFTaskBaseDlg(pParent, _("directory copy"), rTask)
+{
+    // name
+    wxStaticText* pNameStatic = new wxStaticText(this, -1, _("destination name:"));
+    SetRowSize(pNameStatic, pNameCtrl_);
+
+    // source
+    wxStaticText* pSourceStatic   = new wxStaticText(this, -1, _("source:"));
+    pSourceCtrl_->Disable();
+    SetRowSize(pSourceStatic, pSourceCtrl_);
+
+    // destination
+    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    SetRowSize(pDestStatic, pDestCtrl_);
+
+    // verify
+    wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
+    SetRowSize(pVerifyStatic, pVerifyCheck_);
+
+    // exclude control
+    wxStaticText* pExcludeStatic = new wxStaticText(this, -1, _("files and directories to exclude from this task"));
+    pExcludeStatic->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeStatic->GetSize().GetHeight()));
+    pExcludeList_ = new wxListBox(this, -1);
+    pExcludeList_->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeList_->GetSize().GetHeight()));
+
+    // sizer
+    wxBoxSizer* pBodySizer      = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pExtraSizer     = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pSourceSizer    = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pDestSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pVerifySizer    = new wxBoxSizer(wxHORIZONTAL);
+
+    // arrange
+    pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSizer      ->Add(pNameCtrl_);
+    pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSourceSizer    ->Add(pSourceCtrl_);
+    pDestSizer      ->Add(pDestStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pDestSizer      ->Add(pDestCtrl_);
+    pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pVerifySizer    ->Add(pVerifyCheck_);
+    pExtraSizer     ->Add(pExcludeStatic,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pExtraSizer     ->Add(pExcludeList_);
+
+    pBodySizer->Add(pSourceSizer,   wxSizerFlags(0).Border());
+    pBodySizer->Add(pDestSizer,     wxSizerFlags(0).Border());
+    pBodySizer->Add(pNameSizer,     wxSizerFlags(0).Border());
+    pBodySizer->Add(pVerifySizer,   wxSizerFlags(0).Border());
+    pBodySizer->Add(pExtraSizer,    wxSizerFlags(0).Border());
+
+    Arrange(pBodySizer);
+
+    GetData();
+    ShowModal();
+}
+
+BFTaskDirectoryCopyDlg::~BFTaskDirectoryCopyDlg ()
+{
+}

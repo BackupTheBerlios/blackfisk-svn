@@ -176,7 +176,7 @@ void BFApp::Backup()
     rRoot.AppendTask(TaskDIRCOPY,    _T("C:\\OBtest\\tocopy"),       _T("F:\\OBtest\\<date>"),   _T("tocopy"),       true);
 */
     rRoot.AppendTask(TaskFILECOPY,   _T("C:\\OBtest\\CONTACT.odt"),  _T("F:\\OBtest\\<date>"),   _T("CONtACT.odt"),  true);
-    rRoot.broadcastObserver();
+    rRoot.broadcastObservers();
 
     // ** RUN **
     //if (rootTask.Run(pMainFrame_))

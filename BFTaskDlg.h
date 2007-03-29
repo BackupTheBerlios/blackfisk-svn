@@ -20,11 +20,13 @@
 #define BFTASKDLG_ID_BUTTONOK       1 + wxID_HIGHEST
 #define BFTASKDLG_ID_BUTTONCANCEL   2 + wxID_HIGHEST
 
+class wxSizer;
+
 /// the base class of all task dialogs
 class BFTaskBaseDlg : public wxDialog
 {
     protected:
-        /// reference to the object holding the data
+        /** reference to the object holding the data */
         BFTask&             rTask_;
 
         /// task name
@@ -35,6 +37,11 @@ class BFTaskBaseDlg : public wxDialog
         wxDirPickerCtrl*    pDestCtrl_;
         /// verify
         wxCheckBox*         pVerifyCheck_;
+
+        /// width of the label column
+        static const long lWidth1_;
+        /// width of the editable column
+        static const long lWidth2_;
 
         /** get the data from the data layer ('rTask')
             in the dialog controls */
@@ -48,15 +55,13 @@ class BFTaskBaseDlg : public wxDialog
         /// constructor
         BFTaskBaseDlg (wxWindow* pParent, const wxString& strTitle, BFTask& rTask);
 
-        /// init the dialog
-        void Init ();
-
         /** init the task type with icon and its description
             and return its wxSizer */
         virtual wxSizer* InitType ();
-
         /** init the buttons in the dialog*/
         virtual wxSizer* InitButtons ();
+        ///
+        void Arrange(wxSizer* pBody, wxSizer* pBodyExtra = NULL);
 
     public:
         /// virtual destructor
@@ -93,50 +98,20 @@ class BFTaskFileCopyDlg : public BFTaskBaseDlg
 
 };    // class BFTaskFileCopyDlg
 
-/**
-///
-class BFTaskDlg : public wxDialog
+
+/// dialog for directory copy tasks
+class BFTaskDirectoryCopyDlg : public BFTaskBaseDlg
 {
-    private:
-        /// reference to the object holding the data
-        BFTask&             rTask_;
-
-        /// task name
-        wxTextCtrl*         pNameCtrl_;
-        /// task source
-        wxTextCtrl*         pSourceCtrl_;
-        /// task destination
-        wxDirPickerCtrl*    pDestCtrl_;
-        //wxTextCtrl*       pDestCtrl_;
-        /// verify
-        wxCheckBox*         pVerifyCheck_;
-        /// exclude
-        wxListBox*          pExcludeList_;
-
-        /** get the data from the data layer ('rTask')
-            in the dialog controls *
-        void GetData ();
-        /** set/store the data from the controls to
-            the data layer ('rTask') if they are modified *
-        void SetData ();
-        /** check if the data in the dialog is plausible *
-        bool IsPlausible ();
-
     protected:
-        /// proteced members
+        /// exclude control
+        wxListBox*          pExcludeList_;
 
     public:
         /// constructor
-        BFTaskDlg (wxWindow* pParent, BFTask& rTask);
+        BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask);
         /// virtual destructor
-        virtual ~BFTaskDlg ();
+        virtual ~BFTaskDirectoryCopyDlg ();
 
-        ///
-        void OnButton_Ok (wxCommandEvent& rEvent);
-        ///
-        void OnButton_Cancel (wxCommandEvent& rEvent);
-
-    DECLARE_EVENT_TABLE();
 };    // class BFTaskDlg
-*/
+
 #endif    // BFTASKDLG_H

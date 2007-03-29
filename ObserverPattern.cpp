@@ -84,11 +84,6 @@ void Subject::deregisterObserver (Observer* observer)
 
 void Subject::broadcastObservers ()
 {
-    broadcastObserver();
-}
-
-void Subject::broadcastObserver ()
-{
 	ItVecObserver itObserver;
 
 	for (itObserver = vecObserver_.begin();

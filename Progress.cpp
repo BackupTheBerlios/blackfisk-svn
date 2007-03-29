@@ -36,7 +36,7 @@ bool Progress::SetActual (long actual)
         return false;
 
 	actual_ = actual;
-    broadcastObserver();
+    broadcastObservers();
 
 	return true;
 }

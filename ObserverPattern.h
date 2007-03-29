@@ -64,8 +64,6 @@ class Subject
 		///
 		void deregisterObserver (Observer* observer);
 		/// tell all observers that the subject changed
-		void broadcastObserver ();
-		/// just a synonym
 		void broadcastObservers ();
 
         ///

@@ -9,6 +9,7 @@
 #include "BFRootTask.h"
 #include "BFundef.h"
 #include "BFIconTable.h"
+#include "BFSystem.h"
 
 BFTaskData::BFTaskData (BFTaskType type,
                         const wxChar* strSource,
