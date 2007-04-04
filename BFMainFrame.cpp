@@ -81,7 +81,6 @@ END_EVENT_TABLE()
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
     pSizer->Add( pSplitter, wxSizerFlags(3).Expand() );
-    //pSizer->Add( pAniCtrl, wxSizerFlags(1).Expand() );
 
     CreateStatusBar();
     SetStatusText( _("Welcome to wxWindows!") );

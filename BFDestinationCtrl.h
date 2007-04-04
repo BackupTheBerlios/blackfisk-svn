@@ -33,7 +33,9 @@ class BFDestinationCtrl : public wxPanel
 
         ///
         wxString GetPath ();
-        //DECLARE_EVENT_TABLE();
+        ///
+        void SetPath (const wxString& strPath);
+
 };    // class BFDestinationCtrl
 
 #endif    // BFDESTINATIONCTRL_H

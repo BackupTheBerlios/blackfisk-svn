@@ -22,18 +22,18 @@ class BFTaskBase
 
     protected:
         /// reference to the BFCore instance
-        BFCore& Core ()
+        static BFCore& Core ()
         { return BFCore::Instance(); }
-
-        /** search for macros (for example "<date>") in 'rStr'
-            and replace them with the needed value */
-        wxString& ReplaceMacros (wxString& rStr);
 
     public:
         /// ctor
         BFTaskBase ();
         /// virtual dtor
         virtual ~BFTaskBase ();
+
+        /** search for macros (for example "<date>") in 'rStr'
+            and replace them with the needed value */
+        static wxString& ReplaceMacros (wxString& rStr);
 };  // class BFTaskBase
 
 

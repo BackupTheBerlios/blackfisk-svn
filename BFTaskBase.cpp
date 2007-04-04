@@ -16,7 +16,7 @@ BFTaskBase::BFTaskBase ()
 }
 
 
-wxString& BFTaskBase::ReplaceMacros (wxString& rStr)
+/*static*/ wxString& BFTaskBase::ReplaceMacros (wxString& rStr)
 {
     // BFTASK_MACRO_DATE
     rStr.Replace(BFTASK_MACRO_DATE, Core().GetDateString());

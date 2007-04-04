@@ -3,5 +3,6 @@
 	<Workspace title="BF workspace">
 		<Project filename="blackfisk.cbp" active="1" />
 		<Project filename="C:\wxWindows\samples\widgets\widgets.cbp" />
+		<Project filename="C:\wxWindows\samples\treectrl\treectrl.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

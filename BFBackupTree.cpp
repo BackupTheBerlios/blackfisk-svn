@@ -39,7 +39,8 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultPosition,
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
-              Observer(&(BFRootTask::Instance()))
+              Observer(&(BFRootTask::Instance())),
+              bReplaceMacro_(false)
 {
     //SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
     SetImageList ( BFIconTable::Instance() );
@@ -63,6 +64,15 @@ void BFBackupTree::Init ()
 
     // expand all items in the treeCtlr
     ExpandAll();
+    SelectItem(lastItemId_);
+}
+
+wxString& BFBackupTree::ReplaceMacro(wxString& str)
+{
+    if (bReplaceMacro_)
+        BFTaskBase::ReplaceMacros(str);
+
+    return str;
 }
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
@@ -72,8 +82,11 @@ void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
 {
+    // remember this itemId
+    lastItemId_ = rEvent.GetItem();
+
     // get the task object from the data layer
-    BFTask* pTask = GetTaskByItem(rEvent.GetItem());
+    BFTask* pTask = GetTaskByItem(lastItemId_);
 
     if (pTask != NULL)
         BFTaskBaseDlg::Show (pTask);
@@ -227,6 +240,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     {
         idCurr  = idLast;
         strCurr = tkz.GetNextToken();
+        ReplaceMacro(strCurr);
         idLast  = FindItem(idCurr, strCurr, false);
 
         // does the item exists
@@ -462,7 +476,14 @@ wxTreeItemId BFBackupTree::FindItem (const wxChar* label)
     return FindItem(GetRootItem(), label);
 }
 
+void BFBackupTree::SetReplaceMacro(bool bValue)
+{
+    if (bReplaceMacro_ == bValue)
+        return;
 
+    bReplaceMacro_ = bValue;
+    Init();
+}
 
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxChar* strPath /*= NULL*/)
                 : oid_(oid),
@@ -513,6 +534,9 @@ wxDragResult BFBackupTree::BFBackupDropTarget::OnDragOver(wxCoord x, wxCoord y, 
 
 
 
+BEGIN_EVENT_TABLE(BFBackupCtrl, wxPanel)
+    EVT_TOGGLEBUTTON (BFBACKUPCTRL_ID_MACROBUTTON, BFBackupCtrl::OnButton)
+END_EVENT_TABLE()
 
 BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
             : wxPanel(pParent, -1)
@@ -520,19 +544,21 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
     // init sizer
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
 
-    // toolbar
+    /* toolbar
     wxToolBar* pTool = new wxToolBar(this, -1);
     pTool->AddTool(-1, _T("label 1"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
     pTool->AddSeparator();
     pTool->AddTool(-1, _T("label 2"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
     pTool->Realize();
-    pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));
+    pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));*/
 
     // init controls
-    pBackupTree_ = new BFBackupTree(this);
+    pBackupTree_    = new BFBackupTree(this);
+    pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("macros"));
+    pMacroButton_->SetValue(false);
 
     // arange
-    pTopSizer->Add(pTool);
+    pTopSizer->Add(pMacroButton_, wxSizerFlags(0).Center().Border(wxUP | wxDOWN, 5));
     pTopSizer->Add(pBackupTree_, wxSizerFlags(1).Expand());
     SetSizer(pTopSizer);
 }
@@ -545,4 +571,9 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
 BFBackupTree* BFBackupCtrl::BackupTree ()
 {
     return pBackupTree_;
+}
+
+void BFBackupCtrl::OnButton (wxCommandEvent& rEvent)
+{
+    BackupTree()->SetReplaceMacro(pMacroButton_->GetValue());
 }

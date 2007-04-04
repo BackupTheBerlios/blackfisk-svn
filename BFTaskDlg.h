@@ -21,6 +21,7 @@
 #define BFTASKDLG_ID_BUTTONCANCEL   2 + wxID_HIGHEST
 
 class wxSizer;
+class BFDestinationCtrl;
 
 /// the base class of all task dialogs
 class BFTaskBaseDlg : public wxDialog
@@ -34,7 +35,7 @@ class BFTaskBaseDlg : public wxDialog
         /// task source
         wxTextCtrl*         pSourceCtrl_;
         /// task destination
-        wxDirPickerCtrl*    pDestCtrl_;
+        BFDestinationCtrl*  pDestCtrl_;
         /// verify
         wxCheckBox*         pVerifyCheck_;
 

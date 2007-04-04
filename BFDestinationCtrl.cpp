@@ -11,6 +11,7 @@
 #include "BFSystem.h"
 #include "BFTaskDlg.h"
 
+
 //
 BFDestinationCtrl::BFDestinationCtrl (wxWindow* pParent, const wxChar* strPath /*= wxEmptyString*/)
                  : wxPanel(pParent),
@@ -41,7 +42,7 @@ void BFDestinationCtrl::Init ()
                         _("select a destination folder"),
                         wxDefaultPosition,
                         wxDefaultSize,
-                        wxDIRP_USE_TEXTCTRL
+                        wxDIRP_USE_TEXTCTRL | wxDIRP_CHANGE_DIR
                     );
 
     // set size
@@ -59,4 +60,9 @@ void BFDestinationCtrl::Init ()
 wxString BFDestinationCtrl::GetPath ()
 {
     return pPickerCtrl_->GetPath();
+}
+
+void BFDestinationCtrl::SetPath (const wxString& strPath)
+{
+    pPickerCtrl_->SetPath(strPath);
 }

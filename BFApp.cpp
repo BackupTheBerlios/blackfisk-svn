@@ -41,7 +41,7 @@ BFApp::BFApp ()
 
 /*virtual*/ BFApp::~BFApp ()
 {
-    BFSystem::Log(wxString::Format(_("%s closed"), BF_PRGNAME).c_str());
+    BFSystem::Log(wxString::Format(_("%s closed\n"), BF_PRGNAME).c_str());
 }
 
 bool BFApp::OnInit()
@@ -117,6 +117,7 @@ void BFApp::Test ()
 
 void BFApp::Backup()
 {
+    OpenProject(_T("D:\\test.ob"));
     return;
 
     // init

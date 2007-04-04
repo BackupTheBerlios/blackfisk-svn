@@ -14,6 +14,7 @@
 #include "BFMainFrame.h"
 #include "BFRootTask.h"
 #include "BFIconTable.h"
+#include "BFDestinationCtrl.h"
 
 BEGIN_EVENT_TABLE(BFTaskBaseDlg, wxDialog)
   EVT_CLOSE   (BFTaskBaseDlg::OnClose)
@@ -36,13 +37,12 @@ BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
 {
     pNameCtrl_      = new wxTextCtrl(this, -1);
     pSourceCtrl_    = new wxTextCtrl(this, -1);
-    pDestCtrl_      = new wxDirPickerCtrl(this, -1, wxEmptyString, _("select a destination folder"));
+    pDestCtrl_      = new BFDestinationCtrl(this);
     pVerifyCheck_   = new wxCheckBox(this, -1, wxEmptyString);
 }
 
 /*virtual*/ BFTaskBaseDlg::~BFTaskBaseDlg ()
 {
-    BFSystem::Debug(_("BFTaskBaseDlg dtor"));
 }
 
 wxSizer* BFTaskBaseDlg::InitType ()
@@ -65,8 +65,8 @@ wxSizer* BFTaskBaseDlg::InitType ()
 
 wxSizer* BFTaskBaseDlg::InitButtons ()
 {
-    wxButton* pButtonOk     = new wxButton(this, BFTASKDLG_ID_BUTTONOK, _("OK"));
-    wxButton* pButtonCancel = new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("Cancel"));
+    wxButton* pButtonOk     = new wxButton(this, BFTASKDLG_ID_BUTTONOK, _("&OK"));
+    wxButton* pButtonCancel = new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("&Cancel"));
 
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
 
@@ -183,15 +183,15 @@ void BFTaskBaseDlg::Arrange(wxSizer* pBody, wxSizer* pBodyExtra /*= NULL*/)
     wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
 
     // type
-    pMainSizer  ->Add (InitType(),  wxSizerFlags(0).Border());
+    pMainSizer->Add (InitType(),  wxSizerFlags(0).Border());
 
     // body
     if (pBody != NULL)
-        pMainSizer  ->Add (pBody, wxSizerFlags(0));
+        pMainSizer->Add (pBody, wxSizerFlags(0));
 
     // body extra
     if (pBodyExtra != NULL)
-        pMainSizer  ->Add (pBodyExtra, wxSizerFlags(0));
+        pMainSizer->Add (pBodyExtra, wxSizerFlags(0));
 
     // buttons
     pMainSizer->Add(InitButtons(), wxSizerFlags(0).Border().Center());
@@ -238,8 +238,9 @@ BFTaskFileCopyDlg::BFTaskFileCopyDlg (wxWindow* pParent, BFTask& rTask)
     SetRowSize(pSourceStatic, pSourceCtrl_);
 
     // destination
-    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
-    SetRowSize(pDestStatic, pDestCtrl_);
+    // is handled by the base-ctor and the ctrl itself
+    //wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    //SetRowSize(pDestStatic, pDestCtrl_);
 
     // verify
     wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
@@ -257,7 +258,6 @@ BFTaskFileCopyDlg::BFTaskFileCopyDlg (wxWindow* pParent, BFTask& rTask)
     pNameSizer      ->Add(pNameCtrl_);
     pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pSourceSizer    ->Add(pSourceCtrl_);
-    pDestSizer      ->Add(pDestStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pDestSizer      ->Add(pDestCtrl_);
     pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pVerifySizer    ->Add(pVerifyCheck_);
@@ -291,8 +291,9 @@ BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask
     SetRowSize(pSourceStatic, pSourceCtrl_);
 
     // destination
-    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
-    SetRowSize(pDestStatic, pDestCtrl_);
+    // is handled by the base-ctor and the ctrl itself
+    //wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    //SetRowSize(pDestStatic, pDestCtrl_);
 
     // verify
     wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
@@ -317,7 +318,6 @@ BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask
     pNameSizer      ->Add(pNameCtrl_);
     pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pSourceSizer    ->Add(pSourceCtrl_);
-    pDestSizer      ->Add(pDestStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pDestSizer      ->Add(pDestCtrl_);
     pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pVerifySizer    ->Add(pVerifyCheck_);

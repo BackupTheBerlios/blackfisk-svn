@@ -14,6 +14,7 @@
 #include <wx/dnd.h>
 #include <wx/panel.h>
 #include <wx/artprov.h>
+#include <wx/tglbtn.h>
 #include "ObserverPattern.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
@@ -32,6 +33,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
         wxTreeItemId    lastItemId_;
+        /// view raw macros or fill them with data
+        bool            bReplaceMacro_;
 
         /** this private class just wrappes the drop-events from the
             dropTarget to the affeceted treeCtrl
@@ -54,6 +57,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
 
         /// return a pointer to the BFTask object relating to the itemId in the backupTree
         BFTask* GetTaskByItem (wxTreeItemId itemId);
+
+        /** check the string for a macro (begins with '<' and ends with '>')
+            and replace it if 'bReplaceMacro_ == true'*/
+        wxString& ReplaceMacro(wxString& str);
 
     protected:
         /// proteced members
@@ -92,6 +99,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             but do not check if the specified task realy exists! */
         wxTreeItemId AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination);
 
+        /** set 'bReplaceMacro_' and recreate the tree if needed */
+        void SetReplaceMacro(bool bValue);
         ///
         void OnItemActivated (wxTreeEvent& rEvent);
         ///
@@ -148,6 +157,8 @@ class BFBackupCtrl : public wxPanel
     private:
         ///
         BFBackupTree*   pBackupTree_;
+        ///
+        wxToggleButton* pMacroButton_;
 
     protected:
 
@@ -160,6 +171,11 @@ class BFBackupCtrl : public wxPanel
 
         ///
         BFBackupTree* BackupTree ();
+
+        ///
+        void OnButton (wxCommandEvent& rEvent);
+
+        DECLARE_EVENT_TABLE();
 };    // class BFBackupCtrl
 
 #endif    // BFBACKUPTREE_H
