@@ -1,3 +1,4 @@
+- exclude-control for directory-tasks
 - log backup
 - OBTaskProgressWindow (tasklist, totalprg, taskwiseprg, etc)
 - cancel/pause task, redo task on errors

@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;" />
 		<Build>
 			<Target title="release_ansi">
 				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
@@ -155,10 +155,10 @@
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFRootTask.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFRootTask.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFSystem.cpp">
 			<Option virtualFolder="AppLayer\" />
@@ -167,16 +167,16 @@
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="BFTask.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFTask.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFTaskBase.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFTaskBase.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFTaskDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />

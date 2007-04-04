@@ -22,8 +22,8 @@ BEGIN_EVENT_TABLE(BFTaskBaseDlg, wxDialog)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONCANCEL,   BFTaskBaseDlg::OnButton_Cancel)
 END_EVENT_TABLE()
 
-/*static*/ const long BFTaskBaseDlg::lWidth1_ = 100;
-/*static*/ const long BFTaskBaseDlg::lWidth2_ = 250;
+/*static*/ const long BFTaskBaseDlg::lWidth1_ = 95;
+/*static*/ const long BFTaskBaseDlg::lWidth2_ = 280;
 
 BFTaskBaseDlg::BFTaskBaseDlg (wxWindow* pParent,
                               const wxString& strTitle,
@@ -299,11 +299,11 @@ BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask
     wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
     SetRowSize(pVerifyStatic, pVerifyCheck_);
 
-    // exclude control
+    /* exclude control
     wxStaticText* pExcludeStatic = new wxStaticText(this, -1, _("files and directories to exclude from this task"));
     pExcludeStatic->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeStatic->GetSize().GetHeight()));
     pExcludeList_ = new wxListBox(this, -1);
-    pExcludeList_->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeList_->GetSize().GetHeight()));
+    pExcludeList_->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeList_->GetSize().GetHeight()));*/
 
     // sizer
     wxBoxSizer* pBodySizer      = new wxBoxSizer(wxVERTICAL);
@@ -321,14 +321,14 @@ BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask
     pDestSizer      ->Add(pDestCtrl_);
     pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pVerifySizer    ->Add(pVerifyCheck_);
-    pExtraSizer     ->Add(pExcludeStatic,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pExtraSizer     ->Add(pExcludeList_);
+    /*pExtraSizer     ->Add(pExcludeStatic,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pExtraSizer     ->Add(pExcludeList_);*/
 
     pBodySizer->Add(pSourceSizer,   wxSizerFlags(0).Border());
     pBodySizer->Add(pDestSizer,     wxSizerFlags(0).Border());
     pBodySizer->Add(pNameSizer,     wxSizerFlags(0).Border());
     pBodySizer->Add(pVerifySizer,   wxSizerFlags(0).Border());
-    pBodySizer->Add(pExtraSizer,    wxSizerFlags(0).Border());
+    //pBodySizer->Add(pExtraSizer,    wxSizerFlags(0).Border());
 
     Arrange(pBodySizer);
 

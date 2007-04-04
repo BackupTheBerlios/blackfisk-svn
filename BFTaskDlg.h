@@ -39,11 +39,6 @@ class BFTaskBaseDlg : public wxDialog
         /// verify
         wxCheckBox*         pVerifyCheck_;
 
-        /// width of the label column
-        static const long lWidth1_;
-        /// width of the editable column
-        static const long lWidth2_;
-
         /** get the data from the data layer ('rTask')
             in the dialog controls */
         void GetData ();
@@ -65,6 +60,11 @@ class BFTaskBaseDlg : public wxDialog
         void Arrange(wxSizer* pBody, wxSizer* pBodyExtra = NULL);
 
     public:
+        /// width of the label column
+        static const long lWidth1_;
+        /// width of the editable column
+        static const long lWidth2_;
+
         /// virtual destructor
         virtual ~BFTaskBaseDlg ();
 

@@ -11,6 +11,7 @@
 #include <wx/wx.h>
 #include <wx/panel.h>
 #include <wx/filepicker.h>
+#include <wx/button.h>
 
 /// a control to edit destinations
 class BFDestinationCtrl : public wxPanel
@@ -18,6 +19,8 @@ class BFDestinationCtrl : public wxPanel
     private:
         ///
         wxDirPickerCtrl*        pPickerCtrl_;
+        ///
+        wxButton*               pMacroButton_;
 
         ///
         BFDestinationCtrl ();
@@ -36,6 +39,12 @@ class BFDestinationCtrl : public wxPanel
         ///
         void SetPath (const wxString& strPath);
 
+        ///
+        void OnButton(wxCommandEvent& rEvent);
+        ///
+        void OnMacro(wxCommandEvent& rEvent);
+
+        DECLARE_EVENT_TABLE();
 };    // class BFDestinationCtrl
 
 #endif    // BFDESTINATIONCTRL_H
