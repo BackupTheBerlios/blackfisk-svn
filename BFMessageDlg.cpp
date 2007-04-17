@@ -54,6 +54,10 @@ void BFMessageDlg::SetStyle (long style)
     if (pSys->GetLastType() > pSys->GetMsgLevel())
         return;
 
+    // check for message of type MsgBACKUP
+    if (pSys->GetLastType() == MsgBACKUP) //&& pSys->GetObserverCount() > 0)
+        return;
+
     // caption
     SetCaption (BFSystem::GetTypeString(pSys->GetLastType()));
 

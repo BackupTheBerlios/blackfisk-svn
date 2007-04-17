@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 
 //
 BFDestinationDlg::BFDestinationDlg (wxWindow* pParent, const wxChar* strPath /*= wxEmptyString*/)
-                : wxDialog(pParent, wxID_ANY, _("create a destination")),
+                : wxDialog(pParent, wxID_ANY, wxString(_("create a destination"))),
                   pDestCtrl_(NULL)
 {
     // dialog icon

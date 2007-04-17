@@ -13,15 +13,12 @@
 
 #include <../../src/zlib/zlib.h>
 
+#include "BFCore_traverser.h"
+#include "BFApp.h"
 #include "Progress.h"
 #include "blackfisk.h"
 #include "BFundef.h"
 
-/*void BFCore::Init ()
-{
-    // set strCurrentDate_
-    ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
-}*/
 
 wxDEFINE_SCOPED_PTR_TYPE(wxZipEntry);
 
@@ -38,6 +35,7 @@ BFCore& BFCore::Instance ()
 
 
 BFCore::BFCore ()
+      : log_(BF_LOGFILE_NAME)
 {
     // remember current date in a string
     ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
@@ -49,13 +47,21 @@ BFCore::BFCore ()
 }
 
 
-wxArrayString& BFCore::GetDirListing (const wxChar* dir, wxArrayString& arr, wxArrayString* pExcludeListing /*= NULL*/)
+wxArrayString& BFCore::GetDirListing (const wxChar* dir,
+                                      wxArrayString& arr,
+                                      wxArrayString* pExcludeListing /*= NULL*/,
+                                      bool bRelativ /*= false*/)
 {
     if (dir == NULL)
         return arr;
 
     wxDir                   dirSource(dir);
-    BFDirListingTraverser   trav(arr, pExcludeListing);
+    wxString                strStartDir;
+
+    if (bRelativ)
+        strStartDir = dir;
+
+    BFDirListingTraverser   trav(arr, strStartDir, pExcludeListing);
 
     dirSource.Traverse(trav);
 
@@ -180,8 +186,8 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
                     zip.PutNextDirEntry(fileName.GetFullPath().Mid(lLen)); // TODO , fileName.GetModificationTime());
             }
             else
-            {   // FATAL ERROR: it should not be possible to step in this code
-                wxLogSysError(_("fatal error in BFCore::CreateZipFromDir(): no file AND no dir: %s"), fileArray[i].c_str());
+            {
+                BFSystem::Fatal(wxString::Format(_("no file AND no dir: %s"), fileArray[i].c_str()), _T("BFCore::CreateZipFromDir()"));
 
                 if (pProgress != NULL)
                     pProgress->DoEnd();
@@ -204,6 +210,8 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
     // close the zip-file
     zip.Close();
     out.Close();
+
+    BFSystem::Backup(wxString::Format(_("%s compressed to %s"), pstrSourceDir, pstrZipName));
 
     // verify the zip-file
     if (bVerify)
@@ -252,13 +260,11 @@ bool BFCore::VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, Pro
             // compare crc's
             if ( entry->GetCrc() != GetFileCrc(arrFiles[i]) )
             {
-                wxLogError
-                (
-                    _("zip-file %s is corrupt because of the entry %s (crc compared with %s)"),
-                    pZipFileName,
-                    entry->GetName().c_str(),
-                    arrFiles[i].c_str()
-                );
+                BFSystem::Error(wxString::Format(_("zip-file %s is corrupt because of the entry %s (crc compared with %s)"),
+                                                 pZipFileName,
+                                                 entry->GetName().c_str(),
+                                                 arrFiles[i].c_str()),
+                                _T("BFCore::VerifyZip()"));
 
                 return false;
             }
@@ -272,6 +278,10 @@ bool BFCore::VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, Pro
 
         ++i;
     }   // while
+
+    BFSystem::Backup(wxString::Format(_("%s verifyied"), pZipFileName));
+
+    return true;
 }
 
 
@@ -280,15 +290,15 @@ wxUint32 BFCore::GetFileCrc (const wxChar* pFilename)
     // check parameters
     if (pFilename == NULL)
     {
-        wxLogSysError( _("wrong parameters in BFCore::GetFileCrc") );
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::GetFileCrc") );
         return 0;
     }
 
     // init file
-    wxFile  file(pFilename);
+    wxFile file(pFilename);
     if ( !(file.IsOpened()) )
     {
-        wxLogSysError( _("could not open file %s in BFCore::GetFileCrc"), pFilename );
+        BFSystem::Error(wxString::Format(_("could not open file %s in BFCore::GetFileCrc"), pFilename), _T("BFCore::GetFileCrc()"));
         return 0;
     }
 
@@ -305,7 +315,12 @@ wxUint32 BFCore::GetFileCrc (const wxChar* pFilename)
 bool BFCore::MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite /*= DEFAULT_OVERWRITE*/)
 {
     if (pSource == NULL || pDestination == NULL)
-        return false;
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::MoveFile") );
+        return 0;
+    }
+
+    BFSystem::Backup(wxString::Format(_("move %s to %s"), pSource, pDestination));
 
     return ::wxRenameFile(pSource, pDestination, bOverwrite);
 }
@@ -315,7 +330,10 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
 {
     // check parameters
     if (pSource == NULL || pDestination == NULL)
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::CopyFile") );
         return false;
+    }
 
     wxString        strDest(pDestination);
     wxString        strSource(pSource);
@@ -344,10 +362,11 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
     else
     {
         if ( arrSource.Count() > 0 )
-        {   // error because source has wildcards AND destination is only one specific file
-            wxLogSysError ( _("error in BFCore::CopyFile(): can not copy %s to %s"),
-                            pSource,
-                            pDestination );
+        {
+            BFSystem::Error(wxString::Format(_("can not copy %s to %s"),
+                                              pSource,
+                                              pDestination),
+                            _T("BFCore::CopyFile"));
             return false;
         }
     }
@@ -373,6 +392,9 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
                     rc = false;
     }
 
+    if (rc)
+        BFSystem::Backup(wxString::Format(_("%s copyied to %s"), pSource, pDestination));
+
     return rc;
 }
 
@@ -380,14 +402,111 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
 bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DEFAULT_OVERWRITE*/)
 {
     if (pFile == NULL)
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteFile()"));
         return false;
+    }
 
     if ( !bIgnoreWriteProtection && IsWriteProtected(pFile) )
         return false;
 
+    BFSystem::Backup(wxString::Format(_("delete %s"), pFile));
+
     return ::wxRemoveFile(pFile);
 }
 
+bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
+{
+    if (pDir == NULL || !(wxDir::Exists(pDir)) )
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteDir()"));
+        return false;
+    }
+
+    wxDir dir(pDir);
+
+    if (bOnlyIfEmpty)
+    {
+        if (dir.HasFiles() || dir.HasSubDirs())
+        {
+            BFSystem::Error(wxString::Format(_("directory %s is not empty"), pDir), _T("BFCore::DeleteDir()"));
+            return false;
+        }
+    }
+    else
+    {
+        BFDeleteDirTraverser trav(bIgnoreWriteprotection);
+        dir.Traverse(trav);
+    }
+
+    BFSystem::Backup(wxString::Format(_("delete %s"), pDir));
+
+    return ::wxRmdir(pDir);
+}
+
+bool BFCore::Delete (wxArrayString& arrDelete)
+{
+    for (int i = 0; i < arrDelete.GetCount(); ++i)
+    {
+        BFSystem::Debug(wxString::Format(_T("current delete target: %s"), arrDelete[i].c_str()), _T("BFCore::Delete()"));
+
+        if ( wxDir::Exists(arrDelete[i]) )
+            DeleteDir(arrDelete[i], false, true);
+        else
+            DeleteFile(arrDelete[i], true);
+    }
+
+    return true;
+}
+
+bool BFCore::Synchronize (const wxChar* pOriginal,
+                          const wxChar* pToSynchronize,
+                          bool bVerify,
+                          ProgressWithMessage* pProgress /*= NULL*/)
+{
+    // check parameters
+    if (pOriginal == NULL || pToSynchronize == NULL)
+    {
+        BFSystem::Fatal(_("Wrong parameters!"), _T("BFCore::Synchronize"));
+        return false;
+    }
+
+    // create destination dir
+    if ( CreatePath(pToSynchronize) == false )
+        return false;
+
+    CopyDirAttributes(pOriginal, pToSynchronize);
+
+    // init copy progress
+    if (pProgress != NULL)
+    {
+        long lCountFile, lCountDir;
+
+        pProgress->SetActual( 0 );
+        pProgress->SetRange ( GetDirFileCount(pOriginal, &lCountDir, &lCountFile) );
+        pProgress->SetLabel ( wxString::Format(_("synchronize to %s"), pToSynchronize) );
+    }
+
+    BFSystem::Backup(wxString::Format(_("synchronize %s with %s (copy-step)"), pToSynchronize, pOriginal));
+
+    // synchronize the dir
+    wxDir dir(pOriginal);
+    wxArrayString arrOriginalListing;
+    BFSynchronizeDirTraverser trav(pOriginal, pToSynchronize, arrOriginalListing, bVerify, pProgress);
+    dir.Traverse(trav);
+
+    BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
+
+    // check for deletable files
+    wxArrayString arrToSyncListing;
+    GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
+    BFApp::PrependString(arrToSyncListing, pToSynchronize);
+    BFSystem::Log(_T("files to delete..."));
+    BFSystem::Log(BFApp::SumStrings(arrToSyncListing));
+    Delete(arrToSyncListing);
+
+    return true;
+}
 
 long BFCore::GetDirFileCount(const wxChar* pDir, long* pDirCount /*= NULL*/, long* pFileCount /*= NULL*/)
 {
@@ -413,7 +532,12 @@ long BFCore::GetDirFileCount(const wxChar* pDir, long* pDirCount /*= NULL*/, lon
 bool BFCore::CreateDir (const wxChar* pNewDir)
 {
     if (pNewDir == NULL)
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::CreateDir()"));
         return false;
+    }
+
+    BFSystem::Backup(wxString::Format(_("create dir %s"), pNewDir));
 
     return ::wxMkdir(pNewDir);
 }
@@ -423,7 +547,10 @@ bool BFCore::CreatePath (const wxChar* pPath)
 {
     // check parameters
     if (pPath == NULL)
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::CreatePath()"));
         return false;
+    }
 
     // init
     wxString strSub;
@@ -440,34 +567,9 @@ bool BFCore::CreatePath (const wxChar* pPath)
         strSub = strSub + wxFILE_SEP_PATH;
     }
 
+    BFSystem::Backup(wxString::Format(_("create path %s"), pPath));
+
     return true;
-}
-
-bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
-{
-    if (pDir == NULL || !(wxDir::Exists(pDir)) )
-    {
-        wxLogSysError(_("Wrong parameters!"));
-        return false;
-    }
-
-    wxDir dir(pDir);
-
-    if (bOnlyIfEmpty)
-    {
-        if (dir.HasFiles() || dir.HasSubDirs())
-        {
-            wxLogSysError(_("directory is not empty"));
-            return false;
-        }
-    }
-    else
-    {
-        BFDeleteDirTraverser trav(*this, bIgnoreWriteprotection);
-        dir.Traverse(trav);
-    }
-
-    return ::wxRmdir(pDir);
 }
 
 
@@ -479,12 +581,12 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     // check parameters
     if (pSourceDir == NULL || pDestinationDir == NULL)
     {
-        wxLogSysError(_("Wrong parameters!"));
+        BFSystem::Fatal(_("Wrong parameters!"), _T("BFCore::CopyDir"));
         return false;
     }
 
     // create destination dir
-    if ( CreateDir(pDestinationDir) == false )
+    if ( CreatePath(pDestinationDir) == false )
         return false;
 
     CopyDirAttributes(pSourceDir, pDestinationDir);
@@ -512,9 +614,11 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     if (bVerify)
         pMap = &mapRememberToVerify;
 
+    BFSystem::Backup(wxString::Format(_("copy %s to %s"), pSourceDir, pDestinationDir));
+
     // copy the dir
     wxDir dir(pSourceDir);
-    BFCopyDirTraverser trav(*this, pDestinationDir, pMap, pProgress);
+    BFCopyDirTraverser trav(pDestinationDir, pMap, pProgress);
     dir.Traverse(trav);
 
     // verify
@@ -522,6 +626,8 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     {
         if (pProgress != NULL)
             pProgress->SetLabel ( _("verify files") );
+
+        BFSystem::Backup(wxString::Format(_("verify %s"), pDestinationDir));
 
         return VerifyFiles (mapRememberToVerify, pProgress);
     }
@@ -615,7 +721,9 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 
         if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str()) )
         {
-            wxLogError(_("the files %s and %s NOT identically"), rMap[i].first.c_str(), rMap[i].second.c_str());
+            BFSystem::Backup(wxString::Format(_("the files %s and %s NOT identically"),
+                                              rMap[i].first.c_str(),
+                                              rMap[i].second.c_str()));
             return false;
         }
     }
@@ -626,12 +734,10 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 
 bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
 {
-    #define BF_VERIFYFILE_ERR1 "file objects BFCore::VerifyFile() not open"
-
     // check parameters
     if (pFile1 == NULL || pFile2 == NULL)
     {
-        wxLogSysError(_("wrong parameters in BFCore::VerifyFile()"));
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::VerifyFile()"));
         return false;
     }
 
@@ -640,7 +746,10 @@ bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
     // check file-objects
     if ( !(fn1.IsOk()) || !(fn2.IsOk()) )
     {
-        wxLogSysError(_(BF_VERIFYFILE_ERR1));
+        BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
+                                         pFile1,
+                                         pFile2),
+                        _T("BFCore::VerifyFile() - wxFileName"));
         return false;
     }
 
@@ -671,165 +780,13 @@ bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
     // check open files
     if ( !(f1.IsOpened()) || !(f2.IsOpened()) )
     {
-        wxLogSysError(_(BF_VERIFYFILE_ERR1));
+        BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
+                                         pFile1,
+                                         pFile2),
+                        _T("BFCore::VerifyFile() - wxFile"));
         return false;
     }
 
-    // verify byte-by-by
+    // verify byte-by-byte
     return VerifyFileContents(f1, f2);
-}
-
-
-BFDirListingTraverser::BFDirListingTraverser (wxArrayString& rList, wxArrayString* pExcludeList /*=NULL*/)
-                     : rList_(rList),
-                       pExcludeList_(pExcludeList)
-
-{
-}
-
-
-/*virtual*/ wxDirTraverseResult BFDirListingTraverser::OnFile(const wxString& filename)
-{
-    if ( pExcludeList_ != NULL )
-    {
-        if ( pExcludeList_->Index(filename) != wxNOT_FOUND )
-            return wxDIR_CONTINUE;
-
-        for (int i = 0; i < pExcludeList_->Count(); ++i)
-            if ( filename.Matches((*pExcludeList_)[i]) )
-                return wxDIR_CONTINUE;
-    }
-
-    rList_.Add(filename);
-
-    return wxDIR_CONTINUE;
-}
-
-
-/*virtual*/ wxDirTraverseResult BFDirListingTraverser::OnDir(const wxString& dirname)
-{
-    if ( pExcludeList_ != NULL && pExcludeList_->Index(dirname) != wxNOT_FOUND )
-        return wxDIR_IGNORE;
-
-    rList_.Add(dirname);
-
-    return wxDIR_CONTINUE;
-}
-
-
-BFCountDirTraverser::BFCountDirTraverser ()
-                    : lFileCount_(0), lDirCount_(0)
-{
-}
-
-
-/*virtual*/ wxDirTraverseResult BFCountDirTraverser::OnFile(const wxString& filename)
-{
-    ++lFileCount_;
-
-    return wxDIR_CONTINUE;
-}
-
-
-/*virtual*/ wxDirTraverseResult BFCountDirTraverser::OnDir(const wxString& dirname)
-{
-    ++lDirCount_;
-
-    return wxDIR_CONTINUE;
-}
-
-
-BFDeleteDirTraverser::BFDeleteDirTraverser (BFCore& rCore, bool bIgnoreWriteprotection /*= false*/)
-                    : bIgnoreWriteprotection_(bIgnoreWriteprotection), core_(rCore)
-{
-}
-
-
-/*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnDir(const wxString& dirname)
-{
-    // remove write protection
-    if (bIgnoreWriteprotection_)
-        if (core_.IsWriteProtected(dirname))
-            core_.SetWriteProtected(dirname, false);
-
-    wxDir dir(dirname);
-
-    if (dir.HasFiles() || dir.HasSubDirs())
-    {
-        BFDeleteDirTraverser trav(core_, bIgnoreWriteprotection_);
-        dir.Traverse(trav);
-    }
-
-    ::wxRmdir(dirname);
-
-    return wxDIR_IGNORE;
-}
-
-
-/*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnFile(const wxString& filename)
-{
-    // remove write protection
-    if (bIgnoreWriteprotection_)
-        if (core_.IsWriteProtected(filename))
-            core_.SetWriteProtected(filename, false);
-
-    if ( ::wxRemoveFile(filename) == false )
-        wxLogWarning(_("removeFile ERR"));
-
-    return wxDIR_CONTINUE;
-}
-
-
-BFCopyDirTraverser::BFCopyDirTraverser (BFCore& rCore,
-                                        const wxChar* pDestinationDirectory,
-                                        MapStringPair* pRememberToVerify /*=NULL*/,
-                                        ProgressWithMessage* pProgress /*= NULL*/)
-                  : core_(rCore),
-                    strDestination_(pDestinationDirectory),
-                    pRememberToVerify_(pRememberToVerify),
-                    pProgress_(pProgress)
-{
-}
-
-
-/*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnDir(const wxString& dirname)
-{
-    // init
-    wxDir dir(dirname);
-    wxString strSubDest = strDestination_ + dirname.Right(dirname.Length() - dirname.Find(wxFILE_SEP_PATH, true));
-
-    // create sub-dir
-    if ( core_.CreateDir(strSubDest) == false )
-        return wxDIR_IGNORE;
-
-    // set attributes for sub-dir like the source-dir
-    core_.CopyDirAttributes(dirname, strSubDest);
-
-    // update progress
-    pProgress_->IncrementActualWithMessage(dirname);
-
-    // copy
-    BFCopyDirTraverser trav(core_, strSubDest, pRememberToVerify_, pProgress_);
-    dir.Traverse(trav);
-
-    return wxDIR_IGNORE;
-}
-
-
-/*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnFile(const wxString& fileName)
-{
-    // init
-    wxFileName  wxFn(fileName);
-    wxString    strFrom(wxFn.GetFullPath());
-    wxString    strTo(strDestination_ + wxFILE_SEP_PATH + wxFn.GetFullName());
-
-    // copy
-    pProgress_->IncrementActualWithMessage(fileName);
-    core_.CopyFile(strFrom, strTo);
-
-    // remember for a later verify
-    if (pRememberToVerify_ != NULL)
-        pRememberToVerify_->push_back(PairString(strFrom, strTo));
-
-    return wxDIR_CONTINUE;
 }

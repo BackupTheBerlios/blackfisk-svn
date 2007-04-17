@@ -44,17 +44,9 @@ class BFCore
             just use OBSystem to create messages */
         BFLog       log_;
 
-        ///
-        //void Init ();
-
         /** get attributes from a file ('rFn') and set them to a ZipEntry ('pEntry')
             this methode should be to encapsulate plattformdependend code! */
         bool SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry);
-
-        /// compare the file-attributes of two files
-        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
-        /// compare the content of to files
-        bool VerifyFileContents (wxFile& f1, wxFile& f2);
 
         ///
         static BFCore sCore_;
@@ -79,8 +71,9 @@ class BFCore
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
         bool CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE, bool bVerify = false);
-        /** delete a file */
-        bool DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
+
+        /** synchroinze two directories */
+        bool Synchronize (const wxChar* pOriginal, const wxChar* pToSynchronize, bool bVerify, ProgressWithMessage* pProgress = NULL);
 
         /// to patch for wxWidgets
         bool IsWriteProtected (const wxChar* pFilename);
@@ -89,18 +82,19 @@ class BFCore
 
         /// return number of files and directories in a directory and its subdirectories
         long GetDirFileCount(const wxChar* pDir, long* pDirCount = NULL, long* pFileCount = NULL);
-        /* return number of files and directories in a list of files and directories
-        long GetDirFileCount(wxArrayString& rListing, long* pDirCount = NULL, long* pFileCount = NULL);*/
 
         /** get all files and subdirectories in 'dir' and store them to 'arr'
+            it is possible to store them as relative pathes
             files and directories that should not be in the listing can be specified in 'pExcludeListing' */
-        wxArrayString& GetDirListing (const wxChar* dir, wxArrayString& arr, wxArrayString* pExcludeListing = NULL);
+        wxArrayString& GetDirListing (const wxChar* dir, wxArrayString& arr, wxArrayString* pExcludeListing = NULL, bool bRelativ = false);
 
         /** read the attributes (like file-attributes) from a dir ('pSourceDir') and
             copy them to another dir ('pDestinationDir') */
         bool CopyDirAttributes (const wxChar* pSourceDir, const wxChar* pDestinationDir);
 
-        /** create a directory */
+        /** create a directory
+            there should be just one new directory to create
+            look at CreatePath() to create more than one new directories */
         bool CreateDir (const wxChar* pNewDir);
         /** create a path
             there could be more than one new directories in the path */
@@ -109,20 +103,6 @@ class BFCore
         /** copy a directory */
         bool CopyDir (const wxChar* pSourceDir, const wxChar* pDestinationDir, bool bVerify, ProgressWithMessage* pProgress = NULL);
 
-        /** delete a directory
-            if bOnlyIfEmpty = false it does not care about if the directory is empty or not
-            if bOnlyIfEmpty = true it delete the directory only if there are no files or dirs in it
-            if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
-            if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them */
-        bool DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty = false, bool bIgnoreWriteprotection = false);
-
-        /** */
-        bool VerifyFile (const wxChar* pFile1, const wxChar* pFile2);
-        /** compare a pair-list (map) of files
-            break on the first uncompare filepair */
-        bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL);
-        /** compare the zip entries by checksum (CRC) with the original files */
-        bool VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
 
         /*
         bool CreateZipFromListing (const wxChar* pstrZipName, wxArrayString& rListing, ProgressWithMessage* pProgress = NULL);*/
@@ -134,111 +114,39 @@ class BFCore
         /** */
         const wxChar* GetDateString ();
 
-        ///
-        wxUint32 GetFileCrc (const wxChar* pFilename);
-
-};    // class BFCore
-
-
-/** create a directory-listing with empty directories included */
-class BFDirListingTraverser : public wxDirTraverser
-{
-    private:
-        ///
-        wxArrayString&      rList_;
-        ///
-        wxArrayString*      pExcludeList_;
-
+        // >>> DELETE methodes  <<<
     public:
-        /// default ctor
-        BFDirListingTraverser (wxArrayString& rList, wxArrayString* pExcludeList = NULL);
-
-        ///
-        virtual wxDirTraverseResult OnDir(const wxString& dirname);
-        ///
-        virtual wxDirTraverseResult OnFile(const wxString& filename);
-
-};  // class BFDirListingTraverser
-
-
-///
-class BFCountDirTraverser : public wxDirTraverser
-{
-    private:
-        ///
-        long lDirCount_;
-        ///
-        long lFileCount_;
-
-    public:
-        /// default ctor
-        BFCountDirTraverser ();
-
-        ///
-        virtual wxDirTraverseResult OnDir(const wxString& dirname);
-        ///
-        virtual wxDirTraverseResult OnFile(const wxString& filename);
-
-        ///
-        long GetCount ()
-        { return lDirCount_ + lFileCount_; }
-        ///
-        long GetDirCount ()
-        { return lDirCount_; }
-        ///
-        long GetFileCount ()
-        { return lFileCount_; }
-};  // class BFCountDirTraverser
-
-
-///
-class BFDeleteDirTraverser : public wxDirTraverser
-{
-    private:
-        /** if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
+        /** delete a directory
+            if bOnlyIfEmpty = false it does not care about if the directory is empty or not
+            if bOnlyIfEmpty = true it delete the directory only if there are no files or dirs in it
+            if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
             if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them */
-        bool bIgnoreWriteprotection_;
-        ///
-        BFCore&     core_;
+        bool DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty = false, bool bIgnoreWriteprotection = false);
 
+        /** delete a file */
+        bool DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
+
+        /** delete files and directories specified by the array
+            be carefull because it ignore write-protection and does not check if a directory is empty */
+        bool Delete (wxArrayString& arrDelete);
+
+        // >>> VERIFICATION methodes  <<<
     public:
-        /// default ctor
-        BFDeleteDirTraverser (BFCore& rCore, bool bIgnoreWriteprotection = false);
-
-        ///
-        virtual wxDirTraverseResult OnDir(const wxString& dirname);
-        ///
-        virtual wxDirTraverseResult OnFile(const wxString& filename);
-
-};  // class BFDeleteDirTraverser
-
-
-///
-class BFCopyDirTraverser : public wxDirTraverser
-{
+        /** verify the file in this order:
+            file-size, file-attributes, file-content*/
+        bool VerifyFile (const wxChar* pFile1, const wxChar* pFile2);
+        /** compare a pair-list (map) of files
+            break on the first uncompare filepair */
+        bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL);
+        /** compare the zip entries by checksum (CRC) with the original files */
+        bool VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
+        /** create a CRC checksum of a file */
+        wxUint32 GetFileCrc (const wxChar* pFilename);
     private:
-        ///
-        wxString                strDestination_;
-        ///
-        ProgressWithMessage*    pProgress_;
-        ///
-        BFCore&                 core_;
-        ///
-        MapStringPair*          pRememberToVerify_;
-
-    public:
-        /// default ctor
-        BFCopyDirTraverser (BFCore& rCore,
-                            const wxChar* pDestinationDirectory,
-                            MapStringPair* pRememberToVerify = NULL,
-                            ProgressWithMessage* pProgress = NULL);
-
-        ///
-        virtual wxDirTraverseResult OnDir(const wxString& dirname);
-        ///
-        virtual wxDirTraverseResult OnFile(const wxString& filename);
-
-};  // class BFCopyDirTraverser
-
+        /// compare the file-attributes of two files
+        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
+        /// compare the content of to files
+        bool VerifyFileContents (wxFile& f1, wxFile& f2);
+};    // class BFCore
 
 #endif    // BFCORE_H

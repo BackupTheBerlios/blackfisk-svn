@@ -47,6 +47,12 @@ class BFApp : public wxApp
             see the call in the BFMainFrame ctor for more details */
         static void SetMainFrame (BFMainFrame* pMainFrame);
 
+        /** sum a array of strings to one string and return it */
+        static wxString SumStrings (const wxArrayString& rStrings, const wxChar cSeperator = _T('\n'));
+        /** prepend a string on each element of a string array
+            and return the reference of the array */
+        static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);
+
         ///
         bool OpenProject (const wxChar* filename);
         ///

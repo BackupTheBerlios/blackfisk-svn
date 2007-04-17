@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;" />
 		<Build>
 			<Target title="release_ansi">
 				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
@@ -16,35 +16,11 @@
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Compiler>
 					<Add option="-D_RELEASE" />
-					<Add directory="C:\wxWindows\include" />
-					<Add directory="C:\wxWindows\contrib\include" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxexpat.a" />
-					<Add library="libwxmsw27.a" />
+					<Add library="libwxmsw$(wxver).a" />
 					<Add library="libwxzlib.a" />
-					<Add library="libwxmsw27_animate.a" />
-					<Add directory="C:\wxWindows\lib\gcc_dll" />
-				</Linker>
-			</Target>
-			<Target title="debug_ansi">
-				<Option output=".\blackfiskD.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_deb" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="1" />
-				<Compiler>
-					<Add option="-g" />
-					<Add option="-D_DEBUG" />
-					<Add directory="C:\wxWindows\include" />
-					<Add directory="C:\wxWindows\contrib\include" />
-				</Compiler>
-				<Linker>
-					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw27d.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxmsw27d_animate.a" />
-					<Add directory="C:\wxWindows\lib\gcc_dll" />
 				</Linker>
 			</Target>
 			<Target title="debug_unicode">
@@ -57,14 +33,11 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="C:\wxWindows\include" />
-					<Add directory="C:\wxWindows\contrib\include" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw29ud.a" />
+					<Add library="libwxmsw$(#wxversion)ud.a" />
 					<Add library="libwxzlibd.a" />
-					<Add directory="C:\wxWindows\lib\gcc_dll" />
 				</Linker>
 			</Target>
 			<Target title="release_unicode">
@@ -76,24 +49,25 @@
 				<Compiler>
 					<Add option="-D_RELEASE" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="C:\wxWindows\include" />
-					<Add directory="C:\wxWindows\contrib\include" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxexpat.a" />
-					<Add library="libwxmsw27u.a" />
+					<Add library="libwxmsw$(#wxversion)u.a" />
 					<Add library="libwxzlib.a" />
-					<Add library="libwxmsw27u_animate.a" />
-					<Add directory="C:\wxWindows\lib\gcc_dll" />
 				</Linker>
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="release_ansi;debug_ansi;debug_unicode;release_unicode;" />
+			<Add alias="All" targets="release_ansi;debug_unicode;release_unicode;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-DWXUSINGDLL" />
+			<Add directory="$(#wx)\include" />
+			<Add directory="$(#wx)\contrib\include" />
 		</Compiler>
+		<Linker>
+			<Add directory="$(#wx)\lib\gcc_dll" />
+		</Linker>
 		<Unit filename="BFApp.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -107,10 +81,16 @@
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFCore.cpp">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\Core\" />
 		</Unit>
 		<Unit filename="BFCore.h">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="BFCore_traverser.cpp">
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="BFCore_traverser.h">
+			<Option virtualFolder="AppLayer\Core\" />
 		</Unit>
 		<Unit filename="BFDestinationCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />

@@ -8,6 +8,7 @@ BFSystem BFSystem::sSystem_;
 }
 
 BFSystem::BFSystem()
+        : lBackupObservers_(0)
 {
     //ctor
 }
@@ -17,6 +18,23 @@ BFSystem::~BFSystem()
     //dtor
 }
 
+long BFSystem::IncrementBackupObservers ()
+{
+    return ++lBackupObservers_;
+}
+
+long BFSystem::DecrementBackupObservers ()
+{
+    if (lBackupObservers_ > 0)
+        --lBackupObservers_;
+
+    return lBackupObservers_;
+}
+
+long BFSystem::GetBackupObservers ()
+{
+    return lBackupObservers_;
+}
 
 void BFSystem::Message (BFMessageType msgType,
                                    const wxChar* strMessage,
@@ -28,6 +46,11 @@ void BFSystem::Message (BFMessageType msgType,
     strLastMessage_  = strMessage;
 
     broadcastObservers();
+}
+
+/*static*/ void BFSystem::Backup (const wxChar* strMessage)
+{
+    Instance().Message(MsgBACKUP, strMessage, NULL);
 }
 
 /*static*/ void BFSystem::Info (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
@@ -60,12 +83,16 @@ BFMessageType BFSystem::GetLastType ()
     return lastType_;
 }
 
-/*static*/ const wxChar* BFSystem::GetTypeString (BFMessageType type)
+/*static*/ wxString BFSystem::GetTypeString (BFMessageType type)
 {
     wxString str;
 
     switch (type)
     {
+        case MsgBACKUP:
+            str = _("Backup");
+            break;
+
         case MsgINFO:
             str = _("Info");
             break;
@@ -91,7 +118,7 @@ BFMessageType BFSystem::GetLastType ()
             break;
     };
 
-    return str.c_str();
+    return str;
 }
 
 

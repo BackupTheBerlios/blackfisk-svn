@@ -35,6 +35,30 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     spMainFrame_ = pMainFrame;
 }
 
+/*static*/ wxString BFApp::SumStrings (const wxArrayString& rStrings, const wxChar cSeperator /*= _T('\n')*/)
+{
+    wxString strResult;
+
+    strResult.Clear();
+
+    for (int i = 0; i < rStrings.GetCount(); ++i)
+        strResult = strResult + rStrings[i] + cSeperator;
+
+    return strResult;
+}
+
+/*static*/ wxArrayString& BFApp::PrependString (wxArrayString& rStrings,
+                                                const wxChar* strToPrepend)
+{
+    if (strToPrepend)
+    {
+        for (int i = 0; i < rStrings.GetCount(); ++i)
+            rStrings[i].Prepend(strToPrepend);
+    }
+
+    return rStrings;
+}
+
 BFApp::BFApp ()
 {
 }
@@ -89,29 +113,24 @@ bool BFApp::IsProjectModified ()
 
 void BFApp::Test ()
 {
-    /*
-    wxFFileOutputStream out(_T("C:\\x.zip"));
-    wxZipOutputStream   zip(out);
-    wxFFileInputStream* pIn             = NULL;
-    wxZipEntry*         pEntry          = NULL;
+    wxString strOrg(_T("C:\\MyOrg"));
+    wxString strSync(_T("E:\\ToSync"));
 
-    // create zip-entry
-    pEntry = new wxZipEntry(_T("autoexec.bat"));
-    pIn = new wxFFileInputStream(_T("C:\\autoexec.bat"), _T("rb"));
-    zip.PutNextEntry(pEntry);
-    zip.Write(*pIn);
-    delete pIn;
+    BFSystem::Log(_T("test start"));
+    Core().Synchronize(strOrg, strSync, true);
+    BFSystem::Log(_T("sync finished"));
 
-    // create empty zip-dir
-    wxFileName fn(_T("C:\\windows"));
-    zip.PutNextDirEntry(_T("ordner"), fn.GetModificationTime());
+    wxArrayString arrOrg, arrSync;
+    Core().GetDirListing(strOrg, arrOrg);
+    Core().GetDirListing(strSync, arrSync);
 
-    // create zip-entry
-    pEntry = new wxZipEntry(_T("scandisk.log"));
-    pIn = new wxFFileInputStream(_T("C:\\scandisk.log"), _T("rb"));
-    zip.PutNextEntry(pEntry);
-    zip.Write(*pIn);
-    delete pIn;*/
+    if (arrOrg.GetCount() != arrSync.GetCount())
+    {
+        BFSystem::Error(_T("different listing count"));
+        return;
+    }
+
+    BFSystem::Info(_T("test finished"));
 }
 
 

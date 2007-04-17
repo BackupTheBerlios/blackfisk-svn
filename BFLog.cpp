@@ -6,56 +6,54 @@
 #include "BFLog.h"
 #include "BFCore.h"
 
-BFLog::BFLog ()
+BFLogBase::BFLogBase (const wxChar* strLogFileName, long lMaxSize /*= 0*/ )
      : Observer(&(BFSystem::Instance())),
-       fileLog_(BF_LOGFILE_NAME, wxFile::write_append)
+       fileLog_(strLogFileName, wxFile::write_append),
+       strLogFileName_(strLogFileName),
+       lMaxSize_(lMaxSize)
 {
     CareSize();
 }
 
-/*virtual*/ BFLog::~BFLog ()
+/*virtual*/ BFLogBase::~BFLogBase ()
 {
 }
 
-void BFLog::CareSize ()
+long BFLogBase::GetMaxSize ()
 {
+    return lMaxSize_;
+}
+
+void BFLogBase::SetMaxSize (long lSize)
+{
+    lMaxSize_ = lSize;
+}
+
+void BFLogBase::CareSize ()
+{
+    // the size does not matter
+    if (GetMaxSize() <= 0)
+        return;
+
+    if ( !(fileLog_.IsOpened()) )
+        return;
+
     // check log-file size
-    if (fileLog_.Length() > BF_LOGFILE_MAXSIZE)
+    if (fileLog_.Length() > GetMaxSize())
     {
         // close the file
         fileLog_.Close();
         // backup the file
-        BFCore::Instance().MoveFile(BF_LOGFILE_NAME, BF_LOGFILE_BAKNAME, true);
+        BFCore::Instance().MoveFile(strLogFileName_, strLogFileName_ + BF_LOGFILE_BAKSUFFIX, true);
         // create a new empty file
-        fileLog_.Open(BF_LOGFILE_NAME, wxFile::write_append);
+        fileLog_.Open(strLogFileName_, wxFile::write_append);
     }
 }
 
-/*virtual*/ void BFLog::ValueChanged (Subject* pSender)
-{
-    BFSystem* pSys = dynamic_cast<BFSystem*>(pSender);
-
-    if (pSys == NULL)
-        return;
-
-    // check log-level
-    if (pSys->GetLastType() < pSys->GetLogLevel())
-        return;
-
-    // log to file
-    Do
-    (
-        pSys->GetLastType(),
-        pSys->GetLastTimestamp(),
-        pSys->GetLastMessage().c_str(),
-        pSys->GetLastLocation().c_str()
-    );
-}
-
-void BFLog::Do(BFMessageType type,
-               const wxDateTime& timestamp,
-               const wxChar* strMessage,
-               const wxChar* strLocation)
+void BFLogBase::Do(BFMessageType type,
+                   const wxDateTime& timestamp,
+                   const wxChar* strMessage,
+                   const wxChar* strLocation)
 {
     // check arguments
     if (strMessage == NULL)
@@ -81,4 +79,49 @@ void BFLog::Do(BFMessageType type,
 
     // write to the file
     fileLog_.Write(strLog);
+}
+
+
+/*virtual*/ void BFLog::ValueChanged (Subject* pSender)
+{
+    BFSystem* pSys = dynamic_cast<BFSystem*>(pSender);
+
+    if (pSys == NULL)
+        return;
+
+    // check log-level
+    if (pSys->GetLastType() < pSys->GetLogLevel())
+    {
+        // check for message of type MsgBACKUP
+        if (pSys->GetLastType() != MsgBACKUP)
+        {
+            return;
+        }
+        else
+        {
+            // handle MsgBACKUP just if there is no other observer for it
+            if (pSys->GetBackupObservers() > 0)
+                return;
+        }
+    }
+
+
+    // log to file
+    Do
+    (
+        pSys->GetLastType(),
+        pSys->GetLastTimestamp(),
+        pSys->GetLastMessage().c_str(),
+        pSys->GetLastLocation().c_str()
+    );
+}
+
+
+BFLog::BFLog (const wxChar* strLogFileName)
+     : BFLogBase(strLogFileName, BF_LOGFILE_MAXSIZE)
+{
+}
+
+/*virtual*/ BFLog::~BFLog ()
+{
 }

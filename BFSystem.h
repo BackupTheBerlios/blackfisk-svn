@@ -15,7 +15,7 @@
 #include "ObserverPattern.h"
 
 
-enum BFMessageType { MsgINFO, MsgERROR, MsgFATAL, MsgLOG, MsgDEBUG };
+enum BFMessageType { MsgBACKUP, MsgINFO, MsgERROR, MsgFATAL, MsgLOG, MsgDEBUG };
 
 /// manage handling of messages for errors and other messages
 class BFSystem : public Subject
@@ -29,6 +29,8 @@ class BFSystem : public Subject
         wxString            strLastMessage_;
         /// timestamp of the last message
         wxDateTime          lastTimestamp_;
+        /// count observers for messages of type MsgBACKUP
+        long                lBackupObservers_;
 
         /// ctor
         BFSystem();
@@ -49,6 +51,15 @@ class BFSystem : public Subject
         ///
         const wxString& GetLastMessage ();
 
+        /** increment 'lBackupObservers_' and return the new value */
+        long IncrementBackupObservers ();
+        /** decrement 'lBackupObservers_' and return the new value
+            it won't decrement in a negativ value */
+        long DecrementBackupObservers ();
+        /** tell you how many observers for messages of the type MsgBACKUP are alaive */
+        long GetBackupObservers ();
+
+
         ///
         BFMessageType GetLogLevel ();
         ///
@@ -57,13 +68,15 @@ class BFSystem : public Subject
         ///
         static BFSystem& Instance ();
         ///
-        static const wxChar* GetTypeString (BFMessageType type);
+        static wxString GetTypeString (BFMessageType type);
         ///
         static long GetMsgStyle (BFMessageType type);
 
         /// create a message
         void Message (BFMessageType msgType, const wxChar* strMessage, const wxChar* strLocation);
 
+        /// create a backup message to "log" a running backup process
+        static void Backup (const wxChar* strMessage);
         /// create a info message
         static void Info (const wxChar* strMessage, const wxChar* strLocation = NULL);
         /// create a log message
