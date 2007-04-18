@@ -96,14 +96,38 @@ bool BFApp::OnInit()
     return TRUE;
 }
 
+const wxString& BFApp::GetCurrentProjectFilename ()
+{
+    BFRootTask::Instance().GetCurrentFilename();
+}
+
 bool BFApp::OpenProject (const wxChar* filename)
 {
-    return BFRootTask::Instance().ReadFromFile(filename);
+    bool rc = BFRootTask::Instance().ReadFromFile(filename);
+
+    return rc;
 }
 
 bool BFApp::SaveProject (const wxChar* filename)
 {
     return BFRootTask::Instance().StoreToFile(filename);
+}
+
+bool BFApp::SaveCurrentProject ()
+{
+    return BFRootTask::Instance().StoreToFile
+    (
+        BFRootTask::Instance().GetCurrentFilename()
+    );
+}
+
+bool BFApp::CloseCurrentProject (bool bCheckForModifications /*= true*/)
+{
+    if (bCheckForModifications)
+        if (IsProjectModified())
+            return false;
+
+    BFRootTask::Instance().Close();
 }
 
 bool BFApp::IsProjectModified ()
@@ -112,7 +136,7 @@ bool BFApp::IsProjectModified ()
 }
 
 void BFApp::Test ()
-{
+{/*
     wxString strOrg(_T("C:\\MyOrg"));
     wxString strSync(_T("E:\\ToSync"));
 
@@ -130,7 +154,7 @@ void BFApp::Test ()
         return;
     }
 
-    BFSystem::Info(_T("test finished"));
+    BFSystem::Info(_T("test finished"));*/
 }
 
 

@@ -159,6 +159,10 @@ wxString BFTask::GetTypeDescription ()
             strDesc = _("copy the file");
             break;
 
+        case TaskSYNC:
+            strDesc = _("synchronize directories");
+            break;
+
         default:
             strDesc = _("unknown task type");
             break;
@@ -169,9 +173,14 @@ wxString BFTask::GetTypeDescription ()
 
 int BFTask::GetTypeIconId ()
 {
+    return GetTypeIconId(GetType());
+}
+
+/*static*/ int BFTask::GetTypeIconId (BFTaskType type)
+{
     int iconId = -1;
 
-    switch (GetType())
+    switch (type)
     {
         case TaskARCHIVE:
             iconId = BFIconTable::task_zip;
@@ -183,6 +192,10 @@ int BFTask::GetTypeIconId ()
 
         case TaskFILECOPY:
             iconId = BFIconTable::task_filecopy;
+            break;
+
+        case TaskSYNC:
+            iconId = BFIconTable::task_sync;
             break;
 
         default:
@@ -361,9 +374,6 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
     ReplaceMacros(strDest);
     ReplaceMacros(strSrc);
 
-    // progress message
-    // ... do something with rProgress ...
-
     // copy file
     return Core().CopyFile
     (
@@ -374,6 +384,22 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
     );
 }
 
+bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
+{
+    // create destination string
+    wxString strDest, strSrc;
+    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
+    strSrc  = GetSource();
+    ReplaceMacros(strDest);
+    ReplaceMacros(strSrc);
+
+    return Core().Synchronize
+    (
+        GetSource(),
+        GetDestination(),
+        Verify()
+    );
+}
 
 bool BFTask::Run (ProgressWithMessage& rProgress)
 {
@@ -389,6 +415,10 @@ bool BFTask::Run (ProgressWithMessage& rProgress)
 
         case TaskFILECOPY:
             RunForFileCopy(rProgress);
+            break;
+
+        case TaskSYNC:
+            RunForDirSync(rProgress);
             break;
 
         default:

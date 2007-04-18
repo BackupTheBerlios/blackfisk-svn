@@ -22,10 +22,10 @@ class BFApp : public wxApp
 {
     private:
         /// for internationalization
-        wxLocale        locale_;
+        wxLocale                locale_;
 
         /// the main window
-        static BFMainFrame*    spMainFrame_;
+        static BFMainFrame*     spMainFrame_;
 
     protected:
         /// reference to the OBCore instance
@@ -54,9 +54,15 @@ class BFApp : public wxApp
         static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);
 
         ///
+        const wxString& GetCurrentProjectFilename ();
+        ///
         bool OpenProject (const wxChar* filename);
         ///
         bool SaveProject (const wxChar* filename);
+        ///
+        bool SaveCurrentProject ();
+        /** it close the current project */
+        bool CloseCurrentProject (bool bCheckForModifications = true);
         ///
         void Test ();
         ///

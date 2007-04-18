@@ -20,8 +20,11 @@
 #include "BFIconTable.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
-    EVT_MENU    (ID_OpenProject,        BFMainFrame::OnOpenProject)
-    EVT_MENU    (ID_SaveProject,        BFMainFrame::OnSaveProject)
+    EVT_MENU    (ID_OpenProject,        BFMainFrame::OnProject)
+    EVT_MENU    (ID_SaveProject,        BFMainFrame::OnProject)
+    EVT_MENU    (ID_SaveProjectAs,      BFMainFrame::OnProject)
+    EVT_MENU    (ID_CloseProject,       BFMainFrame::OnProject)
+    EVT_MENU    (ID_NewProject,         BFMainFrame::OnProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
@@ -51,25 +54,31 @@ END_EVENT_TABLE()
     // set as top window
     spApp_->SetTopWindow(this);
 
-    // ** menu FILE **
+
+    // ** menu PROJECT **
     wxMenu *menuFile = new wxMenu;
+    menuFile->Append( ID_NewProject,    _("&New/Close Project") );
+    menuFile->AppendSeparator();
     menuFile->Append( ID_OpenProject,   _("&Open Project") );
     menuFile->Append( ID_SaveProject,   _("&Save Project") );
-    menuFile->AppendSeparator();
-    menuFile->Append( ID_About,         _("&About...") );
-    menuFile->AppendSeparator();
-    menuFile->Append( ID_Quit,          _("E&xit") );
+    menuFile->Append( ID_SaveProjectAs, _("&Save Project as ...") );
 
+    // ** menu BLACKFISK **
+    wxMenu* menuBlackfisk = new wxMenu;
+    menuBlackfisk->Append( ID_Test,      _("&Testen") );
+    menuBlackfisk->Append( ID_Backup,    _("&Backup") );
+    menuBlackfisk->AppendSeparator();
+    menuBlackfisk->Append( ID_Quit,      _("E&xit") );
+
+    // ** menu HELP **
+    wxMenu *menuHelp = new wxMenu;
+    menuHelp->Append( ID_About,         _("&About...") );
+
+    // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
-
-    // ** menu TEST **
-    wxMenu* menuTest = new wxMenu;
-    menuTest->Append( ID_Test,      _("&Testen") );
-    menuTest->AppendSeparator();
-    menuTest->Append( ID_Backup,    _("&Backup") );
-
-    menuBar->Append( menuFile,  _("&File") );
-    menuBar->Append( menuTest,  _("&Test") );
+    menuBar->Append( menuFile,          _("&Project") );
+    menuBar->Append( menuBlackfisk,     _("&blackfisk") );
+    menuBar->Append( menuHelp,          _("&Help") );
     SetMenuBar( menuBar );
 
     // splitter window
@@ -110,23 +119,62 @@ BFBackupTree* BFMainFrame::BackupTree ()
     int i = 0;
 }
 
-void BFMainFrame::OnOpenProject (wxCommandEvent& event)
+void BFMainFrame::OnProject (wxCommandEvent& event)
+{
+    wxString strProject;
+
+    switch (event.GetId())
+    {
+        case ID_OpenProject:
+            if (AskModification())
+                spApp_->CloseCurrentProject(false);
+                    if (AskOpenProject(strProject))
+                        spApp_->OpenProject(strProject);
+            break;
+
+        case ID_SaveProject:
+            spApp_->SaveCurrentProject();
+            break;
+
+        case ID_SaveProjectAs:
+            if (AskSaveProject(strProject))
+                spApp_->SaveProject(strProject);
+            break;
+
+        case ID_CloseProject:
+        case ID_NewProject:
+            if (AskModification())
+                spApp_->CloseCurrentProject(false);
+            break;
+    }
+}
+
+bool BFMainFrame::AskModification ()
 {
     // check for a modified project
     if (spApp_->IsProjectModified())
     {
         // ask for save
-        int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it before open a new one?"));
+        int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
 
         // cancel/abort
         if (iAnswer == wxID_CANCEL)
-            return;
+            return false;
 
         // save
         if (iAnswer == wxID_YES)
-            if (SaveProject() == false)
-                return;
+            if (spApp_->SaveCurrentProject() == false)
+                return false;
     }
+
+    // wxID_NO
+    return true;
+}
+
+bool BFMainFrame::AskOpenProject (wxString& strProject)
+{
+    if ( !(AskModification()) )
+        return false;
 
     wxFileDialog dlg
     (
@@ -134,19 +182,22 @@ void BFMainFrame::OnOpenProject (wxCommandEvent& event)
         _("message"),
         wxEmptyString,
         wxEmptyString,
-        _("OctopusBackup files (*.ob)|*.ob"),
+        _("BlackfiskBackup files (*.ob)|*.ob"),
         wxFD_OPEN
     );
 
     dlg.CentreOnParent();
-    //dlg.SetDirectory(wxGetHomeDir());
 
     if (dlg.ShowModal() == wxID_OK)
-        if ( spApp_->OpenProject(dlg.GetPath()) == false)
-            BFSystem::Fatal(wxString::Format(_("Can not open Project %s"), dlg.GetPath().c_str()), _T("BFMainFrame::OpenProject()"));
+    {
+        strProject = dlg.GetPath();
+        return true;
+    }
+
+    return false;
 }
 
-bool BFMainFrame::SaveProject ()
+bool BFMainFrame::AskSaveProject (wxString& strProject)
 {
     wxFileDialog dlg
     (
@@ -162,25 +213,11 @@ bool BFMainFrame::SaveProject ()
 
     if (dlg.ShowModal() == wxID_OK)
     {
-        if ( spApp_->SaveProject(dlg.GetPath()))
-        {
-            return true;
-        }
-        else
-        {
-            BFSystem::Fatal(wxString::Format(_("Can not save Project %s"), dlg.GetPath().c_str()), _T("BFMainFrame::SaveProject()"));
-            return false;
-        }
+        strProject = dlg.GetPath();
+        return true;
     }
-    else
-    {
-        return false;
-    }
-}
 
-void BFMainFrame::OnSaveProject (wxCommandEvent& event)
-{
-    SaveProject();
+    return false;
 }
 
 void BFMainFrame::OnQuit (wxCommandEvent& WXUNUSED(event))

@@ -34,6 +34,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
         bool                bModified_;
 
     protected:
+        /** the complete filename of the current open project
+            if nothing is open it is empty */
+        wxString            strCurrentFilename_;
+
         ///
         BFRootTaskData ();
         ///
@@ -45,6 +49,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
 
         ///
         bool Serialize (jbArchive& rA);
+
+        /** it delete all task objects in the task-vector
+            ATTENTION: it does not check if the project is saved !*/
+        void ClearTaskVector ();
 
     public:
         ///
@@ -76,9 +84,12 @@ class BFRootTaskData : public BFTaskBase, public Subject
         BFTask* GetTask(BFoid oid);
 
         ///
+        const wxString& GetCurrentFilename ();
+        ///
         bool IsModified ();
         ///
         void SetModified (bool bModified = true);
+
         ///
         bool StoreToFile (const wxChar* strFilename);
         ///
@@ -89,10 +100,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
 class BFRootTask : public BFRootTaskData
 {
     private:
-        ///
+        /*
         Progress*           pTotalProgress_;
         ///
-        Progress*           pTaskProgress_;
+        Progress*           pTaskProgress_;*/
 
         ///
         BFRootTask ();
@@ -118,6 +129,9 @@ class BFRootTask : public BFRootTaskData
 
         ///
         BFCore& Core ();
+
+        ///
+        void Close ();
 
         /** run all tasks*/
         bool Run (wxWindow* pParent);

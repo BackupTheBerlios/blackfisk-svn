@@ -18,7 +18,7 @@ typedef wxUint8 BFTaskType;
 #define TaskARCHIVE     1       // comprase backup-source to an archive
 #define TaskDIRCOPY     2       // copy a complete directory
 #define TaskFILECOPY    3       // copy a file
-//#define TaskDUMMY       4
+#define TaskSYNC        4       // synchronize directories
 
 /** define the compression types
     which compression format should be used for TaskARCHIVE */
@@ -125,6 +125,8 @@ class BFTask : public BFTaskData
         bool RunForDirCopy (ProgressWithMessage& rProgress);
         ///
         bool RunForFileCopy(ProgressWithMessage& rProgress);
+        ///
+        bool RunForDirSync (ProgressWithMessage& rProgress);
 
     public:
         /// constructor
@@ -155,6 +157,8 @@ class BFTask : public BFTaskData
         wxString GetTypeDescription ();
         /// return the iconId of the task
         int GetTypeIconId ();
+        ///
+        static int GetTypeIconId (BFTaskType type);
         ///
         wxString GetArchiveExtension();
 

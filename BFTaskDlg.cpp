@@ -214,7 +214,10 @@ void BFTaskBaseDlg::Arrange(wxSizer* pBody, wxSizer* pBodyExtra /*= NULL*/)
             new BFTaskDirectoryCopyDlg(BFMainFrame::Instance(), *pTask);
             break;
 
-        //case TaskINVALID:
+        case TaskSYNC:
+            new BFTaskDirectoryCopyDlg(BFMainFrame::Instance(), *pTask);
+            break;
+
         //case TaskARCHIVE:
 
         case TaskINVALID:
@@ -339,3 +342,67 @@ BFTaskDirectoryCopyDlg::BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask
 BFTaskDirectoryCopyDlg::~BFTaskDirectoryCopyDlg ()
 {
 }
+
+/*
+BFTaskSynchronizeDlg::BFTaskSynchronizeDlg (wxWindow* pParent, BFTask& rTask)
+                      : BFTaskBaseDlg(pParent, _("directory copy"), rTask)
+{
+    // name
+    wxStaticText* pNameStatic = new wxStaticText(this, -1, _("destination name:"));
+    SetRowSize(pNameStatic, pNameCtrl_);
+
+    // source
+    wxStaticText* pSourceStatic   = new wxStaticText(this, -1, _("source:"));
+    pSourceCtrl_->Disable();
+    SetRowSize(pSourceStatic, pSourceCtrl_);
+
+    // destination
+    // is handled by the base-ctor and the ctrl itself
+    //wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    //SetRowSize(pDestStatic, pDestCtrl_);
+
+    // verify
+    wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
+    SetRowSize(pVerifyStatic, pVerifyCheck_);
+
+    /* exclude control
+    wxStaticText* pExcludeStatic = new wxStaticText(this, -1, _("files and directories to exclude from this task"));
+    pExcludeStatic->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeStatic->GetSize().GetHeight()));
+    pExcludeList_ = new wxListBox(this, -1);
+    pExcludeList_->SetMinSize(wxSize(lWidth1_+lWidth2_, pExcludeList_->GetSize().GetHeight()));*/
+/*
+    // sizer
+    wxBoxSizer* pBodySizer      = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pExtraSizer     = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pSourceSizer    = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pDestSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pVerifySizer    = new wxBoxSizer(wxHORIZONTAL);
+
+    // arrange
+    pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSizer      ->Add(pNameCtrl_);
+    pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSourceSizer    ->Add(pSourceCtrl_);
+    pDestSizer      ->Add(pDestCtrl_);
+    pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pVerifySizer    ->Add(pVerifyCheck_);
+    /*pExtraSizer     ->Add(pExcludeStatic,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pExtraSizer     ->Add(pExcludeList_);*/
+/*
+    pBodySizer->Add(pSourceSizer,   wxSizerFlags(0).Border());
+    pBodySizer->Add(pDestSizer,     wxSizerFlags(0).Border());
+    pBodySizer->Add(pNameSizer,     wxSizerFlags(0).Border());
+    pBodySizer->Add(pVerifySizer,   wxSizerFlags(0).Border());
+    //pBodySizer->Add(pExtraSizer,    wxSizerFlags(0).Border());
+
+    Arrange(pBodySizer);
+
+    GetData();
+    ShowModal();
+}
+
+BFTaskSynchronizeDlg::~BFTaskSynchronizeDlg ()
+{
+}
+*/

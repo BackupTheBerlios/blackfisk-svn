@@ -43,7 +43,8 @@ class BFIconTable : public wxImageList
             folder_virtual_open,
             task_dircopy,
             task_filecopy,
-            task_zip
+            task_zip,
+            task_sync
         };
 };    // class BFIconTable
 

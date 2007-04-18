@@ -83,7 +83,7 @@ class BFTaskBaseDlg : public wxDialog
         static void Show (BFTask* pTask);
 
     DECLARE_EVENT_TABLE();
-};    // class BFTaskBaseDlg
+};
 
 
 /// dialog for file copy tasks
@@ -97,7 +97,7 @@ class BFTaskFileCopyDlg : public BFTaskBaseDlg
         /// virtual destructor
         virtual ~BFTaskFileCopyDlg ();
 
-};    // class BFTaskFileCopyDlg
+};
 
 
 /// dialog for directory copy tasks
@@ -112,7 +112,22 @@ class BFTaskDirectoryCopyDlg : public BFTaskBaseDlg
         BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask);
         /// virtual destructor
         virtual ~BFTaskDirectoryCopyDlg ();
+};
 
-};    // class BFTaskDlg
+/*
+/// dialog for directory synchronization
+class BFTaskSynchronizeDlg : public BFTaskBaseDlg
+{
+    protected:
+        /// exclude control
+        wxListBox*          pExcludeList_;
+
+    public:
+        /// ctor
+        BFTaskSynchronizeDlg (wxWindow* pParent, BFTask& rTask);
+        /// virtual dtor
+        virtual ~BFTaskSynchronizeDlg ();
+};
+*/
 
 #endif    // BFTASKDLG_H

@@ -13,8 +13,10 @@
 #include "Progress.h"
 #include "BFIconTable.h"
 
+#define BFROOTTASK_DEFAULT_NAME _("unnamed")
+
 BFRootTaskData::BFRootTaskData ()
-              : strName_(_("unnamed")),
+              : strName_(BFROOTTASK_DEFAULT_NAME),
                 bModified_(false)
 {
 }
@@ -22,8 +24,15 @@ BFRootTaskData::BFRootTaskData ()
 
 /*virtual*/BFRootTaskData::~BFRootTaskData ()
 {
+    ClearTaskVector();
+}
+
+void BFRootTaskData::ClearTaskVector ()
+{
     for (int i = 0; i < vecTasks_.size(); ++i)
         delete vecTasks_[i];
+
+    vecTasks_.clear();
 }
 
 BFTask* BFRootTaskData::GetTask(BFoid oid)
@@ -38,6 +47,11 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
 bool BFRootTaskData::HasTask(BFoid oid)
 {
     return (GetTask(oid) != NULL);
+}
+
+const wxString& BFRootTaskData::GetCurrentFilename ()
+{
+    return strCurrentFilename_;
 }
 
 bool BFRootTaskData::IsModified ()
@@ -61,7 +75,13 @@ bool BFRootTaskData::StoreToFile (const wxChar* strFilename)
     wxFileOutputStream  out(strFilename);
     jbArchive           archive(out);
 
-    return Serialize(archive);
+    if (Serialize(archive))
+    {
+        strCurrentFilename_ = strFilename;
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -69,14 +89,20 @@ bool BFRootTaskData::ReadFromFile (const wxChar* strFilename)
 {
     if (strFilename == NULL)
     {
-        wxLogError (_("wrong parameters in BFRootTaskData::StoreToFile (const wxChar*)"));
+        BFSystem::Fatal(_("wrong parameters"), _T("BFRootTaskData::ReadFromFile()"));
         return false;
     }
 
     wxFileInputStream   in(strFilename);
     jbArchive           archive(in);
 
-    return Serialize(archive);
+    if (Serialize(archive))
+    {
+        strCurrentFilename_ = strFilename;
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -220,8 +246,7 @@ BFRootTask& BFRootTask::Instance ()
 }
 
 BFRootTask::BFRootTask()
-          : pTotalProgress_(NULL),
-            pTaskProgress_(NULL)
+          : oidLast_(BFInvalidOID)
 {
 }
 
@@ -244,6 +269,15 @@ BFCore& BFRootTask::Core ()
     return BFCore::Instance();
 }
 
+void BFRootTask::Close ()
+{
+    ClearTaskVector();
+    SetName(BFROOTTASK_DEFAULT_NAME);
+    SetModified(false);
+    strCurrentFilename_ = wxEmptyString;
+    oidLast_ = BFInvalidOID;
+    broadcastObservers();
+}
 
 bool BFRootTask::Run (wxWindow* pParent)
 {

@@ -27,7 +27,10 @@ enum
     ID_Test,
     ID_Backup,
     ID_OpenProject,
-    ID_SaveProject
+    ID_SaveProject,
+    ID_SaveProjectAs,
+    ID_CloseProject,
+    ID_NewProject
 };
 
 /// menuIDs for BFDirCtrl and BFBackupTree
@@ -43,6 +46,8 @@ enum
 #define BFBACKUPCTRL_ID_MACROBUTTON         8 + wxID_HIGHEST
 #define BFDESTCTRL_ID_MACROBUTTON           9 + wxID_HIGHEST
 #define BFDESTCTRL_ID_MACRO_DATE            10 + wxID_HIGHEST
+#define BFBACKUPCTRL_ID_SYNC_DIR            11 + wxID_HIGHEST
+#define BFDIRCTRL_ID_BACKUP_SYNCDIR         BFBACKUPCTRL_ID_SYNC_DIR
 
 ///
 class BFMainFrame : public wxFrame
@@ -90,12 +95,17 @@ class BFMainFrame : public wxFrame
         ///
         void OnBackup (wxCommandEvent& event);
         ///
-        void OnOpenProject (wxCommandEvent& event);
-        ///
-        void OnSaveProject (wxCommandEvent& event);
+        void OnProject (wxCommandEvent& event);
 
-        ///
-        bool SaveProject ();
+        /** ask for the project file to open and store it in 'strProject'
+            it handle another open and modified project */
+        bool AskOpenProject (wxString& strProject);
+        /** ask for the project filename to save and store it in 'strProject' */
+        bool AskSaveProject (wxString& strProject);
+        /** handle a modified project, ask if it should be saved and does it
+            it return 'false' if the user press the cancel button
+            it return 'true' if the user press yes or no */
+        bool AskModification ();
 
         /** Create a progress-object and a ProgressDialog as an observer
             for it.

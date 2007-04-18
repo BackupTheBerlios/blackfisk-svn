@@ -25,8 +25,9 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                          BFBackupTree::OnItemMenu)
     EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,    BFBackupTree::OnAddDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION, BFBackupTree::OnCreateDestination)
-    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnBackupCopy)
-    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnBackupCopy)
+    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_SYNC_DIR,          BFBackupTree::OnCreateBackup)
     EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
     EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                          BFBackupTree::OnEndLabelEdit)
 END_EVENT_TABLE()
@@ -151,27 +152,30 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
         return false;
 
     wxMenu                  menu;
-    wxMenuItem*             pItem       = NULL;
-    int                     idBmp, idItem;
+    wxMenuItem*             pItem;
     wxString                str;
 
     // ** copy entry **
     if (wxDir::Exists(filenames[0]))
     {
-        idBmp   = BFIconTable::task_dircopy;
-        idItem  = BFBACKUPCTRL_ID_COPY_DIR;
-        str     = _("copy directory");
+        // copy directory
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_DIR, _("copy directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu.Append(pItem);
+
+        // sync directory
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronize directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
+        menu.Append(pItem);
     }
     else
     {
-        idBmp   = BFIconTable::task_filecopy;
-        idItem  = BFBACKUPCTRL_ID_COPY_FILE;
-        str     = _("copy file");
+        // copy file
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
+        menu.Append(pItem);
     }
 
-    pItem = new wxMenuItem(&menu, idItem, str);
-    pItem->SetBitmap(BFIconTable::Instance()->GetIcon(idBmp));
-    menu.Append(pItem);
 
     // remember the filename for use in other methodes
     SetDropedFilename(filenames[0]);
@@ -321,29 +325,18 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
 {
-    int iIconId;
-
-    // add the task identifier itself
-    switch (type)
-    {
-        case TaskARCHIVE:
-            iIconId = BFIconTable::task_zip;
-            break;
-
-        case TaskDIRCOPY:
-            iIconId = BFIconTable::task_dircopy;
-            break;
-
-        case TaskFILECOPY:
-            iIconId = BFIconTable::task_filecopy;
-            break;
-    };  // switch(GetType)
-
     // add the destination items and the task item itself
-    return AppendItem (AddDestination(strDestination), strName, iIconId, -1, new BFBackupTreeItemData(oid));
+    return AppendItem
+    (
+        AddDestination(strDestination),
+        strName,
+        BFTask::GetTypeIconId(type),
+        -1,
+        new BFBackupTreeItemData(oid)
+    );
 }
 
-void BFBackupTree::OnBackupCopy (wxCommandEvent& rEvent)
+void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 {
     BFTask*         pTask       = NULL;
     BFTaskType      type;
@@ -358,6 +351,10 @@ void BFBackupTree::OnBackupCopy (wxCommandEvent& rEvent)
 
         case BFBACKUPCTRL_ID_COPY_FILE:
             type = TaskFILECOPY;
+            break;
+
+        case BFBACKUPCTRL_ID_SYNC_DIR:
+            type = TaskSYNC;
             break;
 
         default:

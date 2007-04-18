@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
   EVT_MENU    (BFDIRCTRL_ID_CREATEDESTINATION,  BFDirCtrl::OnDestination)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_FILECOPY,    BFDirCtrl::OnBackup)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_DIRCOPY,     BFDirCtrl::OnBackup)
+  EVT_MENU    (BFDIRCTRL_ID_BACKUP_SYNCDIR,     BFDirCtrl::OnBackup)
 END_EVENT_TABLE()
 
 //
@@ -125,6 +126,7 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 
         // ** backup dir copy **
         menu_backup.Append(BFDIRCTRL_ID_BACKUP_DIRCOPY, _("directory copy"));
+        menu_backup.Append(BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
     }
     else
     {
@@ -200,8 +202,9 @@ void BFDirCtrl::OnBackup (wxCommandEvent& event)
     {
         case BFDIRCTRL_ID_BACKUP_FILECOPY:
         case BFDIRCTRL_ID_BACKUP_DIRCOPY:
+        case BFDIRCTRL_ID_BACKUP_SYNCDIR:
             BFMainFrame::Instance()->BackupTree()->SetDropedFilename (pDirItem->m_path);
-            BFMainFrame::Instance()->BackupTree()->OnBackupCopy (event);
+            BFMainFrame::Instance()->BackupTree()->OnCreateBackup (event);
             break;
 
         default:
