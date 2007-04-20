@@ -7,22 +7,17 @@
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/colour.h>
 
 #include "BFSystem.h"
 #include "BFTaskDlg.h"
 #include "BFMainFrame.h"
-
-BEGIN_EVENT_TABLE(BFDestinationCtrl, wxPanel)
-    EVT_BUTTON  (BFDESTCTRL_ID_MACROBUTTON,     BFDestinationCtrl::OnButton)
-    EVT_MENU    (BFDESTCTRL_ID_MACRO_DATE,      BFDestinationCtrl::OnMacro)
-END_EVENT_TABLE()
+#include "BFMacroButton.h"
+#include "ctrlids.h"
 
 //
 BFDestinationCtrl::BFDestinationCtrl (wxWindow* pParent, const wxChar* strPath /*= wxEmptyString*/)
                  : wxPanel(pParent),
-                   pPickerCtrl_(NULL),
-                   pMacroButton_(NULL)
+                   pPickerCtrl_(NULL)
 {
     Init();
 
@@ -42,7 +37,6 @@ void BFDestinationCtrl::Init ()
 
     // panel
     wxPanel* pPanel = new wxPanel(this);
-    //pPanel->SetBackgroundColour(wxColour(100, 10, 10));
 
     // control
     pPickerCtrl_ = new wxDirPickerCtrl
@@ -59,26 +53,17 @@ void BFDestinationCtrl::Init ()
     pPickerCtrl_->SetPickerCtrlProportion(1);
 
     // macro button
-    pMacroButton_ = new wxButton
-                    (
-                        pPanel,
-                        BFDESTCTRL_ID_MACROBUTTON,
-                        _("macro"),
-                        wxDefaultPosition,
-                        wxDefaultSize,
-                        wxNO_BORDER | wxBU_EXACTFIT
-                    );
+    wxButton* pMacroButton = new BFMacroButton(pPanel, *(pPickerCtrl_->GetTextCtrl()));
 
     // arrange/layout panel
     wxBoxSizer* pSubSizer = new wxBoxSizer(wxHORIZONTAL);
     pSubSizer->Add(pPickerCtrl_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL).Expand());
-    pSubSizer->Add(pMacroButton_, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSubSizer->Add(pMacroButton, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPanel->SetSizer(pSubSizer);
 
     // set size
-    //BFTaskBaseDlg::SetRowSize(pLabel, pPanel);
-    pLabel->SetMinSize(wxSize(BFTaskBaseDlg::lWidth1_, pLabel->GetSize().GetHeight()));
-    pPanel->SetMinSize(wxSize(BFTaskBaseDlg::lWidth2_, pPanel->GetSize().GetHeight()+3));
+    pLabel->SetMinSize(wxSize(BFTaskDlg::lWidth1_, pLabel->GetSize().GetHeight()));
+    pPanel->SetMinSize(wxSize(BFTaskDlg::lWidth2_, pPanel->GetSize().GetHeight()+3));
 
     // arrange/layout the main control
     wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -95,17 +80,4 @@ wxString BFDestinationCtrl::GetPath ()
 void BFDestinationCtrl::SetPath (const wxString& strPath)
 {
     pPickerCtrl_->SetPath(strPath);
-}
-
-void BFDestinationCtrl::OnButton(wxCommandEvent& rEvent)
-{
-    wxMenu menu;
-    menu.Append(BFDESTCTRL_ID_MACRO_DATE, BFTASK_MACRO_DATE);
-    pMacroButton_->PopupMenu(&menu);
-}
-
-void BFDestinationCtrl::OnMacro(wxCommandEvent& rEvent)
-{
-    pPickerCtrl_->GetTextCtrl()->WriteText(BFTASK_MACRO_DATE);
-    pPickerCtrl_->GetTextCtrl()->SetFocus();
 }

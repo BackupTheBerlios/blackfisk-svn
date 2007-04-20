@@ -133,7 +133,15 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             break;
 
         case ID_SaveProject:
-            spApp_->SaveCurrentProject();
+            if (spApp_->GetCurrentProjectFilename().Len() == 0)
+            {
+                if (AskSaveProject(strProject))
+                    spApp_->SaveProject(strProject);
+            }
+            else
+            {
+                spApp_->SaveCurrentProject();
+            }
             break;
 
         case ID_SaveProjectAs:

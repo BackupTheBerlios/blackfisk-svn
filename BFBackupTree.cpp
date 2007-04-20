@@ -19,6 +19,7 @@
 #include "BFTaskDlg.h"
 #include "BFIconTable.h"
 #include "BFDestinationDlg.h"
+#include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
@@ -90,7 +91,7 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
     BFTask* pTask = GetTaskByItem(lastItemId_);
 
     if (pTask != NULL)
-        BFTaskBaseDlg::Show (pTask);
+        BFTaskDlg::Show (pTask);
 }
 
 void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
@@ -371,7 +372,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
                         true /* DEBUG */,
                         CompressNOTUSED,
                         arrString);
-    BFTaskBaseDlg::Show(pTask);
+    BFTaskDlg::Show(pTask);
 
     // the remembered filename and destination is not needed anymore
     strDropedFilename_      = wxEmptyString;

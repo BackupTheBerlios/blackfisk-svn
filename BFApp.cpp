@@ -90,9 +90,6 @@ bool BFApp::OnInit()
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
     new BFMainFrame(*this);
 
-    // DEBUG
-    Backup();
-
     return TRUE;
 }
 
@@ -160,7 +157,6 @@ void BFApp::Test ()
 
 void BFApp::Backup()
 {
-    OpenProject(_T("D:\\test.ob"));
     return;
 
     // init

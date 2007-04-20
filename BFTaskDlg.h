@@ -23,8 +23,8 @@
 class wxSizer;
 class BFDestinationCtrl;
 
-/// the base class of all task dialogs
-class BFTaskBaseDlg : public wxDialog
+/// task dialog
+class BFTaskDlg : public wxDialog
 {
     protected:
         /** reference to the object holding the data */
@@ -38,6 +38,8 @@ class BFTaskBaseDlg : public wxDialog
         BFDestinationCtrl*  pDestCtrl_;
         /// verify
         wxCheckBox*         pVerifyCheck_;
+        /// exclude control
+        wxListBox*          pExcludeCtrl_;
 
         /** get the data from the data layer ('rTask')
             in the dialog controls */
@@ -48,16 +50,13 @@ class BFTaskBaseDlg : public wxDialog
         /** check if the data in the dialog is plausible */
         bool IsPlausible ();
 
-        /// constructor
-        BFTaskBaseDlg (wxWindow* pParent, const wxString& strTitle, BFTask& rTask);
-
         /** init the task type with icon and its description
             and return its wxSizer */
-        virtual wxSizer* InitType ();
-        /** init the buttons in the dialog*/
-        virtual wxSizer* InitButtons ();
+        virtual wxSizer* CreateTypeCtrl ();
         ///
-        void Arrange(wxSizer* pBody, wxSizer* pBodyExtra = NULL);
+        virtual wxSizer* CreateControls ();
+        /** init the buttons in the dialog*/
+        virtual wxSizer* CreateButtons ();
 
     public:
         /// width of the label column
@@ -65,8 +64,10 @@ class BFTaskBaseDlg : public wxDialog
         /// width of the editable column
         static const long lWidth2_;
 
+        /// constructor
+        BFTaskDlg (wxWindow* pParent, BFTask& rTask);
         /// virtual destructor
-        virtual ~BFTaskBaseDlg ();
+        virtual ~BFTaskDlg ();
 
         /** set the size of the specified dialog row */
         static void SetRowSize (wxWindow* pCol1, wxWindow* pCol2);
@@ -84,50 +85,5 @@ class BFTaskBaseDlg : public wxDialog
 
     DECLARE_EVENT_TABLE();
 };
-
-
-/// dialog for file copy tasks
-class BFTaskFileCopyDlg : public BFTaskBaseDlg
-{
-    protected:
-
-    public:
-        /// constructor
-        BFTaskFileCopyDlg (wxWindow* pParent, BFTask& rTask);
-        /// virtual destructor
-        virtual ~BFTaskFileCopyDlg ();
-
-};
-
-
-/// dialog for directory copy tasks
-class BFTaskDirectoryCopyDlg : public BFTaskBaseDlg
-{
-    protected:
-        /// exclude control
-        wxListBox*          pExcludeList_;
-
-    public:
-        /// constructor
-        BFTaskDirectoryCopyDlg (wxWindow* pParent, BFTask& rTask);
-        /// virtual destructor
-        virtual ~BFTaskDirectoryCopyDlg ();
-};
-
-/*
-/// dialog for directory synchronization
-class BFTaskSynchronizeDlg : public BFTaskBaseDlg
-{
-    protected:
-        /// exclude control
-        wxListBox*          pExcludeList_;
-
-    public:
-        /// ctor
-        BFTaskSynchronizeDlg (wxWindow* pParent, BFTask& rTask);
-        /// virtual dtor
-        virtual ~BFTaskSynchronizeDlg ();
-};
-*/
 
 #endif    // BFTASKDLG_H

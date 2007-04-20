@@ -1,3 +1,4 @@
+- open project file progress
 - exclude-control for directory-tasks
 - log backup
 - OBTaskProgressWindow (tasklist, totalprg, taskwiseprg, etc)
@@ -12,4 +13,5 @@
 - using commandline without gui (controlable by things like cronjob)
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
 - supported languages: english, german, chinese (brian)
-- context-sensitiv help (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
+- help: describe unsage based on usecases
+- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)

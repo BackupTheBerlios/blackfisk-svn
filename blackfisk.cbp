@@ -122,6 +122,12 @@
 		<Unit filename="BFLog.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
+		<Unit filename="BFMacroButton.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFMacroButton.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFMainFrame.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
@@ -191,6 +197,9 @@
 		</Unit>
 		<Unit filename="blackfisk.h">
 			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="ctrlids.h">
+			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="wxArchive\include\wx\wxArchive.h">
 			<Option virtualFolder="DataLayer\" />

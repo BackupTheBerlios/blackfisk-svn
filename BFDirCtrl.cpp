@@ -10,6 +10,7 @@
 #include "BFBackupTree.h"
 #include "BFMainFrame.h"
 #include "BFDestinationDlg.h"
+#include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
   EVT_TOGGLEBUTTON (BFDIRCTRL_ID_FILEBUTTON,    BFDirCtrl::OnButton_DirCtrl)

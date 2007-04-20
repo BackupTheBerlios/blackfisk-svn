@@ -1,0 +1,15 @@
+[place in each task-destination with the task-name+".log"]
+
+Task:
+Type:
+Source:
+Destination:
+Backup-Start:
+Backup-Time:
+Verbose-Level: [fatal][error][warning]
+Stop-Level: [stop|wait|ignore on warning|error|fatal]
+
+logged messages:
+[fatal][error][warning]
+[task skiped because of the last [fatal][error][warning]]
+[ask user] -> [user said: ignore|skip task|skip backup|retry]
