@@ -18,6 +18,7 @@
 #include "BFDirCtrl.h"
 #include "BFBackupTree.h"
 #include "BFIconTable.h"
+#include "BFProjectSettingsDlg.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_OpenProject,        BFMainFrame::OnProject)
@@ -25,10 +26,12 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_SaveProjectAs,      BFMainFrame::OnProject)
     EVT_MENU    (ID_CloseProject,       BFMainFrame::OnProject)
     EVT_MENU    (ID_NewProject,         BFMainFrame::OnProject)
+    EVT_MENU    (ID_ProjectSettings,    BFMainFrame::OnProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
     EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
+    EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
 END_EVENT_TABLE()
 
 
@@ -54,21 +57,24 @@ END_EVENT_TABLE()
     // set as top window
     spApp_->SetTopWindow(this);
 
-
-    // ** menu PROJECT **
-    wxMenu *menuFile = new wxMenu;
-    menuFile->Append( ID_NewProject,    _("&New/Close Project") );
-    menuFile->AppendSeparator();
-    menuFile->Append( ID_OpenProject,   _("&Open Project") );
-    menuFile->Append( ID_SaveProject,   _("&Save Project") );
-    menuFile->Append( ID_SaveProjectAs, _("&Save Project as ...") );
-
     // ** menu BLACKFISK **
     wxMenu* menuBlackfisk = new wxMenu;
+    menuBlackfisk->Append( ID_Settings,  _("Gobal &Settings") );
+    menuBlackfisk->AppendSeparator();
     menuBlackfisk->Append( ID_Test,      _("&Testen") );
     menuBlackfisk->Append( ID_Backup,    _("&Backup") );
     menuBlackfisk->AppendSeparator();
     menuBlackfisk->Append( ID_Quit,      _("E&xit") );
+
+    // ** menu PROJECT **
+    wxMenu *menuProject = new wxMenu;
+    menuProject->Append( ID_NewProject,         _("&New/Close Project") );
+    menuProject->AppendSeparator();
+    menuProject->Append( ID_OpenProject,        _("&Open Project") );
+    menuProject->Append( ID_SaveProject,        _("&Save Project") );
+    menuProject->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
+    menuProject->AppendSeparator();
+    menuProject->Append( ID_ProjectSettings,    _("&Project Settings") );
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -76,8 +82,8 @@ END_EVENT_TABLE()
 
     // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append( menuFile,          _("&Project") );
     menuBar->Append( menuBlackfisk,     _("&blackfisk") );
+    menuBar->Append( menuProject,       _("&Project") );
     menuBar->Append( menuHelp,          _("&Help") );
     SetMenuBar( menuBar );
 
@@ -154,7 +160,16 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             if (AskModification())
                 spApp_->CloseCurrentProject(false);
             break;
+
+        case ID_ProjectSettings:
+            OpenProjectSettings();
+            break;
     }
+}
+
+void BFMainFrame::OnSettings (wxCommandEvent& event)
+{
+    BFSystem::Info(_("Settings"));
 }
 
 bool BFMainFrame::AskModification ()
@@ -268,4 +283,9 @@ int BFMainFrame::QuestionYesNoCancel (const wxChar* strQuestion)
     wxMessageDialog dlg(this, strQuestion, _("Question"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
 
     return dlg.ShowModal();
+}
+
+void BFMainFrame::OpenProjectSettings ()
+{
+    new BFProjectSettingsDlg(this);
 }

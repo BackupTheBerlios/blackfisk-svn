@@ -30,7 +30,9 @@ enum
     ID_SaveProject,
     ID_SaveProjectAs,
     ID_CloseProject,
-    ID_NewProject
+    ID_NewProject,
+    ID_ProjectSettings,
+    ID_Settings
 };
 
 ///
@@ -80,6 +82,8 @@ class BFMainFrame : public wxFrame
         void OnBackup (wxCommandEvent& event);
         ///
         void OnProject (wxCommandEvent& event);
+        ///
+        void OnSettings (wxCommandEvent& event);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */
@@ -103,6 +107,9 @@ class BFMainFrame : public wxFrame
         bool QuestionYesNo (const wxChar* strQuestion);
         /// displays a modal message-box, ask a YES-NO-CANCEL-question and return the answer as button ID
         int QuestionYesNoCancel (const wxChar* strQuestion);
+
+        ///
+        void OpenProjectSettings ();
 
     DECLARE_EVENT_TABLE();
 };    // class BFMainFrame

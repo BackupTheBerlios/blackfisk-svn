@@ -106,6 +106,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         ///
         void OnItemMenu (wxTreeEvent& rEvent);
         ///
+        void OnProjectSettings (wxCommandEvent& rEvent);
+        ///
         void OnAddDestination (wxCommandEvent& rEvent);
         ///
         void OnCreateDestination (wxCommandEvent& rEvent);

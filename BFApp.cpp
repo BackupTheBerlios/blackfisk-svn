@@ -59,6 +59,39 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     return rStrings;
 }
 
+/*static*/ wxString BFApp::ExtractCommunity (wxArrayString& rStrings)
+{
+    wxString str;
+
+    if (rStrings.GetCount() == 0)
+        return str;
+
+    int iCur = 0;
+    wxChar cCur = _T('\0');
+
+    while (true)
+    {
+        for (int i = 0; i < rStrings.GetCount(); ++i)
+        {
+            // check string length
+            if (rStrings[i].Len() < (iCur+1))
+                return str;
+
+            if (cCur == _T('\0'))
+                cCur = rStrings[i][iCur];
+
+            if (cCur != rStrings[i][iCur])
+                return str;
+        }
+
+        str = str + cCur;
+        cCur = _T('\0');
+        ++iCur;
+    }
+
+    return str;
+}
+
 BFApp::BFApp ()
 {
 }
@@ -133,25 +166,15 @@ bool BFApp::IsProjectModified ()
 }
 
 void BFApp::Test ()
-{/*
-    wxString strOrg(_T("C:\\MyOrg"));
-    wxString strSync(_T("E:\\ToSync"));
+{
+    wxArrayString   arr;
+    wxString        str;
+    arr.Add(_T("ABCDEFGHIJKLMN"));
+    arr.Add(_T("ABCDEfghi239"));
+    arr.Add(_T("ABCd333"));
+    arr.Add(_T("ABC"));
 
-    BFSystem::Log(_T("test start"));
-    Core().Synchronize(strOrg, strSync, true);
-    BFSystem::Log(_T("sync finished"));
-
-    wxArrayString arrOrg, arrSync;
-    Core().GetDirListing(strOrg, arrOrg);
-    Core().GetDirListing(strSync, arrSync);
-
-    if (arrOrg.GetCount() != arrSync.GetCount())
-    {
-        BFSystem::Error(_T("different listing count"));
-        return;
-    }
-
-    BFSystem::Info(_T("test finished"));*/
+    str = ExtractCommunity(arr);
 }
 
 

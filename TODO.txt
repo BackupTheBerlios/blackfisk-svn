@@ -15,3 +15,4 @@
 - supported languages: english, german, chinese (brian)
 - help: describe unsage based on usecases
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
+- full customizable keybord-shortcuts based on the menus

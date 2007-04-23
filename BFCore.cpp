@@ -35,7 +35,6 @@ BFCore& BFCore::Instance ()
 
 
 BFCore::BFCore ()
-      : log_(BF_LOGFILE_NAME)
 {
     // remember current date in a string
     ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());

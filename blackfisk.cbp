@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxArchive\;" />
 		<Build>
 			<Target title="release_ansi">
 				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
@@ -74,6 +74,12 @@
 		<Unit filename="BFApp.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
+		<Unit filename="BFBackupLog.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFBackupLog.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
 		<Unit filename="BFBackupTree.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
@@ -117,10 +123,16 @@
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="BFLog.cpp">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFLog.h">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFLogBase.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFLogBase.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFMacroButton.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
@@ -140,17 +152,41 @@
 		<Unit filename="BFMessageDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
+		<Unit filename="BFProjectSettings.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFProjectSettings.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFProjectSettingsCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFProjectSettingsCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFProjectSettingsDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFProjectSettingsDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="BFRootTask.cpp">
 			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
 		<Unit filename="BFRootTask.h">
 			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
+		<Unit filename="BFSettings.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFSettings.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
 		<Unit filename="BFSystem.cpp">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFSystem.h">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFTask.cpp">
 			<Option virtualFolder="DataLayer\Task\" />
@@ -201,11 +237,14 @@
 		<Unit filename="ctrlids.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="jbarchive.h">
+			<Option virtualFolder="AppLayer\wxArchive\" />
+		</Unit>
 		<Unit filename="wxArchive\include\wx\wxArchive.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="AppLayer\wxArchive\" />
 		</Unit>
 		<Unit filename="wxArchive\src\wxArchive.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="AppLayer\wxArchive\" />
 		</Unit>
 		<Extensions>
 			<code_completion />

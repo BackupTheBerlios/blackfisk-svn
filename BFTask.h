@@ -10,6 +10,7 @@
 
 #include <vector>
 #include "BFTaskBase.h"
+#include "jbarchive.h"
 
 /** define the type of the task
     it says what the tasks exactly do */

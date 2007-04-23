@@ -16,6 +16,7 @@
 #include "BFMainFrame.h"
 #include "ObserverPattern.h"
 #include "BFBackupTree.h"
+#include "BFProjectSettings.h"
 
 /// data layer
 class BFRootTaskData : public BFTaskBase, public Subject
@@ -28,6 +29,8 @@ class BFRootTaskData : public BFTaskBase, public Subject
         wxString            strName_;
         /// vector with all backup-tasks
         BFTaskVector        vecTasks_;
+        ///
+        BFProjectSettings   projectSettings_;
 
         /** indicates that the object or child of it has
             data that was not stored this time */
@@ -62,6 +65,8 @@ class BFRootTaskData : public BFTaskBase, public Subject
         void SetName (const wxChar* strName);
         ///
         const wxChar* GetName ();
+        ///
+        BFProjectSettings& GetSettings ();
 
         /** create a new task and return its oid
             if an error occures it returns OBInvalidOID
@@ -126,6 +131,9 @@ class BFRootTask : public BFRootTaskData
 
         /// create unique oid's for
         BFoid CreateOID ();
+
+        /// return the destinations of each task as a string array
+        wxArrayString GetDestinations ();
 
         ///
         BFCore& Core ();

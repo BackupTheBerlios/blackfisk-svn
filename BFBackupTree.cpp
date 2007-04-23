@@ -25,6 +25,7 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
     EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                          BFBackupTree::OnItemMenu)
     EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,    BFBackupTree::OnAddDestination)
+    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSETTINGS,   BFBackupTree::OnProjectSettings)
     EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION, BFBackupTree::OnCreateDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnCreateBackup)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnCreateBackup)
@@ -87,6 +88,13 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
     // remember this itemId
     lastItemId_ = rEvent.GetItem();
 
+    // root?
+    if (lastItemId_ == GetRootItem())
+    {
+        BFMainFrame::Instance()->OpenProjectSettings();
+        return;
+    }
+
     // get the task object from the data layer
     BFTask* pTask = GetTaskByItem(lastItemId_);
 
@@ -104,11 +112,16 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 
     if ( !(IsTask(lastItemId_)) )
     {
+        menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
+
         // right click on root item
         if (GetRootItem() == lastItemId_)
+        {
             menu.Append(BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
+            menu.AppendSeparator();
+            menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS, _("Project settings"));
+        }
 
-        menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
     }
 
     if (menu.GetMenuItemCount() > 0)
@@ -196,6 +209,11 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     PopupMenu(&menu, wxPoint(x, y));
 
     return true;
+}
+
+void BFBackupTree::OnProjectSettings (wxCommandEvent& rEvent)
+{
+    BFMainFrame::Instance()->OpenProjectSettings();
 }
 
 void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
@@ -409,7 +427,7 @@ BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
 
     // get the data object behind the item
     // because it holds the taskOID
-    BFBackupTreeItemData* pItemData = (BFBackupTreeItemData*)GetItemData(itemId);
+    BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
 
     if (pItemData == NULL)
         return NULL;

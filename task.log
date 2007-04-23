@@ -7,7 +7,7 @@ Destination:
 Backup-Start:
 Backup-Time:
 Verbose-Level: [fatal][error][warning]
-Stop-Level: [stop|wait|ignore on warning|error|fatal]
+Stop-Level: [stop|skip|ask|ignore on warning|error|fatal]
 
 logged messages:
 [fatal][error][warning]

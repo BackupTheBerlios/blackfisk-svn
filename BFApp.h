@@ -52,6 +52,11 @@ class BFApp : public wxApp
         /** prepend a string on each element of a string array
             and return the reference of the array */
         static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);
+        /** search for community on all strings and return the community
+            example:
+            string1 = "ABCDEFG" and string2 = "ABCwdFG
+            return value is "ABC" */
+        static wxString ExtractCommunity (wxArrayString& rStrings);
 
         ///
         const wxString& GetCurrentProjectFilename ();

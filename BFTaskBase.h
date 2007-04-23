@@ -9,9 +9,7 @@
 #define BFTASKBASE_H
 
 #include "BFCore.h"
-#include "wxArchive\include\wx\wxArchive.h"
 
-typedef wxArchive jbArchive;
 
 #define BFTASK_MACRO_DATE   _T("<date>")
 

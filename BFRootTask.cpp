@@ -115,10 +115,12 @@ bool BFRootTaskData::Serialize (jbArchive& rA)
     bool    rc          = true;
     int     iObjCount   = GetTaskCount();
 
+    rA.EnterObject();
     if( rA.IsStoring() )
     // ** serialize TO file **
     {
         rA << strName_;
+        projectSettings_.Serialize(rA);
         rA << iObjCount;
 
         for (int i = 0; i < iObjCount; ++i)
@@ -133,6 +135,7 @@ bool BFRootTaskData::Serialize (jbArchive& rA)
     // ** serialize FROM file **
     {
         rA >> strName_;
+        projectSettings_.Serialize(rA);
         rA >> iObjCount;
 
         // ** DEBUG **
@@ -151,6 +154,7 @@ bool BFRootTaskData::Serialize (jbArchive& rA)
 
         broadcastObservers();
     }
+    rA.LeaveObject();
 
     SetModified(false);
 
@@ -180,6 +184,11 @@ const wxChar* BFRootTaskData::GetName ()
     return strName_;
 }
 
+
+BFProjectSettings& BFRootTaskData::GetSettings ()
+{
+    return projectSettings_;
+}
 
 BFoid BFRootTaskData::AppendTask (BFTask& rTask)
 {
@@ -273,6 +282,7 @@ void BFRootTask::Close ()
 {
     ClearTaskVector();
     SetName(BFROOTTASK_DEFAULT_NAME);
+    GetSettings().SetDefault();
     SetModified(false);
     strCurrentFilename_ = wxEmptyString;
     oidLast_ = BFInvalidOID;
@@ -339,4 +349,15 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
                         TaskVector()[i]->GetDestination()
                     );
     }
+}
+
+wxArrayString BFRootTask::GetDestinations ()
+{
+    wxArrayString arr;
+
+    // iterate throug the tasks
+    for (int i = 0; i < TaskVector().size(); ++i)
+        arr.Add(TaskVector()[i]->GetDestination());
+
+    return arr;
 }

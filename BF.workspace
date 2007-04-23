@@ -2,5 +2,6 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="BF workspace">
 		<Project filename="blackfisk.cbp" active="1" />
+		<Project filename="C:\wxWindows\samples\widgets\widgets.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
