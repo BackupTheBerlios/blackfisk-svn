@@ -19,6 +19,7 @@
 #include "BFTaskDlg.h"
 #include "BFIconTable.h"
 #include "BFDestinationDlg.h"
+#include "BFSettings.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
@@ -43,7 +44,7 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
               Observer(&(BFRootTask::Instance())),
-              bReplaceMacro_(false)
+              bReplaceMacro_(BFSettings::Instance().GetReplaceMacros())
 {
     //SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
     SetImageList ( BFIconTable::Instance() );
@@ -344,11 +345,13 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
 {
+    wxString lstrName(strName);
+
     // add the destination items and the task item itself
     return AppendItem
     (
         AddDestination(strDestination),
-        strName,
+        ReplaceMacro(lstrName),
         BFTask::GetTypeIconId(type),
         -1,
         new BFBackupTreeItemData(oid)
@@ -571,7 +574,8 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
     // init controls
     pBackupTree_    = new BFBackupTree(this);
     pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("macros"));
-    pMacroButton_->SetValue(false);
+    pMacroButton_->SetValue(BFSettings::Instance().GetReplaceMacros());
+    BackupTree()->SetReplaceMacro(BFSettings::Instance().GetReplaceMacros());
 
     // arange
     pTopSizer->Add(pMacroButton_, wxSizerFlags(0).Center().Border(wxUP | wxDOWN, 5));

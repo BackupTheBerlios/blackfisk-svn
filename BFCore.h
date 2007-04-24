@@ -31,6 +31,8 @@ class wxZipEntry;
 class Progress;
 class ProgressWithMessage;
 
+#define BF_DEFAULT_OVERWRITE       true
+
 ///
 class BFCore
 {

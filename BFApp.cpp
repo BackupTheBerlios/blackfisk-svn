@@ -18,7 +18,7 @@
 #include "BFTaskDlg.h"
 #include "BFRootTask.h"
 #include "Progress.h"
-
+#include "BFSettings.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -103,6 +103,8 @@ BFApp::BFApp ()
 
 bool BFApp::OnInit()
 {
+    ReadSettings();
+
     BFSystem::Log(wxString::Format(_("%s %s by %s started"), BF_PRGNAME, BF_VERSION, BF_AUTHOR).c_str());
 
     // available languages
@@ -126,6 +128,25 @@ bool BFApp::OnInit()
     return TRUE;
 }
 
+/*static*/ bool BFApp::ReadSettings ()
+{
+    if ( !(wxFileName::FileExists(BF_SETTINGS)) )
+        SaveSettings();
+
+    wxFileInputStream   in(BF_SETTINGS);
+    jbArchive           archive(in);
+
+    return BFSettings::Instance().Serialize(archive);
+}
+
+/*static*/ bool BFApp::SaveSettings ()
+{
+    wxFileOutputStream  out(BF_SETTINGS);
+    jbArchive           archive(out);
+
+    return BFSettings::Instance().Serialize(archive);
+}
+
 const wxString& BFApp::GetCurrentProjectFilename ()
 {
     BFRootTask::Instance().GetCurrentFilename();
@@ -133,9 +154,7 @@ const wxString& BFApp::GetCurrentProjectFilename ()
 
 bool BFApp::OpenProject (const wxChar* filename)
 {
-    bool rc = BFRootTask::Instance().ReadFromFile(filename);
-
-    return rc;
+    return BFRootTask::Instance().ReadFromFile(filename);
 }
 
 bool BFApp::SaveProject (const wxChar* filename)

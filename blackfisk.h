@@ -10,4 +10,10 @@
 #define BF_AUTHOR               _T("Christian Buhtz")
 
 #define BF_GRAPHICDIR           _T("graphic/")
+
+#define BF_SETTINGS             _T("blackfisk.cfg")
+
+#define BF_LOGFILE_NAME         _T("bf.log")
+#define BF_LOGFILE_BAKSUFFIX    _T(".bak")
+
 #endif // BLACKFISK_H

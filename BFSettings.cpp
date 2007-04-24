@@ -5,7 +5,8 @@
 
 #include "BFSettings.h"
 
-#define BFSETTINGS_FILENAME "blackfisk.set"
+
+/*static*/ BFSettings BFSettings::sSettings_;
 
 //
 BFSettings::BFSettings ()
@@ -21,14 +22,9 @@ BFSettings::BFSettings ()
 }
 
 
-const BFProjectSettings& BFSettings::GetDefaultProjectSettings ()
+BFProjectSettings& BFSettings::GetDefaultProjectSettings ()
 {
     return defaultPrj_;
-}
-
-void BFSettings::SetDefaultProjectSettings (const BFProjectSettings& rDefaultPrj)
-{
-    defaultPrj_ = rDefaultPrj;
 }
 
 bool BFSettings::GetReplaceMacros ()

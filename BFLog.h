@@ -11,13 +11,6 @@
 #include "BFLogBase.h"
 #include "BFSystem.h"
 
-#define BF_DEFAULT_OVERWRITE       true
-#define BF_LOGFILE_NAME         _T("bf.log")
-#define BF_LOGFILE_BAKSUFFIX    _T(".bak")
-#define BF_LOGFILE_MAXSIZE      150000
-
-
-
 /// it is just log
 class BFLog : public BFLogBase
 {

@@ -10,6 +10,7 @@
 #include "BFBackupTree.h"
 #include "BFMainFrame.h"
 #include "BFDestinationDlg.h"
+#include "BFSettings.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
@@ -27,11 +28,14 @@ BFDirCtrl::BFDirCtrl (wxWindow* pParent)
 {
     // DirCtrl
     pDirCtrl_ = new wxGenericDirCtrl(this);
-    pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() & wxDIRCTRL_DIR_ONLY);
+    if (BFSettings::Instance().GetWithFiles())
+        pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() & ~wxDIRCTRL_DIR_ONLY);
+    else
+        pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() | wxDIRCTRL_DIR_ONLY);
 
     // button to show files in the DirCtrl
-    pButtonFiles_ = new wxToggleButton(this, BFDIRCTRL_ID_FILEBUTTON, _("show with files"));
-    pButtonFiles_->SetValue(true);
+    pButtonFiles_ = new wxToggleButton(this, BFDIRCTRL_ID_FILEBUTTON, _("files"));
+    pButtonFiles_->SetValue(BFSettings::Instance().GetWithFiles());
 
     // sizer
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);

@@ -68,6 +68,9 @@ class BFMainFrame : public wxFrame
         { return spApp_->MainFrame(); }
 
         ///
+        static BFApp* App ()
+        { return spApp_; }
+        ///
         BFBackupCtrl* BackupCtrl ();
         ///
         BFBackupTree* BackupTree ();

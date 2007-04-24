@@ -46,9 +46,7 @@ class BFSettings
         virtual ~BFSettings ();
 
         ///
-        const BFProjectSettings& GetDefaultProjectSettings ();
-        ///
-        void SetDefaultProjectSettings (const BFProjectSettings& rDefaultPrj);
+        BFProjectSettings& GetDefaultProjectSettings ();
         ///
         bool GetReplaceMacros ();
         ///

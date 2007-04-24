@@ -4,6 +4,8 @@
  ***/
 
 #include "BFLog.h"
+#include "blackfisk.h"
+#include "BFSettings.h"
 
 void BFLog::Do(BFMessageType type,
                const wxDateTime& timestamp,
@@ -73,7 +75,7 @@ void BFLog::Do(BFMessageType type,
 
 
 BFLog::BFLog ()
-     : BFLogBase(BF_LOGFILE_NAME, BF_LOGFILE_MAXSIZE)
+     : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize())
 {
 }
 

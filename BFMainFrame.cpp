@@ -19,6 +19,7 @@
 #include "BFBackupTree.h"
 #include "BFIconTable.h"
 #include "BFProjectSettingsDlg.h"
+#include "BFSettingsDlg.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_OpenProject,        BFMainFrame::OnProject)
@@ -169,7 +170,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
 
 void BFMainFrame::OnSettings (wxCommandEvent& event)
 {
-    BFSystem::Info(_("Settings"));
+    new BFSettingsDlg(this);
 }
 
 bool BFMainFrame::AskModification ()

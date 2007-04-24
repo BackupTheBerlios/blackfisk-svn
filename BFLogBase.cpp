@@ -4,7 +4,7 @@
  ***/
 
 #include "BFLogBase.h"
-
+#include "blackfisk.h"
 #include "BFCore.h"
 
 BFLogBase::BFLogBase (const wxChar* strLogFileName, long lMaxSize /*= 0*/ )

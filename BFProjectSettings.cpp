@@ -112,9 +112,9 @@ bool BFProjectSettings::Serialize (jbArchive& rA)
 void BFProjectSettings::SetDefault ()
 {
     iVerboseLevel_          = BFVERBOSE_WARNING;
-    iStopLevelOnFatal_      = BFDO_STOPPRJ;
-    iStopLevelOnError_      = BFDO_STOPPRJ;
-    iStopLevelOnWarning_    = BFDO_STOPPRJ;
+    iStopLevelOnFatal_      = BFDO_ASK;
+    iStopLevelOnError_      = BFDO_ASK;
+    iStopLevelOnWarning_    = BFDO_ASK;
     wxArrayString arrDest   = BFRootTask::Instance().GetDestinations();
     strBackupLogLocation_   = BFApp::ExtractCommunity(arrDest);
 }

@@ -64,6 +64,10 @@ class BFApp : public wxApp
         bool OpenProject (const wxChar* filename);
         ///
         bool SaveProject (const wxChar* filename);
+        /// read the global settings from the settings file
+        static bool ReadSettings ();
+        /// save the global settings to the settings file
+        static bool SaveSettings ();
         ///
         bool SaveCurrentProject ();
         /** it close the current project */

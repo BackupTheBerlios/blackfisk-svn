@@ -8,21 +8,6 @@
 		<Option compiler="gcc" />
 		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxArchive\;" />
 		<Build>
-			<Target title="release_ansi">
-				<Option output=".\blackfiskR.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_rel" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="1" />
-				<Compiler>
-					<Add option="-D_RELEASE" />
-				</Compiler>
-				<Linker>
-					<Add library="libwxexpat.a" />
-					<Add library="libwxmsw$(wxver).a" />
-					<Add library="libwxzlib.a" />
-				</Linker>
-			</Target>
 			<Target title="debug_unicode">
 				<Option output=".\blackfiskDu.exe" prefix_auto="0" extension_auto="0" />
 				<Option object_output=".objs_debu" />
@@ -58,7 +43,7 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="release_ansi;debug_unicode;release_unicode;" />
+			<Add alias="All" targets="debug_unicode;release_unicode;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-DWXUSINGDLL" />
@@ -181,6 +166,12 @@
 		</Unit>
 		<Unit filename="BFSettings.h">
 			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFSettingsDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFSettingsDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFSystem.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
