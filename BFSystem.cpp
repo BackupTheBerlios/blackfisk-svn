@@ -63,6 +63,11 @@ void BFSystem::Message (BFMessageType msgType,
     Instance().Message(MsgLOG, strMessage, strLocation);
 }
 
+/*static*/ void BFSystem::Warning (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+{
+    Instance().Message(MsgWARNING, strMessage, strLocation);
+}
+
 /*static*/ void BFSystem::Fatal (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
 {
     Instance().Message(MsgFATAL, strMessage, strLocation);

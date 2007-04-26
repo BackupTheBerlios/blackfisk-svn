@@ -12,6 +12,7 @@
 #include "BFBackupTree.h"
 #include "Progress.h"
 #include "BFIconTable.h"
+#include "BFBackupLog.h"
 
 #define BFROOTTASK_DEFAULT_NAME _("unnamed")
 
@@ -255,7 +256,10 @@ BFRootTask& BFRootTask::Instance ()
 }
 
 BFRootTask::BFRootTask()
-          : oidLast_(BFInvalidOID)
+          : oidLast_(BFInvalidOID),
+            bStopProject_(false),
+            bStopTask_(false),
+            pRunningTask_(NULL)
 {
 }
 
@@ -286,6 +290,9 @@ void BFRootTask::Close ()
     SetModified(false);
     strCurrentFilename_ = wxEmptyString;
     oidLast_ = BFInvalidOID;
+    bStopProject_ = false;
+    bStopTask_ = false;
+    pRunningTask_ = NULL;
     broadcastObservers();
 }
 
@@ -294,11 +301,11 @@ bool BFRootTask::Run (wxWindow* pParent)
     // init
     int                     i;
     wxString                str;
+    BFBackupLog             log;
     BFTaskProgressDlg       dlg(pParent, *this);
 
-    // log start
-    str = wxString::Format(_("RootTask %s started"), GetName());
-    BFSystem::Log(str);
+    // start logging the backup
+    log.BackupStarted();
 
     // prepare for destination directories
     for (i = 0; i < TaskVector().size(); ++i)
@@ -310,17 +317,22 @@ bool BFRootTask::Run (wxWindow* pParent)
             Core().CreatePath(str);
     }
 
-    // run each task
-    for (i = 0; i < TaskVector().size(); ++i)
+    if (!bStopProject_)
     {
-        dlg.SetCurrentTaskName(TaskVector()[i]->GetName());
-        TaskVector()[i]->Run( *(dlg.GetProgressTask()) );
-        dlg.GetProgressTotal()->IncrementActual();
+        // run each task
+        for (i = 0; i < TaskVector().size() && !bStopProject_; ++i)
+        {
+            pRunningTask_ = TaskVector()[i];
+            log.TaskStarted(*pRunningTask_);
+            dlg.SetCurrentTaskName(pRunningTask_->GetName());
+            pRunningTask_->Run( *(dlg.GetProgressTask()) );
+            dlg.GetProgressTotal()->IncrementActual();
+            log.TaskFinished();
+        }
     }
 
-    // log finished
-    str = wxString::Format(_("RootTask %s finished"), GetName());
-    BFSystem::Log(str);
+    // end the logging of the backup
+    log.BackupFinished();
 
     return true;
 }
@@ -360,4 +372,26 @@ wxArrayString BFRootTask::GetDestinations ()
         arr.Add(TaskVector()[i]->GetDestination());
 
     return arr;
+}
+
+void BFRootTask::StopCurrentTask ()
+{
+    BFSystem::Backup(_("try to stop the current running task"));
+
+    bStopTask_ = true;
+    bStopProject_ = false;
+
+    if (pRunningTask_ != NULL)
+        pRunningTask_->StopTask();
+}
+
+void BFRootTask::StopProject ()
+{
+    BFSystem::Backup(_("try to stop the current running project"));
+
+    bStopTask_ = true;
+    bStopProject_ = true;
+
+    if (pRunningTask_ != NULL)
+        pRunningTask_->StopTask();
 }

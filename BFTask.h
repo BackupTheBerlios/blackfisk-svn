@@ -129,6 +129,9 @@ class BFTask : public BFTaskData
         ///
         bool RunForDirSync (ProgressWithMessage& rProgress);
 
+        ///
+        bool bStopTask_;
+
     public:
         /// constructor
         BFTask (BFTaskType type,
@@ -153,6 +156,8 @@ class BFTask : public BFTaskData
 
         ///
         bool Run (ProgressWithMessage& rProgress);
+        ///
+        void StopTask ();
 
         /// return a describe of the task
         wxString GetTypeDescription ();

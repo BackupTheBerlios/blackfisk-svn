@@ -13,6 +13,7 @@
 
 enum BF_VerboseLevel
 {
+    BFVERBOSE_INFO,
     BFVERBOSE_WARNING,
     BFVERBOSE_ERROR,
     BFVERBOSE_FATAL
@@ -50,12 +51,16 @@ class BFProjectSettings
     public:
         /// constructor
         BFProjectSettings ();
-
         /// virtual destructor
         virtual ~BFProjectSettings ();
 
         /// set all values to default
         void SetDefault();
+
+        ///
+        static wxString GetVerboseString (BF_VerboseLevel verboseLevel);
+        ///
+        static wxString GetStopLevelString (BF_StopLevel stopLevel);
 
         ///
         void SetVerboseLevel (BF_VerboseLevel iLevel);

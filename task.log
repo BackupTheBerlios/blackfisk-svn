@@ -2,10 +2,12 @@
 
 Task:
 Type:
+Project:
 Source:
 Destination:
-Backup-Start:
-Backup-Time:
+Task-Start:
+Task-End:
+Task-Time:
 Verbose-Level: [fatal][error][warning]
 Stop-Level: [stop|skip|ask|ignore on warning|error|fatal]
 

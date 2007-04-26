@@ -4,9 +4,151 @@
  ***/
 
 #include "BFBackupLog.h"
+#include "BFSystem.h"
+#include "BFRootTask.h"
+
+
+BFTaskLog::BFTaskLog (BFTask& rTask)
+         : rTask_(rTask)
+{
+}
+
+/*virtual*/ BFTaskLog::~BFTaskLog ()
+{
+}
+
+void BFTaskLog::Started ()
+{
+    timeStart_ = wxDateTime::Now();
+}
+
+void BFTaskLog::Finished ()
+{
+    timeEnd_ = wxDateTime::Now();
+    Write();
+}
+
+void BFTaskLog::Message (BFMessageType type,
+                         const wxDateTime& timestamp,
+                         const wxChar* strMessage,
+                         const wxChar* strLocation)
+{
+    wxString str;
+
+    str << timestamp.Format(_T("%Y-%m-%d %H:%M:%S "));
+    str << _T('[') << BFSystem::GetTypeString(type) << _T(']');
+    str << _T(' ') << strMessage;
+
+    arrLog_.Add(str);
+}
+
+bool BFTaskLog::Write ()
+{
+    // open log-file
+    wxFile file(GetFileName(), wxFile::write);
+
+    if ( !(file.IsOpened()) )
+    {
+        BFSystem::Fatal(wxString::Format(_("can not create/open the log-file %s"), GetFileName().c_str()), _T("BFTaskLog::Write()"));
+        return false;
+    }
+
+    wxString strLine;
+
+    strLine.Clear();
+    strLine << _("Task: ") << rTask_.GetName();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Type: ") << rTask_.GetTypeDescription();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Project: ") << BFRootTask::Instance().GetName();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Source: ") << rTask_.GetSource();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Destination: ") << rTask_.GetDestination();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Task-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Task-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Task-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(BFRootTask::Instance().GetSettings().GetVerboseLevel());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnWarning());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnError());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnFatal());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("\nlogged messages:");
+    file.Write(strLine);
+
+    for (int i = 0; i < arrLog_.GetCount(); ++i)
+        file.Write(arrLog_[i]);
+
+    return true;
+}
+
+wxString BFTaskLog::GetFileName ()
+{
+    wxString str;
+    str << rTask_.GetDestination() << wxFILE_SEP_PATH << rTask_.GetName() << _T(".log");
+    return str;
+}
+
+wxString BFTaskLog::GetSummary ()
+{
+    wxString str;
+
+    // start
+    str << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S")) << _(" : Task \"") << rTask_.GetName() << _("\" started\n");
+
+    // end
+    str << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S")) << _(" : Task \"") << rTask_.GetName() << _T("\"");
+    if (bNormalEnd_)
+        str << _("finished");
+    else
+        str << _("skiped");
+    str << _T('\n');
+
+    // message count
+    str << wxString::Format(_("Warnings: %d  Errors: %d  Fatal-Errors: %d\n"), lCountWarnings_, lCountErrors_, lCountFatal_);
+
+    // log-file
+    str << _("Log-File: ") << GetFileName();
+
+    return str;
+}
+
 
 //
 BFBackupLog::BFBackupLog ()
+           : Observer(&(BFSystem::Instance())),
+             bIsSaved_(false)
 {
 }
 
@@ -14,6 +156,181 @@ BFBackupLog::BFBackupLog ()
 //
 /*virtual*/ BFBackupLog::~BFBackupLog ()
 {
+    if (!bIsSaved_)
+        BackupFinished();
 }
 
 
+/*virtual*/ void BFBackupLog::ValueChanged (Subject* pSender)
+{
+    // init
+    BFSystem* pSys = dynamic_cast<BFSystem*>(pSender);
+
+    if (pSys == NULL)
+        return;
+
+    BF_VerboseLevel vLvl = BFRootTask::Instance().GetSettings().GetVerboseLevel();
+    BFMessageType msgType = pSys->GetLastType();
+
+    // check verboseLevel and messageType
+    switch (vLvl)
+    {
+        case BFVERBOSE_FATAL:
+            if (msgType != MsgFATAL)
+                return;
+            break;
+
+        case BFVERBOSE_ERROR:
+            if (msgType != MsgFATAL
+             || msgType != MsgERROR)
+                return;
+            break;
+
+        case BFVERBOSE_WARNING:
+            if (msgType != MsgFATAL
+             || msgType != MsgERROR
+             || msgType != MsgWARNING)
+                return;
+            break;
+
+        case BFVERBOSE_INFO:
+            if (msgType != MsgFATAL
+             || msgType != MsgERROR
+             || msgType != MsgWARNING
+             || msgType != MsgBACKUP)
+                return;
+            break;
+    };
+
+    vecTaskLogs_.back()->Message
+    (
+        pSys->GetLastType(),
+        pSys->GetLastTimestamp(),
+        pSys->GetLastMessage(),
+        pSys->GetLastLocation()
+    );
+
+    // do something on warning?
+    if (msgType == MsgWARNING)
+    {
+        switch (BFRootTask::Instance().GetSettings().GetStopLevelOnWarning())
+        {
+            case BFDO_STOPPRJ:
+                BFRootTask::Instance().StopProject();
+                break;
+
+            case BFDO_STOPTSK:
+                BFRootTask::Instance().StopCurrentTask();
+                break;
+
+            case BFDO_ASK:
+                break;
+
+            case BFDO_IGNORE:
+                break;
+        };
+    }
+}
+
+bool BFBackupLog::WhileBackup ()
+{
+    if (timeStart_ > timeEnd_)
+        return true;
+
+    return false;
+}
+
+void BFBackupLog::BackupStarted ()
+{
+    timeStart_ = wxDateTime::Now();
+}
+
+void BFBackupLog::BackupFinished ()
+{
+    timeEnd_ = wxDateTime::Now();
+    bIsSaved_ = Write();
+}
+
+void BFBackupLog::TaskStarted (BFTask& rTask)
+{
+    vecTaskLogs_.push_back(new BFTaskLog(rTask));
+
+    vecTaskLogs_.back()->Started();
+}
+
+void BFBackupLog::TaskFinished ()
+{
+    vecTaskLogs_.back()->Finished();
+}
+
+bool BFBackupLog::Write ()
+{
+    BFRootTask& rPrj = BFRootTask::Instance();
+
+    // create filename
+    wxString strFile;
+    strFile = rPrj.GetSettings().GetBackupLogLocation();
+    //strFile = strFile  + timeStart_.Format(_T("%Y-%m-%d")) + _T('_');
+    strFile = strFile + wxFILE_SEP_PATH + rPrj.GetName() + _T(".log");
+
+    // open log-file
+    wxFile file(strFile, wxFile::write);
+
+    if ( !(file.IsOpened()) )
+    {
+        BFSystem::Fatal(wxString::Format(_("can not create/open the log-file %s"), strFile.c_str()), _T("BFBackupLog::Write()"));
+        return false;
+    }
+
+    // project info
+    wxString strLine;
+
+    strLine.Clear();
+    strLine << _("Project: ") << rPrj.GetName();
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("File: ") << strFile;
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Backup-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Backup-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Backup-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(rPrj.GetSettings().GetVerboseLevel());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnWarning());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnError());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnFatal());
+    file.Write(strLine);
+
+    strLine.Clear();
+    strLine << _("Task-Count: ") << vecTaskLogs_.size();
+    file.Write(strLine);
+
+    for (int i = 0; i < vecTaskLogs_.size(); ++i)
+    {
+        strLine.Clear();
+        strLine << _T('\n') << vecTaskLogs_[i]->GetSummary();
+        file.Write(strLine);
+    }
+
+    return true;
+}

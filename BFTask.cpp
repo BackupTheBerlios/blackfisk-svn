@@ -279,7 +279,8 @@ BFTask::BFTask (BFTaskType type,
                 bool bVerify,
                 BFArchiveFormat archiveFormat,
                 wxArrayString& arrExclude)
-      : BFTaskData(type, strSource, strDestination, strName, bVerify, archiveFormat, arrExclude)
+      : BFTaskData(type, strSource, strDestination, strName, bVerify, archiveFormat, arrExclude),
+        bStopTask_(false)
 {
 }
 
@@ -399,6 +400,11 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
         GetDestination(),
         Verify()
     );
+}
+
+void BFTask::StopTask ()
+{
+    bStopTask_ = true;
 }
 
 bool BFTask::Run (ProgressWithMessage& rProgress)

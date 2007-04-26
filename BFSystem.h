@@ -15,7 +15,16 @@
 #include "ObserverPattern.h"
 
 
-enum BFMessageType { MsgBACKUP, MsgINFO, MsgERROR, MsgFATAL, MsgLOG, MsgDEBUG };
+enum BFMessageType
+{
+    MsgBACKUP,
+    MsgINFO,
+    MsgWARNING,
+    MsgERROR,
+    MsgFATAL,
+    MsgLOG,
+    MsgDEBUG
+};
 
 /// manage handling of messages for errors and other messages
 class BFSystem : public Subject
@@ -81,6 +90,8 @@ class BFSystem : public Subject
         static void Info (const wxChar* strMessage, const wxChar* strLocation = NULL);
         /// create a log message
         static void Log (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        /// create a warning message
+        static void Warning (const wxChar* strMessage, const wxChar* strLocation = NULL);
         /// create a fatal error message
         static void Fatal (const wxChar* strMessage, const wxChar* strLocation = NULL);
         /// create a errror message

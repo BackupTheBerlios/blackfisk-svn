@@ -45,15 +45,15 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent)
                        iLabelWidth_(85)
 {
     // verbose
-    wxString arrVerbose[] = { _("warning"), _("error"), _("fatal error") };
+    wxString arrVerbose[] = { _("information"), _("warning"), _("error"), _("fatal error") };
     wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("Verbose Level:"));
     pVerboseLabel->SetMinSize(wxSize(GetLabelWidth(), pVerboseLabel->GetSize().GetHeight()));
     pComboVerbose_ = new wxComboBox(this,
                                     wxID_ANY,
-                                    arrVerbose[0],
+                                    arrVerbose[1],
                                     wxDefaultPosition,
                                     wxDefaultSize,
-                                    3,
+                                    4,
                                     arrVerbose,
                                     wxCB_READONLY);
     // StopLevel

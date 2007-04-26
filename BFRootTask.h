@@ -117,11 +117,15 @@ class BFRootTask : public BFRootTaskData
 
         /// the last created oid
         BFoid               oidLast_;
+        /// current running task
+        BFTask*             pRunningTask_;
+        ///
+        bool                bStopProject_;
+        ///
+        bool                bStopTask_;
 
         ///
         static BFRootTask sRootTask_;
-
-    protected:
 
     public:
         ///
@@ -143,6 +147,10 @@ class BFRootTask : public BFRootTaskData
 
         /** run all tasks*/
         bool Run (wxWindow* pParent);
+        ///
+        void StopCurrentTask ();
+        ///
+        void StopProject ();
 
         ///
         void InitThat (wxListBox& rListBox);
