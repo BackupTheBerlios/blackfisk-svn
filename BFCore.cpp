@@ -43,6 +43,7 @@ BFCore::BFCore ()
 
 /*virtual*/ BFCore::~BFCore ()
 {
+    int i = 0;
 }
 
 
@@ -308,6 +309,9 @@ wxUint32 BFCore::GetFileCrc (const wxChar* pFilename)
 
     // get crc for data
     return crc32(0, buffer, bufsize);
+
+    // DEBUG
+    // for portability look at boost::crc
 }
 
 

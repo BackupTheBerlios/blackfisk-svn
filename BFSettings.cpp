@@ -11,7 +11,9 @@
 //
 BFSettings::BFSettings ()
           : bReplaceMacros_(false),
-            bWithFiles_(false)
+            bWithFiles_(false),
+            bOpenLastProject_(false),
+            lMaxLogFileSize_(1024)
 {
 }
 
@@ -19,6 +21,7 @@ BFSettings::BFSettings ()
 //
 /*virtual*/ BFSettings::~BFSettings ()
 {
+    int i = 0;
 }
 
 
@@ -60,6 +63,36 @@ void BFSettings::SetMaxLogFileSize (long lSize)
         lMaxLogFileSize_ = lSize;
 }
 
+const wxArrayString& BFSettings::GetLastProjects ()
+{
+    return arrLastProjects_;
+}
+
+void BFSettings::SetLastProject (const wxChar* strFilename)
+{
+    if (strFilename == NULL)
+        return;
+
+    int idx = arrLastProjects_.Index(strFilename);
+
+    if (idx != wxNOT_FOUND)
+        arrLastProjects_.RemoveAt(idx);
+
+    if (arrLastProjects_.GetCount() == 4)
+        arrLastProjects_.RemoveAt(0);
+
+    arrLastProjects_.Add(strFilename);
+}
+
+void BFSettings::SetOpenLastProject (bool bOpen)
+{
+    bOpenLastProject_ = bOpen;
+}
+
+bool BFSettings::GetOpenLastProject ()
+{
+    return bOpenLastProject_;
+}
 
 bool BFSettings::Serialize (jbArchive& rA)
 {
@@ -75,6 +108,8 @@ bool BFSettings::Serialize (jbArchive& rA)
         rA << bReplaceMacros_;
         rA << bWithFiles_;
         rA << (wxUint32&)lMaxLogFileSize_;
+        rA << arrLastProjects_;
+        rA << bOpenLastProject_;
     }
     else
     // ** serialize FROM file **
@@ -83,6 +118,8 @@ bool BFSettings::Serialize (jbArchive& rA)
         rA >> bReplaceMacros_;
         rA >> bWithFiles_;
         rA >> (wxUint32&)lMaxLogFileSize_;
+        rA >> arrLastProjects_;
+        rA >> bOpenLastProject_;
     }
 
     rA.LeaveObject();

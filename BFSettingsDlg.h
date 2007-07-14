@@ -23,6 +23,8 @@ class BFSettingsDlg : public wxDialog
 {
     private:
         ///
+        wxCheckBox*             pCheckOpenLast_;
+        ///
         wxCheckBox*             pCheckMacro_;
         ///
         wxCheckBox*             pCheckFiles_;

@@ -98,7 +98,7 @@ BFApp::BFApp ()
 
 /*virtual*/ BFApp::~BFApp ()
 {
-    BFSystem::Log(wxString::Format(_("%s closed\n"), BF_PRGNAME).c_str());
+    int i = 0;
 }
 
 bool BFApp::OnInit()
@@ -121,11 +121,21 @@ bool BFApp::OnInit()
     locale_.Init( langIds[2] );
     locale_.AddCatalog(_T("ob"));
 
+    //
+    if (BFSettings::Instance().GetOpenLastProject())
+        OpenProject(BFSettings::Instance().GetLastProjects().Last());
+
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
     new BFMainFrame(*this);
 
     return TRUE;
+}
+
+/*virtual*/ int BFApp::OnExit()
+{
+    SaveSettings();
+    BFSystem::Log(wxString::Format(_("%s closed\n"), BF_PRGNAME).c_str());
 }
 
 /*static*/ bool BFApp::ReadSettings ()
@@ -134,7 +144,7 @@ bool BFApp::OnInit()
         SaveSettings();
 
     wxFileInputStream   in(BF_SETTINGS);
-    jbArchive           archive(in);
+    jbArchive           archive(in, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }
@@ -142,18 +152,24 @@ bool BFApp::OnInit()
 /*static*/ bool BFApp::SaveSettings ()
 {
     wxFileOutputStream  out(BF_SETTINGS);
-    jbArchive           archive(out);
+    jbArchive           archive(out, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }
 
 const wxString& BFApp::GetCurrentProjectFilename ()
 {
-    BFRootTask::Instance().GetCurrentFilename();
+    return BFRootTask::Instance().GetCurrentFilename();
+}
+
+wxString BFApp::GetCurrentProjectName ()
+{
+    return wxString(BFRootTask::Instance().GetName());
 }
 
 bool BFApp::OpenProject (const wxChar* filename)
 {
+    BFSettings::Instance().SetLastProject(filename);
     return BFRootTask::Instance().ReadFromFile(filename);
 }
 
@@ -199,74 +215,13 @@ void BFApp::Test ()
 
 void BFApp::Backup()
 {
-    return;
-
-    // init
-    BFRootTask& rRoot = BFRootTask::Instance();
-    wxArrayString arrExclude;
-
-    rRoot.SetName(_T("NAME ME"));
-
-    /** prepare for BACKUP **
-    rRoot.AppendTask(TaskDIRCOPY, _T("D:\\_new"), _T("X:\\<date>_MUSIC"), _T("_new"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("D:\\_torename"), _T("X:\\<date>_MUSIC"), _T("_torename"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("D:\\CD_MP3"), _T("X:\\<date>_MUSIC"), _T("CD_MP3"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("D:\\mp3"), _T("X:\\<date>_MUSIC"), _T("mp3"), true);
-
-    rRoot.AppendTask(TaskDIRCOPY, _T("E:\\Data"), _T("F:\\<date>_PRG"), _T("Data"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("E:\\Dokumente"), _T("F:\\<date>_PRG"), _T("Dokumente"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("E:\\TD"), _T("F:\\<date>_PRG"), _T("TD"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("E:\\Garage"), _T("F:\\<date>_PRG"), _T("Garage"), true);
-
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\40tude Dialog"),    _T("F:\\<date>_PRG"), _T("40tude Dialog"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\40tude Dialog II"), _T("F:\\<date>_PRG"), _T("40tude Dialog II"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\MIRANDA IM"),       _T("F:\\<date>_PRG"), _T("MIRANDA IM"), true);
-
-    arrExclude.Clear();
-    arrExclude.Add(_T("C:\\Programme\\Opera\\profile\\cache4"));
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\Opera\\profile"), _T("F:\\<date>_PRG"), _T("OperaProfile_<date>"), true, &arrExclude);
-
-    rRoot.AppendTask(TaskFILECOPY,
-                        _T("C:\\Programme\\Microsoft Visual Studio\\Common\\MSDev98\\Bin\\autoexp.dat"),
-                        _T("F:\\<date>_PRG\\MSVC"),
-                        _T("autoexp.dat"),
-                        true);
-
-    rRoot.AppendTask(TaskZIP, _T("C:\\codeblocks-head"), _T("F:\\<date>_PRG"), _T("codeblocks-head"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\CodeBlocks"), _T("F:\\<date>_PRG\\"), _T("CodeBlocks"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\OpenOffice.org 2.0"), _T("F:\\<date>_PRG\\OpenOffice"), _T("OpenOffice.org 2.0"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\WINDOWS\\Anwendungsdaten\\OpenOffice.org2"), _T("F:\\<date>_PRG\\OpenOffice"), _T("Anwendungsdaten"), true);
-    rRoot.AppendTask(TaskFILECOPY, _T("F:\\feedreader.opml"), _T("F:\\<date>_PRG\\FeedReader30"), _T("feedreader.opml"), true);
-    rRoot.AppendTask(TaskFILECOPY, _T("C:\\Programme\\FeedReader30\\feedreader.ini"), _T("F:\\<date>_PRG\\FeedReader30"), _T("feedreader.ini"), true);
-    rRoot.AppendTask(TaskFILECOPY, _T("C:\\Programme\\FeedReader30\\data\\RSSENGINE.FDB"), _T("F:\\<date>_PRG\\FeedReader30\\data"), _T("RSSENGINE.FDB"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("F:\\TheBat"), _T("F:\\<date>_PRG"), _T("The Bat"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\Square Soft, Inc\\Final Fantasy VII\\save"), _T("F:\\<date>_PRG\\GameSave"), _T("FFVII"), true);
-    rRoot.AppendTask(TaskZIP, _T("C:\\Programme\\THQ\\Baphomets Fluch - Der schlafende Drache\\saves"), _T("F:\\<date>_PRG\\GameSave"), _T("BF3"), true);
-    rRoot.AppendTask(TaskFILECOPY, _T("C:\\Programme\\WS_FTP\\WS_FTP.ini"), _T("F:\\<date>_PRG\\WS_FTP"), _T("WS_FTP.ini"), true);
-
-    rRoot.AppendTask(TaskDIRCOPY, _T("X:\\Applications"), _T("F:\\<date>_Archiv"), _T("Applications"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("X:\\Graphic"), _T("F:\\<date>_Archiv"), _T("Graphic"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("X:\\Sound"), _T("F:\\<date>_Archiv"), _T("Sound"), true);
-    rRoot.AppendTask(TaskDIRCOPY, _T("X:\\Stuff"), _T("F:\\<date>_Archiv"), _T("Stuff"), true);
-
-    rRoot.AppendTask(TaskDIRCOPY, _T("F:\\<date>_PRG"), _T("X:\\_BACKUP"), _T("<date>_PRG"), true);
-
-    rRoot.AppendTask(TaskARCHIVE, _T("C:\\wxWindows"), _T("F:\\<date>_PRG"), _T("wxWindows"), true);
-
-
-    rRoot.AppendTask(TaskARCHIVE,    _T("C:\\OBtest\\tozip"),        _T("F:\\OBtest\\<date>"),   _T("tozip"),        true, NULL, CompressZIP);
-    rRoot.AppendTask(TaskDIRCOPY,    _T("C:\\OBtest\\tocopy"),       _T("F:\\OBtest\\<date>"),   _T("tocopy"),       true);
-*/
-    rRoot.AppendTask(TaskFILECOPY,   _T("C:\\OBtest\\CONTACT.odt"),  _T("F:\\OBtest\\<date>"),   _T("CONtACT.odt"),  true);
-    rRoot.broadcastObservers();
-
     // ** RUN **
-    //if (rootTask.Run(pMainFrame_))
+    if (BFRootTask::Instance().Run(this->MainFrame()))
+    {
         wxSound(_T("sound\\finish.wav")).Play();
-/*    }
+    }
     else
     {
-        MainFrame()->Message(MsgFATAL, _T("there was an ERROR while Backup"));
+        BFSystem::Fatal(_T("there was an ERROR while Backup"), _T("BFApp::Backup()"));
     }
-*/
 }

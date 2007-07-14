@@ -40,6 +40,8 @@ class BFApp : public wxApp
 
         /// start point like main()
         virtual bool OnInit();
+        ///
+        virtual int OnExit();
 
         ///
         static BFMainFrame* MainFrame ();
@@ -60,6 +62,8 @@ class BFApp : public wxApp
 
         ///
         const wxString& GetCurrentProjectFilename ();
+        ///
+        wxString GetCurrentProjectName ();
         ///
         bool OpenProject (const wxChar* filename);
         ///

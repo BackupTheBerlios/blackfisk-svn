@@ -20,6 +20,7 @@
 #include "BFIconTable.h"
 #include "BFProjectSettingsDlg.h"
 #include "BFSettingsDlg.h"
+#include "BFSettings.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_OpenProject,        BFMainFrame::OnProject)
@@ -28,6 +29,10 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_CloseProject,       BFMainFrame::OnProject)
     EVT_MENU    (ID_NewProject,         BFMainFrame::OnProject)
     EVT_MENU    (ID_ProjectSettings,    BFMainFrame::OnProject)
+    EVT_MENU    (ID_LastProject1,       BFMainFrame::OnLastProject)
+    EVT_MENU    (ID_LastProject2,       BFMainFrame::OnLastProject)
+    EVT_MENU    (ID_LastProject3,       BFMainFrame::OnLastProject)
+    EVT_MENU    (ID_LastProject4,       BFMainFrame::OnLastProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
@@ -41,8 +46,9 @@ END_EVENT_TABLE()
 /*private*/ BFMainFrame::BFMainFrame (BFApp& rApp)
             : wxFrame (NULL,
                        -1,
-                       wxString::Format(_("%s %s by %s with %s"), BF_PRGNAME, BF_VERSION, BF_AUTHOR, wxVERSION_STRING)),
-                       msgDlg_(this)
+                       wxEmptyString),
+                       msgDlg_(this),
+                       menuProject_(NULL)
 {
     // set application variable
     spApp_ = &rApp;
@@ -62,20 +68,21 @@ END_EVENT_TABLE()
     wxMenu* menuBlackfisk = new wxMenu;
     menuBlackfisk->Append( ID_Settings,  _("Gobal &Settings") );
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( ID_Test,      _("&Testen") );
+    //menuBlackfisk->Append( ID_Test,      _("&Testen") );
     menuBlackfisk->Append( ID_Backup,    _("&Backup") );
     menuBlackfisk->AppendSeparator();
     menuBlackfisk->Append( ID_Quit,      _("E&xit") );
 
     // ** menu PROJECT **
-    wxMenu *menuProject = new wxMenu;
-    menuProject->Append( ID_NewProject,         _("&New/Close Project") );
-    menuProject->AppendSeparator();
-    menuProject->Append( ID_OpenProject,        _("&Open Project") );
-    menuProject->Append( ID_SaveProject,        _("&Save Project") );
-    menuProject->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
-    menuProject->AppendSeparator();
-    menuProject->Append( ID_ProjectSettings,    _("&Project Settings") );
+    menuProject_ = new wxMenu;
+    menuProject_->Append( ID_NewProject,         _("&New/Close Project") );
+    menuProject_->AppendSeparator();
+    menuProject_->Append( ID_OpenProject,        _("&Open Project") );
+    menuProject_->Append( ID_SaveProject,        _("&Save Project") );
+    menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
+    menuProject_->AppendSeparator();
+    menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
+    menuProject_->AppendSeparator();
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -84,9 +91,11 @@ END_EVENT_TABLE()
     // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append( menuBlackfisk,     _("&blackfisk") );
-    menuBar->Append( menuProject,       _("&Project") );
+    menuBar->Append( menuProject_,      _("&Project") );
     menuBar->Append( menuHelp,          _("&Help") );
     SetMenuBar( menuBar );
+
+    CreateLastProjectMenu ();
 
     // splitter window
     wxSplitterWindow* pSplitter = new wxSplitterWindow(this);
@@ -103,9 +112,49 @@ END_EVENT_TABLE()
 
     SetSizer(pSizer);
 
+    SetTitle();
+
     Show(TRUE);
     SetSize(wxSize(650, 600));
     Center();
+}
+
+void BFMainFrame::SetTitle ()
+{
+    wxString str;
+
+    // project filename
+    str = App()->GetCurrentProjectFilename();
+
+    // project name
+    if (str.IsEmpty())
+        str = App()->GetCurrentProjectName();
+    else
+        str << _T(" (") << App()->GetCurrentProjectName() << _T(")");
+
+    // application name and version
+    str << wxString::Format(_T(" - %s %s"), BF_PRGNAME, BF_VERSION);
+
+    wxTopLevelWindow::SetTitle(str);
+}
+
+void BFMainFrame::CreateLastProjectMenu ()
+{
+    if (menuProject_ == NULL)
+        return;
+
+    if (menuProject_->FindItem(ID_LastProject1) != NULL)
+        menuProject_->Delete(ID_LastProject1);
+    if (menuProject_->FindItem(ID_LastProject2) != NULL)
+        menuProject_->Delete(ID_LastProject2);
+    if (menuProject_->FindItem(ID_LastProject3) != NULL)
+        menuProject_->Delete(ID_LastProject3);
+    if (menuProject_->FindItem(ID_LastProject4) != NULL)
+        menuProject_->Delete(ID_LastProject4);
+
+    int iCount = BFSettings::Instance().GetLastProjects().GetCount();
+    for (int i = iCount-1; i > -1 ; --i)
+        menuProject_->Append( ID_LastProject4 - i, BFSettings::Instance().GetLastProjects()[i] );
 }
 
 BFBackupCtrl* BFMainFrame::BackupCtrl ()
@@ -126,6 +175,17 @@ BFBackupTree* BFMainFrame::BackupTree ()
     int i = 0;
 }
 
+void BFMainFrame::OnLastProject (wxCommandEvent& event)
+{
+    if (AskModification())
+        spApp_->CloseCurrentProject(false);
+        {
+            spApp_->OpenProject(BFSettings::Instance().GetLastProjects()[ID_LastProject4 - event.GetId()]);
+            CreateLastProjectMenu();
+            SetTitle();
+        }
+}
+
 void BFMainFrame::OnProject (wxCommandEvent& event)
 {
     wxString strProject;
@@ -136,7 +196,10 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             if (AskModification())
                 spApp_->CloseCurrentProject(false);
                     if (AskOpenProject(strProject))
+                    {
                         spApp_->OpenProject(strProject);
+                        CreateLastProjectMenu();
+                    }
             break;
 
         case ID_SaveProject:
@@ -166,6 +229,8 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             OpenProjectSettings();
             break;
     }
+
+    SetTitle();
 }
 
 void BFMainFrame::OnSettings (wxCommandEvent& event)

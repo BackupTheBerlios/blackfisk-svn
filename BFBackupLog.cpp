@@ -56,55 +56,56 @@ bool BFTaskLog::Write ()
     wxString strLine;
 
     strLine.Clear();
-    strLine << _("Task: ") << rTask_.GetName();
+    strLine << _("Task: ") << rTask_.GetName() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Type: ") << rTask_.GetTypeDescription();
+    strLine << _("Type: ") << rTask_.GetTypeDescription() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Project: ") << BFRootTask::Instance().GetName();
+    strLine << _("Project: ") << BFRootTask::Instance().GetName() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Source: ") << rTask_.GetSource();
+    strLine << _("Source: ") << rTask_.GetSource() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Destination: ") << rTask_.GetDestination();
+    strLine << _("Destination: ") << rTask_.GetDestination() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Task-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Task-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Task-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Task-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Task-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    //strLine << _("Task-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Task-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(BFRootTask::Instance().GetSettings().GetVerboseLevel());
+    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(BFRootTask::Instance().GetSettings().GetVerboseLevel()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnWarning());
+    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnWarning()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnError());
+    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnError()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnFatal());
+    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnFatal()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("\nlogged messages:");
+    strLine << _("\nlogged messages:") << _T("\n");
     file.Write(strLine);
 
     for (int i = 0; i < arrLog_.GetCount(); ++i)
@@ -117,6 +118,7 @@ wxString BFTaskLog::GetFileName ()
 {
     wxString str;
     str << rTask_.GetDestination() << wxFILE_SEP_PATH << rTask_.GetName() << _T(".log");
+    BFTaskBase::ReplaceMacros(str);
     return str;
 }
 
@@ -270,8 +272,8 @@ bool BFBackupLog::Write ()
     // create filename
     wxString strFile;
     strFile = rPrj.GetSettings().GetBackupLogLocation();
-    //strFile = strFile  + timeStart_.Format(_T("%Y-%m-%d")) + _T('_');
     strFile = strFile + wxFILE_SEP_PATH + rPrj.GetName() + _T(".log");
+    BFTaskBase::ReplaceMacros(strFile);
 
     // open log-file
     wxFile file(strFile, wxFile::write);
@@ -286,43 +288,44 @@ bool BFBackupLog::Write ()
     wxString strLine;
 
     strLine.Clear();
-    strLine << _("Project: ") << rPrj.GetName();
+    strLine << _("Project: ") << rPrj.GetName() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("File: ") << strFile;
+    strLine << _("File: ") << strFile << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Backup-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Backup-Start: ") << timeStart_.Format(_T("%Y-%m-%d %H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Backup-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Backup-End: ") << timeEnd_.Format(_T("%Y-%m-%d %H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Backup-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    //strLine << _("Backup-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLine << _("Backup-Time: ") << timeEnd_.Subtract(timeStart_).Format(_T("%H:%M:%S")) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(rPrj.GetSettings().GetVerboseLevel());
+    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(rPrj.GetSettings().GetVerboseLevel()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnWarning());
+    strLine << _("Stop-Level on Warnings: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnWarning()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnError());
+    strLine << _("Stop-Level on Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnError()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnFatal());
+    strLine << _("Stop-Level on Fatal Errors: ") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnFatal()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Task-Count: ") << vecTaskLogs_.size();
+    strLine << _("Task-Count: ") << vecTaskLogs_.size() << _T("\n");
     file.Write(strLine);
 
     for (int i = 0; i < vecTaskLogs_.size(); ++i)

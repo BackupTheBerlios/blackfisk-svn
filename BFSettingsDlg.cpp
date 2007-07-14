@@ -41,6 +41,16 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pBook->SetMinSize(wxSize(440, 220));
     pBook->SetInternalBorder(15);
 
+    // general-page
+    wxPanel* pPageGeneral = new wxPanel(pBook);
+    pCheckOpenLast_ = new wxCheckBox(pPageGeneral,
+                                     wxID_ANY,
+                                     _("open the last opened project on startup"));
+    wxBoxSizer* pPageGeneralSizerTop = new wxBoxSizer(wxVERTICAL);
+    pPageGeneralSizerTop->Add(pCheckOpenLast_);
+    pPageGeneral->SetSizer(pPageGeneralSizerTop);
+    pBook->AddPage(pPageGeneral, _("General"));
+
     // view-page
     wxPanel* pPageView = new wxPanel(pBook);
     pCheckMacro_ = new wxCheckBox(pPageView,
@@ -131,6 +141,7 @@ void BFSettingsDlg::GetData ()
 {
     BFSettings& rS = BFSettings::Instance();
 
+    pCheckOpenLast_->SetValue(rS.GetOpenLastProject());
     pCheckMacro_->SetValue(rS.GetReplaceMacros());
     pCheckFiles_->SetValue(rS.GetWithFiles());
     pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
@@ -141,6 +152,7 @@ void BFSettingsDlg::SetData ()
 {
     BFSettings& rS = BFSettings::Instance();
 
+    rS.SetOpenLastProject(pCheckOpenLast_->GetValue());
     rS.SetReplaceMacros(pCheckMacro_->GetValue());
     rS.SetWithFiles(pCheckFiles_->GetValue());
     rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());

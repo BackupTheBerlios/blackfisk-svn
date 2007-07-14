@@ -32,6 +32,10 @@ enum
     ID_CloseProject,
     ID_NewProject,
     ID_ProjectSettings,
+    ID_LastProject1,
+    ID_LastProject2,
+    ID_LastProject3,
+    ID_LastProject4,
     ID_Settings
 };
 
@@ -49,10 +53,18 @@ class BFMainFrame : public wxFrame
         /// to display the real data-structure on HDD volumes
         BFDirCtrl*          pDirCtrl_;
 
+        ///
+        wxMenu*             menuProject_;
+
         /** display messages from the application;
             it is not needed to touch it directly!
             just use OBSystem to display messages to the user */
         BFMessageDlg        msgDlg_;
+
+        ///
+        void CreateLastProjectMenu ();
+        ///
+        void SetTitle ();
 
     protected:
         /// proteced members
@@ -85,6 +97,8 @@ class BFMainFrame : public wxFrame
         void OnBackup (wxCommandEvent& event);
         ///
         void OnProject (wxCommandEvent& event);
+        ///
+        void OnLastProject (wxCommandEvent& event);
         ///
         void OnSettings (wxCommandEvent& event);
 

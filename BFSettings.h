@@ -28,6 +28,10 @@ class BFSettings
         /** max size of the application logfile in KB
             size does not matter if it is '0' */
         long                lMaxLogFileSize_;
+        /** open the last opened project on start */
+        bool                bOpenLastProject_;
+        /** last opened projectes */
+        wxArrayString       arrLastProjects_;
 
         ///
         static BFSettings   sSettings_;
@@ -59,6 +63,14 @@ class BFSettings
         long GetMaxLogFileSize ();
         ///
         void SetMaxLogFileSize (long lSize);
+        ///
+        const wxArrayString& GetLastProjects ();
+        ///
+        void SetLastProject (const wxChar* strFilename);
+        ///
+        void SetOpenLastProject (bool bOpen);
+        ///
+        bool GetOpenLastProject ();
 
         ///
         bool Serialize (jbArchive& rA);
