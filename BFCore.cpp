@@ -35,6 +35,7 @@ BFCore& BFCore::Instance ()
 
 
 BFCore::BFCore ()
+      : bWhileBackup_(false)
 {
     // remember current date in a string
     ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
@@ -46,6 +47,16 @@ BFCore::BFCore ()
     int i = 0;
 }
 
+
+void BFCore::BackupStarted ()
+{
+    bWhileBackup_ = true;
+}
+
+void BFCore::BackupEnded ()
+{
+    bWhileBackup_ = false;
+}
 
 wxArrayString& BFCore::GetDirListing (const wxChar* dir,
                                       wxArrayString& arr,
@@ -211,7 +222,8 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
     zip.Close();
     out.Close();
 
-    BFSystem::Backup(wxString::Format(_("%s compressed to %s"), pstrSourceDir, pstrZipName));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("%s compressed to %s"), pstrSourceDir, pstrZipName));
 
     // verify the zip-file
     if (bVerify)
@@ -279,7 +291,8 @@ bool BFCore::VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, Pro
         ++i;
     }   // while
 
-    BFSystem::Backup(wxString::Format(_("%s verifyied"), pZipFileName));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("%s verifyied"), pZipFileName));
 
     return true;
 }
@@ -323,7 +336,8 @@ bool BFCore::MoveFile (const wxChar* pSource, const wxChar* pDestination, bool b
         return 0;
     }
 
-    BFSystem::Backup(wxString::Format(_("move %s to %s"), pSource, pDestination));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("move %s to %s"), pSource, pDestination));
 
     return ::wxRenameFile(pSource, pDestination, bOverwrite);
 }
@@ -395,7 +409,7 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
                     rc = false;
     }
 
-    if (rc)
+    if (rc && bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("%s copyied to %s"), pSource, pDestination));
 
     return rc;
@@ -413,7 +427,8 @@ bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DE
     if ( !bIgnoreWriteProtection && IsWriteProtected(pFile) )
         return false;
 
-    BFSystem::Backup(wxString::Format(_("delete %s"), pFile));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("delete %s"), pFile));
 
     return ::wxRemoveFile(pFile);
 }
@@ -442,7 +457,8 @@ bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool 
         dir.Traverse(trav);
     }
 
-    BFSystem::Backup(wxString::Format(_("delete %s"), pDir));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("delete %s"), pDir));
 
     return ::wxRmdir(pDir);
 }
@@ -490,7 +506,8 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
         pProgress->SetLabel ( wxString::Format(_("synchronize to %s"), pToSynchronize) );
     }
 
-    BFSystem::Backup(wxString::Format(_("synchronize %s with %s (copy-step)"), pToSynchronize, pOriginal));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("synchronize %s with %s (copy-step)"), pToSynchronize, pOriginal));
 
     // synchronize the dir
     wxDir dir(pOriginal);
@@ -498,7 +515,8 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     BFSynchronizeDirTraverser trav(pOriginal, pToSynchronize, arrOriginalListing, bVerify, pProgress);
     dir.Traverse(trav);
 
-    BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
 
     // check for deletable files
     wxArrayString arrToSyncListing;
@@ -540,7 +558,8 @@ bool BFCore::CreateDir (const wxChar* pNewDir)
         return false;
     }
 
-    BFSystem::Backup(wxString::Format(_("create dir %s"), pNewDir));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("create dir %s"), pNewDir));
 
     return ::wxMkdir(pNewDir);
 }
@@ -570,7 +589,8 @@ bool BFCore::CreatePath (const wxChar* pPath)
         strSub = strSub + wxFILE_SEP_PATH;
     }
 
-    BFSystem::Backup(wxString::Format(_("create path %s"), pPath));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("create path %s"), pPath));
 
     return true;
 }
@@ -617,7 +637,8 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     if (bVerify)
         pMap = &mapRememberToVerify;
 
-    BFSystem::Backup(wxString::Format(_("copy %s to %s"), pSourceDir, pDestinationDir));
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("copy %s to %s"), pSourceDir, pDestinationDir));
 
     // copy the dir
     wxDir dir(pSourceDir);
@@ -630,7 +651,8 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
         if (pProgress != NULL)
             pProgress->SetLabel ( _("verify files") );
 
-        BFSystem::Backup(wxString::Format(_("verify %s"), pDestinationDir));
+        if (bWhileBackup_)
+            BFSystem::Backup(wxString::Format(_("verify %s"), pDestinationDir));
 
         return VerifyFiles (mapRememberToVerify, pProgress);
     }
@@ -724,9 +746,10 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 
         if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str()) )
         {
-            BFSystem::Backup(wxString::Format(_("the files %s and %s NOT identically"),
-                                              rMap[i].first.c_str(),
-                                              rMap[i].second.c_str()));
+            if (bWhileBackup_)
+                BFSystem::Backup(wxString::Format(_("the files %s and %s NOT identically"),
+                                                  rMap[i].first.c_str(),
+                                                  rMap[i].second.c_str()));
             return false;
         }
     }

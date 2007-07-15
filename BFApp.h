@@ -58,7 +58,7 @@ class BFApp : public wxApp
             example:
             string1 = "ABCDEFG" and string2 = "ABCwdFG
             return value is "ABC" */
-        static wxString ExtractCommunity (wxArrayString& rStrings);
+        static wxString ExtractCommunity (const wxArrayString& rStrings);
 
         ///
         const wxString& GetCurrentProjectFilename ();

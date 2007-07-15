@@ -59,6 +59,9 @@ class BFRootTaskData : public BFTaskBase, public Subject
 
     public:
         ///
+        bool Has (BFProjectSettings* pPrjSet);
+
+        ///
         long GetTaskCount ();
 
         ///

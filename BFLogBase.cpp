@@ -7,11 +7,11 @@
 #include "blackfisk.h"
 #include "BFCore.h"
 
-BFLogBase::BFLogBase (const wxChar* strLogFileName, long lMaxSize /*= 0*/ )
+BFLogBase::BFLogBase (const wxChar* strLogFileName, long lMaxSizeInBytes /*= 0*/ )
      : Observer(&(BFSystem::Instance())),
        fileLog_(strLogFileName, wxFile::write_append),
        strLogFileName_(strLogFileName),
-       lMaxSize_(lMaxSize)
+       lMaxSize_(lMaxSizeInBytes)
 {
     CareSize();
 }
@@ -25,9 +25,9 @@ long BFLogBase::GetMaxSize ()
     return lMaxSize_;
 }
 
-void BFLogBase::SetMaxSize (long lSize)
+void BFLogBase::SetMaxSize (long lMaxSizeInBytes)
 {
-    lMaxSize_ = lSize;
+    lMaxSize_ = lMaxSizeInBytes;
 }
 
 void BFLogBase::CareSize ()

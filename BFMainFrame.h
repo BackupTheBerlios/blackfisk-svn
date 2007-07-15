@@ -88,6 +88,8 @@ class BFMainFrame : public wxFrame
         BFBackupTree* BackupTree ();
 
         ///
+        void OnClose (wxCloseEvent& event);
+        ///
         void OnQuit (wxCommandEvent& event);
         ///
         void OnAbout (wxCommandEvent& event);

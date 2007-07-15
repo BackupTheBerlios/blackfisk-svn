@@ -7,6 +7,15 @@
 #include "blackfisk.h"
 #include "BFSettings.h"
 
+BFLog::BFLog ()
+     : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize()*1024)
+{
+}
+
+/*virtual*/ BFLog::~BFLog ()
+{
+}
+
 void BFLog::Do(BFMessageType type,
                const wxDateTime& timestamp,
                const wxChar* strMessage,
@@ -71,14 +80,4 @@ void BFLog::Do(BFMessageType type,
         pSys->GetLastMessage().c_str(),
         pSys->GetLastLocation().c_str()
     );
-}
-
-
-BFLog::BFLog ()
-     : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize())
-{
-}
-
-/*virtual*/ BFLog::~BFLog ()
-{
 }

@@ -44,7 +44,7 @@ class BFTaskLog
         ///
         void Started ();
         ///
-        void Finished ();
+        void Finished (bool bNormalEnd = true);
 
         ///
         void Message (BFMessageType type,

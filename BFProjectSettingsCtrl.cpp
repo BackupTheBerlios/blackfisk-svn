@@ -8,6 +8,8 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 
+#include "BFRootTask.h"
+
 #define BFSTOPLVL_RADIO_WARNING_PRJ  1 + wxID_HIGHEST
 #define BFSTOPLVL_RADIO_WARNING_TSK  2 + wxID_HIGHEST
 #define BFSTOPLVL_RADIO_WARNING_ASK  3 + wxID_HIGHEST
@@ -96,7 +98,7 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl ()
     wxStaticText* pLabelStopPrj = new wxStaticText(this, wxID_ANY, _("stop\nproject"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelStopTsk = new wxStaticText(this, wxID_ANY, _("stop\ntask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelAsk     = new wxStaticText(this, wxID_ANY, _("ask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("ignore"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("ignore\njust log"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
 
     // size the lables
     pLabelStopPrj->SetMinSize (wxSize(50, pLabelStopPrj->GetSize().GetHeight()));
@@ -366,13 +368,35 @@ void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
 void BFProjectSettingsCtrl::SetData (BFProjectSettings& rSettings)
 {
     // verbose
-    rSettings.SetVerboseLevel((BF_VerboseLevel)pComboVerbose_->GetSelection());
+    if (rSettings.GetVerboseLevel() != pComboVerbose_->GetSelection())
+    {
+        rSettings.SetVerboseLevel((BF_VerboseLevel)pComboVerbose_->GetSelection());
+        BFRootTask::Instance().SetModified();
+    }
 
     // backup log
-    rSettings.SetBackupLogLocation(pPickerBackupLog_->GetPath());
+    if (rSettings.GetBackupLogLocation() != pPickerBackupLog_->GetPath())
+    {
+        rSettings.SetBackupLogLocation(pPickerBackupLog_->GetPath());
+        BFRootTask::Instance().SetModified();
+    }
 
     // stop levels
-    rSettings.SetStopLevelOnWarning(iStopLevelOnWarning_);
-    rSettings.SetStopLevelOnError(iStopLevelOnError_);
-    rSettings.SetStopLevelOnFatal(iStopLevelOnFatal_);
+    if (rSettings.GetStopLevelOnWarning() != iStopLevelOnWarning_)
+    {
+        rSettings.SetStopLevelOnWarning(iStopLevelOnWarning_);
+        BFRootTask::Instance().SetModified();
+    }
+
+    if (rSettings.GetStopLevelOnError() != iStopLevelOnError_)
+    {
+        rSettings.SetStopLevelOnError(iStopLevelOnError_);
+        BFRootTask::Instance().SetModified();
+    }
+
+    if (rSettings.GetStopLevelOnFatal() != iStopLevelOnFatal_)
+    {
+        rSettings.SetStopLevelOnFatal(iStopLevelOnFatal_);
+        BFRootTask::Instance().SetModified();
+    }
 }

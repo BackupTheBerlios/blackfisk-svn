@@ -31,10 +31,10 @@ class BFLogBase : public Observer
         /** take care that size of the logfile is not to big */
         void CareSize ();
 
-        ///
+        /// return the maximum size in bytes
         long GetMaxSize ();
         ///
-        void SetMaxSize (long lSize);
+        void SetMaxSize (long lMaxSizeInBytes);
 
         /// the ctor set its 'subject' by itself
         BFLogBase (const wxChar* strLogFileName, long lMaxSize = 0);

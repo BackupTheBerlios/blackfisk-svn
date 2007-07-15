@@ -55,12 +55,12 @@ long BFSettings::GetMaxLogFileSize ()
     return lMaxLogFileSize_;
 }
 
-void BFSettings::SetMaxLogFileSize (long lSize)
+void BFSettings::SetMaxLogFileSize (long lSizeInKiloByte)
 {
-    if (lSize < 0)
+    if (lSizeInKiloByte < 0)
         lMaxLogFileSize_ = 0;
     else
-        lMaxLogFileSize_ = lSize;
+        lMaxLogFileSize_ = lSizeInKiloByte;
 }
 
 const wxArrayString& BFSettings::GetLastProjects ()

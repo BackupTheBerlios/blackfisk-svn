@@ -59,10 +59,10 @@ class BFSettings
         bool GetWithFiles ();
         ///
         void SetWithFiles (bool bWithFiles);
-        ///
+        /// return the maximum size of a log file in kilobyte
         long GetMaxLogFileSize ();
         ///
-        void SetMaxLogFileSize (long lSize);
+        void SetMaxLogFileSize (long lSizeInKiloByte);
         ///
         const wxArrayString& GetLastProjects ();
         ///

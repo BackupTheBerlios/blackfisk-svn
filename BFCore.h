@@ -46,6 +46,10 @@ class BFCore
             just use OBSystem to create messages */
         BFLog       log_;
 
+        /** indicates that a backup is running
+            so that backup messages will be created */
+        bool        bWhileBackup_;
+
         /** get attributes from a file ('rFn') and set them to a ZipEntry ('pEntry')
             this methode should be to encapsulate plattformdependend code! */
         bool SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry);
@@ -65,6 +69,11 @@ class BFCore
 
         /// virtual destructor
         virtual ~BFCore ();
+
+        ///
+        void BackupStarted ();
+        ///
+        void BackupEnded ();
 
         /** move a file */
         bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE);

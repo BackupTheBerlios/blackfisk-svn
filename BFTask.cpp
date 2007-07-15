@@ -212,6 +212,10 @@ bool BFTask::Serialize (jbArchive& rA)
     if ( !(rA.IsOpen()) )
         return false;
 
+    bool rc = false;
+
+    rA.EnterObject();
+
     // ** serialize TO file **
     if( rA.IsStoring() )
     {
@@ -254,22 +258,26 @@ bool BFTask::Serialize (jbArchive& rA)
         if ( !(SetOID(oid)) )
         {
             BFSystem::Fatal(_("Unable to set an OID while loading a project file.\nThe file is corrupt!"), _T("BFTask::Serialize()"));
-            return false;
+            rc = false;
         }
     }
+
+    rA.LeaveObject();
 
     // check for errors
     if ( rA.IsOk())
     {
-        return true;
+        rc =  true;
     }
     else
     {
         if (rA.Eof())
-            return true;    // there is no need to handle EOF like an error
+            rc = true;    // there is no need to handle EOF like an error
         else
-            return false;   // on real error
+            rc = false;   // on real error
     }
+
+    return rc;
 }
 
 BFTask::BFTask (BFTaskType type,

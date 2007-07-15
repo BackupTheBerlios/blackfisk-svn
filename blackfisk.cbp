@@ -239,6 +239,12 @@
 		<Unit filename="BFundef.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
+		<Unit filename="BFwxLog.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFwxLog.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
 		<Unit filename="ObserverPattern.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -272,6 +278,7 @@
 		</Unit>
 		<Extensions>
 			<code_completion />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

@@ -36,6 +36,14 @@ void BFRootTaskData::ClearTaskVector ()
     vecTasks_.clear();
 }
 
+bool BFRootTaskData::Has (BFProjectSettings* pPrjSet)
+{
+    if (pPrjSet == &projectSettings_)
+        return true;
+
+    return false;
+}
+
 BFTask* BFRootTaskData::GetTask(BFoid oid)
 {
     for (int i = 0; i < TaskVector().size(); ++i)
@@ -74,7 +82,7 @@ bool BFRootTaskData::StoreToFile (const wxChar* strFilename)
     }
 
     wxFileOutputStream  out(strFilename);
-    jbArchive           archive(out);
+    jbArchive           archive(out, BF_PROJECT_CURRENT_VERSION);
 
     if (Serialize(archive))
     {
@@ -95,7 +103,7 @@ bool BFRootTaskData::ReadFromFile (const wxChar* strFilename)
     }
 
     wxFileInputStream   in(strFilename);
-    jbArchive           archive(in);
+    jbArchive           archive(in, BF_PROJECT_CURRENT_VERSION);
 
     if (Serialize(archive))
     {
@@ -304,8 +312,10 @@ bool BFRootTask::Run (wxWindow* pParent)
     BFBackupLog             log;
     BFTaskProgressDlg       dlg(pParent, *this);
 
-    // start logging the backup
+    // mark the backup start in the logfile
     log.BackupStarted();
+    // the core need to create backup messages
+    BFCore::Instance().BackupStarted();
 
     // prepare for destination directories
     for (i = 0; i < TaskVector().size(); ++i)
@@ -331,8 +341,10 @@ bool BFRootTask::Run (wxWindow* pParent)
         }
     }
 
-    // end the logging of the backup
+    // mark the backup end in the log files
     log.BackupFinished();
+    // there is no need to create backup messages
+    BFCore::Instance().BackupEnded();
 
     return true;
 }

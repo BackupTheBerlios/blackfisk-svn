@@ -90,6 +90,7 @@ void BFProjectSettingsDlg::SetData ()
     if (rPrj.GetName() != pNameCtrl_->GetValue())
     {
         rPrj.SetName(pNameCtrl_->GetValue());
+        BFRootTask::Instance().SetModified();
         bBroadcast = true;
     }
 

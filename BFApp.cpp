@@ -19,6 +19,7 @@
 #include "BFRootTask.h"
 #include "Progress.h"
 #include "BFSettings.h"
+#include "BFwxLog.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -59,7 +60,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     return rStrings;
 }
 
-/*static*/ wxString BFApp::ExtractCommunity (wxArrayString& rStrings)
+/*static*/ wxString BFApp::ExtractCommunity (const wxArrayString& rStrings)
 {
     wxString str;
 
@@ -123,7 +124,8 @@ bool BFApp::OnInit()
 
     //
     if (BFSettings::Instance().GetOpenLastProject())
-        OpenProject(BFSettings::Instance().GetLastProjects().Last());
+        if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
+            OpenProject(BFSettings::Instance().GetLastProjects().Last());
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
@@ -175,6 +177,7 @@ bool BFApp::OpenProject (const wxChar* filename)
 
 bool BFApp::SaveProject (const wxChar* filename)
 {
+    BFSettings::Instance().SetLastProject(filename);
     return BFRootTask::Instance().StoreToFile(filename);
 }
 
@@ -215,6 +218,13 @@ void BFApp::Test ()
 
 void BFApp::Backup()
 {
+    BFwxLog log;
+
+    /* deactivate the default wxLog target
+       and set a new one that handle messages
+       with BFSystem */
+    wxLog::SetActiveTarget(&log);
+
     // ** RUN **
     if (BFRootTask::Instance().Run(this->MainFrame()))
     {
@@ -224,4 +234,7 @@ void BFApp::Backup()
     {
         BFSystem::Fatal(_T("there was an ERROR while Backup"), _T("BFApp::Backup()"));
     }
+
+    // reset the default wxLog target
+    wxLog::SetActiveTarget(NULL);
 }
