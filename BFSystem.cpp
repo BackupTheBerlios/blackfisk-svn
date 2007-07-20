@@ -118,6 +118,7 @@ BFMessageType BFSystem::GetLastType ()
             str = _("Debug");
             break;
 
+        case MsgUNKNOWN:
         default:
             str = _("Unknown");
             break;

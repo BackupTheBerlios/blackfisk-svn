@@ -13,6 +13,7 @@
 #include "Progress.h"
 #include "BFIconTable.h"
 #include "BFBackupLog.h"
+#include "blackfisk.h"
 
 #define BFROOTTASK_DEFAULT_NAME _("unnamed")
 

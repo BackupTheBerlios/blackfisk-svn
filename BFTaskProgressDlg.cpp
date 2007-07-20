@@ -27,7 +27,6 @@
 
 /*virtual*/ BFProgressCtrlBase::~BFProgressCtrlBase ()
 {
-    int i = 0;
 }
 
 
@@ -169,7 +168,6 @@ BFTaskProgressDlg::BFTaskProgressDlg (wxWindow* pParent,
                    pProgressTask_(NULL),
                    pProgressTotal_(NULL)
 {
-    BFSystem::Debug(_T("ctor BFTaskProgressDlg"));
     Init(rRootTask);
 }
 
@@ -235,8 +233,6 @@ ProgressWithMessage* BFTaskProgressDlg::GetProgressTask ()
 
     if (pProgressTotal_ != NULL)
         delete pProgressTotal_;
-
-    BFSystem::Debug(_T("dtor BFTaskProgressDlg"));
 }
 
 void BFTaskProgressDlg::SetCurrentTaskName (const wxChar* name)

@@ -122,10 +122,14 @@ bool BFApp::OnInit()
     locale_.Init( langIds[2] );
     locale_.AddCatalog(_T("ob"));
 
-    //
+    // open the last project
+#ifndef _DEBUG
     if (BFSettings::Instance().GetOpenLastProject())
         if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
             OpenProject(BFSettings::Instance().GetLastProjects().Last());
+#else
+    OpenProject(_T("C:\\test.ob"));
+#endif
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */

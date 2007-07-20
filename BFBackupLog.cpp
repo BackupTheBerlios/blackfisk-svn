@@ -42,9 +42,24 @@ void BFTaskLog::Message (BFMessageType type,
 
     str << timestamp.Format(_T("%Y-%m-%d %H:%M:%S "));
     str << _T('[') << BFSystem::GetTypeString(type) << _T(']');
-    str << _T(' ') << strMessage;
+    str << _T(' ') << strMessage << _T('\n');
 
     arrLog_.Add(str);
+
+    switch(type)
+    {
+        case MsgWARNING:
+            ++lCountWarnings_;
+            break;
+
+        case MsgERROR:
+            ++lCountErrors_;
+            break;
+
+        case MsgFATAL:
+            ++lCountFatal_;
+            break;
+    };
 }
 
 bool BFTaskLog::Write ()
@@ -152,6 +167,7 @@ BFBackupLog::BFBackupLog ()
            : Observer(&(BFSystem::Instance())),
              bIsSaved_(false)
 {
+    BFSystem::Instance().IncrementBackupObservers();
 }
 
 
@@ -160,6 +176,8 @@ BFBackupLog::BFBackupLog ()
 {
     if (!bIsSaved_)
         BackupFinished();
+
+    BFSystem::Instance().DecrementBackupObservers();
 }
 
 
@@ -184,22 +202,22 @@ BFBackupLog::BFBackupLog ()
 
         case BFVERBOSE_ERROR:
             if (msgType != MsgFATAL
-             || msgType != MsgERROR)
+             && msgType != MsgERROR)
                 return;
             break;
 
         case BFVERBOSE_WARNING:
             if (msgType != MsgFATAL
-             || msgType != MsgERROR
-             || msgType != MsgWARNING)
+             && msgType != MsgERROR
+             && msgType != MsgWARNING)
                 return;
             break;
 
         case BFVERBOSE_INFO:
             if (msgType != MsgFATAL
-             || msgType != MsgERROR
-             || msgType != MsgWARNING
-             || msgType != MsgBACKUP)
+             && msgType != MsgERROR
+             && msgType != MsgWARNING
+             && msgType != MsgBACKUP)
                 return;
             break;
     };
@@ -216,6 +234,48 @@ BFBackupLog::BFBackupLog ()
     if (msgType == MsgWARNING)
     {
         switch (BFRootTask::Instance().GetSettings().GetStopLevelOnWarning())
+        {
+            case BFDO_STOPPRJ:
+                BFRootTask::Instance().StopProject();
+                break;
+
+            case BFDO_STOPTSK:
+                BFRootTask::Instance().StopCurrentTask();
+                break;
+
+            case BFDO_ASK:
+                break;
+
+            case BFDO_IGNORE:
+                break;
+        };
+    }
+
+    // do something on errors?
+    if (msgType == MsgERROR)
+    {
+        switch (BFRootTask::Instance().GetSettings().GetStopLevelOnError())
+        {
+            case BFDO_STOPPRJ:
+                BFRootTask::Instance().StopProject();
+                break;
+
+            case BFDO_STOPTSK:
+                BFRootTask::Instance().StopCurrentTask();
+                break;
+
+            case BFDO_ASK:
+                break;
+
+            case BFDO_IGNORE:
+                break;
+        };
+    }
+
+    // do something on fatal error?
+    if (msgType == MsgFATAL)
+    {
+        switch (BFRootTask::Instance().GetSettings().GetStopLevelOnFatal())
         {
             case BFDO_STOPPRJ:
                 BFRootTask::Instance().StopProject();

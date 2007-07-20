@@ -17,6 +17,7 @@
 
 enum BFMessageType
 {
+    MsgUNKNOWN,
     MsgBACKUP,
     MsgINFO,
     MsgWARNING,

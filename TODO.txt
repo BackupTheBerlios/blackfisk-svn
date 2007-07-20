@@ -1,3 +1,5 @@
+current step: implement ask on errors while backup
+
 - open project file progress
 - exclude-control for directory-tasks
 - log backup
