@@ -1,8 +1,11 @@
 /**
- * BFMainFrame.h
- * definition of class BFMainFrame
- * the main window of OctopusBackup
- * 2006-04-05
+ * Name:        BFMainFrame.cpp
+ * Purpose:     BFMainFrame class definition
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-04-05
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
  ***/
 
 #ifndef BFMAINFRAME_H
@@ -24,7 +27,9 @@ enum
 {
     ID_Quit = 1,
     ID_About,
+#ifdef _DEBUG
     ID_Test,
+#endif
     ID_Backup,
     ID_OpenProject,
     ID_SaveProject,
@@ -39,7 +44,7 @@ enum
     ID_Settings
 };
 
-///
+/// main window of the application
 class BFMainFrame : public wxFrame
 {
     private:
@@ -65,6 +70,10 @@ class BFMainFrame : public wxFrame
         void CreateLastProjectMenu ();
         ///
         void SetTitle ();
+
+#ifdef _DEBUG
+    void Test ();
+#endif
 
     protected:
         /// proteced members
@@ -93,8 +102,10 @@ class BFMainFrame : public wxFrame
         void OnQuit (wxCommandEvent& event);
         ///
         void OnAbout (wxCommandEvent& event);
+#ifdef _DEBUG
         ///
         void OnTest (wxCommandEvent& event);
+#endif
         ///
         void OnBackup (wxCommandEvent& event);
         ///

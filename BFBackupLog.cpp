@@ -65,14 +65,19 @@ void BFTaskLog::Message (BFMessageType type,
 bool BFTaskLog::Write ()
 {
     // open log-file
-    wxFile file(GetFileName(), wxFile::write);
+    wxString strFilename(GetFileName());
+    wxFile file(strFilename, wxFile::write);
 
     if ( !(file.IsOpened()) )
     {
-        BFSystem::Fatal(wxString::Format(_("can not create/open the log-file %s"), GetFileName().c_str()), _T("BFTaskLog::Write()"));
+        BFSystem::Fatal(wxString::Format(_("can not create/open the log-file %s"), strFilename.c_str()), _T("BFTaskLog::Write()"));
         return false;
     }
 
+    // remember the name of the logfile
+    BFRootTask::Instance().AddTaskLogFile(strFilename);
+
+    // write the log
     wxString strLine;
 
     strLine.Clear();
@@ -304,6 +309,7 @@ bool BFBackupLog::WhileBackup ()
 
 void BFBackupLog::BackupStarted ()
 {
+    BFRootTask::Instance().ClearLastLogFiles();
     timeStart_ = wxDateTime::Now();
 }
 
@@ -316,7 +322,6 @@ void BFBackupLog::BackupFinished ()
 void BFBackupLog::TaskStarted (BFTask& rTask)
 {
     vecTaskLogs_.push_back(new BFTaskLog(rTask));
-
     vecTaskLogs_.back()->Started();
 }
 
@@ -334,6 +339,9 @@ bool BFBackupLog::Write ()
     strFile = rPrj.GetSettings().GetBackupLogLocation();
     strFile = strFile + wxFILE_SEP_PATH + rPrj.GetName() + _T(".log");
     BFTaskBase::ReplaceMacros(strFile);
+
+    // remember the filename
+    BFRootTask::Instance().SetProjectLogFile(strFile);
 
     // open log-file
     wxFile file(strFile, wxFile::write);

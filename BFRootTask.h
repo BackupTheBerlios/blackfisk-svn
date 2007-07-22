@@ -37,10 +37,6 @@ class BFRootTaskData : public BFTaskBase, public Subject
         bool                bModified_;
 
     protected:
-        /** the complete filename of the current open project
-            if nothing is open it is empty */
-        wxString            strCurrentFilename_;
-
         ///
         BFRootTaskData ();
         ///
@@ -92,26 +88,21 @@ class BFRootTaskData : public BFTaskBase, public Subject
         BFTask* GetTask(BFoid oid);
 
         ///
-        const wxString& GetCurrentFilename ();
-        ///
         bool IsModified ();
         ///
         void SetModified (bool bModified = true);
-
-        ///
-        bool StoreToFile (const wxChar* strFilename);
-        ///
-        bool ReadFromFile (const wxChar* strFilename);
 };  // class BFRootTaskData
 
 /// application layer
 class BFRootTask : public BFRootTaskData
 {
     private:
-        /*
-        Progress*           pTotalProgress_;
-        ///
-        Progress*           pTaskProgress_;*/
+        /** array of log files from the last backup process
+            start with the project log */
+        wxArrayString       arrLastLogFiles_;
+        /** the complete filename of the current open project
+            if nothing is open it is empty */
+        wxString            strCurrentFilename_;
 
         ///
         BFRootTask ();
@@ -143,6 +134,9 @@ class BFRootTask : public BFRootTaskData
         wxArrayString GetDestinations ();
 
         ///
+        const wxString& GetCurrentFilename ();
+
+        ///
         BFCore& Core ();
 
         ///
@@ -159,6 +153,21 @@ class BFRootTask : public BFRootTaskData
         void InitThat (wxListBox& rListBox);
         ///
         void InitThat (BFBackupTree& rBackupTree);
+
+        ///
+        bool StoreToFile (const wxChar* strFilename);
+        ///
+        bool ReadFromFile (const wxChar* strFilename);
+
+        /** clear 'arrLastLogFiles_' */
+        void ClearLastLogFiles ();
+        /** insert 'strFilename' as the the project
+            log file as the first element of 'arrLastLogFiles_' */
+        void SetProjectLogFile (wxString& strFilename);
+        /** add 'strFilename' as a task log file to 'arrLastLogFiles_' */
+        void AddTaskLogFile (wxString& strFilename);
+        ///
+        const wxArrayString& GetLastLogFiles ();
 };  // class BFRootTask
 
 #endif    // BFROOTTASK_H

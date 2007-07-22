@@ -1,9 +1,11 @@
 /**
- * BFCore.h
- * definition of class BFCore
- * standardroutins for the applications
- * for example: file handling
- * 2006-02-17
+ * Name:        BFCore.h
+ * Purpose:     BFCore class definition
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-02-17
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
  ***/
 
 #ifndef BFCORE_H
@@ -33,7 +35,8 @@ class ProgressWithMessage;
 
 #define BF_DEFAULT_OVERWRITE       true
 
-///
+/** implement standardroutins for the application
+ for example: file handling */
 class BFCore
 {
     private:

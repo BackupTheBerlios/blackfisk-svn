@@ -59,11 +59,6 @@ bool BFRootTaskData::HasTask(BFoid oid)
     return (GetTask(oid) != NULL);
 }
 
-const wxString& BFRootTaskData::GetCurrentFilename ()
-{
-    return strCurrentFilename_;
-}
-
 bool BFRootTaskData::IsModified ()
 {
     return bModified_;
@@ -74,11 +69,11 @@ void BFRootTaskData::SetModified (bool bModified /*= true*/)
     bModified_ = bModified;
 }
 
-bool BFRootTaskData::StoreToFile (const wxChar* strFilename)
+bool BFRootTask::StoreToFile (const wxChar* strFilename)
 {
     if (strFilename == NULL)
     {
-        wxLogError (_("wrong parameters in BFRootTaskData::StoreToFile (const wxChar*)"));
+        wxLogError (_("wrong parameters in BFRootTask::StoreToFile (const wxChar*)"));
         return false;
     }
 
@@ -95,11 +90,11 @@ bool BFRootTaskData::StoreToFile (const wxChar* strFilename)
 }
 
 
-bool BFRootTaskData::ReadFromFile (const wxChar* strFilename)
+bool BFRootTask::ReadFromFile (const wxChar* strFilename)
 {
     if (strFilename == NULL)
     {
-        BFSystem::Fatal(_("wrong parameters"), _T("BFRootTaskData::ReadFromFile()"));
+        BFSystem::Fatal(_("wrong parameters"), _T("BFRootTask::ReadFromFile()"));
         return false;
     }
 
@@ -407,4 +402,29 @@ void BFRootTask::StopProject ()
 
     if (pRunningTask_ != NULL)
         pRunningTask_->StopTask();
+}
+
+const wxString& BFRootTask::GetCurrentFilename ()
+{
+    return strCurrentFilename_;
+}
+
+void BFRootTask::ClearLastLogFiles ()
+{
+    arrLastLogFiles_.Clear();
+}
+
+void BFRootTask::SetProjectLogFile (wxString& strFilename)
+{
+    arrLastLogFiles_.Insert(strFilename, 0);
+}
+
+void BFRootTask::AddTaskLogFile (wxString& strFilename)
+{
+    arrLastLogFiles_.Add(strFilename);
+}
+
+const wxArrayString& BFRootTask::GetLastLogFiles ()
+{
+    return arrLastLogFiles_;
 }

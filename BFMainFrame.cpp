@@ -1,6 +1,11 @@
 /**
- * implementation of class BFMainFrame
- * 2006-04-05
+ * Name:        BFMainFrame.cpp
+ * Purpose:     BFMainFrame class implementation
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-04-05
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
  ***/
 
 #include "BFMainFrame.h"
@@ -21,6 +26,11 @@
 #include "BFProjectSettingsDlg.h"
 #include "BFSettingsDlg.h"
 #include "BFSettings.h"
+#include "BFLogViewDlg.h"
+
+#ifdef _DEBUG
+#include "BFRootTask.h"
+#endif
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -36,7 +46,9 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_LastProject4,       BFMainFrame::OnLastProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
+#ifdef _DEBUG
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
+#endif
     EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
     EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
 END_EVENT_TABLE()
@@ -69,7 +81,9 @@ END_EVENT_TABLE()
     wxMenu* menuBlackfisk = new wxMenu;
     menuBlackfisk->Append( ID_Settings,  _("Gobal &Settings") );
     menuBlackfisk->AppendSeparator();
-    //menuBlackfisk->Append( ID_Test,      _("&Testen") );
+#ifdef _DEBUG
+    menuBlackfisk->Append( ID_Test,      _("&Testen") );
+#endif
     menuBlackfisk->Append( ID_Backup,    _("&Backup") );
     menuBlackfisk->AppendSeparator();
     menuBlackfisk->Append( ID_Quit,      _("E&xit") );
@@ -118,6 +132,10 @@ END_EVENT_TABLE()
     Show(TRUE);
     SetSize(wxSize(650, 600));
     Center();
+
+#ifdef _DEBUG
+    //Test();
+#endif
 }
 
 void BFMainFrame::OnClose (wxCloseEvent& event)
@@ -348,12 +366,24 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
         _("About Hello World"), wxOK | wxICON_INFORMATION, this);
 }
 
-
+#ifdef _DEBUG
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    spApp_->Test();
+    Test();
 }
 
+void BFMainFrame::Test ()
+{
+    wxString str;
+    BFRootTask::Instance().ClearLastLogFiles();
+    str = _T("C:\\2.log");
+    BFRootTask::Instance().AddTaskLogFile(str);
+    str = _T("C:\\1.log");
+    BFRootTask::Instance().SetProjectLogFile(str);
+    new BFLogViewDlg(this);
+    //spApp_->Test();
+}
+#endif
 
 void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 {
@@ -385,7 +415,10 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 
     if (iAnswer != wxID_CANCEL)
+    {
         spApp_->Backup();
+        new BFLogViewDlg(this);
+    }
 }
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)

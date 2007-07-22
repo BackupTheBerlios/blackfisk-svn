@@ -5,7 +5,7 @@
  * Modified by:
  * Created:     2007-07-15
  * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
- * Licence:     GNU General Public License (Version 2)
+ * Licence:     GNU General Public License (Version 3)
  ***/
 
 

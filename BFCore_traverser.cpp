@@ -1,8 +1,13 @@
 /**
- * implementation of wxDirTraversers derived classes
- * used by BFCore
- * 2006-02-17
+ * Name:        BFCore_traverser.cpp
+ * Purpose:     implementation of wxDirTraverser derived classes used by BFCore
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-02-17
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
  ***/
+
 
 #include "BFCore_traverser.h"
 

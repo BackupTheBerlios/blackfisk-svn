@@ -237,7 +237,9 @@ void BFTaskDlg::SetData ()
     if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
         BFRootTask::Instance().AppendTask(rTask_);
     else
+    {
         BFRootTask::Instance().broadcastObservers();
+    }
 }
 
 

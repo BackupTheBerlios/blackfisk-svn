@@ -1,4 +1,6 @@
 current step: implement ask on errors while backup
+current step: BFLogViewDlg
+current step: project-settings: disable behavior based on the verbose level
 
 - open project file progress
 - exclude-control for directory-tasks
