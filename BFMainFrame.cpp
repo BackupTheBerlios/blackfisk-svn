@@ -6,6 +6,18 @@
  * Created:     2006-04-05
  * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
+ ***
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
 #include "BFMainFrame.h"
@@ -127,7 +139,7 @@ END_EVENT_TABLE()
 
     SetSizer(pSizer);
 
-    SetTitle();
+    RefreshTitle();
 
     Show(TRUE);
     SetSize(wxSize(650, 600));
@@ -175,14 +187,15 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         Destroy();
 }
 
-void BFMainFrame::SetTitle ()
+void BFMainFrame::RefreshTitle ()
 {
     // application name and version
-    wxTopLevelWindow::SetTitle( wxString::Format(_T("%s (%s) - %s %s"),
+    wxTopLevelWindow::SetTitle( wxString::Format(_T("%s (%s) - %s %s [with %s]"),
                                                  App()->GetCurrentProjectName().c_str(),
                                                  App()->GetCurrentProjectFilename().c_str(),
                                                  BF_PRGNAME,
-                                                 BF_VERSION) );
+                                                 BF_VERSION,
+                                                 wxArchive::GetLibVersionString().c_str()) );
 }
 
 void BFMainFrame::CreateLastProjectMenu ()
@@ -228,7 +241,7 @@ void BFMainFrame::OnLastProject (wxCommandEvent& event)
         {
             spApp_->OpenProject(BFSettings::Instance().GetLastProjects()[ID_LastProject4 - event.GetId()]);
             CreateLastProjectMenu();
-            SetTitle();
+            RefreshTitle();
         }
 }
 
@@ -276,7 +289,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             break;
     }
 
-    SetTitle();
+    RefreshTitle();
 }
 
 void BFMainFrame::OnSettings (wxCommandEvent& event)
@@ -364,6 +377,12 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 {
     wxMessageBox(wxVERSION_STRING,
         _("About Hello World"), wxOK | wxICON_INFORMATION, this);
+/*
+    <program>  Copyright (C) <year>  <name of author>
+    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; type `show c' for details.
+*/
 }
 
 #ifdef _DEBUG

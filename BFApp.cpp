@@ -1,6 +1,23 @@
 /**
- * implementation of class BFApp
- * 2006-04-05
+ * Name:        BFApp.cpp
+ * Purpose:     BFApp class implementation
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-04-05
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
+ ***
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
 #include "BFApp.h"
@@ -122,18 +139,17 @@ bool BFApp::OnInit()
     locale_.Init( langIds[2] );
     locale_.AddCatalog(_T("ob"));
 
-    // open the last project
-#ifndef _DEBUG
-    if (BFSettings::Instance().GetOpenLastProject())
-        if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
-            OpenProject(BFSettings::Instance().GetLastProjects().Last());
-#else
-    OpenProject(_T("C:\\test.ob"));
-#endif
-
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
     new BFMainFrame(*this);
+
+    // open the last project
+    if (BFSettings::Instance().GetOpenLastProject())
+        if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
+        {
+            OpenProject(BFSettings::Instance().GetLastProjects().Last());
+            MainFrame()->RefreshTitle();
+        }
 
     return TRUE;
 }

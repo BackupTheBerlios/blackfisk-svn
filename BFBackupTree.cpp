@@ -1,6 +1,23 @@
 /**
- * implementation of class BFBackupTree
- * 2006-05-25
+ * Name:        BFBackupTree.cpp
+ * Purpose:     BFBackupTree and BFBackupCtrl class implementation
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-05-25
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
+ ***
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
 #include "BFBackupTree.h"
@@ -15,6 +32,7 @@
 #include "BFApp.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
+#include "BFTaskBase.h"
 #include "BFRootTask.h"
 #include "BFTaskDlg.h"
 #include "BFIconTable.h"
@@ -70,14 +88,14 @@ void BFBackupTree::Init ()
     ExpandAll();
     SelectItem(lastItemId_);
 }
-
+/*
 wxString& BFBackupTree::ReplaceMacro(wxString& str)
 {
     if (bReplaceMacro_)
-        BFTaskBase::ReplaceMacros(str);
+        ;
 
     return str;
-}
+}*/
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
@@ -264,7 +282,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     {
         idCurr  = idLast;
         strCurr = tkz.GetNextToken();
-        ReplaceMacro(strCurr);
+        BFTaskBase::ReplaceMacros(strCurr);
         idLast  = FindItem(idCurr, strCurr, false);
 
         // does the item exists
@@ -345,17 +363,22 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
 {
-    wxString lstrName(strName);
+    wxString str(strName);
+
+    if (bReplaceMacro_)
+        BFTaskBase::ReplaceMacros(str);
 
     // add the destination items and the task item itself
-    return AppendItem
+    wxTreeItemId id = AppendItem
     (
         AddDestination(strDestination),
-        ReplaceMacro(lstrName),
+        str,
         BFTask::GetTypeIconId(type),
         -1,
         new BFBackupTreeItemData(oid)
     );
+    //BFSystem::Info(_T("HERE 2"));
+    return id;
 }
 
 void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)

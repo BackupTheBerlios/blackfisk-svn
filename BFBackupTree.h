@@ -1,8 +1,23 @@
 /**
- * BFBackupTree.h
- * definition of class BFBackupTree
- * <comment>
- * 2006-05-25
+ * Name:        BFBackupTree.cpp
+ * Purpose:     BFBackupTree and BFBackupCtrl class definition
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2006-05-25
+ * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
+ ***
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
 #ifndef BFBACKUPTREE_H
@@ -59,8 +74,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         BFTask* GetTaskByItem (wxTreeItemId itemId);
 
         /** check the string for a macro (begins with '<' and ends with '>')
-            and replace it if 'bReplaceMacro_ == true'*/
-        wxString& ReplaceMacro(wxString& str);
+            and replace it if 'bReplaceMacro_ == true'*
+        wxString& ReplaceMacro(wxString& str);*/
 
     protected:
         /// proteced members

@@ -1,10 +1,23 @@
 /**
- * Progress.h
- * class Progress
- * class ProgressWithMessage
- * class ProgressTotal
+ * Name:        Progress.h
+ * Purpose:     Progress, ProgressWithMessage, ProgressTotal class definition
+ * Author:      Christian Buhtz
+ * Modified by:
+ * Created:     2002-05-28
+ * Copyright:   (c) 2002 Christian Buhtz <exsudat@gmx.de>
+ * Licence:     GNU General Public License (Version 3)
+ ***
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
  *
- * implement logical progress on data-layer
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
 #ifndef PROGRESS_H
