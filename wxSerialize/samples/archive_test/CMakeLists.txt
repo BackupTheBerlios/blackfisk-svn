@@ -11,4 +11,4 @@
 ADD_EXECUTABLE(archive_test archive_test.cpp)
            
 LINK_DIRECTORIES(${COMMON_BINARY_DIR}/contrib/lib ${LINK_DIRECTORIES})
-TARGET_LINK_LIBRARIES(archive_test archive ${WXWIDGETS_LIBRARIES})
+TARGET_LINK_LIBRARIES(archive_test serialize ${WXWIDGETS_LIBRARIES})

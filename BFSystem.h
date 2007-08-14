@@ -83,12 +83,6 @@ class BFSystem : public Subject
         /** tell you how many observers for messages of the type MsgBACKUP are alaive */
         long GetBackupObservers ();
 
-
-        ///
-        BFMessageType GetLogLevel ();
-        ///
-        BFMessageType GetMsgLevel ();
-
         ///
         static BFSystem& Instance ();
         ///

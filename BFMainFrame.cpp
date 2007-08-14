@@ -72,7 +72,7 @@ END_EVENT_TABLE()
             : wxFrame (NULL,
                        -1,
                        wxEmptyString),
-                       msgDlg_(this),
+                       // XXX qmsgDlg_(this),
                        menuProject_(NULL)
 {
     // set application variable
@@ -152,7 +152,7 @@ END_EVENT_TABLE()
 
 void BFMainFrame::OnClose (wxCloseEvent& event)
 {
-    int iAnswer = wxID_YES;
+    int iAnswer = wxYES;
 
     // check for a modified project
     if (spApp_->IsProjectModified())
@@ -161,11 +161,11 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
 
         // cancel/abort
-        if (iAnswer == wxID_CANCEL)
+        if (iAnswer == wxCANCEL)
             event.Veto();
 
         // save
-        if (iAnswer == wxID_YES)
+        if (iAnswer == wxYES)
         {
             wxString strProject;
 
@@ -174,7 +174,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
                 if (AskSaveProject(strProject))
                     spApp_->SaveProject(strProject);
                 else
-                    iAnswer = wxID_CANCEL;
+                    iAnswer = wxCANCEL;
             }
             else
             {
@@ -183,7 +183,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         }
     }
 
-    if (iAnswer != wxID_CANCEL)
+    if (iAnswer != wxCANCEL)
         Destroy();
 }
 
@@ -195,7 +195,7 @@ void BFMainFrame::RefreshTitle ()
                                                  App()->GetCurrentProjectFilename().c_str(),
                                                  BF_PRGNAME,
                                                  BF_VERSION,
-                                                 wxArchive::GetLibVersionString().c_str()) );
+                                                 jbSerialize::GetLibVersionString().c_str()) );
 }
 
 void BFMainFrame::CreateLastProjectMenu ()
@@ -306,16 +306,16 @@ bool BFMainFrame::AskModification ()
         int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
 
         // cancel/abort
-        if (iAnswer == wxID_CANCEL)
+        if (iAnswer == wxCANCEL)
             return false;
 
         // save
-        if (iAnswer == wxID_YES)
+        if (iAnswer == wxYES)
             if (spApp_->SaveCurrentProject() == false)
                 return false;
     }
 
-    // wxID_NO
+    // wxNO
     return true;
 }
 
@@ -336,7 +336,7 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
 
     dlg.CentreOnParent();
 
-    if (dlg.ShowModal() == wxID_OK)
+    if (dlg.ShowModal() == wxOK)
     {
         strProject = dlg.GetPath();
         return true;
@@ -359,7 +359,7 @@ bool BFMainFrame::AskSaveProject (wxString& strProject)
 
     dlg.CentreOnParent();
 
-    if (dlg.ShowModal() == wxID_OK)
+    if (dlg.ShowModal() == wxOK)
     {
         strProject = dlg.GetPath();
         return true;
@@ -406,7 +406,7 @@ void BFMainFrame::Test ()
 
 void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 {
-    int iAnswer = wxID_YES;
+    int iAnswer = wxYES;
 
     // check for a modified project
     if (spApp_->IsProjectModified())
@@ -415,7 +415,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it before running the backup?"));
 
         // save
-        if (iAnswer == wxID_YES)
+        if (iAnswer == wxYES)
         {
             wxString strProject;
 
@@ -424,7 +424,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
                 if (AskSaveProject(strProject))
                     spApp_->SaveProject(strProject);
                 else
-                    iAnswer = wxID_CANCEL;
+                    iAnswer = wxCANCEL;
             }
             else
             {
@@ -433,7 +433,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
         }
     }
 
-    if (iAnswer != wxID_CANCEL)
+    if (iAnswer != wxCANCEL)
     {
         spApp_->Backup();
         new BFLogViewDlg(this);
@@ -442,11 +442,9 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
 {
-    wxMessageDialog dlg(this, strQuestion, _("Question"), wxYES_NO | wxICON_QUESTION);
+    int rc = wxMessageBox(strQuestion, _("Question"), wxYES_NO | wxICON_QUESTION);
 
-    int rc = dlg.ShowModal();
-
-    if (rc == wxID_YES)
+    if (rc == wxYES)
         return true;
 
     return false;
@@ -454,9 +452,7 @@ bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
 
 int BFMainFrame::QuestionYesNoCancel (const wxChar* strQuestion)
 {
-    wxMessageDialog dlg(this, strQuestion, _("Question"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
-
-    return dlg.ShowModal();
+    return ::wxMessageBox(strQuestion, _("Question"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
 }
 
 void BFMainFrame::OpenProjectSettings ()

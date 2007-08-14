@@ -28,6 +28,7 @@
 BFLog::BFLog ()
      : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize()*1024)
 {
+    fileLog_.Write(_T("\n"));
 }
 
 /*virtual*/ BFLog::~BFLog ()
@@ -74,21 +75,9 @@ void BFLog::Do(BFMessageType type,
         return;
 
     // check log-level
-    if (pSys->GetLastType() < pSys->GetLogLevel())
-    {
-        // check for message of type MsgBACKUP
-        if (pSys->GetLastType() != MsgBACKUP)
-        {
+    if (pSys->GetLastType() < BFSettings::Instance().GetVerboseLevelLog())
+        if (pSys->GetLastType() != MsgLOG)
             return;
-        }
-        else
-        {
-            // handle MsgBACKUP just if there is no other observer for it
-            if (pSys->GetBackupObservers() > 0)
-                return;
-        }
-    }
-
 
     // log to file
     Do

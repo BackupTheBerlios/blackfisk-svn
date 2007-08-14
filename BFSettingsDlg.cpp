@@ -58,17 +58,23 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pBook->SetMinSize(wxSize(440, 220));
     pBook->SetInternalBorder(15);
 
-    // general-page
+
+
+    // *** GENERAL-page ***
     wxPanel* pPageGeneral = new wxPanel(pBook);
     pCheckOpenLast_ = new wxCheckBox(pPageGeneral,
                                      wxID_ANY,
                                      _("open the last opened project on startup"));
     wxBoxSizer* pPageGeneralSizerTop = new wxBoxSizer(wxVERTICAL);
     pPageGeneralSizerTop->Add(pCheckOpenLast_);
+    wxBoxSizer* pPageGeneralSizerVerbose = new wxBoxSizer(wxHORIZONTAL);
+
     pPageGeneral->SetSizer(pPageGeneralSizerTop);
     pBook->AddPage(pPageGeneral, _("General"));
 
-    // view-page
+
+
+    // *** VIEW-page ***
     wxPanel* pPageView = new wxPanel(pBook);
     pCheckMacro_ = new wxCheckBox(pPageView,
                                   wxID_ANY,
@@ -82,7 +88,9 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pPageView->SetSizer(pPageViewSizerTop);
     pBook->AddPage(pPageView, _("View"));
 
-    // log-page
+
+
+    // *** LOG-page ***
     wxPanel* pPageLog           = new wxPanel(pBook);
     wxStaticText* pLabelLogSize = new wxStaticText(pPageLog, wxID_ANY, _("size of application log file (KB): "));
     pSpinLogSize_               = new wxSpinCtrl(pPageLog,
@@ -98,10 +106,25 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pPageLogSizerLog->Add(pLabelLogSize, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPageLogSizerLog->Add(pSpinLogSize_);
     pPageLogSizerTop->Add(pPageLogSizerLog);
+
+    wxStaticText* pLabelVerboseLog = new wxStaticText(pPageLog, wxID_ANY, _("Verbose-Level for the application log: "));
+    wxString arrVerbose[] = { _("backup"), _("information"), _("warning"), _("error"), _("fatal error"), _("debug") };
+    pComboVerboseLog_ = new wxComboBox(pPageLog,
+                                       wxID_ANY,
+                                       arrVerbose[1],
+                                       wxDefaultPosition,
+                                       wxDefaultSize,
+                                       6,
+                                       arrVerbose,
+                                       wxCB_READONLY);
+    wxBoxSizer* pPageLogSizerVerbose = new wxBoxSizer(wxHORIZONTAL);
+    pPageLogSizerVerbose->Add(pLabelVerboseLog, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pPageLogSizerVerbose->Add(pComboVerboseLog_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
+    pPageLogSizerTop->Add(pPageLogSizerVerbose);
     pPageLog->SetSizer(pPageLogSizerTop);
     pBook->AddPage(pPageLog, _("Logging"));
 
-    // project-page
+    // *** PROJECT-page ***
     wxPanel* pPageProject = new wxPanel(pBook);
     wxBoxSizer* pPageProjectSizerTop = new wxBoxSizer(wxVERTICAL);
     wxStaticText* pLabelProject = new wxStaticText(pPageProject, wxID_ANY, _("Default Settings for new projects\nAttention: This doesn't affect the existing projects!"));
@@ -163,6 +186,36 @@ void BFSettingsDlg::GetData ()
     pCheckFiles_->SetValue(rS.GetWithFiles());
     pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
     pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
+
+    switch (rS.GetVerboseLevelLog())
+    {
+        case MsgBACKUP:
+            pComboVerboseLog_->SetSelection(0);
+            break;
+
+        case MsgWARNING:
+            pComboVerboseLog_->SetSelection(2);
+            break;
+
+        case MsgERROR:
+            pComboVerboseLog_->SetSelection(3);
+            break;
+
+        case MsgFATAL:
+            pComboVerboseLog_->SetSelection(4);
+            break;
+
+        case MsgDEBUG:
+            pComboVerboseLog_->SetSelection(5);
+            break;
+
+        case MsgUNKNOWN:
+        case MsgLOG:
+        case MsgINFO:
+        default:
+            pComboVerboseLog_->SetSelection(1);
+            break;
+    };
 }
 
 void BFSettingsDlg::SetData ()
@@ -174,5 +227,33 @@ void BFSettingsDlg::SetData ()
     rS.SetWithFiles(pCheckFiles_->GetValue());
     rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());
     pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());
+
+    switch (pComboVerboseLog_->GetSelection())
+    {
+        case 0:
+            rS.SetVerboseLevelLog(MsgBACKUP);
+            break;
+
+        case 2:
+            rS.SetVerboseLevelLog(MsgWARNING);
+            break;
+
+        case 3:
+            rS.SetVerboseLevelLog(MsgERROR);
+            break;
+
+        case 4:
+            rS.SetVerboseLevelLog(MsgFATAL);
+            break;
+
+        case 5:
+            rS.SetVerboseLevelLog(MsgDEBUG);
+            break;
+
+        case 1:
+        default:
+            rS.SetVerboseLevelLog(MsgINFO);
+            break;
+    };
 }
 

@@ -25,7 +25,7 @@
 
 #include <vector>
 #include "BFTaskBase.h"
-#include "jbarchive.h"
+#include "jbSerialize.h"
 
 /** define the type of the task
     it says what the tasks exactly do */
@@ -186,7 +186,7 @@ class BFTask : public BFTaskData
         /** the object will be serialized(write) TO 'rA'
             or
             a the object will be serialized(read) from 'rA' */
-        bool Serialize (jbArchive& rA);
+        bool Serialize (jbSerialize& rA);
 };    // class BFTask
 
 

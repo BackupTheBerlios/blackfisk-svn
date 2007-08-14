@@ -115,7 +115,7 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl ()
     wxStaticText* pLabelStopPrj = new wxStaticText(this, wxID_ANY, _("stop\nproject"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelStopTsk = new wxStaticText(this, wxID_ANY, _("stop\ntask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelAsk     = new wxStaticText(this, wxID_ANY, _("ask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("ignore\njust log"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("log"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
 
     // size the lables
     pLabelStopPrj->SetMinSize (wxSize(50, pLabelStopPrj->GetSize().GetHeight()));
@@ -384,36 +384,42 @@ void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
 
 void BFProjectSettingsCtrl::SetData (BFProjectSettings& rSettings)
 {
+    bool bModified = false;
+
     // verbose
     if (rSettings.GetVerboseLevel() != pComboVerbose_->GetSelection())
     {
         rSettings.SetVerboseLevel((BF_VerboseLevel)pComboVerbose_->GetSelection());
-        BFRootTask::Instance().SetModified();
+        bModified = true;
     }
 
     // backup log
     if (rSettings.GetBackupLogLocation() != pPickerBackupLog_->GetPath())
     {
         rSettings.SetBackupLogLocation(pPickerBackupLog_->GetPath());
-        BFRootTask::Instance().SetModified();
+        bModified = true;
     }
 
     // stop levels
     if (rSettings.GetStopLevelOnWarning() != iStopLevelOnWarning_)
     {
         rSettings.SetStopLevelOnWarning(iStopLevelOnWarning_);
-        BFRootTask::Instance().SetModified();
+        bModified = true;
     }
 
     if (rSettings.GetStopLevelOnError() != iStopLevelOnError_)
     {
         rSettings.SetStopLevelOnError(iStopLevelOnError_);
-        BFRootTask::Instance().SetModified();
+        bModified = true;
     }
 
     if (rSettings.GetStopLevelOnFatal() != iStopLevelOnFatal_)
     {
         rSettings.SetStopLevelOnFatal(iStopLevelOnFatal_);
-        BFRootTask::Instance().SetModified();
+        bModified = true;
     }
+
+    if (bModified)
+        if (&(BFRootTask::Instance().GetSettings()) == &rSettings)
+            BFRootTask::Instance().SetModified();
 }

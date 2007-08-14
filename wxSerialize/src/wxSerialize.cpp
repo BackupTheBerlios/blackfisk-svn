@@ -6,7 +6,21 @@
 //---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
 // Copyright:   (c) Jorgen Bodde
-// License:     wxWidgets License
+// License:     GNU General Public License (Version 2 or later)
+//---------------------------------------------------------------------------
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //---------------------------------------------------------------------------
 
 #undef wxUSE_APPLE_IEEE
@@ -16,9 +30,9 @@
 #endif
 
 #include <wx/log.h>
-#include "../include/wx/wxArchive.h"
+#include "wxSerialize.h"
 
-wxArchive::wxArchive(wxInputStream &stream, size_t version, const wxString &header, bool partialMode)
+wxSerialize::wxSerialize(wxInputStream &stream, size_t version, const wxString &header, bool partialMode)
 	: m_writeMode(false)
 	, m_idstr(stream)
 	, m_partialMode(partialMode)
@@ -33,7 +47,7 @@ wxArchive::wxArchive(wxInputStream &stream, size_t version, const wxString &head
     {
 	    // now we need to reset the code for
 	    // reading to work
-	    m_errorCode = wxARCHIVE_ERR_OK;
+	    m_errorCode = wxSERIALIZE_ERR_OK;
 		m_opened = true;
 
 	    // load header
@@ -60,7 +74,7 @@ wxArchive::wxArchive(wxInputStream &stream, size_t version, const wxString &head
                         // this is the point where all is
                         // approved. We can start reading
                         m_version = ver;
-						m_status = wxArchiveStatus(m_version, m_headerStr);
+						m_status = wxSerializeStatus(m_version, m_headerStr);
                     }
                     else
                     {
@@ -68,23 +82,23 @@ wxArchive::wxArchive(wxInputStream &stream, size_t version, const wxString &head
                         v1 << version;
                         v2 << ver;
 
-                        LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_WRONGVERSION_s1_s2, v1, v2);
+                        LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_WRONGVERSION_s1_s2, v1, v2);
                     }
                 }
                 else
-                    LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_NOVERSION);
+                    LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_NOVERSION);
 	        }
 	        else
-	            LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_HEADER_s1_s2, header, hdr);
+	            LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_HEADER_s1_s2, header, hdr);
 	    }
 	    else
-	        LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_NOHEADER_s1, header);
+	        LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_NOHEADER_s1, header);
 	}
 	else
-	    LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_BADISTREAM);
+	    LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_BADISTREAM);
 }
 
-wxArchive::wxArchive(wxOutputStream &stream, size_t version, const wxString &header, bool partialMode)
+wxSerialize::wxSerialize(wxOutputStream &stream, size_t version, const wxString &header, bool partialMode)
 	: m_writeMode(true)
 	, m_odstr(stream)
 	, m_partialMode(partialMode)
@@ -100,36 +114,36 @@ wxArchive::wxArchive(wxOutputStream &stream, size_t version, const wxString &hea
     if(stream.IsOk())
     {
     	m_opened = true;
-		m_errorCode = wxARCHIVE_ERR_OK;
+		m_errorCode = wxSERIALIZE_ERR_OK;
 
 		// write information
 	    SaveString(header);
 	    SaveUint32(version);
 
-		m_status = wxArchiveStatus(version, header);
+		m_status = wxSerializeStatus(version, header);
 
 	    // when we are ok, start saving
 	    if(!IsOk())
-    	    LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_NOVERHDR);
+    	    LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_NOVERHDR);
 	}
 	else
-	    LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_BADOSTREAM);
+	    LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_BADOSTREAM);
 }
 
-void wxArchive::InitAll()
+void wxSerialize::InitAll()
 {
     m_opened = false;
-    m_errorCode = wxARCHIVE_ERR_ILL;
+    m_errorCode = wxSERIALIZE_ERR_ILL;
 	m_objectLevel = 0;
 	m_haveBoundary = false;
 }
 
-wxArchive::~wxArchive()
+wxSerialize::~wxSerialize()
 {
     Close();
 }
 
-bool wxArchive::Eof()
+bool wxSerialize::Eof()
 {
     // only when we are input (reading) we have
     // something to tell about EOF
@@ -139,21 +153,21 @@ bool wxArchive::Eof()
     return false;
 }
 
-bool wxArchive::CanStore()
+bool wxSerialize::CanStore()
 {
     // are we in an ok state?
     if(m_writeMode)
     {
         if(IsOpen())
-            return (m_errorCode == wxARCHIVE_ERR_OK);
+            return (m_errorCode == wxSERIALIZE_ERR_OK);
     }
     else
-        LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_NOREAD);
+        LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_NOREAD);
 
     return false;
 }
 
-bool wxArchive::CanLoad()
+bool wxSerialize::CanLoad()
 {
     // are we in an ok state?
     if(!m_writeMode)
@@ -161,18 +175,18 @@ bool wxArchive::CanLoad()
         if(IsOpen())
         {
             if(!Eof())
-                return (m_errorCode == wxARCHIVE_ERR_OK);
+                return (m_errorCode == wxSERIALIZE_ERR_OK);
             else
-                LogError(wxARCHIVE_ERR_EOF, wxARCHIVE_ERR_STR_EOF);
+                LogError(wxSERIALIZE_ERR_EOF, wxSERIALIZE_ERR_STR_EOF);
         }
     }
     else
-        LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_NOWRITE);
+        LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_NOWRITE);
 
     return false;
 }
 
-bool wxArchive::EnterObject()
+bool wxSerialize::EnterObject()
 {
 	// increments the level. This will also mean
 	// that with reading we expect to read this level. We skip all
@@ -195,7 +209,7 @@ bool wxArchive::EnterObject()
 			if(CanStore())
 			{
 				m_objectLevel++;
-				SaveChar(wxARCHIVE_HDR_ENTER);
+				SaveChar(wxSERIALIZE_HDR_ENTER);
 			}
 			else
 				return false;	// we did not enter
@@ -205,7 +219,7 @@ bool wxArchive::EnterObject()
 	return IsOk();
 }
 
-bool wxArchive::LeaveObject()
+bool wxSerialize::LeaveObject()
 {
 	// increments the level. This will also mean
 	// that with reading we expect to read this level. We skip all
@@ -219,7 +233,7 @@ bool wxArchive::LeaveObject()
 			{
 				m_objectLevel --;
 				if(m_objectLevel < 0)
-					LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_ILL_LEVEL);
+					LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_ILL_LEVEL);
 				else
 					FindCurrentLeaveLevel();
 			}
@@ -232,9 +246,9 @@ bool wxArchive::LeaveObject()
 			{
 				m_objectLevel--;
 				if(m_objectLevel < 0)
-					LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_ILL_LEVEL);
+					LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_ILL_LEVEL);
 				else
-					SaveChar(wxARCHIVE_HDR_LEAVE);
+					SaveChar(wxSERIALIZE_HDR_LEAVE);
 			}
 			else
 				return false;	// we did not enter
@@ -244,33 +258,33 @@ bool wxArchive::LeaveObject()
 	return IsOk();
 }
 
-void wxArchive::FindCurrentEnterLevel()
+void wxSerialize::FindCurrentEnterLevel()
 {
 	// the next read should be the begin marker. If not, we search for the
 	// begin marker
 
-	if(m_haveBoundary && m_lastBoundary == wxARCHIVE_HDR_ENTER)
+	if(m_haveBoundary && m_lastBoundary == wxSERIALIZE_HDR_ENTER)
 	{
 		m_haveBoundary = false;
 		return;
 	}
 
 	wxUint8 hdr = LoadChar();	// we do not care about the header
-	while(IsOk() && hdr != wxARCHIVE_HDR_ENTER)
+	while(IsOk() && hdr != wxSERIALIZE_HDR_ENTER)
 	{
 		// here we have data loss, as we need to look for our marker
 		m_status.SetNewDataLoss();
 
 		// we should find the enter level, not leave
-		if(hdr == wxARCHIVE_HDR_LEAVE)
-			LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_ILL_LEAVE);
+		if(hdr == wxSERIALIZE_HDR_LEAVE)
+			LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_ILL_LEAVE);
 
 		SkipData(hdr);
 		hdr = LoadChar();
 	}
 }
 
-void wxArchive::FindCurrentLeaveLevel()
+void wxSerialize::FindCurrentLeaveLevel()
 {
 	bool firstHdr = true;
 	unsigned char hdr = 0;
@@ -286,22 +300,22 @@ void wxArchive::FindCurrentLeaveLevel()
 		m_haveBoundary = false;
 
 		// determine what to do
-		if(m_lastBoundary == wxARCHIVE_HDR_ENTER)
+		if(m_lastBoundary == wxSERIALIZE_HDR_ENTER)
 			foundLevel++;
-		else if(m_lastBoundary == wxARCHIVE_HDR_LEAVE)
+		else if(m_lastBoundary == wxSERIALIZE_HDR_LEAVE)
 			return;
 	}
 
 	while(IsOk() && foundLevel > 0)
 	{
-		if(hdr == wxARCHIVE_HDR_ENTER)
+		if(hdr == wxSERIALIZE_HDR_ENTER)
 			foundLevel++;
-		else if(hdr == wxARCHIVE_HDR_LEAVE)
+		else if(hdr == wxSERIALIZE_HDR_LEAVE)
 		{
 			foundLevel--;
 			if(foundLevel < 0)
 			{
-				LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_ILL_LEAVE);
+				LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_ILL_LEAVE);
 				return;
 			}
 		}
@@ -323,68 +337,68 @@ void wxArchive::FindCurrentLeaveLevel()
 }
 
 
-void wxArchive::SkipData(wxUint8 hdr)
+void wxSerialize::SkipData(wxUint8 hdr)
 {
 	switch(hdr)
 	{
-	case wxARCHIVE_HDR_BOOL:
+	case wxSERIALIZE_HDR_BOOL:
 		LoadBool();
 		break;
 
-	case wxARCHIVE_HDR_INT8:
+	case wxSERIALIZE_HDR_INT8:
 		LoadChar();
 		break;
 
-	case wxARCHIVE_HDR_INT16:
+	case wxSERIALIZE_HDR_INT16:
 		LoadUint16();
 		break;
 
-	case wxARCHIVE_HDR_INT32:
+	case wxSERIALIZE_HDR_INT32:
 		LoadUint32();
 		break;
 
-	case wxARCHIVE_HDR_INT64:
+	case wxSERIALIZE_HDR_INT64:
 		LoadUint64();
 		break;
-/*
-	case wxARCHIVE_HDR_DOUBLE:
-		LoadDouble();
-		break;*/
 
-	case wxARCHIVE_HDR_STRING:
+	case wxSERIALIZE_HDR_DOUBLE:
+		LoadDouble();
+		break;
+
+	case wxSERIALIZE_HDR_STRING:
 		LoadString();
 		break;
 
-	case wxARCHIVE_HDR_ARRSTRING:
+	case wxSERIALIZE_HDR_ARRSTRING:
 		LoadArrayString();
 		break;
 
-	case wxARCHIVE_HDR_RECORD:
+	case wxSERIALIZE_HDR_RECORD:
 		{
 			wxMemoryBuffer buf;
 			Load(buf);
 		}
 		break;
 
-	case wxARCHIVE_HDR_INT:
+	case wxSERIALIZE_HDR_INT:
 		LoadInt();
 		break;
 
-	case wxARCHIVE_HDR_ENTER:
+	case wxSERIALIZE_HDR_ENTER:
 		break;
 
-	case wxARCHIVE_HDR_LEAVE:
+	case wxSERIALIZE_HDR_LEAVE:
 		break;
 	default:
-		LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_ILL_UNKNOWN_HDR_s1, GetHeaderName(hdr));
+		LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_ILL_UNKNOWN_HDR_s1, GetHeaderName(hdr));
 		break;
 	}
 }
 
-bool wxArchive::ReadBool(bool& value)
+bool wxSerialize::ReadBool(bool& value)
 {
     // load boolean value
-    if(LoadChunkHeader(wxARCHIVE_HDR_BOOL))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_BOOL))
     {
         bool tmpvalue = LoadBool();
 
@@ -398,10 +412,10 @@ bool wxArchive::ReadBool(bool& value)
     return false;
 }
 
-bool wxArchive::ReadUint8(wxUint8& value)
+bool wxSerialize::ReadUint8(wxUint8& value)
 {
     // load integer value
-    if(LoadChunkHeader(wxARCHIVE_HDR_INT8))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_INT8))
     {
         wxUint8 tmpvalue = LoadChar();
 
@@ -415,10 +429,10 @@ bool wxArchive::ReadUint8(wxUint8& value)
     return false;
 }
 
-bool wxArchive::ReadUint16(wxUint16& value)
+bool wxSerialize::ReadUint16(wxUint16& value)
 {
     // load integer value
-    if(LoadChunkHeader(wxARCHIVE_HDR_INT16))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_INT16))
     {
         wxUint16 tmpvalue = LoadUint16();
 
@@ -432,10 +446,10 @@ bool wxArchive::ReadUint16(wxUint16& value)
     return false;
 }
 
-bool wxArchive::ReadUint32(wxUint32& value)
+bool wxSerialize::ReadUint32(wxUint32& value)
 {
     // load integer value
-    if(LoadChunkHeader(wxARCHIVE_HDR_INT32))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_INT32))
     {
         wxUint32 tmpvalue = LoadUint32();
 
@@ -449,10 +463,10 @@ bool wxArchive::ReadUint32(wxUint32& value)
     return false;
 }
 
-bool wxArchive::ReadUint64(wxUint64& value)
+bool wxSerialize::ReadUint64(wxUint64& value)
 {
     // load integer value
-    if(LoadChunkHeader(wxARCHIVE_HDR_INT64))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_INT64))
     {
         wxUint64 tmpvalue = LoadUint64();
 
@@ -466,9 +480,9 @@ bool wxArchive::ReadUint64(wxUint64& value)
     return false;
 }
 
-bool wxArchive::ReadInt(int& value)
+bool wxSerialize::ReadInt(int& value)
 {
-	if(LoadChunkHeader(wxARCHIVE_HDR_INT))
+	if(LoadChunkHeader(wxSERIALIZE_HDR_INT))
 	{
 		int tmpval = LoadInt();
 
@@ -482,14 +496,13 @@ bool wxArchive::ReadInt(int& value)
 
 	return false;
 }
-/*
-bool wxArchive::ReadDouble(double& value)
-{
 
-    // load double value
-    if(LoadChunkHeader(wxARCHIVE_HDR_DOUBLE))
+bool wxSerialize::ReadDouble(wxFloat64& value)
+{
+    // load wxFloat64 value
+    if(LoadChunkHeader(wxSERIALIZE_HDR_DOUBLE))
     {
-        double tmpvalue = LoadDouble();
+        wxFloat64 tmpvalue = LoadDouble();
 
 		// when all is ok, assign
 		if(IsOk())
@@ -500,11 +513,11 @@ bool wxArchive::ReadDouble(double& value)
     }
 
     return false;
-}*/
+}
 
-bool wxArchive::ReadString(wxString& value)
+bool wxSerialize::ReadString(wxString& value)
 {
-    if(LoadChunkHeader(wxARCHIVE_HDR_STRING))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_STRING))
     {
         wxString tmpvalue = LoadString();
 
@@ -518,9 +531,9 @@ bool wxArchive::ReadString(wxString& value)
     return false;
 }
 
-bool wxArchive::ReadArrayString(wxArrayString& value)
+bool wxSerialize::ReadArrayString(wxArrayString& value)
 {
-    if(LoadChunkHeader(wxARCHIVE_HDR_ARRSTRING))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_ARRSTRING))
     {
         wxArrayString tmpvalue = LoadArrayString();
 
@@ -534,10 +547,10 @@ bool wxArchive::ReadArrayString(wxArrayString& value)
     return false;
 }
 
-bool wxArchive::Read(wxMemoryBuffer &buf)
+bool wxSerialize::Read(wxMemoryBuffer &buf)
 {
     // load record value
-    if(LoadChunkHeader(wxARCHIVE_HDR_RECORD))
+    if(LoadChunkHeader(wxSERIALIZE_HDR_RECORD))
     {
 		Load(buf);
         return true;
@@ -546,7 +559,7 @@ bool wxArchive::Read(wxMemoryBuffer &buf)
     return false;
 }
 
-void wxArchive::Load(wxMemoryBuffer &buf)
+void wxSerialize::Load(wxMemoryBuffer &buf)
 {
 	if(CanLoad())
 	{
@@ -559,7 +572,7 @@ void wxArchive::Load(wxMemoryBuffer &buf)
 	}
 }
 
-int wxArchive::LoadChunkHeader(int expheader)
+int wxSerialize::LoadChunkHeader(int expheader)
 {
 	int hdr = 0;
 
@@ -569,7 +582,7 @@ int wxArchive::LoadChunkHeader(int expheader)
 			return 0;
 
 		hdr = (int)LoadChar();
-		if(hdr == wxARCHIVE_HDR_ENTER || hdr == wxARCHIVE_HDR_LEAVE)
+		if(hdr == wxSERIALIZE_HDR_ENTER || hdr == wxSERIALIZE_HDR_LEAVE)
 		{
 			// remember this state
 			m_lastBoundary = hdr;
@@ -580,7 +593,7 @@ int wxArchive::LoadChunkHeader(int expheader)
         // when header is not ok
         if(hdr != expheader)
         {
-        	LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_WRONGCHUNK_s1_s2,
+        	LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_WRONGCHUNK_s1_s2,
         	         GetHeaderName(expheader), GetHeaderName(hdr));
         	return -1;
         }
@@ -589,7 +602,7 @@ int wxArchive::LoadChunkHeader(int expheader)
     return hdr;
 }
 
-wxUint8 wxArchive::LoadChar()
+wxUint8 wxSerialize::LoadChar()
 {
 	wxUint8 value = '\0';
 
@@ -604,7 +617,7 @@ wxUint8 wxArchive::LoadChar()
 	return value;
 }
 
-int wxArchive::LoadInt()
+int wxSerialize::LoadInt()
 {
 	wxUint8 intsize = 0;
 	int tmpval = 0;
@@ -629,7 +642,7 @@ int wxArchive::LoadInt()
 			break;
 
 		default:
-			LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_RINTSIZE);
+			LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_RINTSIZE);
 			break;
 		}
 	}
@@ -637,7 +650,7 @@ int wxArchive::LoadInt()
 	return tmpval;
 }
 
-wxString wxArchive::LoadString()
+wxString wxSerialize::LoadString()
 {
     wxString str;
 
@@ -670,7 +683,7 @@ wxString wxArchive::LoadString()
 	return str;
 }
 
-wxArrayString wxArchive::LoadArrayString()
+wxArrayString wxSerialize::LoadArrayString()
 {
 	wxArrayString str;
 
@@ -685,7 +698,7 @@ wxArrayString wxArchive::LoadArrayString()
 	return str;
 }
 
-wxUint16 wxArchive::LoadUint16()
+wxUint16 wxSerialize::LoadUint16()
 {
 	wxUint16 value = 0;
 
@@ -699,7 +712,7 @@ wxUint16 wxArchive::LoadUint16()
 	return value;
 }
 
-wxUint32 wxArchive::LoadUint32()
+wxUint32 wxSerialize::LoadUint32()
 {
 	wxUint32 value = 0;
 
@@ -713,7 +726,7 @@ wxUint32 wxArchive::LoadUint32()
 	return value;
 }
 
-wxUint64 wxArchive::LoadUint64()
+wxUint64 wxSerialize::LoadUint64()
 {
 	wxUint64 value = 0;
 
@@ -727,11 +740,11 @@ wxUint64 wxArchive::LoadUint64()
 	return value;
 }
 
-bool wxArchive::WriteInt(int value)
+bool wxSerialize::WriteInt(int value)
 {
 	if(CanStore())
 	{
-		SaveChar(wxARCHIVE_HDR_INT);
+		SaveChar(wxSERIALIZE_HDR_INT);
 
 		// save the size of the int
 		SaveChar(sizeof(int));
@@ -753,7 +766,7 @@ bool wxArchive::WriteInt(int value)
 			break;
 
 		default:
-			LogError(wxARCHIVE_ERR_ILL, wxARCHIVE_ERR_STR_SINTSIZE);
+			LogError(wxSERIALIZE_ERR_ILL, wxSERIALIZE_ERR_STR_SINTSIZE);
 			break;
 
 		}
@@ -762,14 +775,14 @@ bool wxArchive::WriteInt(int value)
 	return IsOk();
 }
 
-bool wxArchive::Write(const wxMemoryBuffer &buffer)
+bool wxSerialize::Write(const wxMemoryBuffer &buffer)
 {
 	wxUint32 size = 0;
 
     if(CanStore())
 	{
 		// save header to the stream
-        SaveChar(wxARCHIVE_HDR_RECORD);
+        SaveChar(wxSERIALIZE_HDR_RECORD);
 
         // save the record count
         size = buffer.GetDataLen();
@@ -781,10 +794,7 @@ bool wxArchive::Write(const wxMemoryBuffer &buffer)
     }
 }
 
-// Must be at global scope for VC++ 5 (ripped from wxDataInputStream)
-/*wxFloat64 WXDLLIMPEXP_BASE ConvertFromIeeeExtended(const wxInt8 *bytes);
-
-wxFloat64 wxArchive::LoadDouble()
+wxFloat64 wxSerialize::LoadDouble()
 {
 	wxFloat64 value = 0;
 
@@ -795,16 +805,16 @@ wxFloat64 wxArchive::LoadDouble()
 		wxInt8 buf[10];
 
 		m_idstr.Read((void *)buf, 10);
-		value = ConvertFromIeeeExtended(buf);
+		value = wxConvertFromIeeeExtended(buf);
 #else
-		#pragma warning "wxArchive::LoadDouble() not using IeeeExtended - will not work!"
+		#pragma warning "wxSerialize::LoadDouble() not using IeeeExtended - will not work!"
 #endif
 	}
 
 	return value;
-}*/
+}
 
-bool wxArchive::LoadBool()
+bool wxSerialize::LoadBool()
 {
 	bool value = false;
 	wxUint8 chr;
@@ -819,13 +829,13 @@ bool wxArchive::LoadBool()
 	return value;
 }
 
-void wxArchive::SaveChar(wxUint8 value)
+void wxSerialize::SaveChar(wxUint8 value)
 {
 	if(CanStore())
 		m_odstr.Write((void *)&value, sizeof(wxUint8));
 }
 
-bool wxArchive::WriteBool(bool value)
+bool wxSerialize::WriteBool(bool value)
 {
     wxUint8 nval = 0;
 
@@ -835,29 +845,26 @@ bool wxArchive::WriteBool(bool value)
         if(value)
             nval = 1;
 
-		SaveChar(wxARCHIVE_HDR_BOOL);
+		SaveChar(wxSERIALIZE_HDR_BOOL);
         SaveChar(nval);
     }
 
     return IsOk();
 }
 
-// Must be at global scope for VC++ 5
-/*void WXDLLIMPEXP_BASE ConvertToIeeeExtended(wxFloat64 num, wxInt8 *bytes);
-
-bool wxArchive::WriteDouble(wxFloat64 value)
+bool wxSerialize::WriteDouble(wxFloat64 value)
 {
     if(CanStore())
     {
-        SaveChar(wxARCHIVE_HDR_DOUBLE);
+        SaveChar(wxSERIALIZE_HDR_DOUBLE);
 
 		wxInt8 buf[10];
 
 #if wxUSE_APPLE_IEEE
-		ConvertToIeeeExtended(value, buf);
+		wxConvertToIeeeExtended(value, buf);
 #else
 	#if !defined(__VMS__) && !defined(__GNUG__)
-		#pragma warning "wxArchive::WriteDouble() not using IeeeExtended - will not work!"
+		#pragma warning "wxSerialize::WriteDouble() not using IeeeExtended - will not work!"
 	#endif
 		// fill with zeros when writing
 		memset(buf, 0, 10);
@@ -866,26 +873,26 @@ bool wxArchive::WriteDouble(wxFloat64 value)
     }
 
     return IsOk();
-}*/
+}
 
-bool wxArchive::WriteString(const wxString& value)
+bool wxSerialize::WriteString(const wxString& value)
 {
     if(CanStore())
     {
 		// write header + string
-		SaveChar(wxARCHIVE_HDR_STRING);
+		SaveChar(wxSERIALIZE_HDR_STRING);
 		SaveString(value);
     }
 
     return IsOk();
 }
 
-bool wxArchive::WriteArrayString(const wxArrayString& value)
+bool wxSerialize::WriteArrayString(const wxArrayString& value)
 {
     if(CanStore())
     {
 		// write header + string
-		SaveChar(wxARCHIVE_HDR_ARRSTRING);
+		SaveChar(wxSERIALIZE_HDR_ARRSTRING);
 		SaveUint32(value.Count());
 		for(size_t i = 0; i < value.Count(); i++)
 			SaveString(value[i]);
@@ -895,7 +902,7 @@ bool wxArchive::WriteArrayString(const wxArrayString& value)
 }
 
 
-void wxArchive::SaveString(const wxString &value)
+void wxSerialize::SaveString(const wxString &value)
 {
 	if(CanStore())
 	{
@@ -912,65 +919,65 @@ void wxArchive::SaveString(const wxString &value)
 	}
 }
 
-bool wxArchive::WriteUint8(wxUint8 value)
+bool wxSerialize::WriteUint8(wxUint8 value)
 {
     if(CanStore())
     {
-		SaveChar(wxARCHIVE_HDR_INT8);
+		SaveChar(wxSERIALIZE_HDR_INT8);
 		SaveChar(value);
 	}
 
     return IsOk();
 }
 
-bool wxArchive::WriteUint16(wxUint16 value)
+bool wxSerialize::WriteUint16(wxUint16 value)
 {
     if(CanStore())
     {
-		SaveChar(wxARCHIVE_HDR_INT16);
+		SaveChar(wxSERIALIZE_HDR_INT16);
 		SaveUint16(value);
 	}
 
     return IsOk();
 }
 
-bool wxArchive::WriteUint32(wxUint32 value)
+bool wxSerialize::WriteUint32(wxUint32 value)
 {
     if(CanStore())
     {
-		SaveChar(wxARCHIVE_HDR_INT32);
+		SaveChar(wxSERIALIZE_HDR_INT32);
 		SaveUint32(value);
 	}
 
     return IsOk();
 }
 
-bool wxArchive::WriteUint64(wxUint64 value)
+bool wxSerialize::WriteUint64(wxUint64 value)
 {
     if(CanStore())
     {
-		SaveChar(wxARCHIVE_HDR_INT64);
+		SaveChar(wxSERIALIZE_HDR_INT64);
 		SaveUint64(value);
 	}
 
     return IsOk();
 }
 
-void wxArchive::SaveUint16(wxUint16 value)
+void wxSerialize::SaveUint16(wxUint16 value)
 {
 	wxUint16 tmpval = wxUINT16_SWAP_ON_LE(value);
 	if(CanStore())
         m_odstr.Write(&tmpval, sizeof(wxUint16));
 }
 
-void wxArchive::SaveUint32(wxUint32 value)
+void wxSerialize::SaveUint32(wxUint32 value)
 {
 	wxUint32 tmpval = wxUINT32_SWAP_ON_LE(value);
 	if(CanStore())
         m_odstr.Write(&tmpval, sizeof(wxUint32));
 }
 
-void wxArchive::SaveUint64(wxUint64 value)
+void wxSerialize::SaveUint64(wxUint64 value)
 {
 	wxUint64 tmpval = wxUINT64_SWAP_ON_LE(value);
 	if(CanStore())
@@ -979,41 +986,41 @@ void wxArchive::SaveUint64(wxUint64 value)
 
 // write function
 
-wxString wxArchive::GetHeaderName(int headername)
+wxString wxSerialize::GetHeaderName(int headername)
 {
 	wxString desc;
 
     switch(headername)
     {
-		case wxARCHIVE_HDR_STRING:
+		case wxSERIALIZE_HDR_STRING:
         	desc = wxT("string");
         	break;
 
-        case wxARCHIVE_HDR_INT8:
+        case wxSERIALIZE_HDR_INT8:
         	desc = wxT("8bits uint");
         	break;
 
-        case wxARCHIVE_HDR_INT16:
+        case wxSERIALIZE_HDR_INT16:
         	desc = wxT("16bits uint");
         	break;
 
-        case wxARCHIVE_HDR_INT32:
+        case wxSERIALIZE_HDR_INT32:
         	desc = wxT("32bits uint");
         	break;
 
-        case wxARCHIVE_HDR_INT64:
+        case wxSERIALIZE_HDR_INT64:
         	desc = wxT("64bits uint");
         	break;
 
-        case wxARCHIVE_HDR_DOUBLE:
+        case wxSERIALIZE_HDR_DOUBLE:
         	desc = wxT("double");
         	break;
 
-        case wxARCHIVE_HDR_BOOL:
+        case wxSERIALIZE_HDR_BOOL:
         	desc = wxT("bool");
         	break;
 
-        case wxARCHIVE_HDR_RECORD:
+        case wxSERIALIZE_HDR_RECORD:
         	desc = wxT("data record");
         	break;
 
@@ -1028,13 +1035,13 @@ wxString wxArchive::GetHeaderName(int headername)
     return desc;
 }
 
-int wxArchive::LogError(int err, int msgcode, const wxString &s1, const wxString &s2)
+int wxSerialize::LogError(int err, int msgcode, const wxString &s1, const wxString &s2)
 {
 	wxString error;
 
 	// make sure we only report one error. When we already have errors
 	// we ignore this one
-	if(m_errorCode == wxARCHIVE_ERR_OK && err != wxARCHIVE_ERR_OK)
+	if(m_errorCode == wxSERIALIZE_ERR_OK && err != wxSERIALIZE_ERR_OK)
 	{
 		// close writing and reading
 		Close();
@@ -1044,80 +1051,80 @@ int wxArchive::LogError(int err, int msgcode, const wxString &s1, const wxString
 
 		switch(msgcode)
 		{
-			case wxARCHIVE_ERR_STR_HEADER_s1_s2:
+			case wxSERIALIZE_ERR_STR_HEADER_s1_s2:
 				error << wxT("Wrong header in start of stream, expected header '") << s1 <<
 				         wxT(" and got '") << s2 << wxT("'");
 				break;
 
-			case wxARCHIVE_ERR_STR_WRONGVERSION_s1_s2:
+			case wxSERIALIZE_ERR_STR_WRONGVERSION_s1_s2:
 				error << wxT("Invalid version in stream, got v") << s1 << wxT(" but expected v")
 				      << s2 << wxT(" or higher");
 				break;
 
-            case wxARCHIVE_ERR_STR_BADISTREAM:
+            case wxSERIALIZE_ERR_STR_BADISTREAM:
 				error << wxT("Bad input stream");
 				break;
 
-            case wxARCHIVE_ERR_STR_BADOSTREAM:
+            case wxSERIALIZE_ERR_STR_BADOSTREAM:
 				error << wxT("Bad output stream");
 				break;
 
-            case wxARCHIVE_ERR_STR_NOHEADER_s1:
+            case wxSERIALIZE_ERR_STR_NOHEADER_s1:
 				error << wxT("No valid header found in stream but expected header '") << s1
 				      << wxT("'");
 				break;
 
-            case wxARCHIVE_ERR_STR_NOVERSION:
+            case wxSERIALIZE_ERR_STR_NOVERSION:
 				error << wxT("No version information found in stream");
 				break;
 
-            case wxARCHIVE_ERR_STR_NOVERHDR:
+            case wxSERIALIZE_ERR_STR_NOVERHDR:
 				error << wxT("Cannot write version and/or header information to stream");
 				break;
 
-            case wxARCHIVE_ERR_STR_NOWRITE:
+            case wxSERIALIZE_ERR_STR_NOWRITE:
 				error << wxT("Cannot write while in read mode!");
 				break;
 
-            case wxARCHIVE_ERR_STR_NOREAD:
+            case wxSERIALIZE_ERR_STR_NOREAD:
 				error << wxT("Cannot read while in write mode!");
 				break;
 
-            case wxARCHIVE_ERR_STR_EOF:
+            case wxSERIALIZE_ERR_STR_EOF:
                 error << wxT("End of stream error while reading!");
                 break;
 
-            case wxARCHIVE_ERR_STR_WRONGCHUNK_s1_s2:
+            case wxSERIALIZE_ERR_STR_WRONGCHUNK_s1_s2:
 				error << wxT("Expected chunk item of type '") << s1
 				      << wxT("' but got type '") << s2 << wxT("'");
 				break;
 
-            case wxARCHIVE_ERR_STR_MEMORY_s1:
+            case wxSERIALIZE_ERR_STR_MEMORY_s1:
 				error << wxT("Memory allocation error. Cannot allocate ") << s1
 				      << wxT(" bytes");
 				break;
 
-            case wxARCHIVE_ERR_STR_READSIZE:
+            case wxSERIALIZE_ERR_STR_READSIZE:
 				error << wxT("Record to read is 0 bytes or larger then expected (does not fit maxcount)");
 				break;
 
-			case wxARCHIVE_ERR_STR_RINTSIZE:
+			case wxSERIALIZE_ERR_STR_RINTSIZE:
 				error << wxT("Cannot read back 'int' value because it's of unknown size (need 1, 2, 4 or 8)");
 				break;
 
-			case wxARCHIVE_ERR_STR_SINTSIZE:
+			case wxSERIALIZE_ERR_STR_SINTSIZE:
 				error << wxT("Cannot save 'int' value because it's of unknown size (need 1, 2, 4 or 8)");
 				break;
 
-			case wxARCHIVE_ERR_STR_ILL_LEAVE:
+			case wxSERIALIZE_ERR_STR_ILL_LEAVE:
 				error << wxT("Sync Error: Illegal LeaveObject() header encountered, expected EnterObject()");
 				break;
 
-			case wxARCHIVE_ERR_STR_ILL_UNKNOWN_HDR_s1:
+			case wxSERIALIZE_ERR_STR_ILL_UNKNOWN_HDR_s1:
 				error << wxT("Unknown '") << s1 << wxT("' header in stream");
 				break;
 
-			case wxARCHIVE_ERR_STR_ILL_LEVEL:
+			case wxSERIALIZE_ERR_STR_ILL_LEVEL:
 				error << wxT("Sync Error: Level dropped below 0, too much LeaveObject() calls ?");
 				break;
 
@@ -1136,3 +1143,17 @@ int wxArchive::LogError(int err, int msgcode, const wxString &s1, const wxString
 }
 
 
+/*static*/ wxString wxSerialize::GetLibVersionString ()
+{
+    return wxString::Format(_T("wxSerialize v%d.%d"), GetLibVersionMajor(), GetLibVersionMinor());
+}
+
+/*static*/ long wxSerialize::GetLibVersionMajor ()
+{
+	return WXSERIALIZE_MAJOR_VERSION;
+}
+
+/*static*/ long wxSerialize::GetLibVersionMinor ()
+{
+	return WXSERIALIZE_MINOR_VERSION;
+}

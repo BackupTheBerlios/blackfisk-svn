@@ -105,7 +105,7 @@ void BFProjectSettings::SetBackupLogLocation (const wxChar* strFile)
     strBackupLogLocation_ = strFile;
 }
 
-bool BFProjectSettings::Serialize (jbArchive& rA)
+bool BFProjectSettings::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
         return false;
@@ -174,7 +174,7 @@ void BFProjectSettings::SetDefault ()
             return _("ask");
 
         case BFDO_IGNORE:
-            return _("ignore just log");
+            return _("log");
 
         case BFDO_STOPTSK:
             return _("stop task");

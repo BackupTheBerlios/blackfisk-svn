@@ -24,9 +24,9 @@
 #define BFPROJECTSETTINGS_H
 
 #include <wx/string.h>
-#include "jbarchive.h"
+#include "jbSerialize.h"
 
-///
+/// verbose level for running backup tasks
 enum BF_VerboseLevel
 {
     BFVERBOSE_INFO,
@@ -101,7 +101,7 @@ class BFProjectSettings
         void SetBackupLogLocation (const wxChar* strFile);
 
         ///
-        bool Serialize (jbArchive& rA);
+        bool Serialize (jbSerialize& rA);
 };    // class BFProjectSettings
 
 #endif    // BFPROJECTSETTINGS_H

@@ -37,6 +37,7 @@
 #include "Progress.h"
 #include "BFSettings.h"
 #include "BFwxLog.h"
+#include "BFBackupQuestionDlg.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -151,6 +152,9 @@ bool BFApp::OnInit()
             MainFrame()->RefreshTitle();
         }
 
+    //
+    BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));
+
     return TRUE;
 }
 
@@ -166,7 +170,7 @@ bool BFApp::OnInit()
         SaveSettings();
 
     wxFileInputStream   in(BF_SETTINGS);
-    jbArchive           archive(in, BF_SETTINGS_CURRENT_VERSION);
+    jbSerialize           archive(in, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }
@@ -174,7 +178,7 @@ bool BFApp::OnInit()
 /*static*/ bool BFApp::SaveSettings ()
 {
     wxFileOutputStream  out(BF_SETTINGS);
-    jbArchive           archive(out, BF_SETTINGS_CURRENT_VERSION);
+    jbSerialize           archive(out, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }

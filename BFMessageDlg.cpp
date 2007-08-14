@@ -21,8 +21,13 @@
  ***/
 
 #include "BFMessageDlg.h"
+
+#include <wx/sizer.h>
+
 #include "BFSystem.h"
 #include "BFMainFrame.h"
+#include "BFProjectSettings.h"
+#include "BFRootTask.h"
 
 //
 BFMessageDlg::BFMessageDlg (BFMainFrame* pParent)
@@ -67,28 +72,109 @@ void BFMessageDlg::SetStyle (long style)
     if (pSys == NULL)
         return;
 
-    // check message level
-    if (pSys->GetLastType() > pSys->GetMsgLevel())
+    /* don't show MsgLOG
+       MsgLOG is logged by class BFLog in the application log file */
+    if (pSys->GetLastType() == MsgLOG)
         return;
 
-    // check for message of type MsgBACKUP
-    if (pSys->GetLastType() == MsgBACKUP) //&& pSys->GetObserverCount() > 0)
-        return;
+    // behave ;)
+    if (BFCore::Instance().IsWhileBackup())
+        BehaviorWhileBackup();
+    else
+        BehaviorDefault();
+}
+
+void BFMessageDlg::BehaviorDefault ()
+{
+    BFSystem& rS = BFSystem::Instance();
 
     // caption
-    SetCaption (BFSystem::GetTypeString(pSys->GetLastType()));
+    SetCaption (BFSystem::GetTypeString(rS.GetLastType()));
 
     // icon
-    SetStyle (wxOK | BFSystem::GetMsgStyle(pSys->GetLastType()));
+    SetStyle (wxOK | BFSystem::GetMsgStyle(rS.GetLastType()));
 
     // message and location
-    if (pSys->GetLastLocation().Len() == 0)
-        SetMessage (pSys->GetLastMessage().c_str());
+    if (rS.GetLastLocation().Len() == 0)
+        SetMessage (rS.GetLastMessage().c_str());
     else
-        SetMessage ((pSys->GetLastMessage() + _T("\nLocation: ") + pSys->GetLastLocation()).c_str());
+        SetMessage ((rS.GetLastMessage() + _T("\nLocation: ") + rS.GetLastLocation()).c_str());
 
     /* if you need to check the return value,
        just use GetReturnCode() */
+    ShowModal();
+}
+
+void BFMessageDlg::BehaviorWhileBackup ()
+{
+    BFSystem& rS = BFSystem::Instance();
+    BFMessageType type = rS.GetLastType();
+
+/*  MsgWARNING,
+    MsgERROR,
+    MsgFATAL
+
+    BFDO_STOPPRJ,
+    BFDO_STOPTSK,
+    BFDO_ASK,
+    BFDO_IGNORE */
+
+    // stop level
+    BF_StopLevel stop = BFDO_ASK;
+
+    // get the stop level
+    switch (type)
+    {
+        case MsgWARNING:
+            stop = BFRootTask::Instance().GetSettings().GetStopLevelOnWarning();
+            break;
+
+        case MsgERROR:
+            stop = BFRootTask::Instance().GetSettings().GetStopLevelOnError();
+            break;
+
+        case MsgFATAL:
+            stop = BFRootTask::Instance().GetSettings().GetStopLevelOnFatal();
+            break;
+
+        // don't handle other message types while a backup
+        default:
+            return;
+            break;
+    };
+
+    // IGNORE
+    if (stop == BFDO_IGNORE)
+        return;
+
+    // STOP PROJECT
+    if (stop == BFDO_STOPPRJ)
+    {
+        BFRootTask::Instance().StopProject();
+        return;
+    }
+
+    // STOP TASK
+    if (stop == BFDO_STOPTSK)
+    {
+        BFRootTask::Instance().StopCurrentTask();
+        return;
+    }
+
+    // ASK
+    SetCaption (BFSystem::GetTypeString(rS.GetLastType()));
+    SetStyle (wxOK | wxRESET | BFSystem::GetMsgStyle(rS.GetLastType()));
+
+    //wxSizer* sizerBtn = dynamic_cast<wxSizer*>(GetSizer()->GetItem(2)->GetUserData());
+    //wxSizer* pSizer = GetSizer();
+
+
+    // message and location
+    if (rS.GetLastLocation().Len() == 0)
+        SetMessage (rS.GetLastMessage().c_str());
+    else
+        SetMessage ((rS.GetLastMessage() + _T("\nLocation: ") + rS.GetLastLocation()).c_str());
+
     ShowModal();
 }
 

@@ -1,4 +1,4 @@
-Welcome to wxArchive - This class provides serialization for wxWidgets with the following features:
+Welcome to wxSerialize - This class provides serialization for wxWidgets with the following features:
 
     - wxInputStream / wxOutputStream serializing (so practically to all wxWidgets streams)
     - With versioning to check what version the stream has
@@ -13,6 +13,13 @@ Welcome to wxArchive - This class provides serialization for wxWidgets with the 
 
 CHANGELOG:
 ----------
+v1.1: 
+    - Name change from wxArchive to wxSerialize, because wxArchive is already a known class
+    - GPLv3 license added thanks to Christian Buhtz
+    - ConvertToIEEEExtended compile error fixed
+    - LoadDouble / SaveDouble now use wxFloat64
+    - Updated documentation for wxSerialize::Eof()
+    
 v1.0.1:
     - Fixed bug - 0000073: Missing function implementation
     - Implemented Read / Write with wxMemoryBuffer for writing records
@@ -22,6 +29,15 @@ v1.0:
     - Fixed some compile errors on wx2.7
     - Added better structure in the source
     
+KNOWN ISSUES
+------------
+As from wx2.8.4, the wxStringInputStream and wxStringOutputStream tests have been 
+removed, because it segfaulted my code. I traced the code back and it appears 
+reading back from a wxStringInputStream is somehow broken. The code that reads 
+back from normal streams works just fine, so I assume this is not wxSerialize 
+that is at fault. To enable the tests, in the archive_test.cpp file simply 
+uncomment #define USE_STRINGSTREAM. 
+
 INFO:
 -----
     Check the site for more information: http://wastebucket.solidsteel.nl
@@ -77,4 +93,4 @@ HOW TO BUILD
 	   
 1.3 SINGLE
 ----------
-    wxArchive is a single header and single cpp file. This means just adding these will work in your current project and is the preferred method.
+    wxSerialize is a single header and single cpp file. This means just adding these will work in your current project and is the preferred method.

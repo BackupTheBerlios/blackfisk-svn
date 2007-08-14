@@ -95,11 +95,12 @@ bool BFRootTask::StoreToFile (const wxChar* strFilename)
     }
 
     wxFileOutputStream  out(strFilename);
-    jbArchive           archive(out, BF_PROJECT_CURRENT_VERSION);
+    jbSerialize           archive(out, BF_PROJECT_CURRENT_VERSION);
 
     if (Serialize(archive))
     {
         strCurrentFilename_ = strFilename;
+        SetModified(false);
         return true;
     }
 
@@ -116,7 +117,7 @@ bool BFRootTask::ReadFromFile (const wxChar* strFilename)
     }
 
     wxFileInputStream   in(strFilename);
-    jbArchive           archive(in, BF_PROJECT_CURRENT_VERSION);
+    jbSerialize           archive(in, BF_PROJECT_CURRENT_VERSION);
 
     if (Serialize(archive))
     {
@@ -128,7 +129,7 @@ bool BFRootTask::ReadFromFile (const wxChar* strFilename)
 }
 
 
-bool BFRootTaskData::Serialize (jbArchive& rA)
+bool BFRootTaskData::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
         return false;
@@ -330,17 +331,7 @@ bool BFRootTask::Run (wxWindow* pParent)
     // the core need to create backup messages
     BFCore::Instance().BackupStarted();
 
-    // prepare for destination directories
-    for (i = 0; i < TaskVector().size(); ++i)
-    {
-        // create directory if needed
-        str = TaskVector()[i]->GetDestination();
-
-        if ( !(wxDir::Exists(ReplaceMacros(str))) )
-            Core().CreatePath(str);
-    }
-
-    if (!bStopProject_)
+    if (!GetStopProject())
     {
         // run each task
         for (i = 0; i < TaskVector().size() && !bStopProject_; ++i)
@@ -348,9 +339,28 @@ bool BFRootTask::Run (wxWindow* pParent)
             pRunningTask_ = TaskVector()[i];
             log.TaskStarted(*pRunningTask_);
             dlg.SetCurrentTaskName(pRunningTask_->GetName());
+
+            // create directory if needed
+            str = pRunningTask_->GetDestination();
+            if ( !(wxDir::Exists(BFTaskBase::ReplaceMacros(str))) )
+                Core().CreatePath(str);
+
+            // run the task
             pRunningTask_->Run( *(dlg.GetProgressTask()) );
+
+            // increment task progress
             dlg.GetProgressTotal()->IncrementActual();
-            log.TaskFinished();
+
+            // check how the task ended
+            if (GetStopCurrentTask())
+            {
+                log.TaskStoped();
+                bStopTask_ = false;
+            }
+            else
+            {
+                log.TaskFinished();
+            }
         }
     }
 
@@ -419,6 +429,16 @@ void BFRootTask::StopProject ()
 
     if (pRunningTask_ != NULL)
         pRunningTask_->StopTask();
+}
+
+bool BFRootTask::GetStopCurrentTask ()
+{
+    return bStopTask_;
+}
+
+bool BFRootTask::GetStopProject ()
+{
+    return bStopProject_;
 }
 
 const wxString& BFRootTask::GetCurrentFilename ()

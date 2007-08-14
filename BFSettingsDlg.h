@@ -28,6 +28,7 @@
 class wxCheckBox;
 class wxSpinCtrl;
 class wxListbook;
+class wxComboBox;
 class BFProjectSettingsCtrl;
 
 #define BFSETTINGSDLG_ID_BUTTONOK        1 + wxID_HIGHEST
@@ -47,6 +48,10 @@ class BFSettingsDlg : public wxDialog
         wxSpinCtrl*             pSpinLogSize_;
         ///
         BFProjectSettingsCtrl*  pPrjCtrl_;
+        ///
+        wxComboBox*             pComboVerboseLog_;
+        /**
+        wxComboBox*             pComboVerboseMsg_;*/
 
         /// read data from the settings data
         void GetData ();

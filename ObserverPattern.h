@@ -32,16 +32,21 @@ class Observer
 	private:
         ///
 		Subject* subject_;
+		/** the subject order the observers on their priority
+            default is 1 */
+		long     priority_;
         ///
 		Observer ();
 
     protected:
         ///
         const Subject* GetSubject () { return subject_; }
+        ///
+        long GetPriority ();
 
 	public:
         ///
-		Observer (Subject* subject);
+		Observer (Subject* subject, long priority = 100);
 		/// deregister itself from the subject
 		virtual ~Observer ();
 
@@ -51,6 +56,12 @@ class Observer
         ///
 		virtual void ValueChanged (Subject* pSender) = 0;
 
+        ///
+        bool operator < (const Observer& o) const
+        {
+            // the priority is descendening (higher first, lower last)
+            return this->priority_ > o.priority_;
+        }
 };	// class Observer
 
 

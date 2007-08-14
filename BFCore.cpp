@@ -28,10 +28,11 @@
 #include <wx/tokenzr.h>
 #include <wx/ptr_scpd.h>
 
-#include <../../src/zlib/zlib.h>
+#include <../src/zlib/zlib.h>
 
 #include "BFCore_traverser.h"
 #include "BFApp.h"
+#include "BFRootTask.h"
 #include "Progress.h"
 #include "blackfisk.h"
 #include "BFundef.h"
@@ -73,6 +74,21 @@ void BFCore::BackupStarted ()
 void BFCore::BackupEnded ()
 {
     bWhileBackup_ = false;
+}
+
+bool BFCore::IsWhileBackup ()
+{
+    return bWhileBackup_;
+}
+
+/*static*/ bool BFCore::IsStop ()
+{
+    if (Instance().IsWhileBackup())
+        if ( BFRootTask::Instance().GetStopCurrentTask() == true
+          || BFRootTask::Instance().GetStopProject() == true)
+          return true;
+
+    return false;
 }
 
 wxArrayString& BFCore::GetDirListing (const wxChar* dir,
@@ -155,6 +171,10 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
     if (pstrZipName == NULL || pstrSourceDir == NULL)
         return false;
 
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     // get all files and directories to zip
     wxArrayString fileArray;
     GetDirListing(pstrSourceDir, fileArray, pExcludeListing);
@@ -188,6 +208,10 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
     // iterate on files and dirs
     for (int i = 0; i < fileArray.GetCount(); ++i)
     {
+        // stop ?
+        if ( BFCore::IsStop() )
+            return false;
+
         fileName.Assign(fileArray[i]);
 
         // is it a file ?
@@ -369,6 +393,10 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
         return false;
     }
 
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     wxString        strDest(pDestination);
     wxString        strSource(pSource);
     wxArrayString   arrSource;
@@ -405,6 +433,10 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
         }
     }
 
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     if ( arrSource.Count() == 0 )
     {   // one file to copy
         rc = ::wxCopyFile(strSource, strDest, bOverwrite);
@@ -440,6 +472,10 @@ bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DE
         BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteFile()"));
         return false;
     }
+
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
 
     if ( !bIgnoreWriteProtection && IsWriteProtected(pFile) )
         return false;
@@ -500,6 +536,10 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
                           bool bVerify,
                           ProgressWithMessage* pProgress /*= NULL*/)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     // check parameters
     if (pOriginal == NULL || pToSynchronize == NULL)
     {
@@ -618,6 +658,10 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
                       bool                  bVerify,
                       ProgressWithMessage*  pProgress /*= NULL*/)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     // check parameters
     if (pSourceDir == NULL || pDestinationDir == NULL)
     {
@@ -656,6 +700,10 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
 
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("copy %s to %s"), pSourceDir, pDestinationDir));
+
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
 
     // copy the dir
     wxDir dir(pSourceDir);

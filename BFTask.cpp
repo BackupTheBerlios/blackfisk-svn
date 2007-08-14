@@ -223,7 +223,7 @@ int BFTask::GetTypeIconId ()
     return iconId;
 }
 
-bool BFTask::Serialize (jbArchive& rA)
+bool BFTask::Serialize (jbSerialize& rA)
 {
     // check parameters
     if ( !(rA.IsOpen()) )
@@ -379,7 +379,6 @@ bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
     ReplaceMacros(strDest);
     ReplaceMacros(strSrc);
 
-
     // copy dir
     return Core().CopyDir
     (
@@ -434,6 +433,15 @@ void BFTask::StopTask ()
 
 bool BFTask::Run (ProgressWithMessage& rProgress)
 {
+    // XXX
+    //BFSystem::Info(_T("TEST INFO 1"));
+    BFSystem::Warning(_T("TEST WARNING 1"));
+    //BFSystem::Error(_T("TEST ERROR 1"));
+    //BFSystem::Fatal(_T("TEST FATAL 1"));
+    //BFSystem::Debug(_T("TEST DEBUG 1"));
+    //BFSystem::Log(_T("TEST LOG 1"));
+    //BFSystem::Backup(_T("TEST BACKUP 1"));
+
     switch (GetType())
     {
         case TaskARCHIVE:
@@ -455,6 +463,9 @@ bool BFTask::Run (ProgressWithMessage& rProgress)
         default:
             break;
     };  // switch(type_)
+
+    if ( BFCore::IsStop() )
+        return false;
 
     return true;
 }

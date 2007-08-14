@@ -65,13 +65,3 @@ BFwxLog::BFwxLog ()
             break;
     };
 }
-
-
-/*virtual* void BFwxLog::DoLogString(const wxChar *szString, time_t t)
-{
-    wxString msg(szString);
-
-    msg.Prepend(_("FOREIGN UNKNOWN: "));
-
-    BFSystem::Instance().Message(MsgUNKNOWN, msg, NULL);
-}*/

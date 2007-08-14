@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#include "BFSystem.h"
+#include "BFSettings.h"
 
 BFSystem BFSystem::sSystem_;
 
@@ -124,6 +124,10 @@ BFMessageType BFSystem::GetLastType ()
             str = _("Info");
             break;
 
+        case MsgWARNING:
+            str = _("Warning");
+            break;
+
         case MsgERROR:
             str = _("Error");
             break;
@@ -194,16 +198,4 @@ const wxString& BFSystem::GetLastLocation ()
 const wxString& BFSystem::GetLastMessage ()
 {
     return strLastMessage_;
-}
-
-BFMessageType BFSystem::GetLogLevel ()
-{
-    /// log MsgERROR, MsgFATAL, MsgLOG, MsgDEBUG in a file
-    return MsgERROR;    /// MsgERROR and higher level
-}
-
-BFMessageType BFSystem::GetMsgLevel ()
-{
-    /// display MsgInfo, MsgERROR, MsgFATAL as a MessageBox
-    return MsgFATAL;    /// MsgFATAL and lower level
 }

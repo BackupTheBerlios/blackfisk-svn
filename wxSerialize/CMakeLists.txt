@@ -21,15 +21,15 @@ SET(WXW_USE_MONO OFF)
 SET(WXW_FILE_VERSION "26")
 SET(WXW_VERSION "2.6")
 
-PROJECT( ARCHIVE )
+PROJECT( SERIALIZE )
 
 # The new FindWX script works better for  windows, but the 
 # old script better for Linux (wx-config should be present
 # for windows too)
 IF(WIN32)
-    INCLUDE (${ARCHIVE_SOURCE_DIR}/bin/FindwxW.cmake)
+    INCLUDE (${SERIALIZE_SOURCE_DIR}/bin/FindwxW.cmake)
 ELSE(WIN32)
-    INCLUDE (${ARCHIVE_SOURCE_DIR}/bin/FindwxWin.cmake)
+    INCLUDE (${SERIALIZE_SOURCE_DIR}/bin/FindwxWin.cmake)
     
     # sync flags for new old flags
     SET(WXWIDGETS_FOUND            ${WXWINDOWS_FOUND})
@@ -47,23 +47,23 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__WXDEBUG__ -DWXDEBUG=1")
 
 # Options for building the stuff
 OPTION( MAKE_DOXYGEN       "Generate doxygen documentation"                                   ON  )
-OPTION( MAKE_ARCHIVESAMPLE "Make wxArchive sample"                                            ON  )
+OPTION( MAKE_SERIALIZESAMPLE "Make wxSerialize sample"                                        ON  )
 
-INCLUDE_DIRECTORIES(${ARCHIVE_SOURCE_DIR}/include/wx
-                    ${ARCHIVE_SOURCE_DIR}/src
+INCLUDE_DIRECTORIES(${SERIALIZE_SOURCE_DIR}/include/wx
+                    ${SERIALIZE_SOURCE_DIR}/src
                     ${WXWIDGETS_INCLUDE_DIR})
 
 LINK_DIRECTORIES( ${WXWIDGETS_LINK_DIRECTORIES} )
 
 # Doxygen example
 IF(MAKE_DOXYGEN)
-    CONFIGURE_FILE(${ARCHIVE_SOURCE_DIR}/docs/Doxyfile.in
-                ${ARCHIVE_BINARY_DIR}/docs/Doxyfile
+    CONFIGURE_FILE(${SERIALIZE_SOURCE_DIR}/docs/Doxyfile.in
+                ${SERIALIZE_BINARY_DIR}/docs/Doxyfile
                 @ONLY IMMEDIATE)                  
     
     ADD_CUSTOM_TARGET(api-docs ALL ${DOXYGEN}
-                      ${ARCHIVE_BINARY_DIR}/docs/Doxyfile DEPENDS
-					  ${ARCHIVE_SOURCE_DIR}/docs/Doxyfile.in )  
+                      ${SERIALIZE_BINARY_DIR}/docs/Doxyfile DEPENDS
+					  ${SERIALIZE_SOURCE_DIR}/docs/Doxyfile.in )  
 ENDIF(MAKE_DOXYGEN)                   
 
 SUBDIRS(src samples)

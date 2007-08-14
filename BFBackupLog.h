@@ -30,7 +30,10 @@
 #include <vector>
 #include "BFTask.h"
 
-///
+/** handle messages while the backup process and
+    store them to the related backup-log-files
+    what is loged and what not depends on the project
+    settings */
 class BFTaskLog
 {
     private:
@@ -115,6 +118,8 @@ class BFBackupLog : public Observer
         void TaskStarted (BFTask& rTask);
         ///
         void TaskFinished ();
+        ///
+        void TaskStoped ();
 
         ///
         virtual void ValueChanged (Subject* pSender);

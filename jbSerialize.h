@@ -1,9 +1,12 @@
 /**
- * Name:        BFwxLog.h
- * Purpose:     BFwxLog class declaration
+ * Name:        jbSerialize.h
+ * Purpose:     tyedef for wxSerialize (aka wxArchive)
+ *              wxArchive is not a part of the official wxWidgets library
+ *              that is why I want another name for it
+ *              I just used the wxArchive-developers name (Jorgen Bodde) as prefix
  * Author:      Christian Buhtz
  * Modified by:
- * Created:     2007-07-15
+ * Created:     2007-04-20
  * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
  ***
@@ -20,28 +23,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#ifndef BFWXLOG_H
-#define BFWXLOG_H
+#ifndef JBSERIALIZE_H
+#define JBSERIALIZE_H
 
-#include <wx/log.h>
+#include "wxSerialize\include\wx\wxSerialize.h"
 
-///
-class BFwxLog : public wxLog
-{
-    private:
-        /// private members
+typedef wxSerialize jbSerialize;
 
-    protected:
-        ///
-        virtual void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp);
-
-    public:
-        /// constructor
-        BFwxLog ();
-
-        /// virtual destructor
-        virtual ~BFwxLog ();
-
-};    // class BFwxLog
-
-#endif    // BFWXLOG_H
+#endif  // JBSERIALIZE_H

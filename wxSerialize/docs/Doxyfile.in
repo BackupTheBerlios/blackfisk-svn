@@ -3,9 +3,9 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = wxArchive
+PROJECT_NAME           = wxSerialize
 PROJECT_NUMBER         = v1.0
-OUTPUT_DIRECTORY       = @ARCHIVE_BINARY_DIR@/docs
+OUTPUT_DIRECTORY       = @SERIALIZE_BINARY_DIR@/docs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = YES
@@ -78,7 +78,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @ARCHIVE_SOURCE_DIR@/include/wx
+INPUT                  = @SERIALIZE_SOURCE_DIR@/include/wx
 FILE_PATTERNS          = *.c \
                          *.cc \
                          *.cxx \
@@ -138,7 +138,7 @@ HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            = 
 HTML_FOOTER            = 
-HTML_STYLESHEET        = @ARCHIVE_SOURCE_DIR@/doc/wx.css
+HTML_STYLESHEET        = @SERIALIZE_SOURCE_DIR@/doc/wx.css
 HTML_ALIGN_MEMBERS     = YES
 GENERATE_HTMLHELP      = NO
 CHM_FILE               = 

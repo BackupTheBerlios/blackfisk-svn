@@ -30,7 +30,8 @@ BFSettings::BFSettings ()
           : bReplaceMacros_(false),
             bWithFiles_(false),
             bOpenLastProject_(false),
-            lMaxLogFileSize_(1024)
+            lMaxLogFileSize_(1024),
+            verboseLog_(MsgINFO)
 {
 }
 
@@ -111,7 +112,28 @@ bool BFSettings::GetOpenLastProject ()
     return bOpenLastProject_;
 }
 
-bool BFSettings::Serialize (jbArchive& rA)
+void BFSettings::SetVerboseLevelLog (BFMessageType lvl)
+{
+    verboseLog_ = lvl;
+}
+
+BFMessageType BFSettings::GetVerboseLevelLog ()
+{
+    return verboseLog_;
+}
+/*
+void BFSettings::SetVerboseLevelMsg (BFMessageType lvl)
+{
+    verboseMsg_ = lvl;
+}
+
+BFMessageType BFSettings::GetVerboseLevelMsg ()
+{
+    return verboseMsg_;
+}*/
+
+
+bool BFSettings::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
         return false;
@@ -127,6 +149,8 @@ bool BFSettings::Serialize (jbArchive& rA)
         rA << (wxUint32&)lMaxLogFileSize_;
         rA << arrLastProjects_;
         rA << bOpenLastProject_;
+        rA << (int)verboseLog_;
+        //rA << (int)verboseMsg_;
     }
     else
     // ** serialize FROM file **
@@ -137,6 +161,8 @@ bool BFSettings::Serialize (jbArchive& rA)
         rA >> (wxUint32&)lMaxLogFileSize_;
         rA >> arrLastProjects_;
         rA >> bOpenLastProject_;
+        rA >> (int&)verboseLog_;
+        //rA >> (int&)verboseMsg_;
     }
 
     rA.LeaveObject();

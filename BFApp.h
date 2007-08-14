@@ -30,6 +30,7 @@ class BFMainFrame;
 #include <wx/wx.h>
 #include <wx/intl.h>
 #include "BFCore.h"
+#include "BFMsgObserver.h"
 
 
 ///
@@ -41,6 +42,11 @@ class BFApp : public wxApp
 
         /// the main window
         static BFMainFrame*     spMainFrame_;
+
+        /** handle messages from the application
+            it is not needed to touch it directly!
+            just use OBSystem to display messages to the user */
+        BFMsgObserver           msgObserver_;
 
     protected:
         /// reference to the OBCore instance

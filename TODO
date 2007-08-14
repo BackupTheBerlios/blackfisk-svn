@@ -1,6 +1,9 @@
-current step: implement ask on errors while backup
-current step: project-settings: disable behavior based on the verbose level
+ bug: drag&drop rezepte->E (chinese chars)
+ 
+next step: project-settings: disable behavior based on the verbose level
 
+- application log view
+- remember last concret backup files and delete them automaticly (last 3)
 - open project file progress
 - exclude-control for directory-tasks
 - log backup

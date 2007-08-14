@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxArchive\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;" />
 		<Build>
 			<Target title="Unicode Debug Static">
 				<Option output=".\blackfiskDus.exe" prefix_auto="0" extension_auto="0" />
@@ -85,6 +85,7 @@
 		<Compiler>
 			<Add directory="$(#wx)\include" />
 			<Add directory="$(#wx)\contrib\include" />
+			<Add directory="wxSerialize\include\wx" />
 		</Compiler>
 		<Unit filename="BFApp.cpp">
 			<Option virtualFolder="AppLayer\" />
@@ -97,6 +98,12 @@
 		</Unit>
 		<Unit filename="BFBackupLog.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFBackupQuestionDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFBackupQuestionDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFBackupTree.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
@@ -175,6 +182,12 @@
 		</Unit>
 		<Unit filename="BFMessageDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFMsgObserver.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFMsgObserver.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFProjectSettings.cpp">
 			<Option virtualFolder="DataLayer\" />
@@ -273,18 +286,19 @@
 		<Unit filename="ctrlids.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
-		<Unit filename="jbarchive.h">
-			<Option virtualFolder="AppLayer\wxArchive\" />
+		<Unit filename="jbSerialize.h">
+			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
-		<Unit filename="wxArchive\include\wx\wxArchive.h">
-			<Option virtualFolder="AppLayer\wxArchive\" />
+		<Unit filename="wxSerialize\include\wx\wxSerialize.h">
+			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
-		<Unit filename="wxArchive\src\wxArchive.cpp">
-			<Option virtualFolder="AppLayer\wxArchive\" />
+		<Unit filename="wxSerialize\src\wxSerialize.cpp">
+			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

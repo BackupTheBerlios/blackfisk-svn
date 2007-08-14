@@ -24,7 +24,8 @@
 #define BFSETTINGS_H
 
 #include "BFProjectSettings.h"
-#include "jbarchive.h"
+#include "BFSystem.h"
+#include "jbSerialize.h"
 
 #define BFSETTINGS_CURRENT_VERSION 1000
 
@@ -47,6 +48,10 @@ class BFSettings
         bool                bOpenLastProject_;
         /** last opened projectes */
         wxArrayString       arrLastProjects_;
+        /** verbose level for the application log file*/
+        BFMessageType       verboseLog_;
+        /** verbose level for application messages (message box) *
+        BFMessageType       verboseMsg_;*/
 
         ///
         static BFSettings   sSettings_;
@@ -86,9 +91,17 @@ class BFSettings
         void SetOpenLastProject (bool bOpen);
         ///
         bool GetOpenLastProject ();
+        ///
+        void SetVerboseLevelLog (BFMessageType lvl);
+        ///
+        BFMessageType GetVerboseLevelLog ();
+        /**
+        void SetVerboseLevelMsg (BFMessageType lvl);
+        ///
+        BFMessageType GetVerboseLevelMsg ();*/
 
         ///
-        bool Serialize (jbArchive& rA);
+        bool Serialize (jbSerialize& rA);
 };    // class BFSettings
 
 #endif    // BFSETTINGS_H

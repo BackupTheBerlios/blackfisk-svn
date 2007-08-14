@@ -89,6 +89,11 @@ class BFCore
         void BackupStarted ();
         ///
         void BackupEnded ();
+        ///
+        bool IsWhileBackup ();
+        /** if bWhileBackup_ == true and the current running task or project
+            should be stoped because of an error it returns true */
+        static bool IsStop ();
 
         /** move a file */
         bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE);

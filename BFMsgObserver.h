@@ -1,9 +1,9 @@
 /**
- * Name:        BFMessageDlg.h
- * Purpose:     BFMessageDlg class definition
+ * Name:        BFMsgObserver.h
+ * Purpose:     BFMsgObserver class definition
  * Author:      Christian Buhtz
  * Modified by:
- * Created:     2007-02-23
+ * Created:     2007-07-29
  * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
  ***
@@ -20,46 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#ifndef BFMESSAGEDLG_H
-#define BFMESSAGEDLG_H
-
-class BFMainFrame;
-
-#include <wx/msgdlg.h>
+#ifndef BFMSGOBSERVER_H
+#define BFMSGOBSERVER_H
 
 #include "ObserverPattern.h"
 
-///
-class BFMessageDlg : public wxMessageDialog, public Observer
+/** this class handle messages that should be displayed
+    in a message box or the user should be asked about it */
+class BFMsgObserver : public Observer
 {
     private:
-        ///
-        void SetMessage (const wxChar* msg);
-        ///
-        void SetCaption (const wxChar* cap);
-        ///
-        void SetStyle (long style);
-
-        /// private ctor
-        BFMessageDlg ();
-
-        /// standard behavior
-        void BehaviorDefault ();
-        /// behavior while a backup runs
-        void BehaviorWhileBackup ();
+        /// private members
 
     protected:
         /// proteced members
 
     public:
         /// constructor
-        BFMessageDlg (BFMainFrame* pParent);
+        BFMsgObserver ();
 
         /// virtual destructor
-        virtual ~BFMessageDlg ();
+        virtual ~BFMsgObserver ();
 
         ///
         virtual void ValueChanged (Subject* pSender);
-};    // class BFMessageDlg
+};    // class BFMsgObserver
 
-#endif    // BFMESSAGEDLG_H
+#endif    // BFMSGOBSERVER_H

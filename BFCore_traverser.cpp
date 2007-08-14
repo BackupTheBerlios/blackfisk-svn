@@ -96,6 +96,10 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
 
 /*virtual*/ wxDirTraverseResult BFSynchronizeDirTraverser::OnFile(const wxString& filename)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // listing
     BFDirListingTraverser::OnFile(filename);
 
@@ -117,6 +121,10 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
 
 /*virtual*/ wxDirTraverseResult BFSynchronizeDirTraverser::OnDir(const wxString& dirname)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // listing
     BFDirListingTraverser::OnDir(dirname);
 
@@ -166,6 +174,10 @@ BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= fals
 
 /*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnDir(const wxString& dirname)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // remove write protection
     if (bIgnoreWriteprotection_)
         if (BFCore::Instance().IsWriteProtected(dirname))
@@ -187,6 +199,10 @@ BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= fals
 
 /*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnFile(const wxString& filename)
 {
+    // stop ?
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // remove write protection
     if (bIgnoreWriteprotection_)
         if (BFCore::Instance().IsWriteProtected(filename))
@@ -211,6 +227,9 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxChar* pDestinationDirectory,
 
 /*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnDir(const wxString& dirname)
 {
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // init
     wxDir dir(dirname);
     wxString strSubDest = strDestination_ + dirname.Right(dirname.Length() - dirname.Find(wxFILE_SEP_PATH, true));
@@ -236,6 +255,9 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxChar* pDestinationDirectory,
 
 /*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnFile(const wxString& fileName)
 {
+    if ( BFCore::IsStop() )
+        return wxDIR_STOP;
+
     // init
     wxFileName  wxFn(fileName);
     wxString    strFrom(wxFn.GetFullPath());

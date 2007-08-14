@@ -62,7 +62,7 @@ class BFRootTaskData : public BFTaskBase, public Subject
         { return vecTasks_; }
 
         ///
-        bool Serialize (jbArchive& rA);
+        bool Serialize (jbSerialize& rA);
 
         /** it delete all task objects in the task-vector
             ATTENTION: it does not check if the project is saved !*/
@@ -163,6 +163,10 @@ class BFRootTask : public BFRootTaskData
         void StopCurrentTask ();
         ///
         void StopProject ();
+        ///
+        bool GetStopCurrentTask ();
+        ///
+        bool GetStopProject ();
 
         ///
         void InitThat (wxListBox& rListBox);

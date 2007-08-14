@@ -21,13 +21,16 @@
  ***/
 
 #include "ObserverPattern.h"
+#include <algorithm>
 
 Observer::Observer ()
-        : subject_(NULL)
+        : subject_(NULL),
+          priority_(100)
 {}
 
-Observer::Observer (Subject* subject)
-        : subject_(NULL)
+Observer::Observer (Subject* subject, long priority /*= 100*/)
+        : subject_(NULL),
+          priority_(priority)
 {
     SetSubject(subject);
 }
@@ -36,6 +39,11 @@ Observer::Observer (Subject* subject)
 {
     if (subject_ != NULL)
         subject_->deregisterObserver (this);
+}
+
+long Observer::GetPriority ()
+{
+    return priority_;
 }
 
 void Observer::SetSubject (Subject* subject)
@@ -80,6 +88,7 @@ long Subject::GetObserverCount ()
 void Subject::registerObserver (Observer* observer)
 {
 	vecObserver_.push_back (observer);
+	std::sort(vecObserver_.begin(), vecObserver_.end());
 }
 
 void Subject::deregisterObserver (Observer* observer)
