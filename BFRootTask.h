@@ -96,11 +96,12 @@ class BFRootTaskData : public BFTaskBase, public Subject
             if the object is not plausible or just exists in root
             OBInvalidOID returns */
         BFoid AppendTask (BFTask& rTask);
-
         ///
         bool HasTask(BFoid oid);
         ///
         BFTask* GetTask(BFoid oid);
+        ///
+        bool DeleteTask (BFoid oid);
 
         ///
         bool IsModified ();

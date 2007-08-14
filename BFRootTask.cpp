@@ -48,8 +48,12 @@ BFRootTaskData::BFRootTaskData ()
 
 void BFRootTaskData::ClearTaskVector ()
 {
-    for (int i = 0; i < vecTasks_.size(); ++i)
-        delete vecTasks_[i];
+    BFTaskVectorIt itVec;
+
+	for (itVec = TaskVector().begin();
+		 itVec != TaskVector().end();
+		 itVec++)
+        delete (*itVec);
 
     vecTasks_.clear();
 }
@@ -64,11 +68,37 @@ bool BFRootTaskData::Has (BFProjectSettings* pPrjSet)
 
 BFTask* BFRootTaskData::GetTask(BFoid oid)
 {
-    for (int i = 0; i < TaskVector().size(); ++i)
-        if (TaskVector()[i]->GetOID() == oid)
-            return TaskVector()[i];
+    BFTaskVectorIt itVec;
+
+	for (itVec = TaskVector().begin();
+		 itVec != TaskVector().end();
+		 itVec++)
+        if ((*itVec)->GetOID() == oid)
+            return (*itVec);
 
     return NULL;
+}
+
+bool BFRootTaskData::DeleteTask (BFoid oid)
+{
+    BFTaskVectorIt itVec;
+
+	for (itVec = TaskVector().begin();
+		 itVec != TaskVector().end();
+		 itVec++)
+    {
+        if ((*itVec)->GetOID() == oid)
+        {
+            BFTask* pTask = (BFTask*)(*itVec);
+            TaskVector().erase(itVec);
+            delete pTask;
+            SetModified(true);
+            broadcastObservers();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool BFRootTaskData::HasTask(BFoid oid)
@@ -135,8 +165,8 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
         return false;
 
     // init
-    bool    rc          = true;
-    int     iObjCount   = GetTaskCount();
+    bool            rc = true;
+    BFTaskVectorIt  itVec;
 
     rA.EnterObject();
     if( rA.IsStoring() )
@@ -144,11 +174,13 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
     {
         rA << strName_;
         projectSettings_.Serialize(rA);
-        rA << iObjCount;
+        rA << (int)GetTaskCount();
 
-        for (int i = 0; i < iObjCount; ++i)
+        for (itVec = TaskVector().begin();
+             itVec != TaskVector().end();
+             itVec++)
         {
-            rc = TaskVector()[i]->Serialize(rA);
+            rc = (*itVec)->Serialize(rA);
 
             if (!rc)
                 break;
@@ -157,11 +189,14 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
     else
     // ** serialize FROM file **
     {
+        int iObjCount;
+
         rA >> strName_;
         projectSettings_.Serialize(rA);
         rA >> iObjCount;
 
         // ** DEBUG **
+
         for (int i = 0; i < iObjCount; ++i)
         {
             // create a task with an invalid oid
@@ -374,8 +409,12 @@ bool BFRootTask::Run (wxWindow* pParent)
 
 void BFRootTask::InitThat (wxListBox& rListBox)
 {
-    for (int i = 0; i < GetTaskCount(); ++i)
-        rListBox.Append(TaskVector()[i]->GetName(), TaskVector()[i]);
+    BFTaskVectorIt itVec;
+
+    for (itVec = TaskVector().begin();
+         itVec != TaskVector().end();
+         itVec++)
+        rListBox.Append((*itVec)->GetName(), (*itVec));
 }
 
 
@@ -385,15 +424,19 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
     rBackupTree.AddRoot(GetName(), BFIconTable::logo);
 
     // iterate throug the tasks
-    for (int i = 0; i < TaskVector().size(); ++i)
+    BFTaskVectorIt itVec;
+
+    for (itVec = TaskVector().begin();
+         itVec != TaskVector().end();
+         itVec++)
     {
         // create all for the task needed items in the tree
         rBackupTree.AddTask
                     (
-                        TaskVector()[i]->GetOID(),
-                        TaskVector()[i]->GetType(),
-                        TaskVector()[i]->GetName(),
-                        TaskVector()[i]->GetDestination()
+                        (*itVec)->GetOID(),
+                        (*itVec)->GetType(),
+                        (*itVec)->GetName(),
+                        (*itVec)->GetDestination()
                     );
     }
 }
@@ -403,8 +446,12 @@ wxArrayString BFRootTask::GetDestinations ()
     wxArrayString arr;
 
     // iterate throug the tasks
-    for (int i = 0; i < TaskVector().size(); ++i)
-        arr.Add(TaskVector()[i]->GetDestination());
+    BFTaskVectorIt itVec;
+
+    for (itVec = TaskVector().begin();
+         itVec != TaskVector().end();
+         itVec++)
+        arr.Add((*itVec)->GetDestination());
 
     return arr;
 }

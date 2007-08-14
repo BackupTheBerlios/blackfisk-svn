@@ -192,5 +192,6 @@ class BFTask : public BFTaskData
 
 ///
 typedef std::vector<BFTask*>    BFTaskVector;
+typedef BFTaskVector::iterator  BFTaskVectorIt;
 
 #endif    // BFTASK_H

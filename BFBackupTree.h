@@ -73,9 +73,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// return a pointer to the BFTask object relating to the itemId in the backupTree
         BFTask* GetTaskByItem (wxTreeItemId itemId);
 
-        /** check the string for a macro (begins with '<' and ends with '>')
-            and replace it if 'bReplaceMacro_ == true'*
-        wxString& ReplaceMacro(wxString& str);*/
+        /// open the TaskDialog for the Task specified by 'id'
+        void ShowTaskSettings (wxTreeItemId id);
 
     protected:
         /// proteced members
@@ -126,6 +125,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         void OnAddDestination (wxCommandEvent& rEvent);
         ///
         void OnCreateDestination (wxCommandEvent& rEvent);
+        ///
+        void OnTaskSettings (wxCommandEvent& rEvent);
+        ///
+        void OnDeleteTask (wxCommandEvent& rEvent);
         ///
         void OnCreateBackup (wxCommandEvent& rEvent);
         ///

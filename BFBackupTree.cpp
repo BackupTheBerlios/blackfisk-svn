@@ -46,6 +46,8 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,    BFBackupTree::OnAddDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSETTINGS,   BFBackupTree::OnProjectSettings)
     EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION, BFBackupTree::OnCreateDestination)
+    EVT_MENU                    (BFBACKUPCTRL_ID_TASKSETTINGS,      BFBackupTree::OnTaskSettings)
+    EVT_MENU                    (BFBACKUPCTRL_ID_DELETETASK,        BFBackupTree::OnDeleteTask)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnCreateBackup)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnCreateBackup)
     EVT_MENU                    (BFBACKUPCTRL_ID_SYNC_DIR,          BFBackupTree::OnCreateBackup)
@@ -100,6 +102,7 @@ wxString& BFBackupTree::ReplaceMacro(wxString& str)
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
     strDropedFilename_ = strDropedFilename;
+    BFSystem::Info(strDropedFilename);
 }
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
@@ -111,11 +114,17 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
     if (lastItemId_ == GetRootItem())
     {
         BFMainFrame::Instance()->OpenProjectSettings();
-        return;
     }
+    else
+    {
+        ShowTaskSettings (lastItemId_);
+    }
+}
 
+void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
+{
     // get the task object from the data layer
-    BFTask* pTask = GetTaskByItem(lastItemId_);
+    BFTask* pTask = GetTaskByItem(id);
 
     if (pTask != NULL)
         BFTaskDlg::Show (pTask);
@@ -129,18 +138,40 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
     // remember the selected item
     lastItemId_ = rEvent.GetItem();
 
-    if ( !(IsTask(lastItemId_)) )
+    if ( IsTask(lastItemId_) )
     {
+        BFTask* pTask = GetTaskByItem(lastItemId_);
+
+        if (pTask == NULL)
+            return;
+
+        // create destination directory
+        if (pTask->GetType() == TaskDIRCOPY)
+            menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
+
+        // delete task
+        menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
+
+        // separator if needed
+        if (menu.GetMenuItemCount() > 0)
+            menu.AppendSeparator();
+
+        // task settings
+        menu.Append(BFBACKUPCTRL_ID_TASKSETTINGS, _("Task settings"));
+    }
+    else
+    {
+        // for non-existing (while backup created) directories
         menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
 
         // right click on root item
         if (GetRootItem() == lastItemId_)
         {
+            // for real existing directories
             menu.Append(BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
             menu.AppendSeparator();
             menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS, _("Project settings"));
         }
-
     }
 
     if (menu.GetMenuItemCount() > 0)
@@ -269,6 +300,22 @@ void BFBackupTree::OnCreateDestination (wxCommandEvent& rEvent)
     new BFDestinationDlg(BFMainFrame::Instance(), strPath);
 }
 
+void BFBackupTree::OnTaskSettings (wxCommandEvent& rEvent)
+{
+    ShowTaskSettings(lastItemId_);
+}
+
+void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
+{
+    BFTask* pTask = GetTaskByItem(lastItemId_);
+
+    if (pTask == NULL)
+        return;
+
+    if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
+        BFRootTask::Instance().DeleteTask(pTask->GetOID());
+}
+
 wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 {
     // add root
@@ -364,6 +411,15 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
 {
     wxString str(strName);
+    wxString strFull;
+
+    // create strFull
+    strFull << strDestination;
+
+    if (strFull.Last() != wxFILE_SEP_PATH)
+        strFull << wxFILE_SEP_PATH;
+
+    strFull << strName;
 
     if (bReplaceMacro_)
         BFTaskBase::ReplaceMacros(str);
@@ -375,9 +431,13 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* st
         str,
         BFTask::GetTypeIconId(type),
         -1,
-        new BFBackupTreeItemData(oid)
+        new BFBackupTreeItemData
+        (
+            oid,
+            strFull.c_str()
+        )
     );
-    //BFSystem::Info(_T("HERE 2"));
+
     return id;
 }
 
