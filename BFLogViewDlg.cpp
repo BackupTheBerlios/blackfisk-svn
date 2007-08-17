@@ -34,8 +34,9 @@ BEGIN_EVENT_TABLE(BFLogViewDlg, wxDialog)
 END_EVENT_TABLE()
 
 //
-BFLogViewDlg::BFLogViewDlg (wxWindow* pParent)
-            : wxDialog(pParent, wxID_ANY, wxString(_("Log View")))
+BFLogViewDlg::BFLogViewDlg (wxWindow* pParent, const wxArrayString& arrLogs)
+            : wxDialog(pParent, wxID_ANY, wxString(_("Log View"))),
+              arrLogs_(arrLogs)
 {
     SetWindowStyle(GetWindowStyle() | wxRESIZE_BORDER);
     Init();
@@ -50,9 +51,6 @@ BFLogViewDlg::BFLogViewDlg (wxWindow* pParent)
 
 void BFLogViewDlg::Init ()
 {
-    // the files
-    wxArrayString arrLogs(BFRootTask::Instance().GetLastLogFiles());
-
     // the book
     wxNotebook* pBook = new wxNotebook (this, wxID_ANY);
     pBook->SetMinSize(wxSize(500, 400));
@@ -60,16 +58,16 @@ void BFLogViewDlg::Init ()
     pBookSizer->Add(pBook);
 
     // the log files
-    for (int i = 0; i < arrLogs.GetCount(); ++i)
+    for (int i = 0; i < arrLogs_.GetCount(); ++i)
     {
         // the log file
         wxTextFile fileLog;
-        fileLog.Open(arrLogs[i]);
+        fileLog.Open(arrLogs_[i]);
 
         // error while opening
         if ( !(fileLog.IsOpened()) )
         {
-            BFSystem::Error(wxString::Format(_("can not open the log file %s"), arrLogs[i].c_str()), _T("BFLogViewDlg::Init()"));
+            BFSystem::Error(wxString::Format(_("can not open the log file %s"), arrLogs_[i].c_str()), _T("BFLogViewDlg::Init()"));
             continue;
         }
 
@@ -97,7 +95,7 @@ void BFLogViewDlg::Init ()
 
 
         // add as a tab
-        pBook->AddPage(pCtrl, arrLogs[i]);
+        pBook->AddPage(pCtrl, arrLogs_[i]);
     }
 
     SetSizerAndFit(pBookSizer);

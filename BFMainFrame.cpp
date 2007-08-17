@@ -28,6 +28,7 @@
 #include <wx/listbox.h>
 #include <wx/filedlg.h>
 #include <wx/imaglist.h>
+#include <wx/tooltip.h>
 
 #include "blackfisk.h"
 #include "BFApp.h"
@@ -58,6 +59,7 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_LastProject4,       BFMainFrame::OnLastProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
+    EVT_MENU    (ID_DisplayLog,         BFMainFrame::OnDisplayLog)
 #ifdef _DEBUG
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
 #endif
@@ -91,25 +93,25 @@ END_EVENT_TABLE()
 
     // ** menu BLACKFISK **
     wxMenu* menuBlackfisk = new wxMenu;
-    menuBlackfisk->Append( ID_Settings,  _("Gobal &Settings") );
+    menuBlackfisk->Append( ID_Settings,     _("Gobal &Settings") );
+    menuBlackfisk->Append( ID_DisplayLog,   _("show &log file") );
     menuBlackfisk->AppendSeparator();
+    menuBlackfisk->Append( ID_Quit,         _("E&xit") );
 #ifdef _DEBUG
-    menuBlackfisk->Append( ID_Test,      _("&Testen") );
-#endif
-    menuBlackfisk->Append( ID_Backup,    _("&Backup") );
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( ID_Quit,      _("E&xit") );
+    menuBlackfisk->Append( ID_Test,         _("&Testen") );
+#endif
 
     // ** menu PROJECT **
     menuProject_ = new wxMenu;
-    menuProject_->Append( ID_NewProject,         _("&New/Close Project") );
+    menuProject_->Append( ID_Backup,             _("&Run Backup...") );
     menuProject_->AppendSeparator();
+    menuProject_->Append( ID_NewProject,         _("&New/Close Project") );
     menuProject_->Append( ID_OpenProject,        _("&Open Project") );
     menuProject_->Append( ID_SaveProject,        _("&Save Project") );
     menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
     menuProject_->AppendSeparator();
     menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
-    menuProject_->AppendSeparator();
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -140,6 +142,8 @@ END_EVENT_TABLE()
     SetSizer(pSizer);
 
     RefreshTitle();
+
+    //wxToolTip::SetDelay(1000);
 
     Show(TRUE);
     SetSize(wxSize(650, 600));
@@ -232,6 +236,13 @@ BFBackupTree* BFMainFrame::BackupTree ()
 
 /*virtual*/ BFMainFrame::~BFMainFrame ()
 {
+}
+
+void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
+{
+    wxArrayString arr;
+    arr.Add(BF_LOGFILE_NAME);
+    new BFLogViewDlg(this, arr);
 }
 
 void BFMainFrame::OnLastProject (wxCommandEvent& event)
@@ -393,13 +404,6 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    wxString str;
-    BFRootTask::Instance().ClearLastLogFiles();
-    str = _T("C:\\2.log");
-    BFRootTask::Instance().AddTaskLogFile(str);
-    str = _T("C:\\1.log");
-    BFRootTask::Instance().SetProjectLogFile(str);
-    new BFLogViewDlg(this);
     //spApp_->Test();
 }
 #endif
@@ -436,7 +440,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     if (iAnswer != wxCANCEL)
     {
         spApp_->Backup();
-        new BFLogViewDlg(this);
+        new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
     }
 }
 

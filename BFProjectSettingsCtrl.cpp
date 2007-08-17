@@ -63,6 +63,8 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent)
                        iStopLevelOnWarning_(BFDO_STOPPRJ),
                        iLabelWidth_(85)
 {
+    wxString strTip;
+
     // verbose
     wxString arrVerbose[] = { _("information"), _("warning"), _("error"), _("fatal error") };
     wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("Verbose Level:"));
@@ -75,6 +77,10 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent)
                                     4,
                                     arrVerbose,
                                     wxCB_READONLY);
+    strTip = _("verbose level while the running backup process\nit differs from the application log verbose-level in the global settings");
+    pVerboseLabel->SetToolTip(strTip);
+    pComboVerbose_->SetToolTip(strTip);
+
     // StopLevel
     wxSizer* pStopSizer = CreateStopLevelCtrl();
 
@@ -82,6 +88,9 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent)
     wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("logfile location:"));
     pBackupLogLabel->SetMinSize(wxSize(GetLabelWidth(), pBackupLogLabel->GetSize().GetHeight()));
     pPickerBackupLog_ = new wxDirPickerCtrl (this, wxID_ANY);
+    strTip = _("the directory where the backup-logfile is stored");
+    pBackupLogLabel->SetToolTip(strTip);
+    pPickerBackupLog_->SetToolTip(strTip);
 
     // sizer and arrange
     wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
@@ -106,6 +115,8 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent)
 
 wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl ()
 {
+    wxString strTip(_("the behavior while a backup if messages (warnings, errors, fatal errors) are created\n  stop project:\tstop the complete backup process\n  stop task:\tstop the current running task and go on with the next task\n  ask:\t\task the use what should be done\n  log:\t\twrite the message to the logfile an do nothing more"));
+
     wxStaticBox* pStopBox = new wxStaticBox(this, wxID_ANY, _("behavior..."));
 
     // the lables
@@ -116,6 +127,13 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl ()
     wxStaticText* pLabelStopTsk = new wxStaticText(this, wxID_ANY, _("stop\ntask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelAsk     = new wxStaticText(this, wxID_ANY, _("ask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("log"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    pLabelWarning->SetToolTip(strTip);
+    pLabelError->SetToolTip(strTip);
+    pLabelFatal->SetToolTip(strTip);
+    pLabelStopPrj->SetToolTip(strTip);
+    pLabelStopTsk->SetToolTip(strTip);
+    pLabelAsk->SetToolTip(strTip);
+    pLabelIgnore->SetToolTip(strTip);
 
     // size the lables
     pLabelStopPrj->SetMinSize (wxSize(50, pLabelStopPrj->GetSize().GetHeight()));

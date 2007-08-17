@@ -89,6 +89,8 @@ void BFBackupTree::Init ()
     // expand all items in the treeCtlr
     ExpandAll();
     SelectItem(lastItemId_);
+
+    SetToolTip(_("files and directories for the backup"));
 }
 /*
 wxString& BFBackupTree::ReplaceMacro(wxString& str)
@@ -102,7 +104,6 @@ wxString& BFBackupTree::ReplaceMacro(wxString& str)
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
     strDropedFilename_ = strDropedFilename;
-    BFSystem::Info(strDropedFilename);
 }
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
@@ -657,6 +658,7 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
     // init controls
     pBackupTree_    = new BFBackupTree(this);
     pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("macros"));
+    pMacroButton_->SetToolTip(_("display items in the backup tree with macros (e.g. <date>)\nor filled macros (e.g. 2008-12-24)"));
     pMacroButton_->SetValue(BFSettings::Instance().GetReplaceMacros());
     BackupTree()->SetReplaceMacro(BFSettings::Instance().GetReplaceMacros());
 

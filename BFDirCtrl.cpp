@@ -109,7 +109,7 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
     wxFileDataObject    my_data;
     wxDropSource        dragSource  ( this );
 
-    // selected the now draging item
+    // selected the currently draging item
     pDirCtrl_->GetTreeCtrl()->SelectItem(event.GetItem());
     my_data.AddFile(pDirCtrl_->GetPath());
     dragSource.SetData(my_data);

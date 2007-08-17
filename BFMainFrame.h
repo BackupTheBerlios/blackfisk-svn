@@ -53,7 +53,8 @@ enum
     ID_LastProject2,
     ID_LastProject3,
     ID_LastProject4,
-    ID_Settings
+    ID_Settings,
+    ID_DisplayLog
 };
 
 /// main window of the application
@@ -125,6 +126,8 @@ class BFMainFrame : public wxFrame
         void OnLastProject (wxCommandEvent& event);
         ///
         void OnSettings (wxCommandEvent& event);
+        ///
+        void OnDisplayLog (wxCommandEvent& event);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */

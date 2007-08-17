@@ -31,13 +31,15 @@ class BFLogViewDlg : public wxDialog
     private:
         ///
         void Init ();
+        ///
+        wxArrayString       arrLogs_;
 
     protected:
         /// proteced members
 
     public:
         /// constructor
-        BFLogViewDlg (wxWindow* pParent);
+        BFLogViewDlg (wxWindow* pParent, const wxArrayString& arrLogs);
 
         /// virtual destructor
         virtual ~BFLogViewDlg ();
