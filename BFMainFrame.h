@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-04-05
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -54,7 +54,10 @@ enum
     ID_LastProject3,
     ID_LastProject4,
     ID_Settings,
-    ID_DisplayLog
+    ID_DisplayLog,
+    ID_ShowLicense,
+    ID_ShowHistory,
+    ID_OpenWebSite
 };
 
 /// main window of the application
@@ -128,6 +131,12 @@ class BFMainFrame : public wxFrame
         void OnSettings (wxCommandEvent& event);
         ///
         void OnDisplayLog (wxCommandEvent& event);
+        ///
+        void OnShowLicense (wxCommandEvent& event);
+        ///
+        void OnShowHistory (wxCommandEvent& event);
+        ///
+        void OnOpenWebSite (wxCommandEvent& event);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */

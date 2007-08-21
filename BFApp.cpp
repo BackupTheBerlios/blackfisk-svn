@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-04-05
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     spMainFrame_ = pMainFrame;
 }
 
-/*static*/ wxString BFApp::SumStrings (const wxArrayString& rStrings, const wxChar cSeperator /*= _T('\n')*/)
+/*static* wxString BFApp::SumStrings (const wxArrayString& rStrings, const wxChar cSeperator /*= _T('\n')*)
 {
     wxString strResult;
 
@@ -64,7 +64,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
         strResult = strResult + rStrings[i] + cSeperator;
 
     return strResult;
-}
+}*/
 
 /*static*/ wxArrayString& BFApp::PrependString (wxArrayString& rStrings,
                                                 const wxChar* strToPrepend)
@@ -124,7 +124,7 @@ bool BFApp::OnInit()
 {
     ReadSettings();
 
-    BFSystem::Log(wxString::Format(_("%s %s by %s started"), BF_PRGNAME, BF_VERSION, BF_AUTHOR).c_str());
+    BFSystem::Log(wxString::Format(_("%s %s by %s started"), BF_PRGNAME, BF_VERSION_STRING, BF_AUTHOR).c_str());
 
     // available languages
     // TODO just look at the locals directory to know what is available

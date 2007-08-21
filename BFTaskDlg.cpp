@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-06-05
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify

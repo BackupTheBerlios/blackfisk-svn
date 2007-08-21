@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2007-03-29
- * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2007 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,10 @@
 #define BLACKFISK_H
 
 #define BF_PRGNAME                  _T("blackfisk")
-#define BF_VERSION                  _T("0.01a")
+#define BF_VERSION_STRING           _T("0.0.1a (SVN)")
+#define BF_VERSION_MAJOR            0
+#define BF_VERSION_MINOR            0
+#define BF_VERSION_RELEASE          0
 #define BF_AUTHOR                   _T("Christian Buhtz")
 //__VERSION__ (gcc version)
 

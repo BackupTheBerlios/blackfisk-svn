@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-02-17
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -580,7 +580,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
     BFApp::PrependString(arrToSyncListing, pToSynchronize);
     BFSystem::Log(_T("files to delete..."));
-    BFSystem::Log(BFApp::SumStrings(arrToSyncListing));
+    BFSystem::Log(wxJoin(arrToSyncListing, _T('\n'), _T('\0')));
     Delete(arrToSyncListing);
 
     return true;

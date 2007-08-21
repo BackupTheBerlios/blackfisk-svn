@@ -1,10 +1,10 @@
 /**
- * Name:        BFLogViewDlg.h
- * Purpose:     BFLogViewDlg class defination
+ * Name:        BFAboutDlg.h
+ * Purpose:
  * Author:      Christian Buhtz
  * Modified by:
- * Created:     2007-07-21
- * Copyright:   (c) 2007 Christian Buhtz <blackfisk@web.de>
+ * Created:     2007-08-19
+ * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -20,34 +20,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#ifndef BFLOGVIEWDLG_H
-#define BFLOGVIEWDLG_H
+
+#ifndef BFABOUTDLG_H
+#define BFABOUTDLG_H
 
 #include <wx/dialog.h>
 
 ///
-class BFLogViewDlg : public wxDialog
+class BFAboutDlg : wxDialog
 {
     private:
         ///
-        void Init ();
-        ///
-        wxArrayString       arrLogs_;
+        wxSizer* CreateThirdPartySizer (const wxChar* strUrl,
+                                        const wxChar* strUrlLabel,
+                                        const wxChar* strAuthor,
+                                        const wxChar* strDesc);
 
     protected:
         /// proteced members
 
     public:
-        /// constructor
-        BFLogViewDlg (wxWindow* pParent, const wxArrayString& arrLogs);
+        /// ctor
+        BFAboutDlg ();
 
-        /// virtual destructor
-        virtual ~BFLogViewDlg ();
+        /// virtual dtor
+        virtual ~BFAboutDlg ();
 
+        ///
+        void OnViewLicense (wxCommandEvent& rEvent);
+        ///
+        void OnOk (wxCommandEvent& rEvent);
         ///
         void OnClose (wxCloseEvent& event);
 
     DECLARE_EVENT_TABLE();
-};    // class BFLogViewDlg
+};
 
-#endif    // BFLOGVIEWDLG_H
+#endif    // BFABOUTDLG_H

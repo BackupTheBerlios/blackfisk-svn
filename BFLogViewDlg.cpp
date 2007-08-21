@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2007-07-21
- * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2007 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ void BFLogViewDlg::Init ()
 {
     // the book
     wxNotebook* pBook = new wxNotebook (this, wxID_ANY);
-    pBook->SetMinSize(wxSize(500, 400));
+    pBook->SetMinSize(wxSize(570, 400));
     wxSizer* pBookSizer = new wxBoxSizer(wxVERTICAL);
     pBookSizer->Add(pBook);
 

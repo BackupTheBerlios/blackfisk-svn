@@ -87,6 +87,12 @@
 			<Add directory="$(#wx)\contrib\include" />
 			<Add directory="wxSerialize\include\wx" />
 		</Compiler>
+		<Unit filename="BFAboutDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFAboutDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="BFApp.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>

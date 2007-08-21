@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-04-05
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 #include <wx/filedlg.h>
 #include <wx/imaglist.h>
 #include <wx/tooltip.h>
+#include <wx/aboutdlg.h>
 
 #include "blackfisk.h"
 #include "BFApp.h"
@@ -40,6 +41,7 @@
 #include "BFSettingsDlg.h"
 #include "BFSettings.h"
 #include "BFLogViewDlg.h"
+#include "BFAboutDlg.h"
 
 #ifdef _DEBUG
 #include "BFRootTask.h"
@@ -60,6 +62,9 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
     EVT_MENU    (ID_DisplayLog,         BFMainFrame::OnDisplayLog)
+    EVT_MENU    (ID_ShowLicense,        BFMainFrame::OnShowLicense)
+    EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
+    EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
 #ifdef _DEBUG
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
 #endif
@@ -115,7 +120,11 @@ END_EVENT_TABLE()
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append( ID_About,         _("&About...") );
+    menuHelp->Append( ID_OpenWebSite,   _("&Website") );
+    menuHelp->Append( ID_ShowLicense,   _("&License") );
+    menuHelp->Append( ID_ShowHistory,   _("&History") );
+    menuHelp->AppendSeparator();
+    menuHelp->Append( ID_About,         _("&About") );
 
     // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
@@ -198,7 +207,7 @@ void BFMainFrame::RefreshTitle ()
                                                  App()->GetCurrentProjectName().c_str(),
                                                  App()->GetCurrentProjectFilename().c_str(),
                                                  BF_PRGNAME,
-                                                 BF_VERSION,
+                                                 BF_VERSION_STRING,
                                                  jbSerialize::GetLibVersionString().c_str()) );
 }
 
@@ -243,6 +252,25 @@ void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
     wxArrayString arr;
     arr.Add(BF_LOGFILE_NAME);
     new BFLogViewDlg(this, arr);
+}
+
+void BFMainFrame::OnShowLicense (wxCommandEvent& event)
+{
+    wxArrayString arr;
+    arr.Add(_T("LICENSE"));
+    new BFLogViewDlg(this, arr);
+}
+
+void BFMainFrame::OnShowHistory (wxCommandEvent& event)
+{
+    wxArrayString arr;
+    arr.Add(_T("HISTORY"));
+    new BFLogViewDlg(this, arr);
+}
+
+void BFMainFrame::OnOpenWebSite (wxCommandEvent& event)
+{
+    wxLaunchDefaultBrowser(_T("http://www.blackfisk.org"));
 }
 
 void BFMainFrame::OnLastProject (wxCommandEvent& event)
@@ -386,8 +414,20 @@ void BFMainFrame::OnQuit (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(wxVERSION_STRING,
-        _("About Hello World"), wxOK | wxICON_INFORMATION, this);
+    new BFAboutDlg();
+
+/*    wxAboutDialogInfo info;
+
+    info.AddArtist(_T("artist"));
+    info.AddDeveloper(BF_AUTHOR);
+    info.SetCopyright(_T("(c) 2006 Christian Buhtz <blackfisk@web.de>"));
+    info.SetDescription(_("description\nthird party 3\nddddddwww"));
+    info.SetLicense(_T("GNU General Public License (Version 3)"));
+    info.SetName(BF_PRGNAME);
+    info.SetVersion(BF_VERSION_STRING);
+    info.SetWebSite(_T("www.blackfisk.org"));
+
+    wxAboutBox(info);*/
 /*
     <program>  Copyright (C) <year>  <name of author>
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.

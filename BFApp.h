@@ -4,7 +4,7 @@
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-04-05
- * Copyright:   (c) 2006 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify
@@ -70,8 +70,6 @@ class BFApp : public wxApp
             see the call in the BFMainFrame ctor for more details */
         static void SetMainFrame (BFMainFrame* pMainFrame);
 
-        /** sum a array of strings to one string and return it */
-        static wxString SumStrings (const wxArrayString& rStrings, const wxChar cSeperator = _T('\n'));
         /** prepend a string on each element of a string array
             and return the reference of the array */
         static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);

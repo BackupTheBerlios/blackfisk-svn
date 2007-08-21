@@ -1,5 +1,9 @@
  bug: drag&drop rezepte->E (chinese chars)
 
+- show license as log-view
+- show history as log-view
+- open website
+ 
 - remember last concret backup files and delete them automaticly (last 3)
 - exclude-control for directory-tasks
 - animate progress
