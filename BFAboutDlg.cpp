@@ -68,7 +68,7 @@ BFAboutDlg::BFAboutDlg ()
     font.SetPointSize(font.GetPointSize()+5);
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pName->SetFont(font);
-    wxStaticText* pCopy = new wxStaticText(this, wxID_ANY, _T("Copyright (C) 2006 Christian Buhtz <blackfisk@web.de>"));
+    wxStaticText* pCopy = new wxStaticText(this, wxID_ANY, _T("Copyright (C) 2005 Christian Buhtz <blackfisk@web.de>"));
     wxStaticText* pDesc = new wxStaticText(this, wxID_ANY, _T("A backup software that can handle very complex tasks.\nBut it has the goal that it is easy to use\nwithout reading a manual."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxHyperlinkCtrl* pWeb = new wxHyperlinkCtrl(this, wxID_ANY, _T("www.blackfisk.org"), _T("http://www.blackfisk.org"));
     wxStaticText* pLicense = new wxStaticText(this, wxID_ANY, _T("This program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome\nto redistribute it under certain conditions;\nfor details select the menu Help/License\nor click this button"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
@@ -132,21 +132,21 @@ BFAboutDlg::BFAboutDlg ()
     pTopSizer->Add(pLicense, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pTopSizer->Add(pViewLicense, wxSizerFlags(0).Center().Border(wxBOTTOM, 10));
     pMLeftSizer->Add(pDev, wxSizerFlags(0).Center());
-    pMLeftSizer->Add(pDev1, wxSizerFlags(0).Center().Border(wxBOTTOM, 3));
-    pMLeftSizer->Add(pThird, wxSizerFlags(0).Center().Border(wxTOP, 3));
+    pMLeftSizer->Add(pDev1, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pThird, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pMLeftSizer->Add(pThird1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pThird2, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pSupporters, wxSizerFlags(0).Center().Border(wxTOP, 3));
+    pMLeftSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxTOP, 10));
+    pMLeftSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pSupporters, wxSizerFlags(0).Center());
     pMRightSizer->Add(pSupporters1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters2, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters3, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMiddleSizer->Add(pMLeftSizer, wxSizerFlags(0).Expand());
     pMiddleSizer->Add(pMRightSizer, wxSizerFlags(0).Expand());
     pTopSizer->Add(pMiddleSizer, wxSizerFlags(0).Expand().Center().Border(wxLEFT | wxRIGHT, 20));
-    pTopSizer->Add(pOk, wxSizerFlags(0).Center().Border(wxALL, 15));
+    pTopSizer->Add(pOk, wxSizerFlags(0).Center().Border(wxALL, 25));
 
     SetSizerAndFit(pTopSizer);
     CenterOnParent();
