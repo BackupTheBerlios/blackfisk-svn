@@ -48,8 +48,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
         wxTreeItemId    lastItemId_;
-        /// view raw macros or fill them with data
-        bool            bReplaceMacro_;
+        /// view blackfisk placeholders or fill them with data
+        bool            bFillBlackfiskPlaceholders_;
 
         /** this private class just wrappes the drop-events from the
             dropTarget to the affeceted treeCtrl
@@ -113,8 +113,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             but do not check if the specified task realy exists! */
         wxTreeItemId AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination);
 
-        /** set 'bReplaceMacro_' and recreate the tree if needed */
-        void SetReplaceMacro(bool bValue);
+        /** set 'bFillBlackfiskPlaceholders_' and recreate the tree if needed */
+        void SetFillBlackfiskPlaceholders(bool bValue);
         ///
         void OnItemActivated (wxTreeEvent& rEvent);
         ///

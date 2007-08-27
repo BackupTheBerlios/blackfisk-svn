@@ -35,9 +35,9 @@ class BFSettings
     private:
         /** project-specific settings by default */
         BFProjectSettings   defaultPrj_;
-        /** display backup-tree with replaced activate
-            macros ("2000-01-01") or not ("<date>") */
-        bool                bReplaceMacros_;
+        /** display backup-tree with filled placeholders
+            or the placeholders itself ("2000-01-01") */
+        bool                bFillBlackfiskPlaceholders_;
         /** display the filesystem with files
             or just with dirs and volumes */
         bool                bWithFiles_;
@@ -72,9 +72,9 @@ class BFSettings
         ///
         BFProjectSettings& GetDefaultProjectSettings ();
         ///
-        bool GetReplaceMacros ();
+        bool GetFillBlackfiskPlaceholders();
         ///
-        void SetReplaceMacros (bool bReplace);
+        void SetFillBlackfiskPlaceholders (bool bFill);
         ///
         bool GetWithFiles ();
         ///

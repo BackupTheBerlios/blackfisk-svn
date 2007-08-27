@@ -54,7 +54,11 @@ class BFCore
     private:
         /** we need a static because if a backup process
             works over midnight */
-        wxChar      strCurrentDate_[11];
+        wxString    strCurrentDate_;
+        /** we need a static because if a backup process
+            works over midnight */
+        wxString    strCurrentTime_;
+
 
         /** it log messages recieving from OBSystem;
             there is no need to touch OBLog directly
@@ -98,7 +102,7 @@ class BFCore
         /** move a file */
         bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE);
         /** copy a file
-            'pSource' can have wildcards
+            'pSource' can have placeholders
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
         bool CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE, bool bVerify = false);
@@ -144,6 +148,8 @@ class BFCore
 
         /** */
         const wxChar* GetDateString ();
+        /** */
+        const wxChar* GetTimeString ();
 
         // >>> DELETE methodes  <<<
     public:

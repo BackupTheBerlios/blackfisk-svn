@@ -64,7 +64,7 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
               Observer(&(BFRootTask::Instance())),
-              bReplaceMacro_(BFSettings::Instance().GetReplaceMacros())
+              bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders())
 {
     //SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
     SetImageList ( BFIconTable::Instance() );
@@ -92,14 +92,6 @@ void BFBackupTree::Init ()
 
     SetToolTip(_("files and directories for the backup"));
 }
-/*
-wxString& BFBackupTree::ReplaceMacro(wxString& str)
-{
-    if (bReplaceMacro_)
-        ;
-
-    return str;
-}*/
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
@@ -330,7 +322,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     {
         idCurr  = idLast;
         strCurr = tkz.GetNextToken();
-        BFTaskBase::ReplaceMacros(strCurr);
+        BFTaskBase::FillBlackfiskPlaceholders(strCurr);
         idLast  = FindItem(idCurr, strCurr, false);
 
         // does the item exists
@@ -422,8 +414,8 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* st
 
     strFull << strName;
 
-    if (bReplaceMacro_)
-        BFTaskBase::ReplaceMacros(str);
+    if (bFillBlackfiskPlaceholders_)
+        BFTaskBase::FillBlackfiskPlaceholders(str);
 
     // add the destination items and the task item itself
     wxTreeItemId id = AppendItem
@@ -579,12 +571,12 @@ wxTreeItemId BFBackupTree::FindItem (const wxChar* label)
     return FindItem(GetRootItem(), label);
 }
 
-void BFBackupTree::SetReplaceMacro(bool bValue)
+void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 {
-    if (bReplaceMacro_ == bValue)
+    if (bFillBlackfiskPlaceholders_ == bValue)
         return;
 
-    bReplaceMacro_ = bValue;
+    bFillBlackfiskPlaceholders_ = bValue;
     Init();
 }
 
@@ -657,10 +649,10 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
 
     // init controls
     pBackupTree_    = new BFBackupTree(this);
-    pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("macros"));
-    pMacroButton_->SetToolTip(_("display items in the backup tree with macros (e.g. <date>)\nor filled macros (e.g. 2008-12-24)"));
-    pMacroButton_->SetValue(BFSettings::Instance().GetReplaceMacros());
-    BackupTree()->SetReplaceMacro(BFSettings::Instance().GetReplaceMacros());
+    pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("fill placeholders"));
+    pMacroButton_->SetToolTip(_("display items in the backup tree with\nplaceholders (e.g. <date>) or fill them (e.g. 2008-12-24)"));
+    pMacroButton_->SetValue(BFSettings::Instance().GetFillBlackfiskPlaceholders());
+    BackupTree()->SetFillBlackfiskPlaceholders(BFSettings::Instance().GetFillBlackfiskPlaceholders());
 
     // arange
     pTopSizer->Add(pMacroButton_, wxSizerFlags(0).Center().Border(wxUP | wxDOWN, 5));
@@ -680,5 +672,5 @@ BFBackupTree* BFBackupCtrl::BackupTree ()
 
 void BFBackupCtrl::OnButton (wxCommandEvent& rEvent)
 {
-    BackupTree()->SetReplaceMacro(pMacroButton_->GetValue());
+    BackupTree()->SetFillBlackfiskPlaceholders(pMacroButton_->GetValue());
 }

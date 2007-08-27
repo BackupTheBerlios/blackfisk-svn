@@ -54,17 +54,16 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     spMainFrame_ = pMainFrame;
 }
 
-/*static* wxString BFApp::SumStrings (const wxArrayString& rStrings, const wxChar cSeperator /*= _T('\n')*)
+/*static*/ wxString BFApp::GetFullApplicationName ()
 {
-    wxString strResult;
+    return wxString::Format(_T("%s %d.%d.%d %s"),
+                               BF_PRGNAME,
+                               BF_VERSION_MAJOR,
+                               BF_VERSION_MINOR,
+                               BF_VERSION_RELEASE,
+                               BF_VERSION_EXTENSION);
+}
 
-    strResult.Clear();
-
-    for (int i = 0; i < rStrings.GetCount(); ++i)
-        strResult = strResult + rStrings[i] + cSeperator;
-
-    return strResult;
-}*/
 
 /*static*/ wxArrayString& BFApp::PrependString (wxArrayString& rStrings,
                                                 const wxChar* strToPrepend)
@@ -124,7 +123,7 @@ bool BFApp::OnInit()
 {
     ReadSettings();
 
-    BFSystem::Log(wxString::Format(_("%s %s by %s started"), BF_PRGNAME, BF_VERSION_STRING, BF_AUTHOR).c_str());
+    BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName()));
 
     // available languages
     // TODO just look at the locals directory to know what is available

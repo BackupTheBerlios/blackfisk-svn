@@ -77,12 +77,6 @@ class BFMainFrame : public wxFrame
         ///
         wxMenu*             menuProject_;
 
-        /** display messages from the application;
-            it is not needed to touch it directly!
-            just use OBSystem to display messages to the user
-            XXX *
-        BFMessageDlg        msgDlg_;*/
-
         ///
         void CreateLastProjectMenu ();
 

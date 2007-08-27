@@ -171,12 +171,6 @@
 		<Unit filename="BFLogViewDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
-		<Unit filename="BFMacroButton.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFMacroButton.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
 		<Unit filename="BFMainFrame.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
@@ -194,6 +188,12 @@
 		</Unit>
 		<Unit filename="BFMsgObserver.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFPlaceholderButton.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFPlaceholderButton.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFProjectSettings.cpp">
 			<Option virtualFolder="DataLayer\" />

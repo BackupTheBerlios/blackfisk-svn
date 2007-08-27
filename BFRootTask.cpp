@@ -377,7 +377,7 @@ bool BFRootTask::Run (wxWindow* pParent)
 
             // create directory if needed
             str = pRunningTask_->GetDestination();
-            if ( !(wxDir::Exists(BFTaskBase::ReplaceMacros(str))) )
+            if ( !(wxDir::Exists(BFTaskBase::FillBlackfiskPlaceholders(str))) )
                 Core().CreatePath(str);
 
             // run the task

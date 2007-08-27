@@ -337,8 +337,8 @@ bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
     wxString strDest, strSrc;
     strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName() + _T(".") + GetArchiveExtension();
     strSrc  = GetSource();
-    ReplaceMacros(strDest);
-    ReplaceMacros(strSrc);
+    FillBlackfiskPlaceholders(strDest);
+    FillBlackfiskPlaceholders(strSrc);
 
     // exclude something?
     wxArrayString* pArr = NULL;
@@ -376,8 +376,8 @@ bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
     wxString strDest, strSrc;
     strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
     strSrc  = GetSource();
-    ReplaceMacros(strDest);
-    ReplaceMacros(strSrc);
+    FillBlackfiskPlaceholders(strDest);
+    FillBlackfiskPlaceholders(strSrc);
 
     // copy dir
     return Core().CopyDir
@@ -396,8 +396,8 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
     wxString strDest, strSrc;
     strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
     strSrc  = GetSource();
-    ReplaceMacros(strDest);
-    ReplaceMacros(strSrc);
+    FillBlackfiskPlaceholders(strDest);
+    FillBlackfiskPlaceholders(strSrc);
 
     // copy file
     return Core().CopyFile
@@ -415,8 +415,8 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
     wxString strDest, strSrc;
     strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
     strSrc  = GetSource();
-    ReplaceMacros(strDest);
-    ReplaceMacros(strSrc);
+    FillBlackfiskPlaceholders(strDest);
+    FillBlackfiskPlaceholders(strSrc);
 
     return Core().Synchronize
     (
@@ -435,7 +435,7 @@ bool BFTask::Run (ProgressWithMessage& rProgress)
 {
     // XXX
     //BFSystem::Info(_T("TEST INFO 1"));
-    BFSystem::Warning(_T("TEST WARNING 1"));
+    //BFSystem::Warning(_T("TEST WARNING 1"));
     //BFSystem::Error(_T("TEST ERROR 1"));
     //BFSystem::Fatal(_T("TEST FATAL 1"));
     //BFSystem::Debug(_T("TEST DEBUG 1"));

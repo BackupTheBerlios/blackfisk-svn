@@ -1,9 +1,13 @@
+
+- manipulate the thread priority while backup
+- stop project, skip task in ProgressDlg
+- relayout the progressdlg
+- error messages in ProgressDlg (+ counter)
+- catch focus in BFDestinationCtrl
  bug: drag&drop rezepte->E (chinese chars)
 
-- show license as log-view
-- show history as log-view
-- open website
- 
+- make date and time format customizable
+- open website in a thread (this don't freez the app; thread-sample) 
 - remember last concret backup files and delete them automaticly (last 3)
 - exclude-control for directory-tasks
 - animate progress
@@ -14,6 +18,7 @@
 - using commandline without gui (controlable by things like cronjob)
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
 - supported languages: english, german, chinese (brian)
+- help: maybe use highlited textfields instead of tooltips
 - help: describe unsage based on usecases
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - full customizable keybord-shortcuts based on the menus

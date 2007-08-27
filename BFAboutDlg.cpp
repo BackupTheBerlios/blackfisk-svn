@@ -63,7 +63,7 @@ BFAboutDlg::BFAboutDlg ()
 
     //
     wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo2.png")), wxBITMAP_TYPE_PNG));
-    wxStaticText* pName = new wxStaticText(this, wxID_ANY, wxString::Format(_T("%s %s"), BF_PRGNAME, BF_VERSION_STRING));
+    wxStaticText* pName = new wxStaticText(this, wxID_ANY, BFApp::GetFullApplicationName());
     font = pName->GetFont();
     font.SetPointSize(font.GetPointSize()+5);
     font.SetWeight(wxFONTWEIGHT_BOLD);
@@ -115,7 +115,7 @@ BFAboutDlg::BFAboutDlg ()
     wxSizer* pSupporters2 = CreateThirdPartySizer(_T("http://www.gmane.org"),
                                                   _T("Gmane"),
                                                   _T(""),
-                                                  _T(" mail-to-news-Gateway and\nmailing list archive"));
+                                                  _T(" mail-to-news-Gateway and\n mailing list archive"));
     wxSizer* pSupporters3 = CreateThirdPartySizer(_T("http://www.inwx.de"),
                                                   _T("InterNetworX"),
                                                   _T(""),

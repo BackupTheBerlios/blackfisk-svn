@@ -27,7 +27,7 @@
 
 //
 BFSettings::BFSettings ()
-          : bReplaceMacros_(false),
+          : bFillBlackfiskPlaceholders_(false),
             bWithFiles_(false),
             bOpenLastProject_(false),
             lMaxLogFileSize_(1024),
@@ -39,7 +39,6 @@ BFSettings::BFSettings ()
 //
 /*virtual*/ BFSettings::~BFSettings ()
 {
-    int i = 0;
 }
 
 
@@ -48,14 +47,14 @@ BFProjectSettings& BFSettings::GetDefaultProjectSettings ()
     return defaultPrj_;
 }
 
-bool BFSettings::GetReplaceMacros ()
+bool BFSettings::GetFillBlackfiskPlaceholders ()
 {
-    return bReplaceMacros_;
+    return bFillBlackfiskPlaceholders_;
 }
 
-void BFSettings::SetReplaceMacros (bool bReplace)
+void BFSettings::SetFillBlackfiskPlaceholders (bool bFill)
 {
-    bReplaceMacros_ = bReplace;
+    bFillBlackfiskPlaceholders_ = bFill;
 }
 
 bool BFSettings::GetWithFiles ()
@@ -144,7 +143,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
     // ** serialize TO file **
     {
         defaultPrj_.Serialize(rA);
-        rA << bReplaceMacros_;
+        rA << bFillBlackfiskPlaceholders_;
         rA << bWithFiles_;
         rA << (wxUint32&)lMaxLogFileSize_;
         rA << arrLastProjects_;
@@ -156,7 +155,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
     // ** serialize FROM file **
     {
         defaultPrj_.Serialize(rA);
-        rA >> bReplaceMacros_;
+        rA >> bFillBlackfiskPlaceholders_;
         rA >> bWithFiles_;
         rA >> (wxUint32&)lMaxLogFileSize_;
         rA >> arrLastProjects_;

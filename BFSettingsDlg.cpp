@@ -49,6 +49,8 @@ END_EVENT_TABLE()
 BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
              : wxDialog(pParent, wxID_ANY, wxString(_("Global Settings")))
 {
+    wxString strTip;
+
     // the book
     wxTreebook* pBook = new wxTreebook(this,
                                        wxID_ANY,
@@ -64,7 +66,8 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     wxPanel* pPageGeneral = new wxPanel(pBook);
     pCheckOpenLast_ = new wxCheckBox(pPageGeneral,
                                      wxID_ANY,
-                                     _("open the last opened project on startup"));
+                                     _("open the last project on startup"));
+    pCheckOpenLast_->SetToolTip(_("open the last opened project automaticly on startup"));
     wxBoxSizer* pPageGeneralSizerTop = new wxBoxSizer(wxVERTICAL);
     pPageGeneralSizerTop->Add(pCheckOpenLast_);
     wxBoxSizer* pPageGeneralSizerVerbose = new wxBoxSizer(wxHORIZONTAL);
@@ -78,10 +81,12 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     wxPanel* pPageView = new wxPanel(pBook);
     pCheckMacro_ = new wxCheckBox(pPageView,
                                   wxID_ANY,
-                                  _("view backup tree with activated macros"));
+                                  _("view backup tree with filled placeholders"));
+    pCheckMacro_->SetToolTip(_("fill the placeholders in the backuptree by default"));
     pCheckFiles_ = new wxCheckBox(pPageView,
                                   wxID_ANY,
                                   _("view directory tree with files"));
+    pCheckFiles_->SetToolTip(_("show files in the directory tree by default"));
     wxBoxSizer* pPageViewSizerTop = new wxBoxSizer(wxVERTICAL);
     pPageViewSizerTop->Add(pCheckMacro_);
     pPageViewSizerTop->Add(pCheckFiles_);
@@ -101,6 +106,9 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
                                                  0,
                                                  0,
                                                  INT_MAX);
+    strTip = _("max size of the log file bf.log\nif bf.log is to big it will be moved to bf.log.bak\nand a new bf.log will be created");
+    pLabelLogSize->SetToolTip(strTip);
+    pSpinLogSize_->SetToolTip(strTip);
     wxBoxSizer* pPageLogSizerTop = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pPageLogSizerLog = new wxBoxSizer(wxHORIZONTAL);
     pPageLogSizerLog->Add(pLabelLogSize, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
@@ -118,6 +126,9 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
                                        arrVerbose,
                                        wxCB_READONLY);
     wxBoxSizer* pPageLogSizerVerbose = new wxBoxSizer(wxHORIZONTAL);
+    strTip = _("how detailed are the informations\nwritten to the application log-file");
+    pLabelVerboseLog->SetToolTip(strTip);
+    pComboVerboseLog_->SetToolTip(strTip);
     pPageLogSizerVerbose->Add(pLabelVerboseLog, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPageLogSizerVerbose->Add(pComboVerboseLog_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
     pPageLogSizerTop->Add(pPageLogSizerVerbose);
@@ -182,7 +193,7 @@ void BFSettingsDlg::GetData ()
     BFSettings& rS = BFSettings::Instance();
 
     pCheckOpenLast_->SetValue(rS.GetOpenLastProject());
-    pCheckMacro_->SetValue(rS.GetReplaceMacros());
+    pCheckMacro_->SetValue(rS.GetFillBlackfiskPlaceholders());
     pCheckFiles_->SetValue(rS.GetWithFiles());
     pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
     pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
@@ -223,7 +234,7 @@ void BFSettingsDlg::SetData ()
     BFSettings& rS = BFSettings::Instance();
 
     rS.SetOpenLastProject(pCheckOpenLast_->GetValue());
-    rS.SetReplaceMacros(pCheckMacro_->GetValue());
+    rS.SetFillBlackfiskPlaceholders(pCheckMacro_->GetValue());
     rS.SetWithFiles(pCheckFiles_->GetValue());
     rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());
     pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());

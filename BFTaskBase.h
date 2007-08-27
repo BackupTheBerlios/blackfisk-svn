@@ -26,7 +26,8 @@
 #include "BFCore.h"
 
 
-#define BFTASK_MACRO_DATE   _T("<date>")
+#define BFTASK_PLACEHOLDER_DATE   _T("<date>")
+#define BFTASK_PLACEHOLDER_TIME   _T("<time>")
 
 /// lowest base class for all Task classes
 class BFTaskBase
@@ -44,9 +45,9 @@ class BFTaskBase
         /// virtual dtor
         virtual ~BFTaskBase ();
 
-        /** search for macros (for example "<date>") in 'rStr'
+        /** search for blackfisk-specific placeholders in 'rStr'
             and replace them with the needed value */
-        static wxString& ReplaceMacros (wxString& rStr);
+        static wxString& FillBlackfiskPlaceholders (wxString& rStr);
 };  // class BFTaskBase
 
 

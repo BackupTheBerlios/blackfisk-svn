@@ -49,7 +49,7 @@ class BFDirListingTraverser : public wxDirTraverser
         /** default ctor
             the listing is stored in 'rList'
             if you need relative pathes set 'strStartDir'
-            set 'pExcludeList' to filter something (wildcards allowed) */
+            set 'pExcludeList' to filter something (placeholders allowed) */
         BFDirListingTraverser (wxArrayString& rList,
                                wxString strStartDir = wxEmptyString,
                                wxArrayString* pExcludeList = NULL);

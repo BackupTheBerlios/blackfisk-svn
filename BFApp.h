@@ -70,6 +70,9 @@ class BFApp : public wxApp
             see the call in the BFMainFrame ctor for more details */
         static void SetMainFrame (BFMainFrame* pMainFrame);
 
+        ///
+        static wxString GetFullApplicationName ();
+
         /** prepend a string on each element of a string array
             and return the reference of the array */
         static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);

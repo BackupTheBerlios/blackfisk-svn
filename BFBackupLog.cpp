@@ -161,7 +161,7 @@ wxString BFTaskLog::GetFileName ()
 {
     wxString str;
     str << rTask_.GetDestination() << wxFILE_SEP_PATH << rTask_.GetName() << _T(".log");
-    BFTaskBase::ReplaceMacros(str);
+    BFTaskBase::FillBlackfiskPlaceholders(str);
     return str;
 }
 
@@ -304,7 +304,7 @@ bool BFBackupLog::Write ()
     wxString strFile;
     strFile = rPrj.GetSettings().GetBackupLogLocation();
     strFile = strFile + wxFILE_SEP_PATH + rPrj.GetName() + _T(".log");
-    BFTaskBase::ReplaceMacros(strFile);
+    BFTaskBase::FillBlackfiskPlaceholders(strFile);
 
     // remember the filename
     BFRootTask::Instance().SetProjectLogFile(strFile);

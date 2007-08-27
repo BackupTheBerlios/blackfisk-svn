@@ -28,7 +28,7 @@
 #include "BFSystem.h"
 #include "BFTaskDlg.h"
 #include "BFMainFrame.h"
-#include "BFMacroButton.h"
+#include "BFPlaceholderButton.h"
 #include "ctrlids.h"
 
 //
@@ -69,13 +69,13 @@ void BFDestinationCtrl::Init ()
     pPickerCtrl_->SetTextCtrlProportion(4);
     pPickerCtrl_->SetPickerCtrlProportion(1);
 
-    // macro button
-    wxButton* pMacroButton = new BFMacroButton(pPanel, *(pPickerCtrl_->GetTextCtrl()));
+    //
+    wxButton* pPlaceholderButton = new BFPlaceholderButton(pPanel, *(pPickerCtrl_->GetTextCtrl()));
 
     // arrange/layout panel
     wxBoxSizer* pSubSizer = new wxBoxSizer(wxHORIZONTAL);
     pSubSizer->Add(pPickerCtrl_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL).Expand());
-    pSubSizer->Add(pMacroButton, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSubSizer->Add(pPlaceholderButton, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPanel->SetSizer(pSubSizer);
 
     // set size

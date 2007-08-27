@@ -1,6 +1,6 @@
 /**
- * Name:        BFMacroButton.cpp
- * Purpose:     BFMacroButton class implementation
+ * Name:        BFPlaceholderButton.cpp
+ * Purpose:     BFPlaceholderButton class implementation
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2007-04-18
@@ -20,14 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#ifndef BFMACROBUTTON_H
-#define BFMACROBUTTON_H
+#ifndef BFPLACEHOLDERBUTTON_H
+#define BFPLACEHOLDERBUTTON_H
 
 #include <wx/button.h>
 #include <wx/textctrl.h>
 
 ///
-class BFMacroButton : public wxButton
+class BFPlaceholderButton : public wxButton
 {
     private:
         ///
@@ -35,17 +35,17 @@ class BFMacroButton : public wxButton
 
     public:
         /// constructor
-        BFMacroButton (wxWindow* pParent, wxTextCtrl& rTextCtrl);
+        BFPlaceholderButton (wxWindow* pParent, wxTextCtrl& rTextCtrl);
 
         /// virtual destructor
-        virtual ~BFMacroButton ();
+        virtual ~BFPlaceholderButton ();
 
         ///
         void OnPressed(wxCommandEvent& rEvent);
         ///
-        void OnMacro(wxCommandEvent& rEvent);
+        void OnPlaceholder(wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
-};    // class BFMacroButton
+};    // class BFPlaceholderButton
 
-#endif    // BFMACROBUTTON_H
+#endif    // BFPLACEHOLDERBUTTON_H

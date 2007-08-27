@@ -33,10 +33,13 @@ BFTaskBase::BFTaskBase ()
 }
 
 
-/*static*/ wxString& BFTaskBase::ReplaceMacros (wxString& rStr)
+/*static*/ wxString& BFTaskBase::FillBlackfiskPlaceholders (wxString& rStr)
 {
-    // BFTASK_MACRO_DATE
-    rStr.Replace(BFTASK_MACRO_DATE, Core().GetDateString());
+    // BFTASK_PLACEHOLDER_DATE
+    rStr.Replace(BFTASK_PLACEHOLDER_DATE, Core().GetDateString());
+
+    // BFTASK_PLACEHOLDER_TIME
+    rStr.Replace(BFTASK_PLACEHOLDER_TIME, Core().GetTimeString());
 
     return rStr;
 }

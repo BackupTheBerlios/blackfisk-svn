@@ -65,7 +65,7 @@ wxDirTraverseResult BFDirListingTraverser::HandleDirAndFile(const wxString& name
         if ( pExcludeList_->Index(strCur) != wxNOT_FOUND )
             return resultNegative;
 
-        // handle wildcards
+        // handle placeholders
         for (int i = 0; i < pExcludeList_->Count(); ++i)
             if ( strCur.Matches((*pExcludeList_)[i]) )
                 return resultNegative;

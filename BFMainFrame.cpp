@@ -79,7 +79,6 @@ END_EVENT_TABLE()
             : wxFrame (NULL,
                        -1,
                        wxEmptyString),
-                       // XXX qmsgDlg_(this),
                        menuProject_(NULL)
 {
     // set application variable
@@ -203,12 +202,10 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
 void BFMainFrame::RefreshTitle ()
 {
     // application name and version
-    wxTopLevelWindow::SetTitle( wxString::Format(_T("%s (%s) - %s %s [with %s]"),
+    wxTopLevelWindow::SetTitle( wxString::Format(_T("%s (%s) - %s"),
                                                  App()->GetCurrentProjectName().c_str(),
                                                  App()->GetCurrentProjectFilename().c_str(),
-                                                 BF_PRGNAME,
-                                                 BF_VERSION_STRING,
-                                                 jbSerialize::GetLibVersionString().c_str()) );
+                                                 BFApp::GetFullApplicationName()) );
 }
 
 void BFMainFrame::CreateLastProjectMenu ()
@@ -415,25 +412,6 @@ void BFMainFrame::OnQuit (wxCommandEvent& WXUNUSED(event))
 void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 {
     new BFAboutDlg();
-
-/*    wxAboutDialogInfo info;
-
-    info.AddArtist(_T("artist"));
-    info.AddDeveloper(BF_AUTHOR);
-    info.SetCopyright(_T("(c) 2006 Christian Buhtz <blackfisk@web.de>"));
-    info.SetDescription(_("description\nthird party 3\nddddddwww"));
-    info.SetLicense(_T("GNU General Public License (Version 3)"));
-    info.SetName(BF_PRGNAME);
-    info.SetVersion(BF_VERSION_STRING);
-    info.SetWebSite(_T("www.blackfisk.org"));
-
-    wxAboutBox(info);*/
-/*
-    <program>  Copyright (C) <year>  <name of author>
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.
-*/
 }
 
 #ifdef _DEBUG

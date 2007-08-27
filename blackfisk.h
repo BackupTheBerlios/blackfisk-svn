@@ -24,10 +24,10 @@
 #define BLACKFISK_H
 
 #define BF_PRGNAME                  _T("blackfisk")
-#define BF_VERSION_STRING           _T("0.0.1a (SVN)")
 #define BF_VERSION_MAJOR            0
 #define BF_VERSION_MINOR            0
 #define BF_VERSION_RELEASE          0
+#define BF_VERSION_EXTENSION        _T("alpha (SVN)")
 #define BF_AUTHOR                   _T("Christian Buhtz")
 //__VERSION__ (gcc version)
 

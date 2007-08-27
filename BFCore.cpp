@@ -56,7 +56,13 @@ BFCore::BFCore ()
       : bWhileBackup_(false)
 {
     // remember current date in a string
-    ::wxSnprintf(strCurrentDate_, 11, wxDateTime::Now().Format(_T("%Y-%m-%d")).c_str());
+    strCurrentDate_ = wxDateTime::Now().FormatISODate();
+
+    // remember current time in a string
+    strCurrentTime_ = wxDateTime::Now().FormatISOTime();
+    strCurrentTime_.Replace(_T(":"), _T("h"), false);
+    strCurrentTime_.Replace(_T(":"), _T("m"), false);
+    strCurrentTime_ << _T("s");
 }
 
 
@@ -402,7 +408,7 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
     wxArrayString   arrSource;
     bool            rc = true;
 
-    // check source filename for wildcards
+    // check source filename for placeholders
     if ( strSource.Find('*') != -1 )
     {
         wxDir::GetAllFiles( strSource.BeforeLast(wxFILE_SEP_PATH),
@@ -446,7 +452,7 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
             rc = VerifyFile(strSource, strDest);
     }
     else
-    {   // more then one files to copy because of wildcards
+    {   // more then one files to copy because of placeholders
         for (int i = 0; i < arrSource.Count(); ++i)
             if ( !(::wxCopyFile(arrSource[i], strDest + arrSource[i].AfterLast(wxFILE_SEP_PATH), bOverwrite)) )
                 rc = false;
@@ -757,9 +763,14 @@ bool BFCore::SetWriteProtected (const wxChar* pFilename, bool bWriteProtected)
 const wxChar* BFCore::GetDateString ()
 {
     /* look at the member declaration for informations */
-    return strCurrentDate_;
+    return strCurrentDate_.c_str();
 }
 
+const wxChar* BFCore::GetTimeString ()
+{
+    /* look at the member declaration for informations */
+    return strCurrentTime_.c_str();
+}
 
 bool BFCore::CopyDirAttributes (const wxChar* pSourceDir, const wxChar* pDestinationDir)
 {

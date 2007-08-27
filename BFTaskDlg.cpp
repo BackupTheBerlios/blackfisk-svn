@@ -32,7 +32,7 @@
 #include "BFRootTask.h"
 #include "BFIconTable.h"
 #include "BFDestinationCtrl.h"
-#include "BFMacroButton.h"
+#include "BFPlaceholderButton.h"
 
 BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
   EVT_CLOSE   (BFTaskDlg::OnClose)
@@ -96,7 +96,7 @@ wxSizer* BFTaskDlg::CreateControls ()
     // name
     wxPanel*        pNamePanel      = new wxPanel(this);
                     pNameCtrl_      = new wxTextCtrl(pNamePanel, -1);
-    wxButton*       pMacroButton    = new BFMacroButton(pNamePanel, *pNameCtrl_);
+    wxButton*       pPlaceholderButton    = new BFPlaceholderButton(pNamePanel, *pNameCtrl_);
     wxStaticText*   pNameStatic     = new wxStaticText(this, -1, _("destination name:"));
     pNameStatic->SetMinSize(wxSize(BFTaskDlg::lWidth1_, pNameStatic->GetSize().GetHeight()));
     pNamePanel->SetMinSize(wxSize(BFTaskDlg::lWidth2_, pNamePanel->GetSize().GetHeight()+3));
@@ -125,7 +125,7 @@ wxSizer* BFTaskDlg::CreateControls ()
 
     // arrange
     pNameSubSizer   ->Add(pNameCtrl_,       wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
-    pNameSubSizer   ->Add(pMacroButton,     wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSubSizer   ->Add(pPlaceholderButton,     wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pNamePanel->SetSizer(pNameSubSizer);
     pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pNameSizer      ->Add(pNamePanel);
