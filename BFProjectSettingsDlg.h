@@ -25,6 +25,9 @@
 
 #include <wx/dialog.h>
 #include <wx/textctrl.h>
+#include <wx/stattext.h>
+
+class BFHelpCtrl;
 
 #define BFPRJSETDLG_ID_BUTTONOK        1 + wxID_HIGHEST
 #define BFPRJSETDLG_ID_BUTTONCANCEL    2 + wxID_HIGHEST
@@ -39,6 +42,8 @@ class BFProjectSettingsDlg : public wxDialog
         wxTextCtrl*             pNameCtrl_;
         /// other project settings
         BFProjectSettingsCtrl*  pCtrl_;
+        ///
+        BFHelpCtrl*             pHelp_;
 
         /// read data from the data object (current rootTask)
         void GetData ();
@@ -61,6 +66,9 @@ class BFProjectSettingsDlg : public wxDialog
         void OnButton_Ok (wxCommandEvent& rEvent);
         ///
         void OnButton_Cancel (wxCommandEvent& rEvent);
+
+        ///
+        //void OnMotion (wxMouseEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };    // class BFProjectSettingsDlg

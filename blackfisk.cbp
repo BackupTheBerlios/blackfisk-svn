@@ -147,6 +147,12 @@
 		<Unit filename="BFDirCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFHelpCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFHelpCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFIconTable.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>

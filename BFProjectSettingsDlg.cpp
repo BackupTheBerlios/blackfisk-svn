@@ -25,6 +25,7 @@
 #include <wx/stattext.h>
 #include "BFProjectSettingsCtrl.h"
 #include "BFRootTask.h"
+#include "BFHelpCtrl.h"
 
 
 BEGIN_EVENT_TABLE(BFProjectSettingsDlg, wxDialog)
@@ -38,29 +39,43 @@ END_EVENT_TABLE()
 BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
                     : wxDialog(pParent, wxID_ANY, wxString(_("Project settings")))
 {
-    // controls
-    pCtrl_ = new BFProjectSettingsCtrl(this);
+    wxString strTip;
+
+    // help ctrl
+    pHelp_ = new BFHelpCtrl(this);
+
+    // project-settings ctrl
+    pCtrl_ = new BFProjectSettingsCtrl(this, pHelp_);
 
     // name
     wxStaticText* pNameLabel = new wxStaticText(this, wxID_ANY, _("Name:"));
     pNameLabel->SetMinSize(wxSize(pCtrl_->GetLabelWidth(), pNameLabel->GetSize().GetHeight()));
     pNameCtrl_ = new wxTextCtrl(this, wxID_ANY);
+    strTip = _("name of the backup project");
+    pNameLabel->SetHelpText(strTip);
+    pNameCtrl_->SetHelpText(strTip);
 
     // button
     wxButton* pButtonOk     = new wxButton(this, BFPRJSETDLG_ID_BUTTONOK, _("&OK"));
     wxButton* pButtonCancel = new wxButton(this, BFPRJSETDLG_ID_BUTTONCANCEL, _("&Cancel"));
 
     // sizer
-    wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer*         pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer*         pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pNameSizer->Add(pNameLabel, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pNameSizer->Add(pNameCtrl_, wxSizerFlags(1));
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
     pTopSizer->Add(pNameSizer,      wxSizerFlags(0).Border(wxLEFT | wxUP | wxRIGHT).Expand());
     pTopSizer->Add(pCtrl_,          wxSizerFlags(0).Border());
+    pTopSizer->Add(pHelp_,          wxSizerFlags(0).Border().Expand());
     pTopSizer->Add(pButtonSizer,    wxSizerFlags(0).Center());
+
+    // motion events
+    pHelp_->ConnectMotionEvent(this);
+    pHelp_->ConnectMotionEvent(pNameLabel);
+    pHelp_->ConnectMotionEvent(pNameCtrl_);
 
     // arrange and show
     SetSizerAndFit(pTopSizer);

@@ -28,6 +28,7 @@
 #include <wx/sound.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
+#include <wx/cshelp.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
@@ -138,6 +139,8 @@ bool BFApp::OnInit()
     locale_.AddCatalogLookupPathPrefix(_T(".\\locale"));
     locale_.Init( langIds[2] );
     locale_.AddCatalog(_T("ob"));
+
+    wxHelpProvider::Set(new wxSimpleHelpProvider);
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */

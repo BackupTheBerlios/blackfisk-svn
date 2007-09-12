@@ -38,6 +38,7 @@
 #include "BFProjectSettingsCtrl.h"
 #include "BFSettings.h"
 #include "BFApp.h"
+#include "BFHelpCtrl.h"
 
 BEGIN_EVENT_TABLE(BFSettingsDlg, wxDialog)
   EVT_CLOSE     (                               BFSettingsDlg::OnClose)
@@ -57,7 +58,7 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
                                        wxDefaultPosition,
                                        wxDefaultSize,
                                        wxNB_LEFT);
-    pBook->SetMinSize(wxSize(440, 220));
+    //pBook->SetMinSize(wxSize(440, 220));
     pBook->SetInternalBorder(15);
 
 
@@ -139,10 +140,12 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     wxPanel* pPageProject = new wxPanel(pBook);
     wxBoxSizer* pPageProjectSizerTop = new wxBoxSizer(wxVERTICAL);
     wxStaticText* pLabelProject = new wxStaticText(pPageProject, wxID_ANY, _("Default Settings for new projects\nAttention: This doesn't affect the existing projects!"));
-    pPrjCtrl_ = new BFProjectSettingsCtrl(pPageProject);
+    BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPageProject);
+    pPrjCtrl_ = new BFProjectSettingsCtrl(pPageProject, pHelpCtrl);
     pPageProjectSizerTop->Add(pLabelProject,                    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPageProjectSizerTop->Add(new wxStaticLine(pPageProject),   wxSizerFlags(0).Expand().Center().Border());
-    pPageProjectSizerTop->Add(pPrjCtrl_);
+    pPageProjectSizerTop->Add(pPrjCtrl_,                        wxSizerFlags(0).Expand());//.Border(wxRIGHT, 50));
+    pPageProjectSizerTop->Add(pHelpCtrl,                        wxSizerFlags(0).Expand());
     pPageProject->SetSizer(pPageProjectSizerTop);
     pBook->AddPage(pPageProject, _("Default Project"));
 
@@ -155,8 +158,8 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-    pDlgSizer->Add(pBook,                   wxSizerFlags(3).Border().Expand());
-    pDlgSizer->Add(new wxStaticLine(this),  wxSizerFlags(0).Expand().Center().Border());
+    pDlgSizer->Add(pBook,                   wxSizerFlags(0).Expand().Border());
+    pDlgSizer->Add(new wxStaticLine(this),  wxSizerFlags(0).Expand().Border().Center());
     pDlgSizer->Add(pButtonSizer,            wxSizerFlags(0).Center());
     SetSizerAndFit(pDlgSizer);
     GetData();

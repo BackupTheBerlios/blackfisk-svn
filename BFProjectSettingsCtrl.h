@@ -23,6 +23,8 @@
 #ifndef BFPROJECTSETTINGSCTRL_H
 #define BFPROJECTSETTINGSCTRL_H
 
+class BFHelpCtrl;
+
 #include <wx/panel.h>
 #include <wx/combobox.h>
 #include <wx/filepicker.h>
@@ -73,14 +75,14 @@ class BFProjectSettingsCtrl : public wxPanel
         int                 iLabelWidth_;
 
         ///
-        wxSizer* CreateStopLevelCtrl ();
+        wxSizer* CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl);
 
     protected:
         /// proteced members
 
     public:
         /// constructor
-        BFProjectSettingsCtrl (wxWindow* pParent);
+        BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHelpCtrl);
 
         /// virtual destructor
         virtual ~BFProjectSettingsCtrl ();
