@@ -57,7 +57,8 @@ enum
     ID_DisplayLog,
     ID_ShowLicense,
     ID_ShowHistory,
-    ID_OpenWebSite
+    ID_OpenWebSite,
+    ID_SubmitBug
 };
 
 /// main window of the application
@@ -131,6 +132,8 @@ class BFMainFrame : public wxFrame
         void OnShowHistory (wxCommandEvent& event);
         ///
         void OnOpenWebSite (wxCommandEvent& event);
+        ///
+        void OnSubmitBug (wxCommandEvent& event);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */

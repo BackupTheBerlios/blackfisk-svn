@@ -1,15 +1,15 @@
-
+- make task-type configurable
 - manipulate the thread priority while backup
 - stop project, skip task in ProgressDlg
 - relayout the progressdlg
 - error messages in ProgressDlg (+ counter)
-- catch focus in BFDestinationCtrl
- bug: drag&drop rezepte->E (chinese chars)
+
+- catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 
 - make date and time format customizable
 - open website in a thread (this don't freez the app; thread-sample) 
-- remember last concret backup files and delete them automaticly (last 3)
-- exclude-control for directory-tasks
+- remember last concret backup files and delete them automaticly (by count, by timespan, by size)
+- exclude-control for directory-tasks (with filters: look on "abakt")
 - animate progress
 - handle process-priority (do not freeze the hole system)
 - check for enough free space on destination drive
@@ -22,3 +22,5 @@
 - help: describe unsage based on usecases
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - full customizable keybord-shortcuts based on the menus
+
+look on "abakt" for more ideas

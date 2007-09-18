@@ -35,9 +35,13 @@ END_EVENT_TABLE()
 
 //
 BFLogViewDlg::BFLogViewDlg (wxWindow* pParent, const wxArrayString& arrLogs)
-            : wxDialog(pParent, wxID_ANY, wxString(_("Log View"))),
+            : wxDialog(pParent, wxID_ANY, _("Log View")),
               arrLogs_(arrLogs)
 {
+    // caption
+    if (arrLogs.GetCount() == 1)
+        SetTitle(arrLogs[0]);
+
     SetWindowStyle(GetWindowStyle() | wxRESIZE_BORDER);
     Init();
     ShowModal();

@@ -42,6 +42,7 @@
 #include "BFSettings.h"
 #include "BFLogViewDlg.h"
 #include "BFAboutDlg.h"
+#include "BFSettingsDlg2.h"
 
 #ifdef _DEBUG
 #include "BFRootTask.h"
@@ -65,6 +66,7 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_ShowLicense,        BFMainFrame::OnShowLicense)
     EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
     EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
+    EVT_MENU    (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
 #ifdef _DEBUG
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
 #endif
@@ -120,6 +122,7 @@ END_EVENT_TABLE()
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append( ID_OpenWebSite,   _("&Website") );
+    menuHelp->Append( ID_SubmitBug,     _("Report a &Bug") );
     menuHelp->Append( ID_ShowLicense,   _("&License") );
     menuHelp->Append( ID_ShowHistory,   _("&History") );
     menuHelp->AppendSeparator();
@@ -270,6 +273,11 @@ void BFMainFrame::OnOpenWebSite (wxCommandEvent& event)
     wxLaunchDefaultBrowser(_T("http://www.blackfisk.org"));
 }
 
+void BFMainFrame::OnSubmitBug (wxCommandEvent& event)
+{
+    wxLaunchDefaultBrowser(_T("http://developer.berlios.de/bugs/?group_id=8687"));
+}
+
 void BFMainFrame::OnLastProject (wxCommandEvent& event)
 {
     if (AskModification())
@@ -372,7 +380,7 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
 
     dlg.CentreOnParent();
 
-    if (dlg.ShowModal() == wxOK)
+    if (dlg.ShowModal() == wxID_OK)
     {
         strProject = dlg.GetPath();
         return true;
@@ -386,16 +394,16 @@ bool BFMainFrame::AskSaveProject (wxString& strProject)
     wxFileDialog dlg
     (
         this,
-        _("save message"),
+        _("Save the project"),
         wxEmptyString,
         wxEmptyString,
-        _("OctopusBackup files (*.ob)|*.ob"),
+        _("blackfisk projects (*.ob)|*.ob"),
         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
     );
 
     dlg.CentreOnParent();
 
-    if (dlg.ShowModal() == wxOK)
+    if (dlg.ShowModal() == wxID_OK)
     {
         strProject = dlg.GetPath();
         return true;
@@ -422,7 +430,26 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    //spApp_->Test();
+    //new BFSettingsDlg2(this);
+
+    switch (QuestionYesNoCancel(_T("quesiton y, n, c")))
+    {
+        case wxYES:
+            BFSystem::Info(_T("yes"));
+            break;
+
+        case wxNO:
+            BFSystem::Info(_T("no"));
+            break;
+
+        case wxCANCEL:
+            BFSystem::Info(_T("cancel"));
+            break;
+
+        default:
+            BFSystem::Info(_T("default"));
+            break;
+    };
 }
 #endif
 

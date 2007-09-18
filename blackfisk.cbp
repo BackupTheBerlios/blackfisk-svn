@@ -213,6 +213,8 @@
 		<Unit filename="BFProjectSettingsCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFProjectSettingsCtrl2.cpp" />
+		<Unit filename="BFProjectSettingsCtrl2.h" />
 		<Unit filename="BFProjectSettingsDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
@@ -237,6 +239,8 @@
 		<Unit filename="BFSettingsDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
+		<Unit filename="BFSettingsDlg2.cpp" />
+		<Unit filename="BFSettingsDlg2.h" />
 		<Unit filename="BFSystem.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>

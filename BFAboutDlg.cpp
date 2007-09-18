@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 BFAboutDlg::BFAboutDlg ()
           : wxDialog(NULL,
                      wxID_ANY,
-                     _("About ") + BF_PRGNAME,
+                     wxString(_("About ")) + BF_PRGNAME,
                      wxDefaultPosition,
                      wxDefaultSize,
                      wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE)

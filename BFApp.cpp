@@ -124,7 +124,7 @@ bool BFApp::OnInit()
 {
     ReadSettings();
 
-    BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName()));
+    BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName().wx_str()));
 
     // available languages
     // TODO just look at the locals directory to know what is available

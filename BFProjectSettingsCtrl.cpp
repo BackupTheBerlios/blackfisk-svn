@@ -95,11 +95,14 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHe
 
     // connect mouse motion events
     //SetHelpText(_T("this PrjSet control"));
-    pHelpCtrl->ConnectMotionEvent(this);
-    pHelpCtrl->ConnectMotionEvent(pVerboseLabel);
-    pHelpCtrl->ConnectMotionEvent(pComboVerbose_);
-    pHelpCtrl->ConnectMotionEvent(pBackupLogLabel);
-    pHelpCtrl->ConnectMotionEvent(pPickerBackupLog_);
+    if (pHelpCtrl != NULL)
+    {
+        pHelpCtrl->ConnectMotionEvent(this);
+        pHelpCtrl->ConnectMotionEvent(pVerboseLabel);
+        pHelpCtrl->ConnectMotionEvent(pComboVerbose_);
+        pHelpCtrl->ConnectMotionEvent(pBackupLogLabel);
+        pHelpCtrl->ConnectMotionEvent(pPickerBackupLog_);
+    }
 
     // sizer and arrange
     wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
@@ -126,8 +129,6 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl)
 {
     wxString strTip(_("the behavior while a backup if messages (warnings, errors, fatal errors) are created\n  stop project:\tstop the complete backup process\n  stop task:\tstop the current running task and go on with the next task\n  ask:\t\task the use what should be done\n  log:\t\twrite the message to the logfile an do nothing more"));
 
-    //wxStaticBox* pStopBox = new wxStaticBox(this, wxID_ANY, _("behavior..."));
-
     // the lables
     wxStaticText* pLabelWarning = new wxStaticText(this, wxID_ANY, _("...on warnings"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelError   = new wxStaticText(this, wxID_ANY, _("...on errors"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
@@ -143,13 +144,16 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl)
     pLabelStopTsk->SetHelpText(strTip);
     pLabelAsk->SetHelpText(strTip);
     pLabelIgnore->SetHelpText(strTip);
-    pHelpCtrl->ConnectMotionEvent(pLabelWarning);
-    pHelpCtrl->ConnectMotionEvent(pLabelError);
-    pHelpCtrl->ConnectMotionEvent(pLabelFatal);
-    pHelpCtrl->ConnectMotionEvent(pLabelStopPrj);
-    pHelpCtrl->ConnectMotionEvent(pLabelStopTsk);
-    pHelpCtrl->ConnectMotionEvent(pLabelAsk);
-    pHelpCtrl->ConnectMotionEvent(pLabelIgnore);
+    if (pHelpCtrl != NULL)
+    {
+        pHelpCtrl->ConnectMotionEvent(pLabelWarning);
+        pHelpCtrl->ConnectMotionEvent(pLabelError);
+        pHelpCtrl->ConnectMotionEvent(pLabelFatal);
+        pHelpCtrl->ConnectMotionEvent(pLabelStopPrj);
+        pHelpCtrl->ConnectMotionEvent(pLabelStopTsk);
+        pHelpCtrl->ConnectMotionEvent(pLabelAsk);
+        pHelpCtrl->ConnectMotionEvent(pLabelIgnore);
+    }
 
     // size the lables
     pLabelStopPrj->SetMinSize (wxSize(50, pLabelStopPrj->GetSize().GetHeight()));
