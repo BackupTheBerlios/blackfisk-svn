@@ -1,26 +1,31 @@
-- make task-type configurable
-- manipulate the thread priority while backup
-- stop project, skip task in ProgressDlg
-- relayout the progressdlg
-- error messages in ProgressDlg (+ counter)
-
+0.1.0
+~~~~~
 - catch focus in BFDestinationCtrl (bug: next ctrl without focus)
+- make task-type configurable
+- implement zip-task-type
+- stop project, skip task in ProgressDlg
+- error messages in ProgressDlg (+ counter)
+- manipulate the thread priority while backup
+- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 
-- make date and time format customizable
-- open website in a thread (this don't freez the app; thread-sample) 
-- remember last concret backup files and delete them automaticly (by count, by timespan, by size)
+0.2.0
+~~~~~
 - exclude-control for directory-tasks (with filters: look on "abakt")
-- animate progress
-- handle process-priority (do not freeze the hole system)
+- using commandline without gui (controlable by things like cronjob)
+- remember last concret backup files and delete them automaticly (by count, by timespan, by size)
+- open website in a thread (this don't freez the app; thread-sample)
+
+0.3.0
+~~~~~
+- full customizable keybord-shortcuts based on the menus
+- supported languages: english, german, chinese (brian)
 - check for enough free space on destination drive
+- animate progress
+- make date and time format customizable
+
+0.4.0 and later
+~~~~~
 - backup to password-protected-samba
 - backup to ftp
-- using commandline without gui (controlable by things like cronjob)
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
-- supported languages: english, german, chinese (brian)
-- help: maybe use highlited textfields instead of tooltips
-- help: describe unsage based on usecases
-- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
-- full customizable keybord-shortcuts based on the menus
-
 look on "abakt" for more ideas

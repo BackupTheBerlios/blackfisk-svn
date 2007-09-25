@@ -144,7 +144,7 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pPrjCtrl_ = new BFProjectSettingsCtrl(pPageProject, pHelpCtrl);
     pPageProjectSizerTop->Add(pLabelProject,                    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pPageProjectSizerTop->Add(new wxStaticLine(pPageProject),   wxSizerFlags(0).Expand().Center().Border());
-    pPageProjectSizerTop->Add(pPrjCtrl_,                        wxSizerFlags(0).Expand());//.Border(wxRIGHT, 50));
+    pPageProjectSizerTop->Add(pPrjCtrl_,                        wxSizerFlags(0).Border(wxRIGHT, 15));
     pPageProjectSizerTop->Add(pHelpCtrl,                        wxSizerFlags(0).Expand());
     pPageProject->SetSizer(pPageProjectSizerTop);
     pBook->AddPage(pPageProject, _("Default Project"));

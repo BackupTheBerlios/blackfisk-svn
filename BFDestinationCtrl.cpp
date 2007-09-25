@@ -53,7 +53,7 @@ void BFDestinationCtrl::Init ()
     wxStaticText* pLabel = new wxStaticText (this, -1, _("destination path:"));
 
     // panel
-    wxPanel* pPanel = new wxPanel(this);
+    wxPanel* pPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
 
     // control
     pPickerCtrl_ = new wxDirPickerCtrl

@@ -29,7 +29,6 @@ class wxCheckBox;
 class wxSpinCtrl;
 class wxListbook;
 class wxComboBox;
-class BFProjectSettingsCtrl2;
 
 #define BFSETTINGSDLG_ID_BUTTONOK        1 + wxID_HIGHEST
 #define BFSETTINGSDLG_ID_BUTTONCANCEL    2 + wxID_HIGHEST
@@ -38,9 +37,6 @@ class BFProjectSettingsCtrl2;
 class BFSettingsDlg2 : public wxDialog
 {
     private:
-        ///
-        BFProjectSettingsCtrl2* pPrjCtrl_;
-        ///
 
     public:
         /// constructor

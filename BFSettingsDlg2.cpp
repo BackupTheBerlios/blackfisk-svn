@@ -34,22 +34,14 @@
 #include <wx/treebook.h>
 #include <limits.h>
 
-#include "BFSystem.h"
-#include "BFProjectSettingsCtrl2.h"
-#include "BFSettings.h"
-#include "BFApp.h"
-#include "BFHelpCtrl.h"
-
 BEGIN_EVENT_TABLE(BFSettingsDlg2, wxDialog)
-  EVT_CLOSE     (                               BFSettingsDlg2::OnClose)
+  EVT_CLOSE     (BFSettingsDlg2::OnClose)
 END_EVENT_TABLE()
 
 //
 BFSettingsDlg2::BFSettingsDlg2 (wxWindow* pParent)
              : wxDialog(pParent, wxID_ANY, wxString(_("Global Settings")))
 {
-    wxString strTip;
-
     // the book
     wxTreebook* pBook = new wxTreebook(this,
                                        wxID_ANY,
@@ -60,8 +52,15 @@ BFSettingsDlg2::BFSettingsDlg2 (wxWindow* pParent)
     // *** PROJECT-page ***
     wxPanel* pPageProject = new wxPanel(pBook);
     wxBoxSizer* pPageProjectSizerTop = new wxBoxSizer(wxVERTICAL);
-    pPrjCtrl_ = new BFProjectSettingsCtrl2(pPageProject);
-    pPageProjectSizerTop->Add(pPrjCtrl_, wxSizerFlags(0).Expand());
+
+    // custom ctrl
+    wxPanel* pPrjCtrl = new wxPanel(pPageProject);
+    wxStaticBoxSizer* pStopStaticSizer  = new wxStaticBoxSizer(wxVERTICAL, pPrjCtrl);
+    wxStaticText* pLabelA = new wxStaticText(pPrjCtrl, wxID_ANY, _("ABCD"));
+    pStopStaticSizer->Add(pLabelA, wxSizerFlags(0).Expand());
+    pPrjCtrl->SetSizer(pStopStaticSizer);
+
+    pPageProjectSizerTop->Add(pPrjCtrl, wxSizerFlags(0).Expand());
     pPageProject->SetSizer(pPageProjectSizerTop);
     pBook->AddPage(pPageProject, _("Default Project"));
 

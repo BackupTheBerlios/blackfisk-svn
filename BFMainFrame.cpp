@@ -43,10 +43,7 @@
 #include "BFLogViewDlg.h"
 #include "BFAboutDlg.h"
 #include "BFSettingsDlg2.h"
-
-#ifdef _DEBUG
 #include "BFRootTask.h"
-#endif
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -430,8 +427,8 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    //new BFSettingsDlg2(this);
-
+    new BFSettingsDlg2(this);
+/*
     switch (QuestionYesNoCancel(_T("quesiton y, n, c")))
     {
         case wxYES:
@@ -449,7 +446,7 @@ void BFMainFrame::Test ()
         default:
             BFSystem::Info(_T("default"));
             break;
-    };
+    };*/
 }
 #endif
 
