@@ -127,6 +127,12 @@
 		<Unit filename="BFBackupTree.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFCmdLine.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFCmdLine.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="BFCore.cpp">
 			<Option virtualFolder="AppLayer\Core\" />
 		</Unit>
@@ -163,6 +169,12 @@
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFHelpCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFHyperlinkCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFHyperlinkCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
 		<Unit filename="BFIconTable.cpp">

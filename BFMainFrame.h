@@ -67,7 +67,7 @@ class BFMainFrame : public wxFrame
     private:
         /** points to the application object
             it is the main link down to the application layer */
-        static BFApp*       spApp_;
+        //static BFApp*       spApp_;
 
         /// control to display the backup-structure
         BFBackupCtrl*       pBackupCtrl_;
@@ -96,11 +96,11 @@ class BFMainFrame : public wxFrame
 
         ///
         static BFMainFrame* Instance()
-        { return spApp_->MainFrame(); }
+        { return wxGetApp().MainFrame(); }
 
         ///
-        static BFApp* App ()
-        { return spApp_; }
+        /*static BFApp* App ()
+        { return spApp_; }*/
         ///
         BFBackupCtrl* BackupCtrl ();
         ///

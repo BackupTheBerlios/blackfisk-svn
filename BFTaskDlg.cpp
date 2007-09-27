@@ -247,6 +247,7 @@ void BFTaskDlg::SetData ()
     if (pNameCtrl_->IsModified())
     {
         rTask_.SetName(pNameCtrl_->GetValue());
+        BFRootTask::Instance().SetModified();
         pNameCtrl_->DiscardEdits();
     }
 
@@ -254,16 +255,23 @@ void BFTaskDlg::SetData ()
     if (pSourceCtrl_->IsModified())
     {
         rTask_.SetSource(pSourceCtrl_->GetValue());
+        BFRootTask::Instance().SetModified();
         pSourceCtrl_->DiscardEdits();
     }
 
     // destination
     if (pDestCtrl_->GetPath() != rTask_.GetDestination())
+    {
         rTask_.SetDestination(pDestCtrl_->GetPath());
+        BFRootTask::Instance().SetModified();
+    }
 
     // verify
     if (pVerifyCheck_->GetValue() != rTask_.Verify())
+    {
         rTask_.SetVerify(pVerifyCheck_->GetValue());
+        BFRootTask::Instance().SetModified();
+    }
 
     // exclude list
 /*    wxArrayString arrExclude = pExcludeList_->GetStrings();

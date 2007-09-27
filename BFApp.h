@@ -107,4 +107,7 @@ class BFApp : public wxApp
         bool IsProjectModified ();
 };    // class BFApp
 
+///
+DECLARE_APP(BFApp);
+
 #endif    // BFAPP_H

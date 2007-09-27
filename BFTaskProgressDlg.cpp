@@ -57,7 +57,12 @@
     UpdateBar   (pP);
     UpdateText  (pP);
 
-    GetParent()->Update();
+/*    wxWindow* pC = this;
+    while (pC->GetParent() != NULL)
+        pC = pC->GetParent();
+
+    //BFMainFrame::App()->Yield();
+    pC->Update();*/
 }
 
 

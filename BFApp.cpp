@@ -39,6 +39,7 @@
 #include "BFSettings.h"
 #include "BFwxLog.h"
 #include "BFBackupQuestionDlg.h"
+#include "BFCmdLine.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -122,6 +123,16 @@ BFApp::BFApp ()
 
 bool BFApp::OnInit()
 {
+    wxString strToOpen;
+
+    // parse command line
+    BFCmdLine cmdLine;
+    cmdLine.SetCmdLine(wxApp::argc, wxApp::argv);
+    cmdLine.Parse();
+    if (cmdLine.GetParamCount() > 0)
+        strToOpen = cmdLine.GetParam(0);
+
+    // read the configuration file
     ReadSettings();
 
     BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName().wx_str()));
@@ -146,13 +157,17 @@ bool BFApp::OnInit()
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
     new BFMainFrame(*this);
 
-    // open the last project
-    if (BFSettings::Instance().GetOpenLastProject())
-        if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
-        {
-            OpenProject(BFSettings::Instance().GetLastProjects().Last());
-            MainFrame()->RefreshTitle();
-        }
+    // open the last project ?
+    if (strToOpen.IsEmpty())
+        if (BFSettings::Instance().GetOpenLastProject())
+            if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
+                strToOpen = BFSettings::Instance().GetLastProjects().Last();
+
+    if ( !(strToOpen.IsEmpty()) )
+    {
+        OpenProject(strToOpen);
+        MainFrame()->RefreshTitle();
+    }
 
     //
     BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));

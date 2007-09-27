@@ -24,7 +24,6 @@
 #include "BFAboutDlg.h"
 
 #include <wx/stattext.h>
-#include <wx/hyperlink.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/button.h>
@@ -33,6 +32,7 @@
 #include "blackfisk.h"
 #include "BFMainFrame.h"
 #include "BFIconTable.h"
+#include "BFHyperlinkCtrl.h"
 
 #define BFABOUTDLG_ID_VIEWLICENSE   1 + wxID_HIGHEST
 #define BFABOUTDLG_ID_OK            2 + wxID_HIGHEST
@@ -70,7 +70,7 @@ BFAboutDlg::BFAboutDlg ()
     pName->SetFont(font);
     wxStaticText* pCopy = new wxStaticText(this, wxID_ANY, _T("Copyright (C) 2005 Christian Buhtz <blackfisk@web.de>"));
     wxStaticText* pDesc = new wxStaticText(this, wxID_ANY, _T("A backup software that can handle very complex tasks.\nBut it has the goal that it is easy to use\nwithout reading a manual."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    wxHyperlinkCtrl* pWeb = new wxHyperlinkCtrl(this, wxID_ANY, _T("www.blackfisk.org"), _T("http://www.blackfisk.org"));
+    BFHyperlinkCtrl* pWeb = new BFHyperlinkCtrl(this, wxID_ANY, _T("www.blackfisk.org"), _T("http://www.blackfisk.org"));
     wxStaticText* pLicense = new wxStaticText(this, wxID_ANY, _T("This program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome\nto redistribute it under certain conditions;\nfor details select the menu Help/License\nor click this button"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxButton* pViewLicense = new wxButton(this, BFABOUTDLG_ID_VIEWLICENSE, _T("view License (GPLv3)"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
     font = pLicense->GetFont();
@@ -164,7 +164,7 @@ wxSizer* BFAboutDlg::CreateThirdPartySizer (const wxChar* strUrl,
 {
     wxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
     wxSizer* pSubSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxHyperlinkCtrl* pUrl = new wxHyperlinkCtrl(this, wxID_ANY, strUrlLabel, strUrl);
+    BFHyperlinkCtrl* pUrl = new BFHyperlinkCtrl(this, wxID_ANY, strUrlLabel, strUrl);
     wxFont font = pUrl->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pUrl->SetFont(font);

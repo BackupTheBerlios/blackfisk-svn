@@ -111,6 +111,14 @@ bool BFTaskData::SetOID (BFoid oid)
 
 void BFTaskData::SetTaskType (BFTaskType type)
 {
+    // it is a fresh task (maybe while serializing from file)
+    if (GetType() == TaskINVALID)
+    {
+        type_ = type;
+        return;
+    }
+
+    // check if the task can be modified
     BFTypeVector vecTypes;
     GetAvailableTypes(vecTypes);
 
