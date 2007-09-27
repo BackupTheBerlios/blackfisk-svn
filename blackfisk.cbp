@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\" />
 		<Build>
 			<Target title="Static Debug Unicode">
 				<Option output=".\blackfiskDus.exe" prefix_auto="0" extension_auto="0" />
@@ -90,7 +90,7 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Static Debug Unicode;" />
+			<Add alias="All" targets="Static Debug Unicode" />
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="$(#wx)\include" />
@@ -145,6 +145,8 @@
 		<Unit filename="BFDestinationCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFDestinationCtrl2.cpp" />
+		<Unit filename="BFDestinationCtrl2.h" />
 		<Unit filename="BFDestinationDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>

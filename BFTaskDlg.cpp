@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
   EVT_CLOSE   (BFTaskDlg::OnClose)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONOK,       BFTaskDlg::OnButton_Ok)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONCANCEL,   BFTaskDlg::OnButton_Cancel)
+  EVT_COMBOBOX(BFTASKDGL_ID_CBTYPE,         BFTaskDlg::OnCombo_TypeSelect)
 END_EVENT_TABLE()
 
 /*static*/ const long BFTaskDlg::lWidth1_ = 95;
@@ -57,8 +58,7 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
 {
     // arrange and create controls
     wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
-    pMainSizer->Add (CreateTypeCtrl(),  wxSizerFlags(0).Border());
-    pMainSizer->Add (CreateControls(),  wxSizerFlags(0));
+    pMainSizer->Add (CreateControls(),  wxSizerFlags(0).Border(wxALL, 10).Center());
     pMainSizer->Add (CreateButtons(),   wxSizerFlags(0).Border().Center());
     SetSizerAndFit(pMainSizer);
 
@@ -73,33 +73,24 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
 {
 }
 
-wxSizer* BFTaskDlg::CreateTypeCtrl ()
-{
-    wxStaticBitmap* pTypeIcon = new wxStaticBitmap
-                                    (
-                                        this,
-                                        -1,
-                                        BFIconTable::Instance()->GetIcon(rTask_.GetTypeIconId())
-                                    );
-    wxStaticText*   pTypeText = new wxStaticText(this, -1, rTask_.GetTypeDescription());
-
-    wxBoxSizer* pTypeSizer = new wxBoxSizer(wxHORIZONTAL);
-
-    pTypeSizer->Add(pTypeIcon, wxSizerFlags(0).Border());
-    pTypeSizer->Add(pTypeText, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border());
-
-    return pTypeSizer;
-}
-
 wxSizer* BFTaskDlg::CreateControls ()
 {
+    // type
+    wxStaticText* pTypeStatic = new wxStaticText(this, -1, _("type:"));
+    pTypeCtrl_ = new wxBitmapComboBox(this, BFTASKDGL_ID_CBTYPE);
+    pTypeCtrl_->SetWindowStyle(wxCB_READONLY);
+
     // name
-    wxPanel*        pNamePanel      = new wxPanel(this);
+    wxPanel*        pNamePanel      = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
                     pNameCtrl_      = new wxTextCtrl(pNamePanel, -1);
     wxButton*       pPlaceholderButton    = new BFPlaceholderButton(pNamePanel, *pNameCtrl_);
     wxStaticText*   pNameStatic     = new wxStaticText(this, -1, _("destination name:"));
-    pNameStatic->SetMinSize(wxSize(BFTaskDlg::lWidth1_, pNameStatic->GetSize().GetHeight()));
-    pNamePanel->SetMinSize(wxSize(BFTaskDlg::lWidth2_, pNamePanel->GetSize().GetHeight()+3));
+    pNameStatic ->SetMinSize(wxSize(BFTaskDlg::lWidth1_, pNameStatic->GetSize().GetHeight()));
+    pNamePanel  ->SetMinSize(wxSize(BFTaskDlg::lWidth2_, pNamePanel->GetSize().GetHeight()+3));
+    wxBoxSizer* pNameSubSizer   = new wxBoxSizer(wxHORIZONTAL);
+    pNameSubSizer->Add(pNameCtrl_,          wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSubSizer->Add(pPlaceholderButton,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNamePanel->SetSizer(pNameSubSizer);
 
     // source
     pSourceCtrl_ = new wxTextCtrl(this, -1);
@@ -108,37 +99,36 @@ wxSizer* BFTaskDlg::CreateControls ()
     SetRowSize(pSourceStatic, pSourceCtrl_);
 
     // destination
-    pDestCtrl_ = new BFDestinationCtrl(this);
+    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
+    pDestCtrl_ = new BFDestinationCtrl(this, wxEmptyString, false);
 
     // verify
     pVerifyCheck_ = new wxCheckBox(this, -1, wxEmptyString);
     wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
     SetRowSize(pVerifyStatic, pVerifyCheck_);
 
-    // sizer
-    wxBoxSizer* pBodySizer      = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pNameSubSizer   = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pSourceSizer    = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pDestSizer      = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pVerifySizer    = new wxBoxSizer(wxHORIZONTAL);
-
-    // arrange
-    pNameSubSizer   ->Add(pNameCtrl_,       wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
-    pNameSubSizer   ->Add(pPlaceholderButton,     wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pNamePanel->SetSizer(pNameSubSizer);
-    pNameSizer      ->Add(pNameStatic,      wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pNameSizer      ->Add(pNamePanel);
-    pSourceSizer    ->Add(pSourceStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pSourceSizer    ->Add(pSourceCtrl_);
-    pDestSizer      ->Add(pDestCtrl_);
-    pVerifySizer    ->Add(pVerifyStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pVerifySizer    ->Add(pVerifyCheck_);
-
-    pBodySizer->Add(pSourceSizer,    wxSizerFlags(0).Border());
-    pBodySizer->Add(pDestSizer,      wxSizerFlags(0).Border());
-    pBodySizer->Add(pNameSizer,      wxSizerFlags(0).Border());
-    pBodySizer->Add(pVerifySizer,    wxSizerFlags(0).Border());
+    // sizer and arrange
+    wxGridSizer* pBodySizer     = new wxFlexGridSizer(2);
+    pBodySizer->SetVGap(5);
+    pBodySizer->Add(pTypeStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pTypeCtrl_,     wxSizerFlags(0).Expand());
+/* DEBUG
+    pBodySizer->AddStretchSpacer();
+    wxPanel* pP = new wxPanel(this);
+    wxTextCtrl* pT = new wxTextCtrl(pP, wxID_ANY, _T("xxx"));
+    wxBoxSizer* pS = new wxBoxSizer(wxHORIZONTAL);
+    pS->Add(pT);
+    pP->SetSizer(pS);
+    pBodySizer->Add(pP);
+// DEBUG off */
+    pBodySizer->Add(pNameStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pNamePanel);
+    pBodySizer->Add(pSourceStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pSourceCtrl_);
+    pBodySizer->Add(pDestStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pDestCtrl_);
+    pBodySizer->Add(pVerifyStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pVerifyCheck_,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
 
     return pBodySizer;
 }
@@ -193,8 +183,39 @@ void BFTaskDlg::OnButton_Cancel (wxCommandEvent& rEvent)
     Close();
 }
 
+void BFTaskDlg::OnCombo_TypeSelect (wxCommandEvent& rEvent)
+{
+    BFTypeVector vecTaskTypes;
+
+    rTask_.GetAvailableTypes(vecTaskTypes);
+    BFTaskType tt = vecTaskTypes[pTypeCtrl_->GetSelection()];
+    rTask_.SetTaskType(tt);
+
+    InitTypeCtrl();
+}
+
+void BFTaskDlg::InitTypeCtrl ()
+{
+    BFTypeVector vecTaskTypes;
+
+    pTypeCtrl_->Clear();
+    rTask_.GetAvailableTypes(vecTaskTypes);
+
+    for (BFTypeVector::iterator it = vecTaskTypes.begin();
+         it != vecTaskTypes.end();
+         it++)
+    {
+        BFTaskType type = (*it);
+        pTypeCtrl_->Append(BFTask::GetTypeDescription(type),
+                           BFIconTable::Instance()->GetBitmap(BFTask::GetTypeIconId(type)));
+    }
+
+    pTypeCtrl_->Select(0);
+}
+
 void BFTaskDlg::GetData ()
 {
+    InitTypeCtrl();
     pNameCtrl_      ->SetValue(rTask_.GetName());
     pSourceCtrl_    ->SetValue(rTask_.GetSource());
     pDestCtrl_      ->SetPath(rTask_.GetDestination());

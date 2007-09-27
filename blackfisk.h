@@ -40,4 +40,6 @@
 #define BF_LOGFILE_NAME             _T("bf.log")
 #define BF_LOGFILE_BAKSUFFIX        _T(".bak")
 
+#define BF_PROJECT_EXTENSION        _T(".bfp")
+#define BF_PROJECT_EXTENSION_STRING _("Blackfisk project files (*.bfp)|*.bfp")
 #endif // BLACKFISK_H

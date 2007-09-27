@@ -111,7 +111,21 @@ bool BFTaskData::SetOID (BFoid oid)
 
 void BFTaskData::SetTaskType (BFTaskType type)
 {
-    type_ = type;
+    BFTypeVector vecTypes;
+    GetAvailableTypes(vecTypes);
+
+    for (BFTypeVector::iterator it = vecTypes.begin();
+         it != vecTypes.end();
+         it ++)
+    {
+        if ((*it) == type)
+        {
+            type_ = type;
+            return;
+        }
+    }
+
+    BFSystem::Fatal(_T("not able to set task type"), _T("BFTaskData::SetTaskType()"));
 }
 
 BFoid BFTaskData::GetOID ()
@@ -158,14 +172,14 @@ void BFTaskData::SetExclude (const wxArrayString& exclude)
     arrExclude_ = exclude;
 }
 
-wxString BFTask::GetTypeDescription ()
+/*static*/ wxString BFTask::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
 {
     wxString strDesc;
 
-    switch (GetType())
+    switch (type)
     {
         case TaskARCHIVE:
-            strDesc << _("compress to a ") << GetArchiveExtension() << _(" archive");
+            strDesc << _("compress to a ") << GetArchiveExtension(format) << _(" archive");
             break;
 
         case TaskDIRCOPY:
@@ -186,6 +200,11 @@ wxString BFTask::GetTypeDescription ()
     };
 
     return strDesc;
+}
+
+wxString BFTask::GetTypeDescription ()
+{
+    return GetTypeDescription(GetType(), GetArchiveFormat());
 }
 
 int BFTask::GetTypeIconId ()
@@ -221,6 +240,26 @@ int BFTask::GetTypeIconId ()
     };
 
     return iconId;
+}
+
+void BFTaskData::GetAvailableTypes (BFTypeVector& rVecType)
+{
+    switch (GetType())
+    {
+        case TaskINVALID:
+        case TaskARCHIVE:
+        case TaskDIRCOPY:
+        case TaskSYNC:
+            if (GetType() != TaskARCHIVE)
+                rVecType.push_back (TaskARCHIVE);
+            if (GetType() != TaskDIRCOPY)
+                rVecType.push_back (TaskDIRCOPY);
+            if (GetType() != TaskSYNC)
+                rVecType.push_back (TaskSYNC);
+            break;
+    };
+
+    rVecType.insert (rVecType.begin(), GetType());
 }
 
 bool BFTask::Serialize (jbSerialize& rA)
@@ -321,7 +360,12 @@ BFTask::BFTask ()
 
 wxString BFTask::GetArchiveExtension()
 {
-    switch (GetArchiveFormat())
+    return GetArchiveExtension(GetArchiveFormat());
+}
+
+/*static*/ wxString BFTask::GetArchiveExtension(BFArchiveFormat format)
+{
+    switch (format)
     {
         case CompressZIP:
             return _T("zip");

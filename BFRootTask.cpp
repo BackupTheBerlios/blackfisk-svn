@@ -431,6 +431,8 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
          itVec++)
     {
         // create all for the task needed items in the tree
+        BFTaskType tt = (*itVec)->GetType();
+
         rBackupTree.AddTask
                     (
                         (*itVec)->GetOID(),

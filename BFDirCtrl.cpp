@@ -28,6 +28,7 @@
 #include "BFMainFrame.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
+#include "BFIconTable.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
@@ -37,6 +38,7 @@ BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_FILECOPY,    BFDirCtrl::OnBackup)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_DIRCOPY,     BFDirCtrl::OnBackup)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_SYNCDIR,     BFDirCtrl::OnBackup)
+  EVT_MENU    (BFDIRCTRL_ID_ARCHIVEDIR,         BFDirCtrl::OnBackup)
 END_EVENT_TABLE()
 
 //
@@ -120,6 +122,8 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
 
 void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 {
+    wxMenuItem* pItem;
+
     // remember the item
     lastItemId_ = event.GetItem();
 
@@ -147,8 +151,19 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
         menu.Append(BFDIRCTRL_ID_CREATEDESTINATION, _("create here a destination directory"));
 
         // ** backup dir copy **
-        menu_backup.Append(BFDIRCTRL_ID_BACKUP_DIRCOPY, _("directory copy"));
-        menu_backup.Append(BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_DIRCOPY, _("copy directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu_backup.Append(pItem);
+
+        // ** backup sync dir **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu_backup.Append(pItem);
+
+        // ** backup archive dir **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_ARCHIVEDIR, _("archive/compress directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu_backup.Append(pItem);
     }
     else
     {
@@ -225,6 +240,7 @@ void BFDirCtrl::OnBackup (wxCommandEvent& event)
         case BFDIRCTRL_ID_BACKUP_FILECOPY:
         case BFDIRCTRL_ID_BACKUP_DIRCOPY:
         case BFDIRCTRL_ID_BACKUP_SYNCDIR:
+        case BFDIRCTRL_ID_ARCHIVEDIR:
             BFMainFrame::Instance()->BackupTree()->SetDropedFilename (pDirItem->m_path);
             BFMainFrame::Instance()->BackupTree()->OnCreateBackup (event);
             break;

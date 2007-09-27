@@ -30,10 +30,13 @@
 #include <wx/listbox.h>
 #include <wx/button.h>
 #include <wx/filepicker.h>
+#include <wx/bmpcbox.h>
+#include <vector>
 #include "BFTask.h"
 
 #define BFTASKDLG_ID_BUTTONOK       1 + wxID_HIGHEST
 #define BFTASKDLG_ID_BUTTONCANCEL   2 + wxID_HIGHEST
+#define BFTASKDGL_ID_CBTYPE         3 + wxID_HIGHEST
 
 class wxSizer;
 class BFDestinationCtrl;
@@ -45,6 +48,8 @@ class BFTaskDlg : public wxDialog
         /** reference to the object holding the data */
         BFTask&             rTask_;
 
+        /// type control
+        wxBitmapComboBox*   pTypeCtrl_;
         /// task name
         wxTextCtrl*         pNameCtrl_;
         /// task source
@@ -56,6 +61,8 @@ class BFTaskDlg : public wxDialog
         /// exclude control
         wxListBox*          pExcludeCtrl_;
 
+        /** init the type control */
+        void InitTypeCtrl ();
         /** get the data from the data layer ('rTask')
             in the dialog controls */
         void GetData ();
@@ -65,9 +72,6 @@ class BFTaskDlg : public wxDialog
         /** check if the data in the dialog is plausible */
         bool IsPlausible ();
 
-        /** init the task type with icon and its description
-            and return its wxSizer */
-        virtual wxSizer* CreateTypeCtrl ();
         ///
         virtual wxSizer* CreateControls ();
         /** init the buttons in the dialog*/
@@ -93,6 +97,8 @@ class BFTaskDlg : public wxDialog
         void OnButton_Ok (wxCommandEvent& rEvent);
         ///
         void OnButton_Cancel (wxCommandEvent& rEvent);
+        ///
+        void OnCombo_TypeSelect (wxCommandEvent& rEvent);
 
         /** this static methode display the given task
             with a dialog specified by type of the task */

@@ -107,6 +107,7 @@ END_EVENT_TABLE()
 
     // ** menu PROJECT **
     menuProject_ = new wxMenu;
+    menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
     menuProject_->Append( ID_Backup,             _("&Run Backup...") );
     menuProject_->AppendSeparator();
     menuProject_->Append( ID_NewProject,         _("&New/Close Project") );
@@ -114,7 +115,6 @@ END_EVENT_TABLE()
     menuProject_->Append( ID_SaveProject,        _("&Save Project") );
     menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
     menuProject_->AppendSeparator();
-    menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -371,7 +371,7 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
         _("message"),
         wxEmptyString,
         wxEmptyString,
-        _("BlackfiskBackup files (*.ob)|*.ob"),
+        BF_PROJECT_EXTENSION_STRING,
         wxFD_OPEN
     );
 
@@ -394,7 +394,7 @@ bool BFMainFrame::AskSaveProject (wxString& strProject)
         _("Save the project"),
         wxEmptyString,
         wxEmptyString,
-        _("blackfisk projects (*.ob)|*.ob"),
+        BF_PROJECT_EXTENSION_STRING,
         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
     );
 

@@ -49,6 +49,9 @@ typedef wxUint8 BFArchiveFormat;
 typedef wxUint32 BFoid;
 #define BFInvalidOID (BFoid)-1
 
+///
+typedef std::vector<BFTaskType> BFTypeVector;
+
 
 /// base class for a "BFTask"; represent the data-layer
 class BFTaskData : public BFTaskBase
@@ -76,8 +79,6 @@ class BFTaskData : public BFTaskBase
     protected:
         ///
         bool SetOID (BFoid oid);
-        ///
-        void SetTaskType (BFTaskType type);
 
     public:
         ///
@@ -98,6 +99,10 @@ class BFTaskData : public BFTaskBase
         /** check if the object and its date in it plausibel */
         bool IsPlausible ();
 
+        /** add all available task types to the vector
+            with the current task type as first item */
+        void GetAvailableTypes (BFTypeVector& rVecType);
+
         ///
         BFoid GetOID ();
         ///
@@ -115,6 +120,8 @@ class BFTaskData : public BFTaskBase
         ///
         const wxArrayString& GetExclude ();
 
+        ///
+        void SetTaskType (BFTaskType type);
         ///
         void SetSource (const wxChar* source);
         ///
@@ -176,12 +183,16 @@ class BFTask : public BFTaskData
 
         /// return a describe of the task
         wxString GetTypeDescription ();
+        ///
+        static wxString GetTypeDescription (BFTaskType type, BFArchiveFormat format = CompressNOTUSED);
         /// return the iconId of the task
         int GetTypeIconId ();
         ///
         static int GetTypeIconId (BFTaskType type);
         ///
         wxString GetArchiveExtension();
+        ///
+        static wxString GetArchiveExtension(BFArchiveFormat format);
 
         /** the object will be serialized(write) TO 'rA'
             or

@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
-#ifndef BFDESTINATIONCTRL_H
-#define BFDESTINATIONCTRL_H
+#ifndef BFDESTINATIONCTRL2_H
+#define BFDESTINATIONCTRL2_H
 
 #include <wx/wx.h>
 #include <wx/panel.h>
@@ -29,21 +29,21 @@
 
 
 /// a control to edit destinations
-class BFDestinationCtrl : public wxPanel
+class BFDestinationCtrl2 : public wxBoxSizer
 {
     private:
         ///
         wxDirPickerCtrl*        pPickerCtrl_;
 
         ///
-        BFDestinationCtrl ();
+        BFDestinationCtrl2 ();
 
     public:
         /// constructor
-        BFDestinationCtrl (wxWindow* pParent, const wxChar* strPath = wxEmptyString, bool bWithLabel = true);
+        BFDestinationCtrl2 (wxWindow* pParent, const wxChar* strPath = wxEmptyString, bool bWithLabel = true);
 
         /// virtual destructor
-        virtual ~BFDestinationCtrl ();
+        virtual ~BFDestinationCtrl2 ();
 
         ///
         wxStaticText* CreateLabel(wxWindow* pParent);
@@ -54,4 +54,4 @@ class BFDestinationCtrl : public wxPanel
         void SetPath (const wxString& strPath);
 };    // class BFDestinationCtrl
 
-#endif    // BFDESTINATIONCTRL_H
+#endif    // BFDESTINATIONCTRL2_H

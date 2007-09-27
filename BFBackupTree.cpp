@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnCreateBackup)
     EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnCreateBackup)
     EVT_MENU                    (BFBACKUPCTRL_ID_SYNC_DIR,          BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_ARCHIVE_DIR,       BFBackupTree::OnCreateBackup)
     EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
     EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                          BFBackupTree::OnEndLabelEdit)
 END_EVENT_TABLE()
@@ -223,6 +224,11 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
         // sync directory
         pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronize directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
+        menu.Append(pItem);
+
+        // archive directory
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_ARCHIVE_DIR, _("archive/compress directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
         menu.Append(pItem);
     }
     else
@@ -438,6 +444,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 {
     BFTask*         pTask       = NULL;
     BFTaskType      type;
+    BFArchiveFormat aformat     = CompressNOTUSED;
     bool            bVerify     = true /* DEBUG: get default value */;
     wxArrayString   arrString;
 
@@ -455,6 +462,11 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
             type = TaskSYNC;
             break;
 
+        case BFBACKUPCTRL_ID_ARCHIVE_DIR:
+            type = TaskARCHIVE;
+            aformat = CompressZIP;
+            break;
+
         default:
             BFSystem::Error((_T("copy ERROR")), _T("BFBackupTree::OnBackupCopy()"));
             return;
@@ -467,7 +479,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
                         strCurrentDestination_,
                         strDropedFilename_.AfterLast(wxFILE_SEP_PATH),
                         true /* DEBUG */,
-                        CompressNOTUSED,
+                        aformat,
                         arrString);
     BFTaskDlg::Show(pTask);
 
