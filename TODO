@@ -1,5 +1,8 @@
 0.0.1
 ~~~~~
+- CHECK: stop current task, project etc while running threads
+- CHECK: using Freeze() and Thaw()
+- write backupLogs while the backup (e.g. after each task)
 - manipulate the thread priority while backup
 - mark current task in the left ctrl
 - message count and display message
@@ -20,6 +23,7 @@
 - using commandline without gui (controlable by things like cronjob)
 - new advanced-option: ask-on-message (true/false) while autorun (non-gui)
 - remember last concret backup files and delete them automaticly (by count, by timespan, by size)
+- auto-update: run tasks different times (e.g. TaskA each day, TaskB just each week)
 - open website in a thread (this don't freez the app; thread-sample)
 
 0.0.3

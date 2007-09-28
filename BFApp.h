@@ -98,13 +98,17 @@ class BFApp : public wxApp
         bool SaveCurrentProject ();
         /** it close the current project */
         bool CloseCurrentProject (bool bCheckForModifications = true);
-        ///
-        void Test ();
-        ///
-        void Backup ();
 
         ///
         bool IsProjectModified ();
+
+        ///
+        void Sound_BackupFinished ();
+
+#ifdef _DEBUG
+        void Test ();
+#endif
+
 };    // class BFApp
 
 ///

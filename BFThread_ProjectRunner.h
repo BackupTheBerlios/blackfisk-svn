@@ -1,9 +1,9 @@
 /**
- * Name:        BFHyperlinkCtrl.h
+ * Name:        BFThread_ProjectRunner.h
  * Purpose:
  * Author:      Christian Buhtz
  * Modified by:
- * Created:     2007-09-27
+ * Created:     2007-09-28
  * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
  ***
@@ -21,49 +21,31 @@
  ***/
 
 
-#ifndef BFHYPERLINKCTRL_H
-#define BFHYPERLINKCTRL_H
+#ifndef BFTHREAD_PROJECTRUNNER_H
+#define BFTHREAD_PROJECTRUNNER_H
 
-#include <wx/hyperlink.h>
 #include <wx/thread.h>
 
+class BFTask;
+
 ///
-class BFHyperlinkCtrl : public wxHyperlinkCtrl
+class BFThread_ProjectRunner : public wxThread
 {
     private:
-        /// private members
+        ///
+        BFTask* pTask_;
 
     protected:
         /// proteced members
 
     public:
         /// ctor
-        BFHyperlinkCtrl (wxWindow* pParent, wxWindowID id, const wxString& strLabel, const wxString& strUrl);
+        BFThread_ProjectRunner (BFTask* pTask);
 
         /// virtual dtor
-        virtual ~BFHyperlinkCtrl ();
-
-        ///
-        void OnHyperlink (wxHyperlinkEvent& rEvent);
-
-        DECLARE_EVENT_TABLE();
-};
-
-///
-class BFThread_LaunchBrowser : public wxThread
-{
-    private:
-        ///
-        wxString        strUrl_;
-
-    public:
-        ///
-        BFThread_LaunchBrowser (const wxString& url);
-        ///
-        virtual ~BFThread_LaunchBrowser ();
+        virtual ~BFThread_ProjectRunner ();
 
         /// thread execution starts here
         virtual void *Entry();
 };
-
-#endif    // BFHYPERLINKCTRL_H
+#endif    // BFTHREAD_PROJECTRUNNER_H

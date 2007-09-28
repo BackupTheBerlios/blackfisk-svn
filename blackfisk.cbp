@@ -225,6 +225,12 @@
 		<Unit filename="BFPlaceholderButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFProgressCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFProgressCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFProjectSettings.cpp">
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
@@ -292,6 +298,12 @@
 		</Unit>
 		<Unit filename="BFTaskProgressDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFThread_ProjectRunner.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFThread_ProjectRunner.h">
+			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="BFundef.h">
 			<Option virtualFolder="AppLayer\" />

@@ -20,186 +20,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
+#include "BFTaskProgressDlg.h"
+
 #include <wx/sizer.h>
 
-#include "BFTaskProgressDlg.h"
-#include "BFRootTask.h"
+#include "BFProgressCtrl.h"
 #include "Progress.h"
+#include "BFRootTask.h"
+#include "BFLogViewDlg.h"
+
+BEGIN_EVENT_TABLE(BFTaskProgressDlg, wxDialog)
+  EVT_CLOSE   (BFTaskProgressDlg::OnClose)
+END_EVENT_TABLE()
 
 
-// ++++++++++++++++++++++++++++++
-// ++ class BFProgressCtrlBase ++
-// ++++++++++++++++++++++++++++++
-
-/*protected*/ BFProgressCtrlBase::BFProgressCtrlBase (wxWindow* pParent,
-                                                      Progress* pProgress)
-                                   : wxPanel(pParent, -1),
-                                     Observer(pProgress),
-                                     pBar_(NULL),
-                                     pTextA_(NULL),
-                                     pTextB_(NULL)
+BFTaskProgressDlg::BFTaskProgressDlg (wxWindow* pParent)
+                 : wxDialog(pParent, -1, wxString(_("Task Progress")))
 {
+    wxGetApp().MainFrame()->Hide();
+    Init();
+    BFRootTask::Instance().Run_Start(this);
 }
 
-
-/*virtual*/ BFProgressCtrlBase::~BFProgressCtrlBase ()
+void BFTaskProgressDlg::OnClose(wxCloseEvent& rEvent)
 {
+    if (BFCore::Instance().IsWhileBackup())
+    {
+        rEvent.Veto();
+    }
+    else
+    {
+        wxGetApp().MainFrame()->Show();
+        new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
+        Destroy();
+    }
 }
 
-
-/*virtual*/ void BFProgressCtrlBase::ValueChanged (Subject* pSender)
+void BFTaskProgressDlg::Init ()
 {
-    Progress* pP = dynamic_cast<Progress*>(pSender);
-
-    if (pP == NULL)
-        return;
-
-    UpdateBar   (pP);
-    UpdateText  (pP);
-
-/*    wxWindow* pC = this;
-    while (pC->GetParent() != NULL)
-        pC = pC->GetParent();
-
-    //BFMainFrame::App()->Yield();
-    pC->Update();*/
-}
-
-
-/*virtual*/ void BFProgressCtrlBase::UpdateBar (Progress* pP)
-{
-    if (pP == NULL || pBar_ == NULL)
-        return;
-
-    pBar_->SetValue ( pP->GetProgress() );
-}
-
-
-/*virtual*/ void BFProgressCtrlBase::UpdateText (Progress* pP)
-{
-    if (pP == NULL || pTextB_ == NULL)
-        return;
-
-    pTextB_->SetLabel ( wxString::Format(_T("%d %%"), pP->GetProgress()) );
-}
-
-
-void BFProgressCtrlBase::SetTextA (const wxChar* text)
-{
-    if (text == NULL || pTextA_ == NULL)
-        return;
-
-    pTextA_->SetLabel(text);
-}
-
-
-// +++++++++++++++++++++++++++++++
-// ++ class BFProgressTotalCtrl ++
-// +++++++++++++++++++++++++++++++
-
-
-BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress)
-                   : BFProgressCtrlBase(pParent, pProgress)
-{
-    InitControls();
-}
-
-/*virtual*/ BFProgressTotalCtrl::~BFProgressTotalCtrl ()
-{
-}
-
-/*virtual*/ void BFProgressTotalCtrl::InitControls ()
-{
-    if (pTextA_ != NULL || pTextB_ != NULL || pBar_ != NULL)
-        return;
-
-    // sizer
-    wxStaticBoxSizer*   pTopSizer       = new wxStaticBoxSizer(wxVERTICAL, this);
-    wxBoxSizer*         pLabelSizer     = new wxBoxSizer(wxHORIZONTAL);
-
-    // controls
-    pTextA_ = new wxStaticText(this, -1, _("Total"));
-    pTextB_ = new wxStaticText(this, -1, _T("000 %"));
-    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 30), wxGA_HORIZONTAL);
-
-    // arange
-    pLabelSizer ->Add ( pTextA_, wxSizerFlags(0).Border(wxALL, 1) );
-    pLabelSizer ->AddSpacer (5);
-    pLabelSizer ->Add ( pTextB_, wxSizerFlags(0).Border(wxALL, 1) );
-    pTopSizer   ->Add ( pLabelSizer );
-    pTopSizer   ->Add ( pBar_, wxSizerFlags(0).Border(wxVERTICAL, 3) );
-    SetSizerAndFit( pTopSizer );
-}
-
-
-// ++++++++++++++++++++++++++++++
-// ++ class BFProgressTaskCtrl ++
-// ++++++++++++++++++++++++++++++
-
-/*virtual*/ void BFProgressTaskCtrl::InitControls ()
-{
-    if (pTextA_ != NULL || pTextB_ != NULL || pBar_ != NULL)
-        return;
-
-    // sizer
-    wxStaticBoxSizer* pSizer = new wxStaticBoxSizer(wxVERTICAL, this);
-
-    // controls
-    pTextA_ = new wxStaticText(this, -1, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
-    pTextB_ = new wxStaticText(this, -1, _T("<message>\n<message2>"));
-
-    // arange
-    pSizer->Add(pTextA_, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1) );
-    pSizer->Add(pBar_, wxSizerFlags(0).Border(wxVERTICAL, 3));
-    pSizer->Add(pTextB_);
-    SetSizerAndFit(pSizer);
-}
-
-
-BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
-                    : BFProgressCtrlBase(pParent, pProgress)
-{
-    InitControls();
-}
-
-
-/*virtual*/ BFProgressTaskCtrl::~BFProgressTaskCtrl ()
-{
-}
-
-
-/*virtual*/ void BFProgressTaskCtrl::UpdateText (Progress* pP)
-{
-    ProgressWithMessage* pPM = dynamic_cast<ProgressWithMessage*>(pP);
-
-    if (pPM == NULL || pTextA_ == NULL || pTextB_ == NULL)
-        return;
-
-    pTextB_->SetLabel ( wxString::Format(_T("%s %d %%\n%s"), pPM->GetLabel(), pPM->GetProgress(), pPM->GetMessage()) );
-}
-
-// +++++++++++++++++++++++++++++
-// ++ class BFTaskProgressDlg ++
-// +++++++++++++++++++++++++++++
-
-
-BFTaskProgressDlg::BFTaskProgressDlg (wxWindow* pParent,
-                                      BFRootTask& rRootTask)
-                 : wxDialog(pParent, -1, wxString(_("Task Progress"))),
-                   pProgressTask_(NULL),
-                   pProgressTotal_(NULL)
-{
-    Init(rRootTask);
-}
-
-
-void BFTaskProgressDlg::Init (BFRootTask& rRootTask)
-{
-    // init progress objects
-    pProgressTask_  = new ProgressWithMessage();
-    pProgressTotal_ = new ProgressTotal(rRootTask.GetTaskCount(), pProgressTask_);
-
     // sizer
     wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer*         pSideSizer      = new wxBoxSizer(wxHORIZONTAL);
@@ -216,9 +74,9 @@ void BFTaskProgressDlg::Init (BFRootTask& rRootTask)
     pSideSizer          ->Add(pListBox_);
 
     // controls for * right side *
-    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, pProgressTask_);
+    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTask::Instance().GetProgressTask());
     pSizerRight         ->Add(pCtrlTaskProgress_);
-    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, pProgressTotal_);
+    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFRootTask::Instance().GetProgressTotal());
     pSizerRight         ->Add(pCtrlTotalProgress_);
     pSideSizer          ->Add(pSizerRight);
 
@@ -227,7 +85,7 @@ void BFTaskProgressDlg::Init (BFRootTask& rRootTask)
     pButtonSizer        ->Add(pButton);
 
     // init controls
-    rRootTask.InitThat(*pListBox_);
+    BFRootTask::Instance().InitThat(*pListBox_);
 
     // show the window while creation
     SetSizerAndFit(pTopSizer);
@@ -235,26 +93,9 @@ void BFTaskProgressDlg::Init (BFRootTask& rRootTask)
 }
 
 
-Progress* BFTaskProgressDlg::GetProgressTotal ()
-{
-    return pProgressTotal_;
-}
-
-
-ProgressWithMessage* BFTaskProgressDlg::GetProgressTask ()
-{
-    return pProgressTask_;
-}
-
-
 //
 /*virtual*/ BFTaskProgressDlg::~BFTaskProgressDlg ()
 {
-    if (pProgressTask_ != NULL)
-        delete pProgressTask_;
-
-    if (pProgressTotal_ != NULL)
-        delete pProgressTotal_;
 }
 
 void BFTaskProgressDlg::SetCurrentTaskName (const wxChar* name)

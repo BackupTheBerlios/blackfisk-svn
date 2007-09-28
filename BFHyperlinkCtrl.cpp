@@ -44,7 +44,6 @@ BFHyperlinkCtrl::BFHyperlinkCtrl (wxWindow* pParent,
 
 void BFHyperlinkCtrl::OnHyperlink (wxHyperlinkEvent& rEvent)
 {
-    //wxLaunchDefaultBrowser(GetURL());
     new BFThread_LaunchBrowser(GetURL());
 }
 
@@ -55,9 +54,13 @@ BFThread_LaunchBrowser::BFThread_LaunchBrowser (const wxString& url)
     Run();
 }
 
+/*virtual*/ BFThread_LaunchBrowser::~BFThread_LaunchBrowser ()
+{
+}
+
 /*virtual*/ void* BFThread_LaunchBrowser::Entry()
 {
-    wxLaunchDefaultBrowser(strUrl_);
+    wxLaunchDefaultBrowser(strUrl_, wxBROWSER_NEW_WINDOW);
     return NULL;
 }
 

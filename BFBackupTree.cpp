@@ -328,7 +328,8 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     {
         idCurr  = idLast;
         strCurr = tkz.GetNextToken();
-        BFTaskBase::FillBlackfiskPlaceholders(strCurr);
+        if (bFillBlackfiskPlaceholders_)
+            BFTaskBase::FillBlackfiskPlaceholders(strCurr);
         idLast  = FindItem(idCurr, strCurr, false);
 
         // does the item exists

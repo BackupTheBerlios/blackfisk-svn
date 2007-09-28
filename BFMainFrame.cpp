@@ -45,6 +45,7 @@
 #include "BFSettingsDlg2.h"
 #include "BFRootTask.h"
 #include "BFTaskProgressDlg.h"
+#include "BFHyperlinkCtrl.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -159,7 +160,7 @@ END_EVENT_TABLE()
     Center();
 
 #ifdef _DEBUG
-    Test();
+    //Test();
 #endif
 }
 
@@ -268,12 +269,12 @@ void BFMainFrame::OnShowHistory (wxCommandEvent& event)
 
 void BFMainFrame::OnOpenWebSite (wxCommandEvent& event)
 {
-    wxLaunchDefaultBrowser(_T("http://www.blackfisk.org"));
+    new BFThread_LaunchBrowser(_T("http://www.blackfisk.org"));
 }
 
 void BFMainFrame::OnSubmitBug (wxCommandEvent& event)
 {
-    wxLaunchDefaultBrowser(_T("http://developer.berlios.de/bugs/?group_id=8687"));
+    new BFThread_LaunchBrowser(_T("http://developer.berlios.de/bugs/?group_id=8687"));
 }
 
 void BFMainFrame::OnLastProject (wxCommandEvent& event)
@@ -428,7 +429,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    new BFTaskProgressDlg(this, BFRootTask::Instance());
+    wxGetApp().Test();
 }
 #endif
 
@@ -462,10 +463,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 
     if (iAnswer != wxCANCEL)
-    {
-        wxGetApp().Backup();
-        new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
-    }
+        new BFTaskProgressDlg(this);
 }
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)

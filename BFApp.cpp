@@ -25,10 +25,10 @@
 #include <wx/wx.h>
 #include <wx/file.h>
 #include <wx/dir.h>
-#include <wx/sound.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
 #include <wx/cshelp.h>
+#include <wx/sound.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
@@ -37,7 +37,6 @@
 #include "BFRootTask.h"
 #include "Progress.h"
 #include "BFSettings.h"
-#include "BFwxLog.h"
 #include "BFBackupQuestionDlg.h"
 #include "BFCmdLine.h"
 
@@ -244,38 +243,17 @@ bool BFApp::IsProjectModified ()
     return BFRootTask::Instance().IsModified();
 }
 
+#ifdef _DEBUG
 void BFApp::Test ()
 {
-    wxArrayString   arr;
-    wxString        str;
-    arr.Add(_T("ABCDEFGHIJKLMN"));
-    arr.Add(_T("ABCDEfghi239"));
-    arr.Add(_T("ABCd333"));
-    arr.Add(_T("ABC"));
-
-    str = ExtractCommunity(arr);
+    //wxArrayString arrExclude;
+    //BFCore::Instance().CreateZipFromDir (_T("D:\\100PHOTO.zip"), _T("D:\\100PHOTO"), &arrExclude, true);
+    wxDateTime dt(1, wxDateTime::Jan, 2050);
+    dt.GetAsDOS();
 }
+#endif
 
-
-void BFApp::Backup()
+void BFApp::Sound_BackupFinished ()
 {
-    BFwxLog log;
-
-    /* deactivate the default wxLog target
-       and set a new one that handle messages
-       with BFSystem */
-    wxLog::SetActiveTarget(&log);
-
-    // ** RUN **
-    if (BFRootTask::Instance().Run(this->MainFrame()))
-    {
-        wxSound(_T("sound\\finish.wav")).Play();
-    }
-    else
-    {
-        BFSystem::Fatal(_T("there was an ERROR while Backup"), _T("BFApp::Backup()"));
-    }
-
-    // reset the default wxLog target
-    wxLog::SetActiveTarget(NULL);
+    wxSound(_T("sound\\finish.wav")).Play();
 }

@@ -31,6 +31,8 @@
 #include "BFIconTable.h"
 #include "BFBackupLog.h"
 #include "blackfisk.h"
+#include "BFwxLog.h"
+#include "BFThread_ProjectRunner.h"
 
 #define BFROOTTASK_DEFAULT_NAME _("unnamed")
 
@@ -66,6 +68,20 @@ bool BFRootTaskData::Has (BFProjectSettings* pPrjSet)
     return false;
 }
 
+long BFRootTaskData::FindTask (BFTask* pTask)
+{
+    BFTaskVectorIt  itVec;
+    long            lPos;
+
+	for (lPos = 0, itVec = TaskVector().begin();
+		 itVec != TaskVector().end();
+		 itVec++, lPos++)
+        if ((*itVec) == pTask)
+            return lPos;
+
+    return -1;
+}
+
 BFTask* BFRootTaskData::GetTask(BFoid oid)
 {
     BFTaskVectorIt itVec;
@@ -77,6 +93,25 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
             return (*itVec);
 
     return NULL;
+}
+
+BFTask* BFRootTaskData::GetNextTask (BFTask* pTask)
+{
+    if (TaskVector().empty())
+        return NULL;
+
+    // current task position
+    long lPos = FindTask(pTask);
+
+    if (lPos == -1 || (lPos+1) == TaskVector().size())
+        return TaskVector()[0];
+
+    return TaskVector()[lPos+1];
+}
+
+BFTask* BFRootTaskData::GetLastTask ()
+{
+    return TaskVector()[TaskVector().size()-1];
 }
 
 bool BFRootTaskData::DeleteTask (BFoid oid)
@@ -316,7 +351,11 @@ BFRootTask::BFRootTask()
           : oidLast_(BFInvalidOID),
             bStopProject_(false),
             bStopTask_(false),
-            pRunningTask_(NULL)
+            pRunningTask_(NULL),
+            pBackupLog_(NULL),
+            pDlg_(NULL),
+            pProgressTotal_(NULL),
+            pProgressTask_(NULL)
 {
 }
 
@@ -342,67 +381,119 @@ BFCore& BFRootTask::Core ()
 void BFRootTask::Close ()
 {
     ClearTaskVector();
-    SetName(BFROOTTASK_DEFAULT_NAME);
-    GetSettings().SetDefault();
-    SetModified(false);
+    SetName             (BFROOTTASK_DEFAULT_NAME);
+    GetSettings()       .SetDefault();
+    SetModified         (false);
     strCurrentFilename_ = wxEmptyString;
-    oidLast_ = BFInvalidOID;
-    bStopProject_ = false;
-    bStopTask_ = false;
-    pRunningTask_ = NULL;
+    oidLast_            = BFInvalidOID;
+    bStopProject_       = false;
+    bStopTask_          = false;
+    pRunningTask_       = NULL;
+    pBackupLog_         = NULL;
+    pDlg_               = NULL;
     broadcastObservers();
 }
 
-bool BFRootTask::Run (wxWindow* pParent)
+
+Progress* BFRootTask::GetProgressTotal ()
 {
+    if (pProgressTotal_ == NULL)
+        pProgressTotal_ = new ProgressTotal(GetTaskCount(), GetProgressTask());
+
+    return pProgressTotal_;
+}
+
+
+ProgressWithMessage* BFRootTask::GetProgressTask ()
+{
+    if (pProgressTask_ == NULL)
+        pProgressTask_ = new ProgressWithMessage();
+
+    return pProgressTask_;
+}
+
+bool BFRootTask::Run_Start (BFTaskProgressDlg* pDlg)
+{
+    if (pDlg == NULL)
+        return false;
+
+    /* deactivate the default wxLog target
+       and set a new one that handle messages
+       with BFSystem */
+    wxLog::SetActiveTarget(new BFwxLog);
+
     // init
-    int                     i;
-    wxString                str;
-    BFBackupLog             log;
-    BFTaskProgressDlg       dlg(pParent, *this);
+    pBackupLog_     = new BFBackupLog();
+    pDlg_           = pDlg;
+    pRunningTask_   = NULL;
 
     // mark the backup start in the logfile
-    log.BackupStarted();
+    pBackupLog_->BackupStarted();
     // the core need to create backup messages
     BFCore::Instance().BackupStarted();
 
-    if (!GetStopProject())
+    return Run_NextTask ();
+}
+
+bool BFRootTask::Run_NextTask ()
+{
+    // finished the last runned task
+    if (pRunningTask_ != NULL)
     {
-        // run each task
-        for (i = 0; i < TaskVector().size() && !bStopProject_; ++i)
+        // increment task progress
+        GetProgressTotal()->IncrementActual();
+
+        // check how the task ended
+        if (GetStopCurrentTask())
         {
-            pRunningTask_ = TaskVector()[i];
-            log.TaskStarted(*pRunningTask_);
-            dlg.SetCurrentTaskName(pRunningTask_->GetName());
-
-            // create directory if needed
-            str = pRunningTask_->GetDestination();
-            if ( !(wxDir::Exists(BFTaskBase::FillBlackfiskPlaceholders(str))) )
-                Core().CreatePath(str);
-
-            // run the task
-            pRunningTask_->Run( *(dlg.GetProgressTask()) );
-
-            // increment task progress
-            dlg.GetProgressTotal()->IncrementActual();
-
-            // check how the task ended
-            if (GetStopCurrentTask())
-            {
-                log.TaskStoped();
-                bStopTask_ = false;
-            }
-            else
-            {
-                log.TaskFinished();
-            }
+            pBackupLog_->TaskStoped();
+            bStopTask_ = false;
+        }
+        else
+        {
+            pBackupLog_->TaskFinished();
         }
     }
 
+    // all tasks runned?
+    if (pRunningTask_ == GetLastTask())
+        return Run_Finished();
+
+    // get the next task
+    pRunningTask_ = GetNextTask(pRunningTask_);
+
+    if (!GetStopProject())
+    {
+        // log running task
+        pBackupLog_->TaskStarted(*pRunningTask_);
+        //
+        pDlg_->SetCurrentTaskName(pRunningTask_->GetName());
+        new BFThread_ProjectRunner(pRunningTask_);
+    }
+
+    return true;
+}
+
+bool BFRootTask::Run_Finished ()
+{
     // mark the backup end in the log files
-    log.BackupFinished();
+    pBackupLog_->BackupFinished();
     // there is no need to create backup messages
     BFCore::Instance().BackupEnded();
+
+    delete pBackupLog_;
+    delete pProgressTask_;
+    delete pProgressTotal_;
+    pBackupLog_     = NULL;
+    pProgressTask_  = NULL;
+    pProgressTotal_ = NULL;
+
+    // reset the default wxLog target
+    delete wxLog::SetActiveTarget(NULL);
+
+    wxGetApp().Sound_BackupFinished();
+
+    pDlg_->Close();
 
     return true;
 }

@@ -33,6 +33,11 @@
 #include "BFBackupTree.h"
 #include "BFProjectSettings.h"
 
+class BFBackupLog;
+class BFTaskProgressDlg;
+class ProgressTotal;
+class ProgressWithMessage;
+
 /// data layer
 class BFRootTaskData : public BFTaskBase, public Subject
 {
@@ -67,6 +72,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
         /** it delete all task objects in the task-vector
             ATTENTION: it does not check if the project is saved !*/
         void ClearTaskVector ();
+
+        /** return the position in the task-vector of the specified BFTask
+            return -1 if nothing is found */
+        long FindTask (BFTask* pTask);
 
     public:
         ///
@@ -103,6 +112,15 @@ class BFRootTaskData : public BFTaskBase, public Subject
         ///
         bool DeleteTask (BFoid oid);
 
+        /** search in 'vecTasks_' for 'pTask'
+            and return the BFTask pointer behind it
+            if 'pTask' is not found in the vector
+            or 'pTask' is the last element
+            the first BFTask pointer is returned */
+        BFTask* GetNextTask (BFTask* pTask);
+        ///
+        BFTask* GetLastTask ();
+
         ///
         bool IsModified ();
         ///
@@ -133,6 +151,14 @@ class BFRootTask : public BFRootTaskData
         bool                bStopProject_;
         ///
         bool                bStopTask_;
+        ///
+        BFBackupLog*        pBackupLog_;
+        ///
+        BFTaskProgressDlg*      pDlg_;
+        ///
+        ProgressTotal*          pProgressTotal_;
+        ///
+        ProgressWithMessage*    pProgressTask_;
 
         ///
         static BFRootTask sRootTask_;
@@ -158,8 +184,18 @@ class BFRootTask : public BFRootTaskData
         ///
         void Close ();
 
-        /** run all tasks*/
-        bool Run (wxWindow* pParent);
+        /// run all tasks
+        bool Run_Start (BFTaskProgressDlg* pDlg);
+        ///
+        bool Run_NextTask ();
+        ///
+        bool Run_Finished ();
+
+        ///
+        Progress* GetProgressTotal ();
+        ///
+        ProgressWithMessage* GetProgressTask ();
+
         ///
         void StopCurrentTask ();
         ///
