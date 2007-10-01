@@ -99,9 +99,6 @@ class BFMainFrame : public wxFrame
         { return wxGetApp().MainFrame(); }
 
         ///
-        /*static BFApp* App ()
-        { return spApp_; }*/
-        ///
         BFBackupCtrl* BackupCtrl ();
         ///
         BFBackupTree* BackupTree ();
@@ -134,6 +131,8 @@ class BFMainFrame : public wxFrame
         void OnOpenWebSite (wxCommandEvent& event);
         ///
         void OnSubmitBug (wxCommandEvent& event);
+        ///
+        void OnThreadEnd (wxCommandEvent& event);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */

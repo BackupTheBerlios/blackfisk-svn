@@ -57,7 +57,7 @@ void BFLogViewDlg::Init ()
 {
     // the book
     wxNotebook* pBook = new wxNotebook (this, wxID_ANY);
-    pBook->SetMinSize(wxSize(570, 400));
+    pBook->SetMinSize(wxSize(570, 420));
     wxSizer* pBookSizer = new wxBoxSizer(wxVERTICAL);
     pBookSizer->Add(pBook);
 

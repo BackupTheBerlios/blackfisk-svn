@@ -37,8 +37,10 @@ END_EVENT_TABLE()
 BFTaskProgressDlg::BFTaskProgressDlg (wxWindow* pParent)
                  : wxDialog(pParent, -1, wxString(_("Task Progress")))
 {
-    wxGetApp().MainFrame()->Hide();
+    wxGetApp().MainFrame()->Iconize();
     Init();
+    Show();
+    Raise();
     BFRootTask::Instance().Run_Start(this);
 }
 
@@ -50,9 +52,13 @@ void BFTaskProgressDlg::OnClose(wxCloseEvent& rEvent)
     }
     else
     {
-        wxGetApp().MainFrame()->Show();
-        new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
+        //new BFThread_LogView();
         Destroy();
+        /*wxMutexGuiEnter();
+            BFLogViewDlg* pDlg = new BFLogViewDlg(NULL, BFRootTask::Instance().GetLastLogFiles());
+            pDlg->Show();
+        wxMutexGuiLeave();*/
+        //wxGetApp().MainFrame()->Show();
     }
 }
 
@@ -87,9 +93,7 @@ void BFTaskProgressDlg::Init ()
     // init controls
     BFRootTask::Instance().InitThat(*pListBox_);
 
-    // show the window while creation
     SetSizerAndFit(pTopSizer);
-    Show();
 }
 
 

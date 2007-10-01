@@ -1,9 +1,6 @@
 0.0.1
 ~~~~~
 - CHECK: stop current task, project etc while running threads
-- CHECK: using Freeze() and Thaw()
-- write backupLogs while the backup (e.g. after each task)
-- manipulate the thread priority while backup
 - mark current task in the left ctrl
 - message count and display message
 - stop project, skip task in ProgressDlg
@@ -19,7 +16,7 @@
   e.g. 5 task in the directory "e:\PrgBackup_<date>", to change the destination
   just modify the node not each of the 5 tasks (destination field in the TaskDlg)
 - sync directories: more detailed settings (delete?)
-- exclude-control for directory-tasks (with filters: look on "abakt")
+- exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - using commandline without gui (controlable by things like cronjob)
 - new advanced-option: ask-on-message (true/false) while autorun (non-gui)
 - remember last concret backup files and delete them automaticly (by count, by timespan, by size)

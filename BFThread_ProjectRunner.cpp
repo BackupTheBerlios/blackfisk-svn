@@ -25,6 +25,9 @@
 #include "BFRootTask.h"
 #include "BFTask.h"
 #include "BFCore.h"
+#include "ctrlids.h"
+
+DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
 
 //
 BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
@@ -54,4 +57,11 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
 
     // finish this and run next task
     BFRootTask::Instance().Run_NextTask();
+
+    // last task
+    if ( !(BFCore::Instance().IsWhileBackup()) )
+        // send pending event
+        wxGetApp().MainFrame()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
+
+    return NULL;
 }

@@ -45,5 +45,6 @@
 #define BFBACKUPCTRL_ID_DELETETASK                  15 + wxID_HIGHEST
 #define BFBACKUPCTRL_ID_ARCHIVE_DIR                 16 + wxID_HIGHEST
 #define BFDIRCTRL_ID_ARCHIVEDIR                     BFBACKUPCTRL_ID_ARCHIVE_DIR
+#define BF_ID_MAINFRAME                             17 + wxID_HIGHEST
 
 #endif  // CTRLIDS_H

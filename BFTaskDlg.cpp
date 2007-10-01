@@ -77,8 +77,14 @@ wxSizer* BFTaskDlg::CreateControls ()
 {
     // type
     wxStaticText* pTypeStatic = new wxStaticText(this, -1, _("type:"));
-    pTypeCtrl_ = new wxBitmapComboBox(this, BFTASKDGL_ID_CBTYPE);
-    pTypeCtrl_->SetWindowStyle(wxCB_READONLY);
+    pTypeCtrl_ = new wxBitmapComboBox(this,
+                                      BFTASKDGL_ID_CBTYPE,
+                                      wxEmptyString,
+                                      wxDefaultPosition,
+                                      wxDefaultSize,
+                                      0,
+                                      NULL,
+                                      wxCB_READONLY);
 
     // name
     wxPanel*        pNamePanel      = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);

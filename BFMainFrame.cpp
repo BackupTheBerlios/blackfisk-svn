@@ -46,6 +46,9 @@
 #include "BFRootTask.h"
 #include "BFTaskProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
+#include "BFThread_ProjectRunner.h"
+#include "ctrlids.h"
+
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -66,25 +69,22 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
     EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
     EVT_MENU    (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
+    EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
+    EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
 #ifdef _DEBUG
     EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
 #endif
-    EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
-    EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
+
+    EVT_COMMAND (BF_ID_MAINFRAME, BF_EVENT_THREAD_END, BFMainFrame::OnThreadEnd)
 END_EVENT_TABLE()
 
 
-/*private static* BFApp* BFMainFrame::spApp_ = NULL;*/
-
 /*private*/ BFMainFrame::BFMainFrame (BFApp& rApp)
             : wxFrame (NULL,
-                       -1,
+                       BF_ID_MAINFRAME,
                        wxEmptyString),
                        menuProject_(NULL)
 {
-    // set application variable
-    //spApp_ = &rApp;
-
     /* the BFMainFrame object set its own reference in BFApp itself
        because the reference (BFApp::spMainFrame_) is needed quite
        early while creation time of the BFMainFrame object */
@@ -153,11 +153,9 @@ END_EVENT_TABLE()
 
     RefreshTitle();
 
-    //wxToolTip::SetDelay(1000);
-
-    Show(TRUE);
     SetSize(wxSize(650, 600));
     Center();
+    Show(TRUE);
 
 #ifdef _DEBUG
     //Test();
@@ -338,6 +336,12 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
 void BFMainFrame::OnSettings (wxCommandEvent& event)
 {
     new BFSettingsDlg(this);
+}
+
+void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
+{
+    Iconize(false);
+    new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
 }
 
 bool BFMainFrame::AskModification ()

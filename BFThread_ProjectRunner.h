@@ -25,6 +25,16 @@
 #define BFTHREAD_PROJECTRUNNER_H
 
 #include <wx/thread.h>
+#include <wx/event.h>
+
+#ifdef __MINGW32__
+    extern const wxEventType BF_EVENT_THREAD_END;
+#else
+    BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_EVENT_TYPE(BF_EVENT_THREAD_END, -1)
+    END_DECLARE_EVENT_TYPES()
+#endif
+
 
 class BFTask;
 

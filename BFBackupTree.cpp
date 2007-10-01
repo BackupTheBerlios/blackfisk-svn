@@ -81,6 +81,8 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
 
 void BFBackupTree::Init ()
 {
+    Freeze();
+
     // delete all items in the treeCtrl
     DeleteAllItems();
 
@@ -92,6 +94,8 @@ void BFBackupTree::Init ()
     SelectItem(lastItemId_);
 
     SetToolTip(_("files and directories for the backup"));
+
+    Thaw();
 }
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
