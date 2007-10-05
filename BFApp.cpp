@@ -32,7 +32,7 @@
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
-#include "BFTaskProgressDlg.h"
+#include "BFBackupProgressDlg.h"
 #include "BFTaskDlg.h"
 #include "BFRootTask.h"
 #include "Progress.h"
@@ -246,10 +246,6 @@ bool BFApp::IsProjectModified ()
 #ifdef _DEBUG
 void BFApp::Test ()
 {
-    //wxArrayString arrExclude;
-    //BFCore::Instance().CreateZipFromDir (_T("D:\\100PHOTO.zip"), _T("D:\\100PHOTO"), &arrExclude, true);
-    wxDateTime dt(1, wxDateTime::Jan, 2050);
-    dt.GetAsDOS();
 }
 #endif
 

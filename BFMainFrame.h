@@ -30,9 +30,13 @@ class BFBackupTree;
 class BFDirCtrl;
 
 #include <wx/wx.h>
+#include <vector>
 
 #include "BFApp.h"
 #include "BFMessageDlg.h"
+
+///
+typedef std::vector<wxThread*> BFThreadVector;
 
 ///
 enum
@@ -65,10 +69,6 @@ enum
 class BFMainFrame : public wxFrame
 {
     private:
-        /** points to the application object
-            it is the main link down to the application layer */
-        //static BFApp*       spApp_;
-
         /// control to display the backup-structure
         BFBackupCtrl*       pBackupCtrl_;
 
@@ -79,7 +79,13 @@ class BFMainFrame : public wxFrame
         wxMenu*             menuProject_;
 
         ///
+        BFThreadVector      vecThreads_;
+
+        ///
         void CreateLastProjectMenu ();
+
+        ///
+        void DeleteRememberedThreads ();
 
 #ifdef _DEBUG
     void Test ();
@@ -133,6 +139,10 @@ class BFMainFrame : public wxFrame
         void OnSubmitBug (wxCommandEvent& event);
         ///
         void OnThreadEnd (wxCommandEvent& event);
+
+        /** remember the thread in vecThreads_
+            to delete them correct in OnThreadEnd() */
+        void RememberThread (wxThread* pThread);
 
         /** ask for the project file to open and store it in 'strProject'
             it handle another open and modified project */

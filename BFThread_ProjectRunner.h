@@ -27,6 +27,8 @@
 #include <wx/thread.h>
 #include <wx/event.h>
 
+#include "BFProjectSettings.h"
+
 #ifdef __MINGW32__
     extern const wxEventType BF_EVENT_THREAD_END;
 #else
@@ -35,7 +37,6 @@
     END_DECLARE_EVENT_TYPES()
 #endif
 
-
 class BFTask;
 
 ///
@@ -43,19 +44,47 @@ class BFThread_ProjectRunner : public wxThread
 {
     private:
         ///
-        BFTask* pTask_;
+        BFTask*         pTask_;
+        ///
+        wxMutex*        pMutex_;
+        ///
+        wxCondition*    pCondition_;
+        ///
+        BF_StopLevel    stopAnswer_;
 
-    protected:
-        /// proteced members
+        ///
+        static BFThread_ProjectRunner* sp_project_runner_;
 
-    public:
         /// ctor
         BFThread_ProjectRunner (BFTask* pTask);
+
+        /// default ctor
+        BFThread_ProjectRunner () {};
+
+    public:
+        ///
+        static BFThread_ProjectRunner* CurrentlyRunning ()
+        { return sp_project_runner_; }
+
+        ///
+        static bool Run (BFTask* pTask);
 
         /// virtual dtor
         virtual ~BFThread_ProjectRunner ();
 
         /// thread execution starts here
         virtual void *Entry();
+
+        /** If an error occures while backup and the user
+            need to be asked what is to do,
+            The backup-worker-thread can not ask the user
+            himself because he is not alowed to call the GUI.
+            The backup-worker-thread send an event to the
+            main-thread and the main-thread ask the user
+            and store the answer with this methode */
+        void SetUsersStopAnswer (BF_StopLevel stop);
+        ///
+        BF_StopLevel GetUsersStopAnswer ();
+
 };
 #endif    // BFTHREAD_PROJECTRUNNER_H

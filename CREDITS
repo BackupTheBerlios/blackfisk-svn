@@ -1,6 +1,26 @@
 Thanks to...
-- wxWidget community
-- Code::Blocks community
-- Jorgen Bode (wxArchiv) http://wastebucket.solidsteel.nl/cms/modules/PDdownloads/viewcat.php?cid=7
+
+- Jorgen Bode
+  created wxSerialize to serialize objects
+  <http://wastebucket.solidsteel.nl/?page_id=5>
+  
+- the wxWidget community and the maintainers 
+  Cross-Platform GUI Library <http://www.wxwidgets.org>
+
+- the Code::Blocks community and the maintainers
+  The open source, cross platform C++ IDE <http://www.codeblocks.org>
+
+- the MinGW project
+  GNU based compiler system for Windows <http://www.mingw.org>
+
+- BerliOS
+  free service to Open Source developers <http://www.berlios.de>
+
+- to Gmane (Lars Magne Ingebrigtsen)
+  mail-to-news-Gateway and mailing list archive
+
+- to InterNetworX
+  hosting the project domain <http://www.inwx.de>
+
 - persons created some stuff that is not in the release-version
 - all others I forgot (please mail me)

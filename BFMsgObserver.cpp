@@ -28,7 +28,9 @@
 #include "BFCore.h"
 #include "BFProjectSettings.h"
 #include "BFRootTask.h"
-#include "BFBackupQuestionDlg.h"
+#include "BFBackupProgressDlg.h"
+#include "BFThread_ProjectRunner.h"
+#include "ctrlids.h"
 
 //
 BFMsgObserver::BFMsgObserver ()
@@ -94,7 +96,28 @@ BFMsgObserver::BFMsgObserver ()
 
         // act depending on the stop level
         if (stop == BFDO_ASK)
-            stop = BFBackupQuestionDlg::Ask(strMsg, pSys->GetLastType());
+        {
+            /* here we have to leave the backup-worker-thread and let
+               the main thread ask the user what whe should do here
+               - this backup-worker-thread send an event to the main-thread
+               - the main-thread pause the backup-worker-thread
+               - aks the user and store the answer somewhere
+               - resume the backup-worker-thread
+            */
+            //stop = BFBackupQuestionDlg::Ask(strMsg, pSys->GetLastType());
+            // create an event
+            wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, BF_BACKUPPROGRESSDLG_QUESTION);
+            // message type
+            event.SetExtraLong  (pSys->GetLastType());
+            // the question
+            event.SetString     (strMsg);
+            // send event
+            BFBackupProgressDlg::Instance()->AddPendingEvent(event);
+            // want for answer from main-thread/user
+            BFBackupProgressDlg::Instance()->GetCondition()->Wait();
+            // get the answer
+            stop = BFThread_ProjectRunner::CurrentlyRunning()->GetUsersStopAnswer();
+        }
 
         switch (stop)
         {

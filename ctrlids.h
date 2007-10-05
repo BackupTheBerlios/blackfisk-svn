@@ -24,7 +24,7 @@
 #ifndef CTRLIDS_H
 #define CTRLIDS_H
 
-/// menuIDs for BFDirCtrl and BFBackupTree
+///
 #define BFBACKUPCTRL_ID_ADDDESTINATION              1 + wxID_HIGHEST
 #define BFBACKUPCTRL_ID_COPY_DIR                    2 + wxID_HIGHEST
 #define BFDIRCTRL_ID_BACKUP_DIRCOPY                 BFBACKUPCTRL_ID_COPY_DIR
@@ -46,5 +46,6 @@
 #define BFBACKUPCTRL_ID_ARCHIVE_DIR                 16 + wxID_HIGHEST
 #define BFDIRCTRL_ID_ARCHIVEDIR                     BFBACKUPCTRL_ID_ARCHIVE_DIR
 #define BF_ID_MAINFRAME                             17 + wxID_HIGHEST
+#define BF_BACKUPPROGRESSDLG_QUESTION               18 + wxID_HIGHEST
 
 #endif  // CTRLIDS_H

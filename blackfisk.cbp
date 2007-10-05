@@ -115,6 +115,12 @@
 		<Unit filename="BFBackupLog.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
+		<Unit filename="BFBackupProgressDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFBackupProgressDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="BFBackupQuestionDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
@@ -293,12 +299,6 @@
 		<Unit filename="BFTaskDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
-		<Unit filename="BFTaskProgressDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFTaskProgressDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
 		<Unit filename="BFThread_ProjectRunner.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -326,6 +326,7 @@
 		<Unit filename="Progress.h">
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
+		<Unit filename="TODO" />
 		<Unit filename="bf.log" />
 		<Unit filename="blackfisk.cpp">
 			<Option virtualFolder="AppLayer\" />

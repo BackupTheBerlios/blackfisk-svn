@@ -25,7 +25,7 @@
 #include <wx/wfstream.h>
 #include <wx/tokenzr.h>
 
-#include "BFTaskProgressDlg.h"
+#include "BFBackupProgressDlg.h"
 #include "BFBackupTree.h"
 #include "Progress.h"
 #include "BFIconTable.h"
@@ -111,6 +111,9 @@ BFTask* BFRootTaskData::GetNextTask (BFTask* pTask)
 
 BFTask* BFRootTaskData::GetLastTask ()
 {
+    if (TaskVector().empty())
+        return NULL;
+
     return TaskVector()[TaskVector().size()-1];
 }
 
@@ -353,7 +356,6 @@ BFRootTask::BFRootTask()
             bStopTask_(false),
             pRunningTask_(NULL),
             pBackupLog_(NULL),
-            pDlg_(NULL),
             pProgressTotal_(NULL),
             pProgressTask_(NULL)
 {
@@ -390,7 +392,6 @@ void BFRootTask::Close ()
     bStopTask_          = false;
     pRunningTask_       = NULL;
     pBackupLog_         = NULL;
-    pDlg_               = NULL;
     broadcastObservers();
 }
 
@@ -412,9 +413,9 @@ ProgressWithMessage* BFRootTask::GetProgressTask ()
     return pProgressTask_;
 }
 
-bool BFRootTask::Run_Start (BFTaskProgressDlg* pDlg)
+bool BFRootTask::Run_Start ()
 {
-    if (pDlg == NULL)
+    if (BFBackupProgressDlg::Instance() == NULL)
         return false;
 
     /* deactivate the default wxLog target
@@ -423,8 +424,9 @@ bool BFRootTask::Run_Start (BFTaskProgressDlg* pDlg)
     wxLog::SetActiveTarget(new BFwxLog);
 
     // init
+    bStopProject_   = false;
+    bStopTask_      = false;
     pBackupLog_     = new BFBackupLog();
-    pDlg_           = pDlg;
     pRunningTask_   = NULL;
 
     // mark the backup start in the logfile
@@ -455,8 +457,8 @@ bool BFRootTask::Run_NextTask ()
         }
     }
 
-    // all tasks runned?
-    if (pRunningTask_ == GetLastTask())
+    // all tasks runned or stoped?
+    if (pRunningTask_ == GetLastTask() || GetStopProject())
         return Run_Finished();
 
     // get the next task
@@ -467,8 +469,8 @@ bool BFRootTask::Run_NextTask ()
         // log running task
         pBackupLog_->TaskStarted(*pRunningTask_);
         //
-        pDlg_->SetCurrentTaskName(pRunningTask_->GetName());
-        new BFThread_ProjectRunner(pRunningTask_);
+        BFBackupProgressDlg::Instance()->SetCurrentTaskName(pRunningTask_->GetName());
+        BFThread_ProjectRunner::Run(pRunningTask_);
     }
 
     return true;
@@ -493,7 +495,7 @@ bool BFRootTask::Run_Finished ()
 
     wxGetApp().Sound_BackupFinished();
 
-    pDlg_->Close();
+    BFBackupProgressDlg::Instance()->Close();
 
     return true;
 }

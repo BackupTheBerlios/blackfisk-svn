@@ -90,6 +90,7 @@ void BFProgressCtrlBase::SetTextA (const wxChar* text)
         return;
 
     pTextA_->SetLabel(text);
+    Layout();
 }
 
 
@@ -145,12 +146,15 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
     wxStaticBoxSizer* pSizer = new wxStaticBoxSizer(wxVERTICAL, this);
 
     // controls
-    pTextA_ = new wxStaticText(this, -1, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    pTextA_ = new wxStaticText(this, -1, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    wxFont font = pTextA_->GetFont();
+    font.SetWeight(wxFONTWEIGHT_BOLD);
+    pTextA_->SetFont(font);
     pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
     pTextB_ = new wxStaticText(this, -1, _T("<message>\n<message2>"));
 
     // arange
-    pSizer->Add(pTextA_, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1) );
+    pSizer->Add(pTextA_, wxSizerFlags(0).Center().Border() );
     pSizer->Add(pBar_, wxSizerFlags(0).Border(wxVERTICAL, 3));
     pSizer->Add(pTextB_);
     SetSizerAndFit(pSizer);

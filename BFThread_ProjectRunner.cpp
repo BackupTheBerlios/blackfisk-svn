@@ -25,22 +25,36 @@
 #include "BFRootTask.h"
 #include "BFTask.h"
 #include "BFCore.h"
+#include "BFBackupProgressDlg.h"
 #include "ctrlids.h"
 
 DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
 
+/*static*/ BFThread_ProjectRunner* BFThread_ProjectRunner::sp_project_runner_ = NULL;
+
+/*static*/ bool BFThread_ProjectRunner::Run (BFTask* pTask)
+{
+    wxGetApp().MainFrame()->RememberThread( new BFThread_ProjectRunner(pTask) );
+
+    return true;
+}
+
 //
 BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
-                      : pTask_(pTask)
+                      : wxThread(wxTHREAD_JOINABLE),
+                        pTask_(pTask)
 {
+    sp_project_runner_ = this;
+
     Create();
-    Run();
+    wxThread::Run();
 }
 
 
 //
 /*virtual*/ BFThread_ProjectRunner::~BFThread_ProjectRunner ()
 {
+    sp_project_runner_ = NULL;
 }
 
 
@@ -63,5 +77,16 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
         // send pending event
         wxGetApp().MainFrame()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
 
+    //delete this;
     return NULL;
+}
+
+BF_StopLevel BFThread_ProjectRunner::GetUsersStopAnswer ()
+{
+    return stopAnswer_;
+}
+
+void BFThread_ProjectRunner::SetUsersStopAnswer (BF_StopLevel stop)
+{
+    stopAnswer_ = stop;
 }

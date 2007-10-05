@@ -44,7 +44,7 @@
 #include "BFAboutDlg.h"
 #include "BFSettingsDlg2.h"
 #include "BFRootTask.h"
-#include "BFTaskProgressDlg.h"
+#include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
 #include "ctrlids.h"
@@ -340,8 +340,32 @@ void BFMainFrame::OnSettings (wxCommandEvent& event)
 
 void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
 {
+    DeleteRememberedThreads();
     Iconize(false);
     new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
+}
+
+void BFMainFrame::DeleteRememberedThreads ()
+{
+    BFThreadVector::iterator it;
+
+    for (it = vecThreads_.begin();
+         it != vecThreads_.end();
+         it++)
+    {
+        (*it)->Wait();
+        delete (*it);
+    }
+
+    vecThreads_.clear();
+}
+
+void BFMainFrame::RememberThread (wxThread* pThread)
+{
+    if (pThread == NULL)
+        return;
+
+    vecThreads_.push_back(pThread);
 }
 
 bool BFMainFrame::AskModification ()
@@ -433,7 +457,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    wxGetApp().Test();
+    //new BFBackupProgressDlg(this);
 }
 #endif
 
@@ -467,7 +491,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 
     if (iAnswer != wxCANCEL)
-        new BFTaskProgressDlg(this);
+        new BFBackupProgressDlg(this);
 }
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)

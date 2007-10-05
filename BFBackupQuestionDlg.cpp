@@ -96,6 +96,7 @@ void BFBackupQuestionDlg::OnButton (wxCommandEvent& rEvent)
 
 /*static*/ BF_StopLevel BFBackupQuestionDlg::Ask (const wxString& strMsg, BFMessageType type)
 {
+
     BFBackupQuestionDlg* pDlg = new BFBackupQuestionDlg(strMsg, type);
 
     BF_StopLevel stop;

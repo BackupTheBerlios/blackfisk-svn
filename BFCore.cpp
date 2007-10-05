@@ -272,6 +272,10 @@ bool BFCore::CreateZipFromDir (const wxChar* pstrZipName,
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("%s compressed to %s"), pstrSourceDir, pstrZipName));
 
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     // verify the zip-file
     if (bVerify)
     {
@@ -299,6 +303,10 @@ bool BFCore::VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, Pro
 
     while ( entry.reset(zip.GetNextEntry()), entry.get() != NULL )
     {
+        // stop ?
+        if ( BFCore::IsStop() )
+            return true;
+
         // we do not need to check directory-entries
         if (entry->IsDir())
         {
@@ -447,6 +455,10 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
     {   // one file to copy
         rc = ::wxCopyFile(strSource, strDest, bOverwrite);
 
+        // stop ?
+        if ( BFCore::IsStop() )
+            return false;
+
         // verify the file
         if (bVerify && rc)
             rc = VerifyFile(strSource, strDest);
@@ -454,14 +466,26 @@ bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool b
     else
     {   // more then one files to copy because of placeholders
         for (int i = 0; i < arrSource.Count(); ++i)
+        {
+            // stop ?
+            if ( BFCore::IsStop() )
+                return false;
+
             if ( !(::wxCopyFile(arrSource[i], strDest + arrSource[i].AfterLast(wxFILE_SEP_PATH), bOverwrite)) )
                 rc = false;
+        }
 
         // verify the files
         if (bVerify && rc)
             for (int i = 0; i < arrSource.Count(); ++i)
+            {
+                // stop ?
+                if ( BFCore::IsStop() )
+                    return true;
+
                 if ( !(VerifyFile(arrSource[i], strDest + arrSource[i].AfterLast(wxFILE_SEP_PATH))) )
                     rc = false;
+            }
     }
 
     if (rc && bWhileBackup_)
@@ -715,6 +739,10 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     wxDir dir(pSourceDir);
     BFCopyDirTraverser trav(pDestinationDir, pMap, pProgress);
     dir.Traverse(trav);
+
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
 
     // verify
     if (bVerify)

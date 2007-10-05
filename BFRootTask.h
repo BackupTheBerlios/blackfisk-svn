@@ -34,7 +34,6 @@
 #include "BFProjectSettings.h"
 
 class BFBackupLog;
-class BFTaskProgressDlg;
 class ProgressTotal;
 class ProgressWithMessage;
 
@@ -154,8 +153,6 @@ class BFRootTask : public BFRootTaskData
         ///
         BFBackupLog*        pBackupLog_;
         ///
-        BFTaskProgressDlg*      pDlg_;
-        ///
         ProgressTotal*          pProgressTotal_;
         ///
         ProgressWithMessage*    pProgressTask_;
@@ -185,7 +182,7 @@ class BFRootTask : public BFRootTaskData
         void Close ();
 
         /// run all tasks
-        bool Run_Start (BFTaskProgressDlg* pDlg);
+        bool Run_Start ();
         ///
         bool Run_NextTask ();
         ///

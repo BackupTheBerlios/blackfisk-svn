@@ -1,7 +1,9 @@
 0.0.1
 ~~~~~
-- CHECK: stop current task, project etc while running threads
-- mark current task in the left ctrl
+- CHECK: error, warnings, questions while backup with threads
+- modify a backup-node (directory)
+  e.g. 5 task in the directory "e:\PrgBackup_<date>", to change the destination
+  just modify the node not each of the 5 tasks (destination field in the TaskDlg)
 - message count and display message
 - stop project, skip task in ProgressDlg
 - backup a backup (task order/dependency!)
@@ -12,9 +14,6 @@
 
 0.0.2
 ~~~~~
-- modify a backup-node (directory)
-  e.g. 5 task in the directory "e:\PrgBackup_<date>", to change the destination
-  just modify the node not each of the 5 tasks (destination field in the TaskDlg)
 - sync directories: more detailed settings (delete?)
 - exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - using commandline without gui (controlable by things like cronjob)
