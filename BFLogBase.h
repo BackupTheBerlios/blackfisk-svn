@@ -57,6 +57,7 @@ class BFLogBase : public Observer
     public:
         /// virtual destructor
         virtual ~BFLogBase ();
+
 };    // class BFLogBase
 
 #endif    // BFLOGBASE_H

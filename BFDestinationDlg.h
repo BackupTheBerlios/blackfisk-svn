@@ -34,16 +34,30 @@ class BFDestinationCtrl;
 ///
 class BFDestinationDlg : public wxDialog
 {
+    public:
+        ///
+        enum BF_DestinationAction
+        {
+            add_destination,
+            modify_destination
+        };
+
     private:
         ///
-        BFDestinationCtrl*  pDestCtrl_;
+        BFDestinationCtrl*      pDestCtrl_;
+        /// what should be done with the destination
+        BF_DestinationAction    action_;
+        /// to know which destination should be modified
+        wxString                strInitialPath_;
 
         ///
         BFDestinationDlg ();
 
     public:
         /// constructor
-        BFDestinationDlg (wxWindow* pParent, const wxChar* strPath = wxEmptyString);
+        BFDestinationDlg (wxWindow* pParent,
+                          const wxChar* strPath,
+                          BF_DestinationAction action);
 
         /// virtual destructor
         virtual ~BFDestinationDlg ();

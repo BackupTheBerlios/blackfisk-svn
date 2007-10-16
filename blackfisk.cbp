@@ -213,12 +213,6 @@
 		<Unit filename="BFMainFrame.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
-		<Unit filename="BFMessageDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFMessageDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
 		<Unit filename="BFMsgObserver.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>

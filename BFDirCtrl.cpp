@@ -219,7 +219,9 @@ void BFDirCtrl::OnDestination (wxCommandEvent& event)
 
         case BFDIRCTRL_ID_CREATEDESTINATION:
             // open the dialog
-            new BFDestinationDlg(BFMainFrame::Instance(), pDirItem->m_path);
+            new BFDestinationDlg(BFMainFrame::Instance(),
+                                 pDirItem->m_path,
+                                 BFDestinationDlg::add_destination);
             break;
 
         default:

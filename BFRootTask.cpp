@@ -185,7 +185,7 @@ bool BFRootTask::ReadFromFile (const wxChar* strFilename)
     }
 
     wxFileInputStream   in(strFilename);
-    jbSerialize           archive(in, BF_PROJECT_CURRENT_VERSION);
+    jbSerialize         archive(in, BF_PROJECT_CURRENT_VERSION);
 
     if (Serialize(archive))
     {
@@ -271,7 +271,6 @@ void BFRootTaskData::SetName (const wxChar* strName)
     strName_ = strName;
 
     SetModified();
-    //broadcastObserver();
 }
 
 
@@ -285,6 +284,28 @@ BFProjectSettings& BFRootTaskData::GetSettings ()
 {
     return projectSettings_;
 }
+
+void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
+                                        const wxString& strNewDestination)
+{
+    BFTaskVectorIt it;
+    bool bMod = false;
+
+    for (it = TaskVector().begin();
+         it != TaskVector().end();
+         it++)
+    {
+        if (strOldDestination == (*it)->GetDestination())
+        {
+            (*it)->SetDestination(strNewDestination);
+            bMod = true;
+        }
+    }
+
+    if (bMod)
+        SetModified();
+}
+
 
 BFoid BFRootTaskData::AppendTask (BFTask& rTask)
 {
@@ -524,8 +545,6 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
          itVec++)
     {
         // create all for the task needed items in the tree
-        BFTaskType tt = (*itVec)->GetType();
-
         rBackupTree.AddTask
                     (
                         (*itVec)->GetOID(),

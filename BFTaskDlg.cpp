@@ -33,6 +33,7 @@
 #include "BFIconTable.h"
 #include "BFDestinationCtrl.h"
 #include "BFPlaceholderButton.h"
+#include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
   EVT_CLOSE   (BFTaskDlg::OnClose)
@@ -45,16 +46,17 @@ END_EVENT_TABLE()
 /*static*/ const long BFTaskDlg::lWidth2_ = 280;
 
 BFTaskDlg::BFTaskDlg (wxWindow* pParent,
-                      BFTask& rTask)
+                      BFTask* pTask)
          : wxDialog (pParent,
                      wxID_ANY,
-                     rTask.GetTypeDescription()),
-           rTask_(rTask),
+                     pTask->GetTypeDescription()),
+           pTask_(pTask),
+           pTypeCtrl_(NULL),
            pNameCtrl_(NULL),
            pSourceCtrl_(NULL),
            pDestCtrl_(NULL),
-           pVerifyCheck_(NULL),
-           pExcludeCtrl_(NULL)
+           pVerifyCheck_(NULL)/*,
+           pExcludeCtrl_(NULL)*/
 {
     // arrange and create controls
     wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
@@ -155,8 +157,8 @@ wxSizer* BFTaskDlg::CreateButtons ()
 void BFTaskDlg::OnClose(wxCloseEvent& rEvent)
 {
     // is it a unsaved/new created task?
-    if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
-        delete &rTask_;
+    if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
+        delete pTask_;
 
     Destroy();
 }
@@ -193,9 +195,9 @@ void BFTaskDlg::OnCombo_TypeSelect (wxCommandEvent& rEvent)
 {
     BFTypeVector vecTaskTypes;
 
-    rTask_.GetAvailableTypes(vecTaskTypes);
+    pTask_->GetAvailableTypes(vecTaskTypes);
     BFTaskType tt = vecTaskTypes[pTypeCtrl_->GetSelection()];
-    rTask_.SetTaskType(tt);
+    pTask_->SetTaskType(tt);
 
     InitTypeCtrl();
 }
@@ -205,7 +207,7 @@ void BFTaskDlg::InitTypeCtrl ()
     BFTypeVector vecTaskTypes;
 
     pTypeCtrl_->Clear();
-    rTask_.GetAvailableTypes(vecTaskTypes);
+    pTask_->GetAvailableTypes(vecTaskTypes);
 
     for (BFTypeVector::iterator it = vecTaskTypes.begin();
          it != vecTaskTypes.end();
@@ -222,10 +224,10 @@ void BFTaskDlg::InitTypeCtrl ()
 void BFTaskDlg::GetData ()
 {
     InitTypeCtrl();
-    pNameCtrl_      ->SetValue(rTask_.GetName());
-    pSourceCtrl_    ->SetValue(rTask_.GetSource());
-    pDestCtrl_      ->SetPath(rTask_.GetDestination());
-    pVerifyCheck_   ->SetValue(rTask_.Verify());
+    pNameCtrl_      ->SetValue(pTask_->GetName());
+    pSourceCtrl_    ->SetValue(pTask_->GetSource());
+    pDestCtrl_      ->SetPath(pTask_->GetDestination());
+    pVerifyCheck_   ->SetValue(pTask_->Verify());
     //pExcludeList_   ->Clear();
     //pExcludeList_   ->Set(rTask_.GetExclude());
 }
@@ -252,7 +254,7 @@ void BFTaskDlg::SetData ()
     // name
     if (pNameCtrl_->IsModified())
     {
-        rTask_.SetName(pNameCtrl_->GetValue());
+        pTask_->SetName(pNameCtrl_->GetValue());
         BFRootTask::Instance().SetModified();
         pNameCtrl_->DiscardEdits();
     }
@@ -260,22 +262,22 @@ void BFTaskDlg::SetData ()
     // source
     if (pSourceCtrl_->IsModified())
     {
-        rTask_.SetSource(pSourceCtrl_->GetValue());
+        pTask_->SetSource(pSourceCtrl_->GetValue());
         BFRootTask::Instance().SetModified();
         pSourceCtrl_->DiscardEdits();
     }
 
     // destination
-    if (pDestCtrl_->GetPath() != rTask_.GetDestination())
+    if (pDestCtrl_->GetPath() != pTask_->GetDestination())
     {
-        rTask_.SetDestination(pDestCtrl_->GetPath());
+        pTask_->SetDestination(pDestCtrl_->GetPath());
         BFRootTask::Instance().SetModified();
     }
 
     // verify
-    if (pVerifyCheck_->GetValue() != rTask_.Verify())
+    if (pVerifyCheck_->GetValue() != pTask_->Verify())
     {
-        rTask_.SetVerify(pVerifyCheck_->GetValue());
+        pTask_->SetVerify(pVerifyCheck_->GetValue());
         BFRootTask::Instance().SetModified();
     }
 
@@ -285,12 +287,16 @@ void BFTaskDlg::SetData ()
     if (arrExclude != rTask_.GetExclude())
         rTask_.SetExclude(arrExclude);
 */
+
     // add task if needed
-    if ( BFRootTask::Instance().HasTask(rTask_.GetOID()) == false )
-        BFRootTask::Instance().AppendTask(rTask_);
+    if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
+    {
+        BFRootTask::Instance().AppendTask(*pTask_);
+    }
     else
     {
-        BFRootTask::Instance().broadcastObservers();
+        // XXX if ( BFRootTask::Instance().IsModified() )
+            BFRootTask::Instance().broadcastObservers();
     }
 }
 
@@ -300,5 +306,5 @@ void BFTaskDlg::SetData ()
     if (pTask == NULL)
         return;
 
-    new BFTaskDlg(BFMainFrame::Instance(), *pTask);
+    new BFTaskDlg(BFMainFrame::Instance(), pTask);
 }

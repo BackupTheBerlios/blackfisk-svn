@@ -90,6 +90,9 @@ class BFRootTaskData : public BFTaskBase, public Subject
         ///
         BFProjectSettings& GetSettings ();
 
+        ///
+        void ModifyDestination (const wxString& strOldDestination, const wxString& strNewDestination);
+
         /** create a new task and return its oid
             if an error occures it returns OBInvalidOID
             this methode does not broadcast the observers! */

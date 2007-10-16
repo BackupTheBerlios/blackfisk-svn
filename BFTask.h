@@ -104,7 +104,7 @@ class BFTaskData : public BFTaskBase
         void GetAvailableTypes (BFTypeVector& rVecType);
 
         ///
-        BFoid GetOID ();
+        BFoid GetOID () const;
         ///
         BFTaskType GetType ();
         ///

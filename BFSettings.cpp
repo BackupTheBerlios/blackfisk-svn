@@ -80,9 +80,9 @@ void BFSettings::SetMaxLogFileSize (long lSizeInKiloByte)
         lMaxLogFileSize_ = lSizeInKiloByte;
 }
 
-const wxArrayString& BFSettings::GetLastProjects ()
+const wxString& BFSettings::GetLastProject ()
 {
-    return arrLastProjects_;
+    return strLastProject_;
 }
 
 void BFSettings::SetLastProject (const wxChar* strFilename)
@@ -90,15 +90,7 @@ void BFSettings::SetLastProject (const wxChar* strFilename)
     if (strFilename == NULL)
         return;
 
-    int idx = arrLastProjects_.Index(strFilename);
-
-    if (idx != wxNOT_FOUND)
-        arrLastProjects_.RemoveAt(idx);
-
-    if (arrLastProjects_.GetCount() == 4)
-        arrLastProjects_.RemoveAt(0);
-
-    arrLastProjects_.Add(strFilename);
+    strLastProject_ = strFilename;
 }
 
 void BFSettings::SetOpenLastProject (bool bOpen)
@@ -120,16 +112,6 @@ BFMessageType BFSettings::GetVerboseLevelLog ()
 {
     return verboseLog_;
 }
-/*
-void BFSettings::SetVerboseLevelMsg (BFMessageType lvl)
-{
-    verboseMsg_ = lvl;
-}
-
-BFMessageType BFSettings::GetVerboseLevelMsg ()
-{
-    return verboseMsg_;
-}*/
 
 
 bool BFSettings::Serialize (jbSerialize& rA)
@@ -146,10 +128,9 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << bFillBlackfiskPlaceholders_;
         rA << bWithFiles_;
         rA << (wxUint32&)lMaxLogFileSize_;
-        rA << arrLastProjects_;
+        rA << strLastProject_;
         rA << bOpenLastProject_;
         rA << (int)verboseLog_;
-        //rA << (int)verboseMsg_;
     }
     else
     // ** serialize FROM file **
@@ -158,10 +139,9 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA >> bFillBlackfiskPlaceholders_;
         rA >> bWithFiles_;
         rA >> (wxUint32&)lMaxLogFileSize_;
-        rA >> arrLastProjects_;
+        rA >> strLastProject_;
         rA >> bOpenLastProject_;
         rA >> (int&)verboseLog_;
-        //rA >> (int&)verboseMsg_;
     }
 
     rA.LeaveObject();

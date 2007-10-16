@@ -68,11 +68,11 @@ void BFBackupProgressDlg::Init ()
     wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer*         pSideSizer      = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer*         pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer*         pSizerRight     = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer*         pSizerRight     = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer*         pSizerRightSub  = new wxBoxSizer(wxVERTICAL);
 
     // list box
     pListBox_           = new wxListBox(this, wxID_ANY);
-    //pListBox_           ->SetMinSize(wxSize(150, 300));
 
     // progress ctrls
     pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTask::Instance().GetProgressTask());
@@ -96,13 +96,14 @@ void BFBackupProgressDlg::Init ()
     BFRootTask::Instance().InitThat(*pListBox_);
 
     // arrange
-    pSizerRight ->Add(pCtrlTaskProgress_);
-    pSizerRight ->Add(pCtrlTotalProgress_);
-    pSizerRight ->Add(pLogCtrl,         wxSizerFlags(0).Expand());
-    pSideSizer  ->Add(pListBox_,        wxSizerFlags(0).Expand());
-    pSideSizer  ->Add(pSizerRight,      wxSizerFlags(0).Border(wxLEFT | wxRIGHT));
-    pTopSizer   ->Add(pSideSizer);
-    pTopSizer   ->Add(pButtonSizer,     wxSizerFlags(0).Center().Border());
+    pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
+    pSizerRightSub  ->Add(pLogCtrl,             wxSizerFlags(0).Expand());
+    pSizerRight     ->Add(pSizerRightSub);
+    pSizerRight     ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxLEFT, 5));
+    pSideSizer      ->Add(pListBox_,            wxSizerFlags(0).Expand());
+    pSideSizer      ->Add(pSizerRight,          wxSizerFlags(0).Border(wxLEFT | wxRIGHT));
+    pTopSizer       ->Add(pSideSizer);
+    pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center().Border());
 
     SetSizerAndFit(pTopSizer);
 }

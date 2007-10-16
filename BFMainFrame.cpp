@@ -58,10 +58,6 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_CloseProject,       BFMainFrame::OnProject)
     EVT_MENU    (ID_NewProject,         BFMainFrame::OnProject)
     EVT_MENU    (ID_ProjectSettings,    BFMainFrame::OnProject)
-    EVT_MENU    (ID_LastProject1,       BFMainFrame::OnLastProject)
-    EVT_MENU    (ID_LastProject2,       BFMainFrame::OnLastProject)
-    EVT_MENU    (ID_LastProject3,       BFMainFrame::OnLastProject)
-    EVT_MENU    (ID_LastProject4,       BFMainFrame::OnLastProject)
     EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
     EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
     EVT_MENU    (ID_DisplayLog,         BFMainFrame::OnDisplayLog)
@@ -116,7 +112,6 @@ END_EVENT_TABLE()
     menuProject_->Append( ID_OpenProject,        _("&Open Project") );
     menuProject_->Append( ID_SaveProject,        _("&Save Project") );
     menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
-    menuProject_->AppendSeparator();
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -133,8 +128,6 @@ END_EVENT_TABLE()
     menuBar->Append( menuProject_,      _("&Project") );
     menuBar->Append( menuHelp,          _("&Help") );
     SetMenuBar( menuBar );
-
-    CreateLastProjectMenu ();
 
     // splitter window
     wxSplitterWindow* pSplitter = new wxSplitterWindow(this);
@@ -208,24 +201,6 @@ void BFMainFrame::RefreshTitle ()
                                                  BFApp::GetFullApplicationName()) );
 }
 
-void BFMainFrame::CreateLastProjectMenu ()
-{
-    if (menuProject_ == NULL)
-        return;
-
-    if (menuProject_->FindItem(ID_LastProject1) != NULL)
-        menuProject_->Delete(ID_LastProject1);
-    if (menuProject_->FindItem(ID_LastProject2) != NULL)
-        menuProject_->Delete(ID_LastProject2);
-    if (menuProject_->FindItem(ID_LastProject3) != NULL)
-        menuProject_->Delete(ID_LastProject3);
-    if (menuProject_->FindItem(ID_LastProject4) != NULL)
-        menuProject_->Delete(ID_LastProject4);
-
-    int iCount = BFSettings::Instance().GetLastProjects().GetCount();
-    for (int i = iCount-1; i > -1 ; --i)
-        menuProject_->Append( ID_LastProject4 - i, BFSettings::Instance().GetLastProjects()[i] );
-}
 
 BFBackupCtrl* BFMainFrame::BackupCtrl ()
 {
@@ -275,17 +250,6 @@ void BFMainFrame::OnSubmitBug (wxCommandEvent& event)
     new BFThread_LaunchBrowser(_T("http://developer.berlios.de/bugs/?group_id=8687"));
 }
 
-void BFMainFrame::OnLastProject (wxCommandEvent& event)
-{
-    if (AskModification())
-        wxGetApp().CloseCurrentProject(false);
-        {
-            wxGetApp().OpenProject(BFSettings::Instance().GetLastProjects()[ID_LastProject4 - event.GetId()]);
-            CreateLastProjectMenu();
-            RefreshTitle();
-        }
-}
-
 void BFMainFrame::OnProject (wxCommandEvent& event)
 {
     wxString strProject;
@@ -295,11 +259,9 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
         case ID_OpenProject:
             if (AskModification())
                 wxGetApp().CloseCurrentProject(false);
-                    if (AskOpenProject(strProject))
-                    {
-                        wxGetApp().OpenProject(strProject);
-                        CreateLastProjectMenu();
-                    }
+
+            if (AskOpenProject(strProject))
+                wxGetApp().OpenProject(strProject);
             break;
 
         case ID_SaveProject:
@@ -457,7 +419,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    //new BFBackupProgressDlg(this);
+    wxGetApp().Test();
 }
 #endif
 

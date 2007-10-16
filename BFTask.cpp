@@ -136,7 +136,7 @@ void BFTaskData::SetTaskType (BFTaskType type)
     BFSystem::Fatal(_T("not able to set task type"), _T("BFTaskData::SetTaskType()"));
 }
 
-BFoid BFTaskData::GetOID ()
+BFoid BFTaskData::GetOID () const
 {
     return oid_;
 }

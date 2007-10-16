@@ -845,12 +845,15 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 {
     for (int i = 0; i < rMap.size(); ++i)
     {
+        if (BFCore::IsStop())
+            return true;
+
         if (pProgress != NULL)
             pProgress->IncrementActualWithMessage(wxString::Format(_("compare %s with %s"), rMap[i].first.c_str(), rMap[i].second.c_str()));
 
         if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str()) )
         {
-            if (bWhileBackup_)
+            if (IsWhileBackup())
                 BFSystem::Backup(wxString::Format(_("the files %s and %s NOT identically"),
                                                   rMap[i].first.c_str(),
                                                   rMap[i].second.c_str()));

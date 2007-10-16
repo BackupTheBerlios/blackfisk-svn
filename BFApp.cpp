@@ -159,8 +159,7 @@ bool BFApp::OnInit()
     // open the last project ?
     if (strToOpen.IsEmpty())
         if (BFSettings::Instance().GetOpenLastProject())
-            if (BFSettings::Instance().GetLastProjects().GetCount() > 0)
-                strToOpen = BFSettings::Instance().GetLastProjects().Last();
+            strToOpen = BFSettings::Instance().GetLastProject();
 
     if ( !(strToOpen.IsEmpty()) )
     {
@@ -186,7 +185,7 @@ bool BFApp::OnInit()
         SaveSettings();
 
     wxFileInputStream   in(BF_SETTINGS);
-    jbSerialize           archive(in, BF_SETTINGS_CURRENT_VERSION);
+    jbSerialize         archive(in, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }
@@ -194,7 +193,7 @@ bool BFApp::OnInit()
 /*static*/ bool BFApp::SaveSettings ()
 {
     wxFileOutputStream  out(BF_SETTINGS);
-    jbSerialize           archive(out, BF_SETTINGS_CURRENT_VERSION);
+    jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
 }
@@ -211,14 +210,22 @@ wxString BFApp::GetCurrentProjectName ()
 
 bool BFApp::OpenProject (const wxChar* filename)
 {
-    BFSettings::Instance().SetLastProject(filename);
-    return BFRootTask::Instance().ReadFromFile(filename);
+    bool rc = BFRootTask::Instance().ReadFromFile(filename);
+
+    if (rc)
+        BFSettings::Instance().SetLastProject(filename);
+
+    return rc;
 }
 
 bool BFApp::SaveProject (const wxChar* filename)
 {
-    BFSettings::Instance().SetLastProject(filename);
-    return BFRootTask::Instance().StoreToFile(filename);
+    bool rc = BFRootTask::Instance().StoreToFile(filename);
+
+    if (rc)
+        BFSettings::Instance().SetLastProject(filename);
+
+    return rc;
 }
 
 bool BFApp::SaveCurrentProject ()

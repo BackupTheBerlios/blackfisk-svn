@@ -46,7 +46,7 @@ class BFTaskDlg : public wxDialog
 {
     protected:
         /** reference to the object holding the data */
-        BFTask&             rTask_;
+        BFTask*             pTask_;
 
         /// type control
         wxBitmapComboBox*   pTypeCtrl_;
@@ -58,8 +58,8 @@ class BFTaskDlg : public wxDialog
         BFDestinationCtrl*  pDestCtrl_;
         /// verify
         wxCheckBox*         pVerifyCheck_;
-        /// exclude control
-        wxListBox*          pExcludeCtrl_;
+        /* exclude control
+        wxListBox*          pExcludeCtrl_;*/
 
         /** init the type control */
         void InitTypeCtrl ();
@@ -84,7 +84,7 @@ class BFTaskDlg : public wxDialog
         static const long lWidth2_;
 
         /// constructor
-        BFTaskDlg (wxWindow* pParent, BFTask& rTask);
+        BFTaskDlg (wxWindow* pParent, BFTask* pTask);
         /// virtual destructor
         virtual ~BFTaskDlg ();
 

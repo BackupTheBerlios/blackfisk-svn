@@ -37,7 +37,8 @@
                                      Observer(pProgress),
                                      pBar_(NULL),
                                      pTextA_(NULL),
-                                     pTextB_(NULL)
+                                     pTextB_(NULL),
+                                     pTextC_(NULL)
 {
 }
 
@@ -81,6 +82,7 @@
         return;
 
     pTextB_->SetLabel ( wxString::Format(_T("%d %%"), pP->GetProgress()) );
+    Layout();
 }
 
 
@@ -116,20 +118,26 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 
     // sizer
     wxStaticBoxSizer*   pTopSizer       = new wxStaticBoxSizer(wxVERTICAL, this);
-    wxBoxSizer*         pLabelSizer     = new wxBoxSizer(wxHORIZONTAL);
 
     // controls
     pTextA_ = new wxStaticText(this, -1, _("Total"));
-    pTextB_ = new wxStaticText(this, -1, _T("000 %"));
-    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 30), wxGA_HORIZONTAL);
+    wxFont font = pTextA_->GetFont();
+    font.SetWeight(wxFONTWEIGHT_BOLD);
+    pTextA_->SetFont(font);
+    pTextB_ = new wxStaticText(this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    pTextB_->SetFont(font);
+    pBar_   = new wxGauge(this,
+                          -1,
+                          100,
+                          wxDefaultPosition,
+                          wxDefaultSize/*wxSize(300, 30)*/,
+                          wxGA_VERTICAL | wxGA_SMOOTH);
 
     // arange
-    pLabelSizer ->Add ( pTextA_, wxSizerFlags(0).Border(wxALL, 1) );
-    pLabelSizer ->AddSpacer (5);
-    pLabelSizer ->Add ( pTextB_, wxSizerFlags(0).Border(wxALL, 1) );
-    pTopSizer   ->Add ( pLabelSizer );
-    pTopSizer   ->Add ( pBar_, wxSizerFlags(0).Border(wxVERTICAL, 3) );
-    SetSizerAndFit( pTopSizer );
+    pTopSizer   ->Add ( pTextA_,    wxSizerFlags(0).Center() );
+    pTopSizer   ->Add ( pTextB_,    wxSizerFlags(0).Center() );
+    pTopSizer   ->Add ( pBar_,      wxSizerFlags(1).Expand() );
+    SetSizer( pTopSizer );
 }
 
 
@@ -139,23 +147,29 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 
 /*virtual*/ void BFProgressTaskCtrl::InitControls ()
 {
-    if (pTextA_ != NULL || pTextB_ != NULL || pBar_ != NULL)
+    if (pTextA_ != NULL || pTextB_ != NULL || pTextC_ != NULL || pBar_ != NULL)
         return;
 
     // sizer
-    wxStaticBoxSizer* pSizer = new wxStaticBoxSizer(wxVERTICAL, this);
+    wxStaticBoxSizer*   pSizer = new wxStaticBoxSizer(wxVERTICAL, this);
+    wxBoxSizer*         pSubSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // controls
-    pTextA_ = new wxStaticText(this, -1, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    pTextA_ = new wxStaticText(this, -1, wxEmptyString);//, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
     wxFont font = pTextA_->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pTextA_->SetFont(font);
+    pTextC_ = new wxStaticText(this, -1, wxEmptyString);
+    pTextC_->SetFont(font);
     pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
     pTextB_ = new wxStaticText(this, -1, _T("<message>\n<message2>"));
 
+
     // arange
-    pSizer->Add(pTextA_, wxSizerFlags(0).Center().Border() );
-    pSizer->Add(pBar_, wxSizerFlags(0).Border(wxVERTICAL, 3));
+    pSubSizer->Add(pTextA_, wxSizerFlags(0).Center() );
+    pSubSizer->Add(pTextC_, wxSizerFlags(0).Center().Border(wxLEFT, 5) );
+    pSizer->Add(pSubSizer,  wxSizerFlags(0).Center() );
+    pSizer->Add(pBar_,      wxSizerFlags(0).Border(wxTOP|wxBOTTOM, 3));
     pSizer->Add(pTextB_);
     SetSizerAndFit(pSizer);
 }
@@ -177,8 +191,10 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
 {
     ProgressWithMessage* pPM = dynamic_cast<ProgressWithMessage*>(pP);
 
-    if (pPM == NULL || pTextA_ == NULL || pTextB_ == NULL)
+    if (pPM == NULL || pTextA_ == NULL || pTextB_ == NULL || pTextC_ == NULL)
         return;
 
-    pTextB_->SetLabel ( wxString::Format(_T("%s %d %%\n%s"), pPM->GetLabel(), pPM->GetProgress(), pPM->GetMessage()) );
+    pTextB_->SetLabel ( wxString::Format(_T("%s\n%s"), pPM->GetLabel(), pPM->GetMessage()) );
+    pTextC_->SetLabel ( wxString::Format(_T("%d %%"), pPM->GetProgress()) );
+    Layout();
 }

@@ -64,6 +64,11 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHe
                        iStopLevelOnWarning_(BFDO_STOPPRJ),
                        iLabelWidth_(85)
 {
+    Init(pHelpCtrl);
+}
+
+void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
+{
     wxString strTip;
 
     // verbose
@@ -117,7 +122,6 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHe
     pTopSizer   ->Add(pStopSizer, wxSizerFlags(0).Border(wxUP, 11));
     SetSizerAndFit(pTopSizer);
 }
-
 
 //
 /*virtual*/ BFProjectSettingsCtrl::~BFProjectSettingsCtrl ()

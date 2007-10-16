@@ -46,12 +46,10 @@ class BFSettings
         long                lMaxLogFileSize_;
         /** open the last opened project on start */
         bool                bOpenLastProject_;
-        /** last opened projectes */
-        wxArrayString       arrLastProjects_;
+        /** last opened projecte */
+        wxString            strLastProject_;
         /** verbose level for the application log file*/
         BFMessageType       verboseLog_;
-        /** verbose level for application messages (message box) *
-        BFMessageType       verboseMsg_;*/
 
         ///
         static BFSettings   sSettings_;
@@ -84,7 +82,7 @@ class BFSettings
         ///
         void SetMaxLogFileSize (long lSizeInKiloByte);
         ///
-        const wxArrayString& GetLastProjects ();
+        const wxString& GetLastProject ();
         ///
         void SetLastProject (const wxChar* strFilename);
         ///
@@ -95,10 +93,6 @@ class BFSettings
         void SetVerboseLevelLog (BFMessageType lvl);
         ///
         BFMessageType GetVerboseLevelLog ();
-        /**
-        void SetVerboseLevelMsg (BFMessageType lvl);
-        ///
-        BFMessageType GetVerboseLevelMsg ();*/
 
         ///
         bool Serialize (jbSerialize& rA);

@@ -123,7 +123,6 @@ class BFBackupLog : public Observer
 
         ///
         virtual void ValueChanged (Subject* pSender);
-
 };    // class BFBackupLog
 
 #endif    // BFBACKUPLOG_H

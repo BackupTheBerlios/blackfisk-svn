@@ -1,9 +1,7 @@
 0.0.1
 ~~~~~
-- CHECK: error, warnings, questions while backup with threads
 - modify a backup-node (directory)
-  e.g. 5 task in the directory "e:\PrgBackup_<date>", to change the destination
-  just modify the node not each of the 5 tasks (destination field in the TaskDlg)
+  BUG: two childs with <date>, on one is <date> to hardcoded-date
 - message count and display message
 - stop project, skip task in ProgressDlg
 - backup a backup (task order/dependency!)

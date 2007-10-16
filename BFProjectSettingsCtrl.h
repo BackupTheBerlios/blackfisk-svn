@@ -77,6 +77,9 @@ class BFProjectSettingsCtrl : public wxPanel
         ///
         wxSizer* CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl);
 
+        ///
+        void Init (BFHelpCtrl* pHelpCtrl);
+
     protected:
         /// proteced members
 

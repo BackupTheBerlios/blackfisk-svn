@@ -114,7 +114,6 @@ class ProgressTotal : public Progress, public Observer
         virtual bool IncrementActual ();
 		///
 		virtual void ValueChanged (Subject* pSender);
-
 };  // class ProgressTotal
 
 

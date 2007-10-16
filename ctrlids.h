@@ -46,6 +46,8 @@
 #define BFBACKUPCTRL_ID_ARCHIVE_DIR                 16 + wxID_HIGHEST
 #define BFDIRCTRL_ID_ARCHIVEDIR                     BFBACKUPCTRL_ID_ARCHIVE_DIR
 #define BF_ID_MAINFRAME                             17 + wxID_HIGHEST
-#define BF_BACKUPPROGRESSDLG_QUESTION               18 + wxID_HIGHEST
+#define BF_BACKUPPROGRESSDLG_QUESTION               18 + wxID_HIGHEST  // custom event
+#define BFBACKUPCTRL_ID_MODIFYDDESTINATION          19 + wxID_HIGHEST
+#define BF_BACKUPTREE_REBUILD                       20 + wxID_HIGHEST  // custom event
 
 #endif  // CTRLIDS_H

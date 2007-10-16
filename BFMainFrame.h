@@ -33,7 +33,6 @@ class BFDirCtrl;
 #include <vector>
 
 #include "BFApp.h"
-#include "BFMessageDlg.h"
 
 ///
 typedef std::vector<wxThread*> BFThreadVector;
@@ -53,10 +52,6 @@ enum
     ID_CloseProject,
     ID_NewProject,
     ID_ProjectSettings,
-    ID_LastProject1,
-    ID_LastProject2,
-    ID_LastProject3,
-    ID_LastProject4,
     ID_Settings,
     ID_DisplayLog,
     ID_ShowLicense,
@@ -80,9 +75,6 @@ class BFMainFrame : public wxFrame
 
         ///
         BFThreadVector      vecThreads_;
-
-        ///
-        void CreateLastProjectMenu ();
 
         ///
         void DeleteRememberedThreads ();
@@ -123,8 +115,6 @@ class BFMainFrame : public wxFrame
         void OnBackup (wxCommandEvent& event);
         ///
         void OnProject (wxCommandEvent& event);
-        ///
-        void OnLastProject (wxCommandEvent& event);
         ///
         void OnSettings (wxCommandEvent& event);
         ///

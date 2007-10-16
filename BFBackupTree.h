@@ -34,7 +34,6 @@
 #include "BFMainFrame.h"
 #include "BFTask.h"
 
-
 ///
 class BFBackupTree : public wxTreeCtrl, public Observer
 {
@@ -72,6 +71,19 @@ class BFBackupTree : public wxTreeCtrl, public Observer
 
         /// return a pointer to the BFTask object relating to the itemId in the backupTree
         BFTask* GetTaskByItem (wxTreeItemId itemId);
+        /// return the path of the specified item
+        const wxChar* GetPathByItem (wxTreeItemId itemId);
+
+        /** search for an item by its label starting at 'idStart'
+            and return the item-id for the first match.
+            if 'bGoDeep' is false only child-items in the next layer will be searched
+            if 'bGoDeep' is true grand-child-items in all layers will be searched
+            if nothing is found can be checked be wxTreeItemId::IsOk() */
+        wxTreeItemId FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep = true);
+        /* search for an item by its corrosponding BFTask starting at 'idStart'
+            and return the item-id for the first match.
+            if nothing is found can be checked be wxTreeItemId::IsOk() *
+        wxTreeItemId FindItem (wxTreeItemId idStart, const BFTask* pTask);*/
 
         /// open the TaskDialog for the Task specified by 'id'
         void ShowTaskSettings (wxTreeItemId id);
@@ -95,15 +107,15 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// used by BFDirCtrl to set the current handled file
         void SetDropedFilename (wxString strDropedFilename);
 
-        /** search for an item by its label and return the item-id
-            for the first match. if nothing is found it returns -1 */
-        wxTreeItemId FindItem (const wxChar* label);
-        /** search for an item by its label starting at 'idStart'
-            and return the item-id for the first match.
-            if 'bGoDeep' is false only child-items in the next layer will be searched
-            if 'bGoDeep' is true grand-child-items in all layers will be searched
-            if nothing is found can be checked be wxTreeItemId::IsOk() */
-        wxTreeItemId FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep = true);
+        /* modify the corrosponding tree-item to the
+            current values *
+        bool ModifyItem (const BFTask* pTask);*
+
+        /// find the corrosponding tree-item
+        wxTreeItemId FindItem (const BFTask* pTask);*/
+        /* search for an item by its label and return the item-id
+            for the first match. if nothing is found it returns -1 *
+        wxTreeItemId FindItem (const wxChar* label);*/
         /// if the specified item a task it returns 'true'
         bool IsTask (wxTreeItemId itemId);
 
@@ -126,11 +138,16 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         ///
         void OnCreateDestination (wxCommandEvent& rEvent);
         ///
+        void OnModifyDestination (wxCommandEvent& rEvent);
+        ///
         void OnTaskSettings (wxCommandEvent& rEvent);
         ///
         void OnDeleteTask (wxCommandEvent& rEvent);
         ///
         void OnCreateBackup (wxCommandEvent& rEvent);
+        /** called from BFBackupTree::ValueChanged() to eleminate
+            some wx-internal crashes */
+        void OnRebuild (wxCommandEvent& rEvent);
         ///
         void OnBeginLabelEdit (wxTreeEvent& rEvent);
         ///
@@ -140,7 +157,9 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         ///
         virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
 
-        DECLARE_EVENT_TABLE();
+        // void Test();
+
+    DECLARE_EVENT_TABLE();
 };    // class BFBackupTree
 
 

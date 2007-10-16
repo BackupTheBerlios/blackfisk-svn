@@ -27,6 +27,7 @@
 #include "BFIconTable.h"
 #include "BFMainFrame.h"
 #include "BFBackupTree.h"
+#include "BFRootTask.h"
 
 BEGIN_EVENT_TABLE(BFDestinationDlg, wxDialog)
   EVT_CLOSE   (BFDestinationDlg::OnClose)
@@ -35,10 +36,21 @@ BEGIN_EVENT_TABLE(BFDestinationDlg, wxDialog)
 END_EVENT_TABLE()
 
 //
-BFDestinationDlg::BFDestinationDlg (wxWindow* pParent, const wxChar* strPath /*= wxEmptyString*/)
-                : wxDialog(pParent, wxID_ANY, wxString(_("create a destination"))),
-                  pDestCtrl_(NULL)
+BFDestinationDlg::BFDestinationDlg (wxWindow* pParent,
+                                    const wxChar* strPath,
+                                    BF_DestinationAction action)
+                : wxDialog(pParent, wxID_ANY, wxEmptyString),
+                  pDestCtrl_(NULL),
+                  action_(action),
+                  strInitialPath_(strPath)
 {
+    // caption
+    if (action_ == add_destination)
+        SetTitle(_("create a destination"));
+
+    if (action_ == modify_destination)
+        SetTitle(_("modify a destination"));
+
     // dialog icon
     SetIcon(BFIconTable::Instance()->GetIcon(BFIconTable::folder));
 
@@ -80,7 +92,17 @@ void BFDestinationDlg::OnButton_Ok (wxCommandEvent& rEvent)
     BFBackupTree* pBackupTree = BFMainFrame::Instance()->BackupTree();
 
     // add and select the destination dir
-    pBackupTree->SelectItem(pBackupTree->AddDestination(pDestCtrl_->GetPath()));
+    if (action_ == add_destination)
+    {
+        pBackupTree->SelectItem(pBackupTree->AddDestination(pDestCtrl_->GetPath()));
+    }
+
+    // modify the destination and rebuild the tree
+    if (action_ == modify_destination)
+    {
+        BFRootTask::Instance().ModifyDestination(strInitialPath_, pDestCtrl_->GetPath());
+        pBackupTree->Init();
+    }
 
     Close();
 }
