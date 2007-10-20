@@ -290,18 +290,28 @@ void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
 {
     BFTaskVectorIt it;
     bool bMod = false;
+    wxString strCurrDest;
 
     for (it = TaskVector().begin();
          it != TaskVector().end();
          it++)
     {
-        if (strOldDestination == (*it)->GetDestination())
+        // the destination of the current task
+        strCurrDest = (*it)->GetDestination();
+
+        // has the destiantion to modify?
+        if (strCurrDest.StartsWith(strOldDestination))
         {
-            (*it)->SetDestination(strNewDestination);
+            // replace old with new destination
+            strCurrDest.Replace(strOldDestination, strNewDestination);
+            // set destination to the task
+            (*it)->SetDestination(strCurrDest);
+            // remember to mark the project as modified
             bMod = true;
         }
     }
 
+    // mark the project modified if needed
     if (bMod)
         SetModified();
 }

@@ -1,12 +1,9 @@
 0.0.1
 ~~~~~
-- modify a backup-node (directory)
-  BUG: two childs with <date>, on one is <date> to hardcoded-date
+- DnD a task to another directory
 - message count and display message
-- stop project, skip task in ProgressDlg
 - backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
-- BFBackupCtrl: sort driveletters and dirs in alphabetic order
 - display "show-log" progress after a backup
 - BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 

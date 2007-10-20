@@ -382,18 +382,19 @@ void BFBackupTree::Test()
 wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 {
     wxTreeItemId    idLast, idCurr;
-    wxString        strCurr, strAdd;
+    wxString        strCurr, strCurrFilled, strAdd;
 
     wxStringTokenizer tkz(strPath, wxFILE_SEP_PATH);
     idLast = GetRootItem();
 
     while ( tkz.HasMoreTokens() )
     {
-        idCurr  = idLast;
-        strCurr = tkz.GetNextToken();
+        idCurr          = idLast;
+        strCurr         = tkz.GetNextToken();
+        strCurrFilled   = strCurr;
         if (bFillBlackfiskPlaceholders_)
-            BFTaskBase::FillBlackfiskPlaceholders(strCurr);
-        idLast  = FindItem(idCurr, strCurr, false);
+            BFTaskBase::FillBlackfiskPlaceholders(strCurrFilled);
+        idLast  = FindItem(idCurr, strCurrFilled, false);
 
         // does the item exists
         if ( idLast.IsOk() )
@@ -404,9 +405,10 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
         // the current path, stored behind the adding item
         strAdd = strPath.Left(strPath.Find(strCurr) + strCurr.Len());
+        //BFSystem::Info(wxString::Format(_T("strAdd=%s\nstrPath=%s\nstrCurr=%s Len:%d"), strAdd, strPath, strCurr, strCurr.Len()), _T("AddDestination() strAdd"));
 
         // ** it is a volume **
-        if (strCurr[1] == _T(':'))
+        if (strCurrFilled[1] == _T(':'))
         {
             // append the volume item
             idLast = AppendItem
@@ -450,7 +452,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
         idLast = AppendItem
                  (
                     idCurr,
-                    strCurr,
+                    strCurrFilled,
                     -1,
                     -1,
                     new BFBackupTreeItemData ( BFInvalidOID, strAdd)
