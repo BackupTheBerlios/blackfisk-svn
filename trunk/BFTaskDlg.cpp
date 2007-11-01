@@ -68,7 +68,9 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
     GetData();
 
     // display the dialog
-    ShowModal();
+    // XXX
+    wxDialog::Show();
+    BFMainFrame::Instance()->Disable();
 }
 
 /*virtual*/ BFTaskDlg::~BFTaskDlg ()
@@ -160,6 +162,7 @@ void BFTaskDlg::OnClose(wxCloseEvent& rEvent)
     if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
         delete pTask_;
 
+    BFMainFrame::Instance()->Enable();
     Destroy();
 }
 

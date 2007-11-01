@@ -1,7 +1,9 @@
 0.0.1
 ~~~~~
+- drive letters UPPERCASE
+- DnD a dir to an existing destination (BFTaskDlg::IsPlausi()!): don't show the BFTaskDlg
 - DnD a task to another directory
-- message count and display message
+- message count and display message in BFBackupProgressDlg
 - backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - display "show-log" progress after a backup

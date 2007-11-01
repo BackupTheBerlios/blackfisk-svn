@@ -155,6 +155,9 @@ void BFTaskData::SetDestination (const wxChar* dest)
         return;
 
     strDestination_ = dest;
+
+    // upper case the drive letter
+    strDestination_.SetChar(0, wxString(strDestination_[0]).MakeUpper()[0]);
 }
 
 void BFTaskData::SetName (const wxChar* name)

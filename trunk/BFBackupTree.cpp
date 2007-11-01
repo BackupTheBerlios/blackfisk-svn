@@ -84,7 +84,7 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
 
 void BFBackupTree::OnRebuild (wxCommandEvent& rEvent)
 {
-    wxYieldIfNeeded();
+    wxGetApp().DebugLogPointers();
     Init();
 }
 
@@ -114,6 +114,13 @@ void BFBackupTree::Init ()
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
     strDropedFilename_ = strDropedFilename;
+}
+
+// XXX
+void BFBackupTree::Test ()
+{
+    lastItemId_ = FindItem (GetRootItem(), _T("TDxx"));
+    ShowTaskSettings(lastItemId_);
 }
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)

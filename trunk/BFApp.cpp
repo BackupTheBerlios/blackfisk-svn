@@ -260,3 +260,52 @@ void BFApp::Sound_BackupFinished ()
 {
     wxSound(_T("sound\\finish.wav")).Play();
 }
+
+// XXX
+#include "BFMainFrame.h"
+#include "BFBackupTree.h"
+void BFApp::DebugLogPointers ()
+{
+    wxString str;
+
+    BFSystem::Log(_T(""));
+    BFSystem::Log(_T("*** LOG POINTERS ***"));
+
+    // app
+    str = wxString::Format(_T("BFApp: %p"), this);
+    BFSystem::Log(str);
+
+    // mainframe
+    str = wxString::Format(_T("BFMainFrame: %p"), BFMainFrame::Instance());
+    BFSystem::Log(str);
+
+    // root task
+    str = wxString::Format(_T("BFRootTask: %p"), &(BFRootTask::Instance()));
+    BFSystem::Log(str);
+
+    // tasks
+    BFTaskVectorIt itVec;
+    for (itVec = BFRootTask::Instance().vecTasks_.begin();
+         itVec != BFRootTask::Instance().vecTasks_.end();
+         itVec++)
+    {
+        str = wxString::Format(_T("BFTask: %p"), (*itVec));
+        BFSystem::Log(str);
+    }
+
+    // observers for BFRootTask
+	ItVecObserver itObserver;
+	for (itObserver = BFRootTask::Instance().vecObserver_.begin();
+		itObserver != BFRootTask::Instance().vecObserver_.end();
+		itObserver++)
+	{
+        str = wxString::Format(_T("Observer (BFRootTask): %p"), (*itObserver));
+        BFSystem::Log(str);
+	}
+
+    // BFBackupTree and BFBackupCtrl
+    str = wxString::Format(_T("BFBackupTree: %p\tBFBackupCtrl: %p"),
+                           BFMainFrame::Instance()->BackupTree(),
+                           BFMainFrame::Instance()->BackupCtrl());
+    BFSystem::Log(str);
+}

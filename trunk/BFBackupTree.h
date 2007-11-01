@@ -37,6 +37,10 @@
 ///
 class BFBackupTree : public wxTreeCtrl, public Observer
 {
+    // XXX
+    public:
+        void Test ();
+
     private:
         /** this is the droped filename catched in OnDropFiles()
             to remember it for use in OnBackupCopy() backup-action

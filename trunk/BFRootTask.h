@@ -47,7 +47,9 @@ class BFRootTaskData : public BFTaskBase, public Subject
         /// name of the RootTask; only for identification by the user
         wxString            strName_;
         /// vector with all backup-tasks
+    public: // XXX
         BFTaskVector        vecTasks_;
+    private:
         ///
         BFProjectSettings   projectSettings_;
 

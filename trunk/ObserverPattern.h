@@ -78,7 +78,8 @@ typedef VecObserver::iterator ItVecObserver;
 ///
 class Subject
 {
-	private:
+	// XXX private:
+	public:
         ///
 		VecObserver vecObserver_;
 

@@ -419,7 +419,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    wxGetApp().Test();
+    BFMainFrame::Instance()->BackupTree()->Test();
 }
 #endif
 

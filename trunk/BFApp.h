@@ -36,6 +36,10 @@ class BFMainFrame;
 ///
 class BFApp : public wxApp
 {
+    /// XXX
+    public:
+        void DebugLogPointers ();
+
     private:
         /// for internationalization
         wxLocale                locale_;
