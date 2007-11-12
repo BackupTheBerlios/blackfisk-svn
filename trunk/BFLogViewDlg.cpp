@@ -27,7 +27,7 @@
 #include <wx/sizer.h>
 #include <wx/textfile.h>
 
-#include "BFRootTask.h"
+#include "BFSystem.h"
 
 BEGIN_EVENT_TABLE(BFLogViewDlg, wxDialog)
   EVT_CLOSE (BFLogViewDlg::OnClose)

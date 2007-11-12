@@ -84,7 +84,6 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
 
 void BFBackupTree::OnRebuild (wxCommandEvent& rEvent)
 {
-    wxGetApp().DebugLogPointers();
     Init();
 }
 
@@ -98,13 +97,28 @@ void BFBackupTree::Init ()
     DeleteAllItems();
 
     // recreate the treeCtrl with all tasks
-    BFRootTask::Instance().InitThat(*this);
+    //BFRootTask::Instance().InitThat(*this);
+    // add root
+    AddRoot(BFRootTask::Instance().GetName(), BFIconTable::logo);
 
-    UnselectAll();
+    // iterate throug the tasks
+    for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
+         itVec != BFRootTask::Instance().TaskVector().end();
+         itVec++)
+    {
+        // create all for the task needed items in the tree
+        AddTask
+        (
+            (*itVec)->GetOID(),
+            (*itVec)->GetType(),
+            (*itVec)->GetName(),
+            (*itVec)->GetDestination()
+        );
+    }
 
     // expand all items in the treeCtlr
     ExpandAll();
-    //SelectItem(lastItemId_);
+    SelectItem(lastItemId_);
 
     SetToolTip(_("files and directories for the backup"));
 
@@ -114,13 +128,6 @@ void BFBackupTree::Init ()
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 {
     strDropedFilename_ = strDropedFilename;
-}
-
-// XXX
-void BFBackupTree::Test ()
-{
-    lastItemId_ = FindItem (GetRootItem(), _T("TDxx"));
-    ShowTaskSettings(lastItemId_);
 }
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
@@ -342,49 +349,6 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
     if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
         BFRootTask::Instance().DeleteTask(pTask->GetOID());
 }
-/*
-void BFBackupTree::Test()
-{
-    wxTreeItemId idLast;
-
-    Freeze();
-    DeleteAllItems();
-
-    idLast = AddRoot(_T("test_root"), BFIconTable::logo);
-
-    // volume
-    idLast = AppendItem
-             (
-                idLast,
-                _T("V:"),
-                BFIconTable::volume_harddisk,
-                -1,
-                new BFBackupTreeItemData ( BFInvalidOID, _T("V:"))
-             );
-
-    // dir
-    idLast = AppendItem
-             (
-                idLast,
-                _T("backup_<date>"),
-                BFIconTable::folder,
-                -1,
-                new BFBackupTreeItemData ( BFInvalidOID, _T("V:\\backup_<date>") )
-             );
-
-    // task
-    idLast = AppendItem
-             (
-                idLast,
-                _T("MyTask_<time>"),
-                BFIconTable::task_dircopy,
-                -1,
-                new BFBackupTreeItemData ( BFInvalidOID, _T("V:\\backup_<date>\\MyTask_<time>") )
-             );
-
-    ExpandAll();
-    Thaw();
-}*/
 
 wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 {
@@ -412,45 +376,12 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
         // the current path, stored behind the adding item
         strAdd = strPath.Left(strPath.Find(strCurr) + strCurr.Len());
-        //BFSystem::Info(wxString::Format(_T("strAdd=%s\nstrPath=%s\nstrCurr=%s Len:%d"), strAdd, strPath, strCurr, strCurr.Len()), _T("AddDestination() strAdd"));
 
         // ** it is a volume **
         if (strCurrFilled[1] == _T(':'))
         {
             // append the volume item
-            idLast = AppendItem
-                     (
-                        idCurr,
-                        strCurr,
-                        -1,
-                        -1,
-                        new BFBackupTreeItemData ( BFInvalidOID, strAdd)
-                     );
-
-            // set the volume icon
-            wxFSVolume vol(strCurr + wxFILE_SEP_PATH);
-
-            switch(vol.GetKind())
-            {
-                case wxFS_VOL_FLOPPY:
-                    if ( strCurr.StartsWith(_T("a:")) || strCurr.StartsWith(_T("b:")) )
-                        SetItemImage(idLast, BFIconTable::volume_floppy, wxTreeItemIcon_Normal);
-                    else
-                        SetItemImage(idLast, BFIconTable::volume_removable, wxTreeItemIcon_Normal);
-                    break;
-
-                case wxFS_VOL_DVDROM:
-                case wxFS_VOL_CDROM:
-                    SetItemImage(idLast, BFIconTable::volume_cdrom, wxTreeItemIcon_Normal);
-                    break;
-
-                case wxFS_VOL_NETWORK:
-                case wxFS_VOL_DISK:
-                case wxFS_VOL_OTHER:
-                default:
-                    SetItemImage(idLast, BFIconTable::volume_harddisk, wxTreeItemIcon_Normal);
-                    break;
-            };
+            idLast = AddVolume(idCurr, strCurr, strAdd);
 
             continue;
         }
@@ -478,6 +409,84 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
     }   // while(token)
 
     return idLast;
+}
+
+wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent, wxString strVol, wxString strAdd)
+{
+    wxTreeItemId    idReturn;
+    bool            bJustAdded = false;
+
+    // find the right position for the volume item
+    if (HasChildren(GetRootItem()) == true)
+    {
+        wxTreeItemId        idPrev;
+        wxTreeItemIdValue   idCookie;
+
+        for (idPrev = GetFirstChild(GetRootItem(), idCookie);
+             idPrev.IsOk();
+             idPrev = GetNextSibling(idPrev))
+        {
+            // add the new volume before the current one
+            if ( GetItemText(idPrev) > strVol )
+            {
+                idPrev = GetPrevSibling(idPrev);
+
+                idReturn = InsertItem
+                            (
+                                idParent,
+                                idPrev,
+                                strVol,
+                                -1,
+                                -1,
+                                new BFBackupTreeItemData ( BFInvalidOID, strAdd )
+                            );
+
+                bJustAdded = true;
+                break;
+            }
+        }
+    }
+
+    // just append the volume if no position was found
+    if (bJustAdded == false)
+    {
+        // append the volume item
+        idReturn = AppendItem
+                    (
+                        idParent,
+                        strVol,
+                        -1,
+                        -1,
+                        new BFBackupTreeItemData ( BFInvalidOID, strAdd)
+                    );
+    }
+
+    // set the volume icon
+    wxFSVolume vol(strVol + wxFILE_SEP_PATH);
+
+    switch(vol.GetKind())
+    {
+        case wxFS_VOL_FLOPPY:
+            if ( strVol.StartsWith(_T("A:")) || strVol.StartsWith(_T("B:")) )
+                SetItemImage(idReturn, BFIconTable::volume_floppy, wxTreeItemIcon_Normal);
+            else
+                SetItemImage(idReturn, BFIconTable::volume_removable, wxTreeItemIcon_Normal);
+            break;
+
+        case wxFS_VOL_DVDROM:
+        case wxFS_VOL_CDROM:
+            SetItemImage(idReturn, BFIconTable::volume_cdrom, wxTreeItemIcon_Normal);
+            break;
+
+        case wxFS_VOL_NETWORK:
+        case wxFS_VOL_DISK:
+        case wxFS_VOL_OTHER:
+        default:
+            SetItemImage(idReturn, BFIconTable::volume_harddisk, wxTreeItemIcon_Normal);
+            break;
+    };
+
+    return idReturn;
 }
 
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
@@ -555,9 +564,6 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
     // the remembered filename and destination is not needed anymore
     strDropedFilename_      = wxEmptyString;
     strCurrentDestination_  = wxEmptyString;
-
-    // refresh the backup tree view
-    BFRootTask::Instance().broadcastObservers();
 }
 
 void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& rEvent)
@@ -659,82 +665,6 @@ wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, 
 
     return wxTreeItemId();
 }
-/*
-wxTreeItemId BFBackupTree::FindItem (const wxChar* label)
-{
-    if (label == NULL)
-        return wxTreeItemId();
-
-    return FindItem(GetRootItem(), label);
-}*
-
-bool BFBackupTree::ModifyItem (const BFTask* pTask)
-{
-    if (pTask == NULL)
-        return false;
-
-    // find the item id
-    wxTreeItemId id = FindItem(pTask);
-
-    // no item found
-    if (!id.IsOk())
-        return false;
-
-    // image
-    // label/name
-    // (path)
-
-    return true;
-}
-
-wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const BFTask* pTask)
-{
-    if (pTask == NULL)
-        return wxTreeItemId();
-
-    wxTreeItemId idCurr, idRes;
-    wxTreeItemIdValue idCookie;
-
-    // are there childrin
-    if (ItemHasChildren(idStart))
-    {
-        for (idCurr = GetFirstChild(idStart, idCookie);
-             idCurr.IsOk();
-             idCurr = GetNextChild(idStart, idCookie))
-        {
-            // it is just a node
-            if (ItemHasChildren(idCurr))
-            {
-                // access the node
-                idRes = FindItem(idCurr, pTask);
-
-                if (idRes.IsOk())
-                    return idRes;
-            }
-            else
-            {
-                // get the task behind the item
-                BFTask* pCurrTask = GetTaskByItem(idCurr);
-
-                // check the OIDs
-                if (pCurrTask)
-                    if (pCurrTask->GetOID() == pTask->GetOID())
-                        return idCurr;
-            }
-        }
-    }
-
-    // nothing found
-    return wxTreeItemId();
-}
-
-wxTreeItemId BFBackupTree::FindItem (const BFTask* pTask)
-{
-    if (pTask == NULL)
-        return wxTreeItemId();
-
-    return FindItem(GetRootItem(), pTask);
-}*/
 
 void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 {

@@ -30,6 +30,8 @@
 #include "BFLogViewDlg.h"
 #include "BFBackupQuestionDlg.h"
 #include "BFThread_ProjectRunner.h"
+#include "BFApp.h"
+#include "BFMainFrame.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
@@ -93,7 +95,12 @@ void BFBackupProgressDlg::Init ()
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
     // init controls
-    BFRootTask::Instance().InitThat(*pListBox_);
+    // BFRootTask::Instance().InitThat(*pListBox_);
+    for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
+         itVec != BFRootTask::Instance().TaskVector().end();
+         itVec++)
+        pListBox_->Append((*itVec)->GetName(), (*itVec));
+
 
     // arrange
     pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));

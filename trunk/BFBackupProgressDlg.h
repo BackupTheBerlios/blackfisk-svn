@@ -31,7 +31,6 @@
 #include "ObserverPattern.h"
 
 // forwarde declarations
-class BFRootTask;
 class Progress;
 class ProgressTotal;
 class ProgressWithMessage;

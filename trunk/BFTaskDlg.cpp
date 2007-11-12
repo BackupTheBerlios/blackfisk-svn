@@ -68,9 +68,13 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
     GetData();
 
     // display the dialog
-    // XXX
     wxDialog::Show();
+    // disable the mainframe to simulate a modal dialog
     BFMainFrame::Instance()->Disable();
+
+    /* if the dialog is shown modal it occures
+       in a race condition somewhere in the wx-code
+       so we need to simulate a modal dialog */
 }
 
 /*virtual*/ BFTaskDlg::~BFTaskDlg ()
@@ -295,10 +299,11 @@ void BFTaskDlg::SetData ()
     if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
     {
         BFRootTask::Instance().AppendTask(*pTask_);
+        BFRootTask::Instance().broadcastObservers();
     }
     else
     {
-        // XXX if ( BFRootTask::Instance().IsModified() )
+        if ( BFRootTask::Instance().IsModified() )
             BFRootTask::Instance().broadcastObservers();
     }
 }

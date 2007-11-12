@@ -26,6 +26,8 @@
 #include "BFTask.h"
 #include "BFCore.h"
 #include "BFBackupProgressDlg.h"
+#include "BFApp.h"
+#include "BFMainFrame.h"
 #include "ctrlids.h"
 
 DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)

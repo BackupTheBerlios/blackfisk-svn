@@ -52,8 +52,8 @@ void BFRootTaskData::ClearTaskVector ()
 {
     BFTaskVectorIt itVec;
 
-	for (itVec = TaskVector().begin();
-		 itVec != TaskVector().end();
+	for (itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
 		 itVec++)
         delete (*itVec);
 
@@ -73,8 +73,8 @@ long BFRootTaskData::FindTask (BFTask* pTask)
     BFTaskVectorIt  itVec;
     long            lPos;
 
-	for (lPos = 0, itVec = TaskVector().begin();
-		 itVec != TaskVector().end();
+	for (lPos = 0, itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
 		 itVec++, lPos++)
         if ((*itVec) == pTask)
             return lPos;
@@ -86,8 +86,8 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
 {
     BFTaskVectorIt itVec;
 
-	for (itVec = TaskVector().begin();
-		 itVec != TaskVector().end();
+	for (itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
 		 itVec++)
         if ((*itVec)->GetOID() == oid)
             return (*itVec);
@@ -97,38 +97,38 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
 
 BFTask* BFRootTaskData::GetNextTask (BFTask* pTask)
 {
-    if (TaskVector().empty())
+    if (vecTasks_.empty())
         return NULL;
 
     // current task position
     long lPos = FindTask(pTask);
 
-    if (lPos == -1 || (lPos+1) == TaskVector().size())
-        return TaskVector()[0];
+    if (lPos == -1 || (lPos+1) == vecTasks_.size())
+        return vecTasks_[0];
 
-    return TaskVector()[lPos+1];
+    return vecTasks_[lPos+1];
 }
 
 BFTask* BFRootTaskData::GetLastTask ()
 {
-    if (TaskVector().empty())
+    if (vecTasks_.empty())
         return NULL;
 
-    return TaskVector()[TaskVector().size()-1];
+    return vecTasks_[vecTasks_.size()-1];
 }
 
 bool BFRootTaskData::DeleteTask (BFoid oid)
 {
     BFTaskVectorIt itVec;
 
-	for (itVec = TaskVector().begin();
-		 itVec != TaskVector().end();
+	for (itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
 		 itVec++)
     {
         if ((*itVec)->GetOID() == oid)
         {
             BFTask* pTask = (BFTask*)(*itVec);
-            TaskVector().erase(itVec);
+            vecTasks_.erase(itVec);
             delete pTask;
             SetModified(true);
             broadcastObservers();
@@ -214,8 +214,8 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
         projectSettings_.Serialize(rA);
         rA << (int)GetTaskCount();
 
-        for (itVec = TaskVector().begin();
-             itVec != TaskVector().end();
+        for (itVec = vecTasks_.begin();
+             itVec != vecTasks_.end();
              itVec++)
         {
             rc = (*itVec)->Serialize(rA);
@@ -233,8 +233,6 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
         projectSettings_.Serialize(rA);
         rA >> iObjCount;
 
-        // ** DEBUG **
-
         for (int i = 0; i < iObjCount; ++i)
         {
             // create a task with an invalid oid
@@ -243,7 +241,7 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
             rc = pTask->Serialize(rA);
 
             if (rc && pTask != NULL)
-                TaskVector().push_back(pTask);
+                vecTasks_.push_back(pTask);
             else
                 break;
         }
@@ -292,8 +290,8 @@ void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
     bool bMod = false;
     wxString strCurrDest;
 
-    for (it = TaskVector().begin();
-         it != TaskVector().end();
+    for (it = vecTasks_.begin();
+         it != vecTasks_.end();
          it++)
     {
         // the destination of the current task
@@ -530,7 +528,7 @@ bool BFRootTask::Run_Finished ()
 
     return true;
 }
-
+/*
 void BFRootTask::InitThat (wxListBox& rListBox)
 {
     BFTaskVectorIt itVec;
@@ -540,7 +538,6 @@ void BFRootTask::InitThat (wxListBox& rListBox)
          itVec++)
         rListBox.Append((*itVec)->GetName(), (*itVec));
 }
-
 
 void BFRootTask::InitThat (BFBackupTree& rBackupTree)
 {
@@ -563,7 +560,7 @@ void BFRootTask::InitThat (BFBackupTree& rBackupTree)
                         (*itVec)->GetDestination()
                     );
     }
-}
+}*/
 
 wxArrayString BFRootTask::GetDestinations ()
 {

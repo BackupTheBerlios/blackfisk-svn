@@ -28,9 +28,8 @@
 
 #include "BFTaskBase.h"
 #include "BFTask.h"
-#include "BFMainFrame.h"
 #include "ObserverPattern.h"
-#include "BFBackupTree.h"
+//#include "BFBackupTree.h"
 #include "BFProjectSettings.h"
 
 class BFBackupLog;
@@ -47,9 +46,7 @@ class BFRootTaskData : public BFTaskBase, public Subject
         /// name of the RootTask; only for identification by the user
         wxString            strName_;
         /// vector with all backup-tasks
-    public: // XXX
         BFTaskVector        vecTasks_;
-    private:
         ///
         BFProjectSettings   projectSettings_;
 
@@ -64,10 +61,6 @@ class BFRootTaskData : public BFTaskBase, public Subject
         virtual ~BFRootTaskData ();
 
         ///
-        BFTaskVector& TaskVector ()
-        { return vecTasks_; }
-
-        ///
         bool Serialize (jbSerialize& rA);
 
         /** it delete all task objects in the task-vector
@@ -79,6 +72,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
         long FindTask (BFTask* pTask);
 
     public:
+        ///
+        BFTaskVector& TaskVector ()
+        { return vecTasks_; }
+
         ///
         bool Has (BFProjectSettings* pPrjSet);
 
@@ -207,10 +204,8 @@ class BFRootTask : public BFRootTaskData
         ///
         bool GetStopProject ();
 
-        ///
-        void InitThat (wxListBox& rListBox);
-        ///
-        void InitThat (BFBackupTree& rBackupTree);
+        // void InitThat (wxListBox& rListBox);
+        // void InitThat (BFBackupTree& rBackupTree);
 
         ///
         bool StoreToFile (const wxChar* strFilename);

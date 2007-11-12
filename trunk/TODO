@@ -1,6 +1,7 @@
 0.0.1
 ~~~~~
 - drive letters UPPERCASE
+- maybe: remove GetStopCurrentTask() and GetStopProject() from BFRootTask to BFApp?
 - DnD a dir to an existing destination (BFTaskDlg::IsPlausi()!): don't show the BFTaskDlg
 - DnD a task to another directory
 - message count and display message in BFBackupProgressDlg
@@ -11,6 +12,7 @@
 
 0.0.2
 ~~~~~
+- redesign the layers: separate code for BFRootTask and BFRootTaskData, etc
 - sync directories: more detailed settings (delete?)
 - exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - using commandline without gui (controlable by things like cronjob)

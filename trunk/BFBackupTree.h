@@ -23,6 +23,7 @@
 #ifndef BFBACKUPTREE_H
 #define BFBACKUPTREE_H
 
+#include <vector>
 #include <wx/wx.h>
 #include <wx/window.h>
 #include <wx/treectrl.h>
@@ -34,25 +35,29 @@
 #include "BFMainFrame.h"
 #include "BFTask.h"
 
+typedef std::pair<wxString, wxTreeItemId>   PairVolItemId;
+typedef std::vector<PairVolItemId>          VecPairVolItemId;
+typedef VecPairVolItemId::iterator          ItVecPairVolItemId;
+
 ///
 class BFBackupTree : public wxTreeCtrl, public Observer
 {
-    // XXX
-    public:
-        void Test ();
-
     private:
         /** this is the droped filename catched in OnDropFiles()
             to remember it for use in OnBackupCopy() backup-action
             is selected in the context-menu displayed after drop */
-        wxString        strDropedFilename_;
+        wxString            strDropedFilename_;
+
         /** this is the current selected destination if there is one */
-        wxString        strCurrentDestination_;
+        wxString            strCurrentDestination_;
+
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
-        wxTreeItemId    lastItemId_;
+        wxTreeItemId        lastItemId_;
+
         /// view blackfisk placeholders or fill them with data
-        bool            bFillBlackfiskPlaceholders_;
+        bool                bFillBlackfiskPlaceholders_;
+
 
         /** this private class just wrappes the drop-events from the
             dropTarget to the affeceted treeCtrl
@@ -111,20 +116,13 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// used by BFDirCtrl to set the current handled file
         void SetDropedFilename (wxString strDropedFilename);
 
-        /* modify the corrosponding tree-item to the
-            current values *
-        bool ModifyItem (const BFTask* pTask);*
-
-        /// find the corrosponding tree-item
-        wxTreeItemId FindItem (const BFTask* pTask);*/
-        /* search for an item by its label and return the item-id
-            for the first match. if nothing is found it returns -1 *
-        wxTreeItemId FindItem (const wxChar* label);*/
         /// if the specified item a task it returns 'true'
         bool IsTask (wxTreeItemId itemId);
 
         /// add tree items relating to the path to the tree
         wxTreeItemId AddDestination (wxString strPath);
+        /// add a tree item as a volume and return its item id
+        wxTreeItemId AddVolume(wxTreeItemId idParent, wxString strVol, wxString strAdd);
         /** add a task to the tree, create all needed items for that,
             but do not check if the specified task realy exists! */
         wxTreeItemId AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination);
