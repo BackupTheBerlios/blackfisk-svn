@@ -1,6 +1,5 @@
 0.0.1
 ~~~~~
-- message count and display message in BFBackupProgressDlg
 - backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 

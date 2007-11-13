@@ -199,3 +199,43 @@ const wxString& BFSystem::GetLastMessage ()
 {
     return strLastMessage_;
 }
+
+bool BFSystem::HandleLastMessage (BF_VerboseLevel verbose)
+{
+    return HandleThisMessage(GetLastType(), verbose);
+}
+
+/*static*/ bool BFSystem::HandleThisMessage (BFMessageType msgType, BF_VerboseLevel lvlVerbose)
+{
+    // check verboseLevel and messageType
+    switch (lvlVerbose)
+    {
+        case BFVERBOSE_FATAL:
+            if (msgType != MsgFATAL)
+                return false;
+            break;
+
+        case BFVERBOSE_ERROR:
+            if (msgType != MsgFATAL
+             && msgType != MsgERROR)
+                return false;
+            break;
+
+        case BFVERBOSE_WARNING:
+            if (msgType != MsgFATAL
+             && msgType != MsgERROR
+             && msgType != MsgWARNING)
+                return false;
+            break;
+
+        case BFVERBOSE_INFO:
+            if (msgType != MsgFATAL
+             && msgType != MsgERROR
+             && msgType != MsgWARNING
+             && msgType != MsgBACKUP)
+                return false;
+            break;
+    };
+
+    return true;
+}

@@ -32,6 +32,7 @@
 #include "BFThread_ProjectRunner.h"
 #include "BFApp.h"
 #include "BFMainFrame.h"
+#include "BFBackupInfoCtrl.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
@@ -80,22 +81,14 @@ void BFBackupProgressDlg::Init ()
     pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTask::Instance().GetProgressTask());
     pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFRootTask::Instance().GetProgressTotal());
 
-    // TODO message counter, verbose info, time info
-
-    // log ctrl
-    wxTextCtrl* pLogCtrl = new wxTextCtrl(this,
-                                          wxID_ANY,
-                                          _T("\n\n\n\n\n\n\n"),
-                                          wxDefaultPosition,
-                                          wxDefaultSize,
-                                          wxTE_MULTILINE | wxTE_READONLY);
+    // backup info ctrl
+    BFBackupInfoCtrl* pInfoCtrl = new BFBackupInfoCtrl(this);
 
     // * buttons *
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPTASK, _("stop task")),   wxSizerFlags(0).Expand().Border());
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
     // init controls
-    // BFRootTask::Instance().InitThat(*pListBox_);
     for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
          itVec != BFRootTask::Instance().TaskVector().end();
          itVec++)
@@ -104,7 +97,7 @@ void BFBackupProgressDlg::Init ()
 
     // arrange
     pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
-    pSizerRightSub  ->Add(pLogCtrl,             wxSizerFlags(0).Expand());
+    pSizerRightSub  ->Add(pInfoCtrl,            wxSizerFlags(0).Expand());
     pSizerRight     ->Add(pSizerRightSub);
     pSizerRight     ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxLEFT, 5));
     pSideSizer      ->Add(pListBox_,            wxSizerFlags(0).Expand());

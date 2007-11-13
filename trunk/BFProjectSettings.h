@@ -23,17 +23,9 @@
 #ifndef BFPROJECTSETTINGS_H
 #define BFPROJECTSETTINGS_H
 
+#include "BFSystem.h"
 #include <wx/string.h>
 #include "jbSerialize.h"
-
-/// verbose level for running backup tasks
-enum BF_VerboseLevel
-{
-    BFVERBOSE_INFO,
-    BFVERBOSE_WARNING,
-    BFVERBOSE_ERROR,
-    BFVERBOSE_FATAL
-};
 
 ///
 enum BF_StopLevel

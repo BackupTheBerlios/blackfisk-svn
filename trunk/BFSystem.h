@@ -28,6 +28,15 @@
 
 #include "ObserverPattern.h"
 
+/// verbose level for message handling
+enum BF_VerboseLevel
+{
+    BFVERBOSE_INFO,
+    BFVERBOSE_WARNING,
+    BFVERBOSE_ERROR,
+    BFVERBOSE_FATAL
+};
+
 ///
 enum BFMessageType
 {
@@ -75,6 +84,11 @@ class BFSystem : public Subject
         ///
         const wxString& GetLastMessage ();
 
+        /** return true if the last message should be handled
+            depending on its message-type and the specified
+            'verbose' level */
+        bool HandleLastMessage (BF_VerboseLevel verbose);
+
         /** increment 'lBackupObservers_' and return the new value */
         long IncrementBackupObservers ();
         /** decrement 'lBackupObservers_' and return the new value
@@ -89,6 +103,9 @@ class BFSystem : public Subject
         static wxString GetTypeString (BFMessageType type);
         ///
         static long GetMsgStyle (BFMessageType type);
+        /** return true if a message of type 'msgType' should be
+            handled depending on the verbose level 'lvlVerbose' */
+        static bool HandleThisMessage (BFMessageType msgType, BF_VerboseLevel lvlVerbose);
 
         /// create a message
         void Message (BFMessageType msgType, const wxChar* strMessage, const wxChar* strLocation);

@@ -217,47 +217,17 @@ BFBackupLog::BFBackupLog ()
     if (pSys == NULL)
         return;
 
-    BF_VerboseLevel vLvl = BFRootTask::Instance().GetSettings().GetVerboseLevel();
-    BFMessageType msgType = pSys->GetLastType();
-
-    // check verboseLevel and messageType
-    switch (vLvl)
+    if ( pSys->HandleLastMessage(BFRootTask::Instance().GetSettings().GetVerboseLevel()) )
     {
-        case BFVERBOSE_FATAL:
-            if (msgType != MsgFATAL)
-                return;
-            break;
-
-        case BFVERBOSE_ERROR:
-            if (msgType != MsgFATAL
-             && msgType != MsgERROR)
-                return;
-            break;
-
-        case BFVERBOSE_WARNING:
-            if (msgType != MsgFATAL
-             && msgType != MsgERROR
-             && msgType != MsgWARNING)
-                return;
-            break;
-
-        case BFVERBOSE_INFO:
-            if (msgType != MsgFATAL
-             && msgType != MsgERROR
-             && msgType != MsgWARNING
-             && msgType != MsgBACKUP)
-                return;
-            break;
-    };
-
-    if (vecTaskLogs_.back() != NULL)
-        vecTaskLogs_.back()->Message
-        (
-            pSys->GetLastType(),
-            pSys->GetLastTimestamp(),
-            pSys->GetLastMessage(),
-            pSys->GetLastLocation()
-        );
+        if (vecTaskLogs_.back() != NULL)
+            vecTaskLogs_.back()->Message
+            (
+                pSys->GetLastType(),
+                pSys->GetLastTimestamp(),
+                pSys->GetLastMessage(),
+                pSys->GetLastLocation()
+            );
+    }
 }
 
 bool BFBackupLog::WhileBackup ()

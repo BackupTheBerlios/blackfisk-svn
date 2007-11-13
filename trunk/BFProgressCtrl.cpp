@@ -161,7 +161,7 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
     pTextA_->SetFont(font);
     pTextC_ = new wxStaticText(this, -1, wxEmptyString);
     pTextC_->SetFont(font);
-    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(300, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
+    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(450, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
     pTextB_ = new wxStaticText(this, -1, _T("<message>\n<message2>"));
 
 
