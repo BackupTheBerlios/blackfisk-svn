@@ -55,6 +55,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             is normaly set by OnItemMenu() */
         wxTreeItemId        lastItemId_;
 
+        /** the oid of the currently draging BFTask
+            set in OnBeginDrag() and used in OnDropTask() */
+        BFoid               oidCurrentDrag_;
+
         /// view blackfisk placeholders or fill them with data
         bool                bFillBlackfiskPlaceholders_;
 
@@ -77,6 +81,16 @@ class BFBackupTree : public wxTreeCtrl, public Observer
                 virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
                 virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
         };    // private class BFBackupDropTarget
+
+        /** */
+        class BFTaskDropTarget : public wxDropTarget
+        {
+            private:
+
+            public:
+                BFTaskDropTarget ();
+                virtual ~BFTaskDropTarget ();
+        };
 
         /// return a pointer to the BFTask object relating to the itemId in the backupTree
         BFTask* GetTaskByItem (wxTreeItemId itemId);
@@ -157,9 +171,11 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         ///
         bool OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filenames);
         ///
+        bool OnDropTask (wxCoord x, wxCoord y);
+        ///
         virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
-
-        // void Test();
+        ///
+        void OnBeginDrag (wxTreeEvent& event);
 
     DECLARE_EVENT_TABLE();
 };    // class BFBackupTree

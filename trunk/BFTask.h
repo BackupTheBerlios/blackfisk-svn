@@ -96,8 +96,11 @@ class BFTaskData : public BFTaskBase
         ///
         virtual ~BFTaskData ();
 
-        /** check if the object and its date in it plausibel */
-        bool IsPlausible ();
+        /** check if the object and its data in it is valid
+            but it doesn't check if the directories are realy there
+            it just validate it to store it without creating inconsistence
+            with other data */
+        bool IsValid ();
 
         /** add all available task types to the vector
             with the current task type as first item */

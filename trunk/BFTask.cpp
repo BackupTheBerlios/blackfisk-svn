@@ -48,7 +48,8 @@ BFTaskData::BFTaskData (BFTaskType type,
 
 BFTaskData::BFTaskData ()
           : type_(TaskINVALID),
-            oid_(BFInvalidOID)
+            oid_(BFInvalidOID),
+            archiveFormat_(CompressNOTUSED)
 {
 }
 
@@ -56,9 +57,21 @@ BFTaskData::BFTaskData ()
 {
 }
 
-bool BFTaskData::IsPlausible ()
+bool BFTaskData::IsValid ()
 {
     if (oid_ == BFInvalidOID)
+        return false;
+
+    if (type_ == TaskINVALID || (type_ == TaskARCHIVE && archiveFormat_ == CompressNOTUSED))
+        return false;
+
+    if (strDestination_.Length() == 0)
+        return false;
+
+    if (strSource_.Length() == 0)
+        return false;
+
+    if (strName_.Length() == 0)
         return false;
 
     return true;

@@ -56,6 +56,7 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
     EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                          BFBackupTree::OnEndLabelEdit)
     EVT_MENU                    (BF_BACKUPTREE_REBUILD,             BFBackupTree::OnRebuild)
+    EVT_TREE_BEGIN_DRAG         (wxID_ANY,                          BFBackupTree::OnBeginDrag)
 END_EVENT_TABLE()
 
 
@@ -67,13 +68,14 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
               Observer(&(BFRootTask::Instance())),
-              bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders())
+              bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders()),
+              oidCurrentDrag_(BFInvalidOID)
 {
-    //SetImageList ( &(BFMainFrame::Instance()->GetImageList()) );
     SetImageList ( BFIconTable::Instance() );
+
     SetDropTarget   ( new BFBackupDropTarget(this) );
+
     Init();
-    //Test();
 }
 
 
@@ -132,8 +134,6 @@ void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
 
 void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
 {
-    //Test(); return;
-
     // remember this itemId
     lastItemId_ = rEvent.GetItem();
 
@@ -297,10 +297,67 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     return true;
 }
 
+bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
+{
+    // is there a valid oid ?
+    if (oidCurrentDrag_ == BFInvalidOID)
+        return false;
+
+    // get the oid-related BFTask
+    BFTask* pTask = BFRootTask::Instance().GetTask(oidCurrentDrag_);
+
+    if (pTask == NULL)
+        return false;
+
+    // get the destination directory where the task was droped
+    BFBackupTreeItemData*   pItemData   = NULL;
+    wxTreeItemId            itemId      = HitTest(wxPoint(x, y));
+
+    if ( itemId.IsOk() )
+        pItemData = (BFBackupTreeItemData*)GetItemData(itemId);
+
+    // set the new destination
+    if ( pItemData && pItemData->GetOID() == BFInvalidOID)
+    {
+        pTask->SetDestination(pItemData->GetPath());
+        BFRootTask::Instance().SetModified();
+        BFRootTask::Instance().broadcastObservers();
+    }
+
+    oidCurrentDrag_ = BFInvalidOID;
+
+    return true;
+}
+
+void BFBackupTree::OnBeginDrag (wxTreeEvent& event)
+{
+    // remember the currently draged task
+    BFTask* pTask = GetTaskByItem(event.GetItem());
+
+    if (pTask == NULL)
+        return;
+
+    oidCurrentDrag_ = pTask->GetOID();
+
+    wxFileDataObject    my_data;
+    wxDropSource        dragSource  ( this );
+
+    // selected the currently draging item
+    SelectItem(event.GetItem());
+
+    // just set dummy data
+    my_data.AddFile(_T("<oid>"));
+    dragSource.SetData(my_data);
+
+    wxDragResult result = dragSource.DoDragDrop( TRUE );
+}
+
+
 void BFBackupTree::OnProjectSettings (wxCommandEvent& rEvent)
 {
     BFMainFrame::Instance()->OpenProjectSettings();
 }
+
 
 void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
 {
@@ -315,6 +372,7 @@ void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
     SelectItem(AddDestination (dlg.GetPath()));
 }
 
+
 void BFBackupTree::OnCreateDestination (wxCommandEvent& rEvent)
 {
     wxString strPath;
@@ -327,6 +385,7 @@ void BFBackupTree::OnCreateDestination (wxCommandEvent& rEvent)
                          BFDestinationDlg::add_destination);
 }
 
+
 void BFBackupTree::OnModifyDestination (wxCommandEvent& rEvent)
 {
     new BFDestinationDlg(BFMainFrame::Instance(),
@@ -334,10 +393,12 @@ void BFBackupTree::OnModifyDestination (wxCommandEvent& rEvent)
                          BFDestinationDlg::modify_destination);
 }
 
+
 void BFBackupTree::OnTaskSettings (wxCommandEvent& rEvent)
 {
     ShowTaskSettings(lastItemId_);
 }
+
 
 void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
 {
@@ -349,6 +410,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
     if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
         BFRootTask::Instance().DeleteTask(pTask->GetOID());
 }
+
 
 wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 {
@@ -410,6 +472,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 
     return idLast;
 }
+
 
 wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent, wxString strVol, wxString strAdd)
 {
@@ -489,6 +552,7 @@ wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent, wxString strVol, wxS
     return idReturn;
 }
 
+
 wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
 {
     wxString str(strName);
@@ -517,6 +581,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* st
 
     return id;
 }
+
 
 void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 {
@@ -551,7 +616,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
             break;
     };  // switch
 
-    // create and show the new task
+    // create the new task
     pTask = new BFTask (type,
                         strDropedFilename_,
                         strCurrentDestination_,
@@ -559,12 +624,22 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
                         true /* DEBUG */,
                         aformat,
                         arrString);
-    BFTaskDlg::Show(pTask);
+
+    if ( pTask->IsValid() )
+    {
+        BFRootTask::Instance().AppendTask(*pTask);
+        BFRootTask::Instance().broadcastObservers();
+    }
+    else
+    {
+        BFTaskDlg::Show(pTask);
+    }
 
     // the remembered filename and destination is not needed anymore
     strDropedFilename_      = wxEmptyString;
     strCurrentDestination_  = wxEmptyString;
 }
+
 
 void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& rEvent)
 {
@@ -572,11 +647,13 @@ void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& rEvent)
         rEvent.Veto();
 }
 
+
 void BFBackupTree::OnEndLabelEdit (wxTreeEvent& rEvent)
 {
     if (rEvent.GetItem() == GetRootItem())
         BFRootTask::Instance().SetName(rEvent.GetLabel());
 }
+
 
 /*virtual*/ void BFBackupTree::ValueChanged (Subject* pSender)
 {
@@ -585,6 +662,7 @@ void BFBackupTree::OnEndLabelEdit (wxTreeEvent& rEvent)
 
     this->AddPendingEvent(wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, BF_BACKUPTREE_REBUILD));
 }
+
 
 BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
 {
@@ -602,6 +680,7 @@ BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
     return BFRootTask::Instance().GetTask(pItemData->GetOID());
 }
 
+
 const wxChar* BFBackupTree::GetPathByItem (wxTreeItemId itemId)
 {
     // get the data behind the last selected (by right-click) item
@@ -618,6 +697,7 @@ const wxChar* BFBackupTree::GetPathByItem (wxTreeItemId itemId)
     }
 }
 
+
 bool BFBackupTree::IsTask (wxTreeItemId itemId)
 {
     BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
@@ -630,6 +710,7 @@ bool BFBackupTree::IsTask (wxTreeItemId itemId)
 
     return true;
 }
+
 
 wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep /*= true*/)
 {
@@ -665,6 +746,7 @@ wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, 
 
     return wxTreeItemId();
 }
+
 
 void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 {
@@ -711,7 +793,10 @@ bool BFBackupTree::BFBackupDropTarget::OnDropFiles(wxCoord x, wxCoord y, const w
     if (pBackupTree_ == NULL)
         return false;
 
-    return pBackupTree_->OnDropFiles(x, y, filenames);
+    if (filenames[0] == _T("<oid>"))
+        return pBackupTree_->OnDropTask(x, y);
+    else
+        return pBackupTree_->OnDropFiles(x, y, filenames);
 }
 
 wxDragResult BFBackupTree::BFBackupDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
@@ -722,7 +807,13 @@ wxDragResult BFBackupTree::BFBackupDropTarget::OnDragOver(wxCoord x, wxCoord y, 
     return pBackupTree_->OnDragOver(x, y, def);
 }
 
+BFBackupTree::BFTaskDropTarget::BFTaskDropTarget ()
+{
+}
 
+BFBackupTree::BFTaskDropTarget::~BFTaskDropTarget ()
+{
+}
 
 BEGIN_EVENT_TABLE(BFBackupCtrl, wxPanel)
     EVT_TOGGLEBUTTON (BFBACKUPCTRL_ID_MACROBUTTON, BFBackupCtrl::OnButton)

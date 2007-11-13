@@ -317,7 +317,7 @@ void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
 
 BFoid BFRootTaskData::AppendTask (BFTask& rTask)
 {
-    if ( !(rTask.IsPlausible()) )
+    if ( !(rTask.IsValid()) )
         return BFInvalidOID;
 
     if ( HasTask(rTask.GetOID()) )

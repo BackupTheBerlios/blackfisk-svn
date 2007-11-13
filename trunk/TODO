@@ -1,25 +1,26 @@
 0.0.1
 ~~~~~
-- drive letters UPPERCASE
-- maybe: remove GetStopCurrentTask() and GetStopProject() from BFRootTask to BFApp?
-- DnD a dir to an existing destination (BFTaskDlg::IsPlausi()!): don't show the BFTaskDlg
-- DnD a task to another directory
 - message count and display message in BFBackupProgressDlg
 - backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
-- display "show-log" progress after a backup
-- BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 
 0.0.2
 ~~~~~
-- redesign the layers: separate code for BFRootTask and BFRootTaskData, etc
+- WebUpdater
+- correct sorting of dirs and tasks (first sub-dirs and then tasks) when DnD a task to a new destination
+- BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
+- redesign the layers:
+  separate code for BFRootTask and BFRootTaskData,
+  maybe: remove GetStopCurrentTask() and GetStopProject() from BFRootTask to BFApp?,
+  etc
+- display "show-log" progress after a backup
+- calculate time while backup-process
 - sync directories: more detailed settings (delete?)
 - exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - using commandline without gui (controlable by things like cronjob)
 - new advanced-option: ask-on-message (true/false) while autorun (non-gui)
 - remember last concret backup files and delete them automaticly (by count, by timespan, by size)
 - auto-update: run tasks different times (e.g. TaskA each day, TaskB just each week)
-- open website in a thread (this don't freez the app; thread-sample)
 
 0.0.3
 ~~~~~
