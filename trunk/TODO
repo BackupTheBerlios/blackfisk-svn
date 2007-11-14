@@ -1,10 +1,13 @@
 0.0.1
 ~~~~~
+- BUG: wxGenericDirCtrl change the working dir
 - backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 
 0.0.2
 ~~~~~
+- settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)
+- remember window position and size incl splitwindow
 - WebUpdater
 - correct sorting of dirs and tasks (first sub-dirs and then tasks) when DnD a task to a new destination
 - BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
@@ -23,6 +26,7 @@
 
 0.0.3
 ~~~~~
+- help: tutorials/howtos with wink
 - full customizable keybord-shortcuts based on the menus
 - supported languages: english, german, chinese (brian)
 - size informations about backuped files, etc

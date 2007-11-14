@@ -47,6 +47,7 @@ BFDirCtrl::BFDirCtrl (wxWindow* pParent)
 {
     // DirCtrl
     pDirCtrl_ = new wxGenericDirCtrl(this);
+    pDirCtrl_->ShowHidden(true);
     if (BFSettings::Instance().GetWithFiles())
         pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() & ~wxDIRCTRL_DIR_ONLY);
     else

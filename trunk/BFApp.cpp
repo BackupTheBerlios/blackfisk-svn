@@ -181,6 +181,9 @@ bool BFApp::OnInit()
 
 /*static*/ bool BFApp::ReadSettings ()
 {
+    // XXX
+    BFSystem::Info(wxGetCwd());
+
     if ( !(wxFileName::FileExists(BF_SETTINGS)) )
         SaveSettings();
 
@@ -192,6 +195,9 @@ bool BFApp::OnInit()
 
 /*static*/ bool BFApp::SaveSettings ()
 {
+    // XXX
+    BFSystem::Info(wxGetCwd());
+
     wxFileOutputStream  out(BF_SETTINGS);
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
 

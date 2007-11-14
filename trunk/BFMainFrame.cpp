@@ -380,12 +380,18 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
 
 bool BFMainFrame::AskSaveProject (wxString& strProject)
 {
+    wxString strPath = BFRootTask::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH);
+    wxString strFile = BFRootTask::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
+
+    if (strFile.IsEmpty())
+        strFile = BFRootTask::Instance().GetName();
+
     wxFileDialog dlg
     (
         this,
         _("Save the project"),
-        BFRootTask::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH),
-        BFRootTask::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH),
+        strPath,
+        strFile,
         BF_PROJECT_EXTENSION_STRING,
         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
     );
