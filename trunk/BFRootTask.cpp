@@ -54,7 +54,7 @@ void BFRootTaskData::ClearTaskVector ()
 
 	for (itVec = vecTasks_.begin();
 		 itVec != vecTasks_.end();
-		 itVec++)
+		 ++itVec)
         delete (*itVec);
 
     vecTasks_.clear();
@@ -75,7 +75,7 @@ long BFRootTaskData::FindTask (BFTask* pTask)
 
 	for (lPos = 0, itVec = vecTasks_.begin();
 		 itVec != vecTasks_.end();
-		 itVec++, lPos++)
+		 ++itVec, ++lPos)
         if ((*itVec) == pTask)
             return lPos;
 
@@ -88,7 +88,7 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
 
 	for (itVec = vecTasks_.begin();
 		 itVec != vecTasks_.end();
-		 itVec++)
+		 ++itVec)
         if ((*itVec)->GetOID() == oid)
             return (*itVec);
 
@@ -123,7 +123,7 @@ bool BFRootTaskData::DeleteTask (BFoid oid)
 
 	for (itVec = vecTasks_.begin();
 		 itVec != vecTasks_.end();
-		 itVec++)
+		 ++itVec)
     {
         if ((*itVec)->GetOID() == oid)
         {
@@ -216,7 +216,7 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
 
         for (itVec = vecTasks_.begin();
              itVec != vecTasks_.end();
-             itVec++)
+             ++itVec)
         {
             rc = (*itVec)->Serialize(rA);
 
@@ -292,7 +292,7 @@ void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
 
     for (it = vecTasks_.begin();
          it != vecTasks_.end();
-         it++)
+         ++it)
     {
         // the destination of the current task
         strCurrDest = (*it)->GetDestination();
@@ -314,6 +314,24 @@ void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
         SetModified();
 }
 
+long BFRootTaskData::FindLastTaskWithDestination(const wxChar* destination)
+{
+    if (destination == NULL)
+        return -1;
+
+    long rc = -1;
+    wxString strDest(destination);
+
+	for (BFTaskVector::size_type i = 0;
+		 i != vecTasks_.size();
+		 ++i)
+    {
+        if (strDest == vecTasks_[i]->GetDestination())
+            rc = i;
+    }
+
+    return rc;
+}
 
 BFoid BFRootTaskData::AppendTask (BFTask& rTask)
 {
@@ -323,10 +341,26 @@ BFoid BFRootTaskData::AppendTask (BFTask& rTask)
     if ( HasTask(rTask.GetOID()) )
         return BFInvalidOID;
 
-    // remember the task
-    vecTasks_.push_back(&rTask);
+    // backup a backup?
+    long idx = FindLastTaskWithDestination(rTask.GetSource());
+
+    /* if the source-dir of rTask created by any other
+       task (source == destination_of_other_task), rTask
+       should be executed after the source is created by
+       the other task(s) */
+    if (idx == -1 || idx == (vecTasks_.size()-1))
+    {
+        vecTasks_.push_back(&rTask);
+    }
+    else
+    {
+        idx++;
+        vecTasks_.insert(vecTasks_.begin()+idx, &rTask);
+    }
 
     SetModified();
+
+    return rTask.GetOID();
 }
 
 BFoid BFRootTaskData::AppendTask (BFTaskType type,
@@ -361,13 +395,12 @@ BFoid BFRootTaskData::AppendTask (BFTaskType type,
                         arrExclude
                     );
 
-    // remember task
-    vecTasks_.push_back(pTask);
+    BFoid rc = AppendTask(*pTask);
 
-    SetModified();
-    //broadcastObserver();
+    if (rc == BFInvalidOID)
+        delete pTask;
 
-    return pTask->GetOID();
+    return rc;
 }
 
 
@@ -571,7 +604,7 @@ wxArrayString BFRootTask::GetDestinations ()
 
     for (itVec = TaskVector().begin();
          itVec != TaskVector().end();
-         itVec++)
+         ++itVec)
         arr.Add((*itVec)->GetDestination());
 
     return arr;

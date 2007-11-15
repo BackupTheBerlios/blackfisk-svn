@@ -218,7 +218,7 @@ void BFTaskDlg::InitTypeCtrl ()
 
     for (BFTypeVector::iterator it = vecTaskTypes.begin();
          it != vecTaskTypes.end();
-         it++)
+         ++it)
     {
         BFTaskType type = (*it);
         pTypeCtrl_->Append(BFTask::GetTypeDescription(type),

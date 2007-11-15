@@ -137,7 +137,7 @@ void BFTaskData::SetTaskType (BFTaskType type)
 
     for (BFTypeVector::iterator it = vecTypes.begin();
          it != vecTypes.end();
-         it ++)
+         ++it)
     {
         if ((*it) == type)
         {

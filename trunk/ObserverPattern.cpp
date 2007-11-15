@@ -98,7 +98,7 @@ void Subject::deregisterObserver (Observer* observer)
     // search for the observer how wants to be deregistered
 	for (itObserver = vecObserver_.begin();
 		itObserver != vecObserver_.end();
-		itObserver++)
+		++itObserver)
 	{
 		if ((*itObserver) == observer)
 		{
@@ -115,7 +115,7 @@ void Subject::broadcastObservers ()
 
 	for (itObserver = vecObserver_.begin();
 		itObserver != vecObserver_.end();
-		itObserver++)
+		++itObserver)
 	{
 		(*itObserver)->ValueChanged (this);
 	}

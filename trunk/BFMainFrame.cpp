@@ -313,7 +313,7 @@ void BFMainFrame::DeleteRememberedThreads ()
 
     for (it = vecThreads_.begin();
          it != vecThreads_.end();
-         it++)
+         ++it)
     {
         (*it)->Wait();
         delete (*it);

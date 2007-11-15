@@ -1,11 +1,14 @@
 0.0.1
 ~~~~~
+- BUG?: sync-X-with-Y not shown in sync-task (by MUSIC) ?
+- insert a space between "verbose level" and "warnings" in BFBackupInfoCtrl
 - BUG: wxGenericDirCtrl change the working dir
-- backup a backup (task order/dependency!)
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 
 0.0.2
 ~~~~~
+- changing the destination of a sync-task should move the exsiting destination, too (ask the user)
+- don't make a complete rebuild of BFBackupCtrl if just a new task is added
 - settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)
 - remember window position and size incl splitwindow
 - WebUpdater
@@ -26,6 +29,7 @@
 
 0.0.3
 ~~~~~
+- change task-type by context-menu of a tree-node (backup-dir)
 - help: tutorials/howtos with wink
 - full customizable keybord-shortcuts based on the menus
 - supported languages: english, german, chinese (brian)

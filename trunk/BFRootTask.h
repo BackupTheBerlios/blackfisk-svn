@@ -71,6 +71,11 @@ class BFRootTaskData : public BFTaskBase, public Subject
             return -1 if nothing is found */
         long FindTask (BFTask* pTask);
 
+        /** return the position in the task-vector of the last BFTask
+            with the destination
+            return -1 if nothing is found */
+        long FindLastTaskWithDestination(const wxChar* destination);
+
     public:
         ///
         BFTaskVector& TaskVector ()

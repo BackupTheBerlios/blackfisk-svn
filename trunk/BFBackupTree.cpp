@@ -106,7 +106,7 @@ void BFBackupTree::Init ()
     // iterate throug the tasks
     for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
          itVec != BFRootTask::Instance().TaskVector().end();
-         itVec++)
+         ++itVec)
     {
         // create all for the task needed items in the tree
         AddTask
@@ -250,8 +250,16 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     wxMenuItem*             pItem;
     wxString                str;
 
-    // ** copy entry **
-    if (wxDir::Exists(filenames[0]))
+    // ** copy file **
+    if ( wxFile::Exists(filenames[0]) )
+    {
+        // copy file
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
+        menu.Append(pItem);
+    }
+    else
+    // ** directory (existing and unexisting/created while backup) **
     {
         // copy directory
         pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_DIR, _("copy directory"));
@@ -268,14 +276,6 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
         menu.Append(pItem);
     }
-    else
-    {
-        // copy file
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
-        menu.Append(pItem);
-    }
-
 
     // remember the filename for use in other methodes
     SetDropedFilename(filenames[0]);
@@ -331,24 +331,40 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
 
 void BFBackupTree::OnBeginDrag (wxTreeEvent& event)
 {
-    // remember the currently draged task
-    BFTask* pTask = GetTaskByItem(event.GetItem());
+    // get data behind the item
+    BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(event.GetItem()));
 
-    if (pTask == NULL)
+    if (pItemData == NULL)
         return;
-
-    oidCurrentDrag_ = pTask->GetOID();
-
-    wxFileDataObject    my_data;
-    wxDropSource        dragSource  ( this );
 
     // selected the currently draging item
     SelectItem(event.GetItem());
 
-    // just set dummy data
-    my_data.AddFile(_T("<oid>"));
-    dragSource.SetData(my_data);
+    // init
+    wxFileDataObject    my_data;
+    wxDropSource        dragSource  ( this );
 
+    // drag a task or a directory?
+    if (pItemData->GetOID() == BFInvalidOID)
+    {
+        my_data.AddFile(pItemData->GetPath());
+    }
+    else
+    {
+        // remember the currently draged task
+        BFTask* pTask = BFRootTask::Instance().GetTask(pItemData->GetOID());
+
+        if (pTask == NULL)
+            return;
+
+        oidCurrentDrag_ = pTask->GetOID();
+
+        // just set dummy data
+        my_data.AddFile(_T("<oid>"));
+    }
+
+    // start dragging
+    dragSource.SetData(my_data);
     wxDragResult result = dragSource.DoDragDrop( TRUE );
 }
 

@@ -91,7 +91,7 @@ void BFBackupProgressDlg::Init ()
     // init controls
     for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
          itVec != BFRootTask::Instance().TaskVector().end();
-         itVec++)
+         ++itVec)
         pListBox_->Append((*itVec)->GetName(), (*itVec));
 
 
