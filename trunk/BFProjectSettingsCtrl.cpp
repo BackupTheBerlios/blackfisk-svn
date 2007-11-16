@@ -93,13 +93,18 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
     // backup-log
     wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("logfile location:"));
     pBackupLogLabel->SetMinSize(wxSize(GetLabelWidth(), pBackupLogLabel->GetSize().GetHeight()));
-    pPickerBackupLog_ = new wxDirPickerCtrl (this, wxID_ANY);
+    pPickerBackupLog_ = new wxDirPickerCtrl (this,
+                                             wxID_ANY,
+                                             wxEmptyString,
+                                             _("Select a folder"),
+                                             wxDefaultPosition,
+                                             wxDefaultSize,
+                                             wxDIRP_USE_TEXTCTRL);
     strTip = _("the directory where the backup-logfile is stored");
     pBackupLogLabel->SetHelpText(strTip);
     pPickerBackupLog_->SetHelpText(strTip);
 
     // connect mouse motion events
-    //SetHelpText(_T("this PrjSet control"));
     if (pHelpCtrl != NULL)
     {
         pHelpCtrl->ConnectMotionEvent(this);

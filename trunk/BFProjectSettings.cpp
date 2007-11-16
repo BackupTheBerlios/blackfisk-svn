@@ -142,8 +142,7 @@ void BFProjectSettings::SetDefault ()
     iStopLevelOnFatal_      = BFDO_ASK;
     iStopLevelOnError_      = BFDO_ASK;
     iStopLevelOnWarning_    = BFDO_ASK;
-    wxArrayString arrDest   = BFRootTask::Instance().GetDestinations();
-    strBackupLogLocation_   = BFApp::ExtractCommunity(arrDest);
+    strBackupLogLocation_   = wxEmptyString;
 }
 
 /*static*/ wxString BFProjectSettings::GetVerboseString (BF_VerboseLevel verboseLevel)

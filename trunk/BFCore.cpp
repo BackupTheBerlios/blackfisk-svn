@@ -518,14 +518,17 @@ bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DE
 
 bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
 {
+    // check parameters
     if (pDir == NULL || !(wxDir::Exists(pDir)) )
     {
         BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteDir()"));
         return false;
     }
 
+    // init
     wxDir dir(pDir);
 
+    // is empty
     if (bOnlyIfEmpty)
     {
         if (dir.HasFiles() || dir.HasSubDirs())
@@ -534,23 +537,31 @@ bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool 
             return false;
         }
     }
-    else
-    {
-        BFDeleteDirTraverser trav(bIgnoreWriteprotection);
-        dir.Traverse(trav);
-    }
 
+    // delete subs
+    BFDeleteDirTraverser trav(bIgnoreWriteprotection);
+    dir.Traverse(trav);
+
+    // backup message
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("delete %s"), pDir));
 
-    return ::wxRmdir(pDir);
+    // delete the dir
+    bool bX = ::wxRmdir(pDir);
+
+    if (bX == true)
+        int i = 0;
+    else
+        int ii = 0;
+
+    return bX;
 }
 
 bool BFCore::Delete (wxArrayString& arrDelete)
 {
     for (int i = 0; i < arrDelete.GetCount(); ++i)
     {
-        BFSystem::Debug(wxString::Format(_T("current delete target: %s"), arrDelete[i].c_str()), _T("BFCore::Delete()"));
+        //BFSystem::Debug(wxString::Format(_T("current delete target: %s"), arrDelete[i].c_str()), _T("BFCore::Delete()"));
 
         if ( wxDir::Exists(arrDelete[i]) )
             DeleteDir(arrDelete[i], false, true);
@@ -599,7 +610,11 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     // synchronize the dir
     wxDir dir(pOriginal);
     wxArrayString arrOriginalListing;
-    BFSynchronizeDirTraverser trav(pOriginal, pToSynchronize, arrOriginalListing, bVerify, pProgress);
+    BFSynchronizeDirTraverser trav(pOriginal,
+                                   pToSynchronize,
+                                   arrOriginalListing,
+                                   bVerify,
+                                   pProgress);
     dir.Traverse(trav);
 
     if (bWhileBackup_)
@@ -607,10 +622,18 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
 
     // check for deletable files
     wxArrayString arrToSyncListing;
+    BFSystem::Log(_T("GetDirListing(): %s"));
+    BFSystem::Log(wxJoin(arrOriginalListing, _T('\n'), _T('\0')));
     GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
     BFApp::PrependString(arrToSyncListing, pToSynchronize);
     BFSystem::Log(_T("files to delete..."));
     BFSystem::Log(wxJoin(arrToSyncListing, _T('\n'), _T('\0')));
+
+    // init delete progress
+    if (pProgress != NULL)
+        pProgress->SetLabel ( _("delete unexisting files and directories") );
+
+    // delete
     Delete(arrToSyncListing);
 
     return true;

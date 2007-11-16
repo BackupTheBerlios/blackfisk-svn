@@ -106,15 +106,13 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
     // target
     wxString strTarget = strToSynchronize_ + ListingArray().Last();
 
-    // verify
+    // progress
+    if (pProgress_ != NULL)
+        pProgress_->IncrementActualWithMessage(strTarget);
+
+    // copy
     if ( !(BFCore::Instance().VerifyFile(filename, strTarget)) )
-    {
-        BFSystem::Debug(wxString::Format(_T("%s is not sync -> copy it from %s"),
-                                         strTarget.c_str(),
-                                         filename.c_str()),
-                        _T("SycnTrav::OnFile()"));
         BFCore::Instance().CopyFile(filename, strTarget, true, bVerify_);
-    }
 
     return wxDIR_CONTINUE;
 }
@@ -133,13 +131,7 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
 
     // does it exist
     if ( !(wxDir::Exists(strTarget)) )
-    {
-        BFSystem::Debug(wxString::Format(_T("%s is not sync -> copy it from %s"),
-                                         strTarget.c_str(),
-                                         dirname.c_str()),
-                        _T("SycnTrav::OnDir()"));
         BFCore::Instance().CopyDir(dirname, strTarget, bVerify_);
-    }
 
     return wxDIR_CONTINUE;
 }
@@ -191,7 +183,8 @@ BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= fals
         dir.Traverse(trav);
     }
 
-    ::wxRmdir(dirname);
+    if (::wxRmdir(dirname) == false)
+        BFSystem::Error(wxString::Format(_("error while removing %s"), dirname.c_str()), _T("BFDeleteDirTraverser::OnDir()"));
 
     return wxDIR_IGNORE;
 }

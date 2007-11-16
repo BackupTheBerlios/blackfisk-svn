@@ -488,9 +488,10 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
 
     return Core().Synchronize
     (
-        GetSource(),
-        GetDestination(),
-        Verify()
+        strSrc.wx_str(),
+        strDest.wx_str(),
+        Verify(),
+        &rProgress
     );
 }
 
