@@ -29,6 +29,7 @@
 #include <wx/arrstr.h>
 #include <vector>
 #include "BFTask.h"
+#include "BFSystem.h"
 
 /** handle messages while the backup process and
     store them to the related backup-log-files

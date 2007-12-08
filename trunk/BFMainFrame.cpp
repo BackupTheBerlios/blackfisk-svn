@@ -75,7 +75,12 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
 END_EVENT_TABLE()
 
 
-/*private*/ BFMainFrame::BFMainFrame (BFApp& rApp)
+/*static*/ BFMainFrame* BFMainFrame::Instance()
+{
+    return wxGetApp().MainFrame();
+}
+
+/*private*/ BFMainFrame::BFMainFrame ()
             : wxFrame (NULL,
                        BF_ID_MAINFRAME,
                        wxEmptyString),
@@ -425,6 +430,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
+    BFCore::Instance().DeleteDir(_T("E:\\MyOrg_sync"));
 }
 #endif
 

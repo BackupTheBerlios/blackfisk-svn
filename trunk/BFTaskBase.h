@@ -23,8 +23,7 @@
 #ifndef BFTASKBASE_H
 #define BFTASKBASE_H
 
-#include "BFCore.h"
-
+#include <wx/wx.h>
 
 #define BFTASK_PLACEHOLDER_DATE   _T("<date>")
 #define BFTASK_PLACEHOLDER_TIME   _T("<time>")
@@ -32,13 +31,6 @@
 /// lowest base class for all Task classes
 class BFTaskBase
 {
-    private:
-
-    protected:
-        /// reference to the BFCore instance
-        static BFCore& Core ()
-        { return BFCore::Instance(); }
-
     public:
         /// ctor
         BFTaskBase ();

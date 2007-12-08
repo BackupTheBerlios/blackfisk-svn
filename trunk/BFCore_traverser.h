@@ -37,6 +37,8 @@ class BFDirListingTraverser : public wxDirTraverser
         wxArrayString*      pExcludeList_;
         ///
         wxString            strStartDir_;
+        ///
+        bool                bOnlyDirectories_;
 
         /** handling for files and dirs is the same */
         wxDirTraverseResult HandleDirAndFile(const wxString& name, wxDirTraverseResult resultNegative);
@@ -50,9 +52,10 @@ class BFDirListingTraverser : public wxDirTraverser
             the listing is stored in 'rList'
             if you need relative pathes set 'strStartDir'
             set 'pExcludeList' to filter something (placeholders allowed) */
-        BFDirListingTraverser (wxArrayString& rList,
-                               wxString strStartDir = wxEmptyString,
-                               wxArrayString* pExcludeList = NULL);
+        BFDirListingTraverser (wxArrayString&   rList,
+                               wxString         strStartDir = wxEmptyString,
+                               wxArrayString*   pExcludeList = NULL,
+                               bool             bOnlyDirectories = false);
 
         ///
         virtual wxDirTraverseResult OnDir(const wxString& dirname);
@@ -92,12 +95,12 @@ class BFCountDirTraverser : public wxDirTraverser
 };  // class BFCountDirTraverser
 
 
-///
+/*
 class BFDeleteDirTraverser : public wxDirTraverser
 {
     private:
         /** if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
-            if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them */
+            if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them *
         bool bIgnoreWriteprotection_;
 
     public:
@@ -110,7 +113,7 @@ class BFDeleteDirTraverser : public wxDirTraverser
         virtual wxDirTraverseResult OnFile(const wxString& filename);
 
 };  // class BFDeleteDirTraverser
-
+*/
 
 /// to copy a dir with all files and sub-dirs in it
 class BFCopyDirTraverser : public wxDirTraverser

@@ -22,7 +22,7 @@
 
 
 #include "BFTask.h"
-
+#include "BFCore.h"
 #include "BFRootTask.h"
 #include "BFundef.h"
 #include "BFIconTable.h"
@@ -416,7 +416,7 @@ bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
     switch (GetArchiveFormat())
     {
         case CompressZIP:
-            Core().CreateZipFromDir
+            BFCore::Instance().CreateZipFromDir
             (
                 strDest.c_str(),
                 strSrc.c_str(),
@@ -448,7 +448,7 @@ bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
     FillBlackfiskPlaceholders(strSrc);
 
     // copy dir
-    return Core().CopyDir
+    return BFCore::Instance().CopyDir
     (
         strSrc.c_str(),
         strDest.c_str(),
@@ -468,7 +468,7 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
     FillBlackfiskPlaceholders(strSrc);
 
     // copy file
-    return Core().CopyFile
+    return BFCore::Instance().CopyFile
     (
         strSrc.c_str(),
         strDest.c_str(),
@@ -486,7 +486,7 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
-    return Core().Synchronize
+    return BFCore::Instance().Synchronize
     (
         strSrc.wx_str(),
         strDest.wx_str(),

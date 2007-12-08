@@ -33,6 +33,7 @@
 #include "BFMainFrame.h"
 #include "BFIconTable.h"
 #include "BFHyperlinkCtrl.h"
+#include "BFApp.h"
 
 #define BFABOUTDLG_ID_VIEWLICENSE   1 + wxID_HIGHEST
 #define BFABOUTDLG_ID_OK            2 + wxID_HIGHEST

@@ -46,8 +46,6 @@ class BFThread_ProjectRunner : public wxThread
         ///
         BFTask*         pTask_;
         ///
-        wxMutex*        pMutex_;
-        ///
         wxCondition*    pCondition_;
         ///
         BF_StopLevel    stopAnswer_;

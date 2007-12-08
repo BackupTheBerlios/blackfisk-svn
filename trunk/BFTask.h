@@ -25,6 +25,7 @@
 
 #include <vector>
 #include "BFTaskBase.h"
+#include "Progress.h"
 #include "jbSerialize.h"
 
 /** define the type of the task

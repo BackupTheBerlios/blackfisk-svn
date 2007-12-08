@@ -507,8 +507,18 @@ bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DE
     if ( BFCore::IsStop() )
         return false;
 
-    if ( !bIgnoreWriteProtection && IsWriteProtected(pFile) )
-        return false;
+    if ( IsWriteProtected(pFile) )
+    {
+        if (bIgnoreWriteProtection)
+        {
+            SetWriteProtected(pFile, false);
+        }
+        else
+        {
+            BFSystem::Error(wxString::Format(_("file %s is write-protected"), pFile), _T("BFCore::DeleteFile()"));
+            return false;
+        }
+    }
 
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("delete %s"), pFile));
@@ -516,57 +526,131 @@ bool BFCore::DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection /*= DE
     return ::wxRemoveFile(pFile);
 }
 
-bool BFCore::DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
+wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString& arr)
 {
     // check parameters
-    if (pDir == NULL || !(wxDir::Exists(pDir)) )
+    if (!(wxDir::Exists(strDir)) )
+    {
+        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::GetSubDirectories()"));
+        return arr;
+    }
+
+    // path separator
+    wxString strUsedDir = strDir;
+    if ( !(strUsedDir.EndsWith(wxFILE_SEP_PATH)) )
+        strUsedDir = strUsedDir + wxFILE_SEP_PATH;
+
+    // init
+    wxDir dir(strUsedDir);
+
+    // check if open
+    if ( !(dir.IsOpened()) )
+    {
+        BFSystem::Error(wxString::Format(_("directory %s is not open"), strUsedDir), _T("BFCore::GetSubDirectories()"));
+        return arr;
+    }
+
+    // iterate
+    wxString        strCurrent;
+
+    for (bool bContinue = dir.GetFirst(&strCurrent, wxEmptyString, wxDIR_DIRS | wxDIR_HIDDEN);
+         bContinue;
+         bContinue = bContinue && dir.GetNext(&strCurrent))
+    {
+        const wxString strFullDir = strUsedDir + strCurrent;
+
+        GetSubDirectories(strFullDir, arr).Add(strFullDir);
+    }
+
+    return arr;
+}
+
+bool BFCore::DeleteDir (const wxString& strDir,
+                        bool bOnlyIfEmpty /*= false*/,
+                        bool bIgnoreWriteprotection /*= false*/)
+{
+    // check parameters
+    if (!(wxDir::Exists(strDir)) )
     {
         BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteDir()"));
         return false;
     }
 
     // init
-    wxDir dir(pDir);
+    wxDir dir(strDir);
+
+    // check if open
+    if ( !(dir.IsOpened()) )
+    {
+        BFSystem::Error(wxString::Format(_("directory %s is not open"), strDir), _T("BFCore::DeleteDir()"));
+        return false;
+    }
 
     // is empty
     if (bOnlyIfEmpty)
     {
         if (dir.HasFiles() || dir.HasSubDirs())
         {
-            BFSystem::Error(wxString::Format(_("directory %s is not empty"), pDir), _T("BFCore::DeleteDir()"));
+            BFSystem::Error(wxString::Format(_("directory %s is not empty"), strDir), _T("BFCore::DeleteDir()"));
             return false;
         }
     }
 
-    // delete subs
-    BFDeleteDirTraverser trav(bIgnoreWriteprotection);
-    dir.Traverse(trav);
+    // get directories in the right (deletable) order
+    wxArrayString   arrToDelete;
+    GetSubDirectories(strDir, arrToDelete);
+    arrToDelete.Add(strDir);
+
+    BFSystem::Fatal(wxJoin(arrToDelete, _T('\n'), _T('\0')));
 
     // backup message
     if (bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("delete %s"), pDir));
+        BFSystem::Backup(wxString::Format(_("delete %s"), strDir));
 
-    // delete the dir
-    bool bX = ::wxRmdir(pDir);
+    // delete subs
+    for (int i = 0;
+         i < arrToDelete.GetCount();
+         ++i)
+    {
+        // remove write protection
+        if (bIgnoreWriteprotection)
+            if (IsWriteProtected(arrToDelete[i]))
+                SetWriteProtected(arrToDelete[i], false);
 
-    if (bX == true)
-        int i = 0;
-    else
-        int ii = 0;
+        // files in it?
+        wxDir* pDirSub = new wxDir(arrToDelete[i]);
+        if (pDirSub->HasFiles())
+        {
+            wxArrayString arrFilesToDelete;
+            GetDirListing(arrToDelete[i], arrFilesToDelete);
+            BFSystem::Fatal(wxJoin(arrFilesToDelete, _T('\n'), _T('\0')));
+            Delete(arrFilesToDelete, bOnlyIfEmpty, bIgnoreWriteprotection);
+        }
+        delete pDirSub;
 
-    return bX;
+        // delete
+        if ( !(wxRmdir(arrToDelete[i])) )
+        {
+            BFSystem::Error(wxString::Format(_T("couldn't delete directory %s\nmaybe it is write-protected or not-empty"), arrToDelete[i]), _T("BFCore::DeleteDir()"));
+            return false;
+        }
+    }
+
+    return true;
 }
 
-bool BFCore::Delete (wxArrayString& arrDelete)
+bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
 {
     for (int i = 0; i < arrDelete.GetCount(); ++i)
     {
-        //BFSystem::Debug(wxString::Format(_T("current delete target: %s"), arrDelete[i].c_str()), _T("BFCore::Delete()"));
+        // stop ?
+        if ( BFCore::IsStop() )
+            return false;
 
         if ( wxDir::Exists(arrDelete[i]) )
-            DeleteDir(arrDelete[i], false, true);
+            DeleteDir(arrDelete[i], bOnlyIfEmpty, bIgnoreWriteprotection);
         else
-            DeleteFile(arrDelete[i], true);
+            DeleteFile(arrDelete[i], bIgnoreWriteprotection);
     }
 
     return true;
@@ -620,21 +704,21 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
 
-    // check for deletable files
+    // check for deletable files ...
     wxArrayString arrToSyncListing;
-    BFSystem::Log(_T("GetDirListing(): %s"));
-    BFSystem::Log(wxJoin(arrOriginalListing, _T('\n'), _T('\0')));
     GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
     BFApp::PrependString(arrToSyncListing, pToSynchronize);
-    BFSystem::Log(_T("files to delete..."));
-    BFSystem::Log(wxJoin(arrToSyncListing, _T('\n'), _T('\0')));
+
+    // ... and sort them in the right order
+    arrToSyncListing.Sort(true);
 
     // init delete progress
     if (pProgress != NULL)
         pProgress->SetLabel ( _("delete unexisting files and directories") );
 
     // delete
-    Delete(arrToSyncListing);
+    BFSystem::Fatal(wxJoin(arrToSyncListing, _T('\n'), _T('\0')));
+    Delete(arrToSyncListing, false, true);
 
     return true;
 }
@@ -684,6 +768,9 @@ bool BFCore::CreatePath (const wxChar* pPath)
         return false;
     }
 
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("create path %s"), pPath));
+
     // init
     wxString strSub;
     wxStringTokenizer tkz(pPath, wxFILE_SEP_PATH);
@@ -698,9 +785,6 @@ bool BFCore::CreatePath (const wxChar* pPath)
 
         strSub = strSub + wxFILE_SEP_PATH;
     }
-
-    if (bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("create path %s"), pPath));
 
     return true;
 }

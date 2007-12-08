@@ -183,9 +183,6 @@ class BFRootTask : public BFRootTaskData
         const wxString& GetCurrentFilename ();
 
         ///
-        BFCore& Core ();
-
-        ///
         void Close ();
 
         /// run all tasks

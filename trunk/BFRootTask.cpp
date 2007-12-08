@@ -33,6 +33,7 @@
 #include "blackfisk.h"
 #include "BFwxLog.h"
 #include "BFThread_ProjectRunner.h"
+#include "BFApp.h"
 
 #define BFROOTTASK_DEFAULT_NAME _("unnamed")
 
@@ -437,10 +438,6 @@ BFoid BFRootTask::CreateOID ()
     return oidLast_;
 }
 
-BFCore& BFRootTask::Core ()
-{
-    return BFCore::Instance();
-}
 
 void BFRootTask::Close ()
 {

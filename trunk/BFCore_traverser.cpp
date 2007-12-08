@@ -27,10 +27,12 @@
 
 BFDirListingTraverser::BFDirListingTraverser (wxArrayString&    rList,
                                               wxString          strStartDir /*= wxEmptyString*/,
-                                              wxArrayString*    pExcludeList /*=NULL*/)
+                                              wxArrayString*    pExcludeList /*=NULL*/,
+                                              bool              bOnlyDirectories /*=false*/)
                      : rList_(rList),
                        pExcludeList_(pExcludeList),
-                       strStartDir_(strStartDir)
+                       strStartDir_(strStartDir),
+                       bOnlyDirectories_(bOnlyDirectories)
 
 {
 }
@@ -38,7 +40,10 @@ BFDirListingTraverser::BFDirListingTraverser (wxArrayString&    rList,
 
 /*virtual*/ wxDirTraverseResult BFDirListingTraverser::OnFile(const wxString& filename)
 {
-    return HandleDirAndFile(filename, wxDIR_CONTINUE);
+    if (bOnlyDirectories_)
+        return wxDIR_CONTINUE;
+    else
+        return HandleDirAndFile(filename, wxDIR_CONTINUE);
 }
 
 
@@ -157,14 +162,14 @@ BFCountDirTraverser::BFCountDirTraverser ()
     return wxDIR_CONTINUE;
 }
 
-
-BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= false*/)
+/*
+BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= false*)
                     : bIgnoreWriteprotection_(bIgnoreWriteprotection)
 {
 }
 
 
-/*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnDir(const wxString& dirname)
+/*virtual* wxDirTraverseResult BFDeleteDirTraverser::OnDir(const wxString& dirname)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -183,14 +188,16 @@ BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= fals
         dir.Traverse(trav);
     }
 
-    if (::wxRmdir(dirname) == false)
-        BFSystem::Error(wxString::Format(_("error while removing %s"), dirname.c_str()), _T("BFDeleteDirTraverser::OnDir()"));
+    //if (::wxRmdir(dirname) == false)
+    wxRmDir(dirname);
+    int e = *(_errno());
+        BFSystem::Error(wxString::Format(_("error (%d) while removing %s\ncwd: %s"), e, dirname.c_str(), wxGetCwd().wx_str()), _T("BFDeleteDirTraverser::OnDir()"));
 
     return wxDIR_IGNORE;
 }
 
 
-/*virtual*/ wxDirTraverseResult BFDeleteDirTraverser::OnFile(const wxString& filename)
+/*virtual* wxDirTraverseResult BFDeleteDirTraverser::OnFile(const wxString& filename)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -206,7 +213,7 @@ BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= fals
 
     return wxDIR_CONTINUE;
 }
-
+*/
 
 BFCopyDirTraverser::BFCopyDirTraverser (const wxChar* pDestinationDirectory,
                                         MapStringPair* pRememberToVerify /*=NULL*/,

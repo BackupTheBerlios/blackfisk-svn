@@ -154,7 +154,7 @@ bool BFApp::OnInit()
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
-    new BFMainFrame(*this);
+    new BFMainFrame();
 
     // open the last project ?
     if (strToOpen.IsEmpty())

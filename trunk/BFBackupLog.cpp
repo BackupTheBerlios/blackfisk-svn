@@ -24,7 +24,7 @@
 #include "BFBackupLog.h"
 #include "BFSystem.h"
 #include "BFRootTask.h"
-
+#include <wx/file.h>
 
 BFTaskLog::BFTaskLog (BFTask& rTask)
          : rTask_(rTask),

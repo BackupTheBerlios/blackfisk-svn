@@ -136,7 +136,10 @@ class BFCore
         bool CreatePath (const wxChar* pPath);
 
         /** copy a directory */
-        bool CopyDir (const wxChar* pSourceDir, const wxChar* pDestinationDir, bool bVerify, ProgressWithMessage* pProgress = NULL);
+        bool CopyDir (const wxChar* pSourceDir,
+                      const wxChar* pDestinationDir,
+                      bool bVerify,
+                      ProgressWithMessage* pProgress = NULL);
 
 
         /*
@@ -144,7 +147,11 @@ class BFCore
         /** create a zipfile ('pstrZipName') from a directory ('pstrSourceDir')
             files and directories that should not be zipped can be specified in 'pExcludeListing'
             'pExcludeListing' and 'pProgress' can be NULL*/
-        bool CreateZipFromDir (const wxChar* pstrZipName, const wxChar* pstrSourceDir, wxArrayString* pExcludeListing, bool bVerify, ProgressWithMessage* pProgress = NULL);
+        bool CreateZipFromDir (const wxChar* pstrZipName,
+                               const wxChar* pstrSourceDir,
+                               wxArrayString* pExcludeListing,
+                               bool bVerify,
+                               ProgressWithMessage* pProgress = NULL);
 
         /** */
         const wxChar* GetDateString ();
@@ -158,14 +165,29 @@ class BFCore
             if bOnlyIfEmpty = true it delete the directory only if there are no files or dirs in it
             if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
             if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them */
-        bool DeleteDir (const wxChar* pDir, bool bOnlyIfEmpty = false, bool bIgnoreWriteprotection = false);
+        bool DeleteDir (const wxString& strDir,
+                        bool bOnlyIfEmpty = false,
+                        bool bIgnoreWriteprotection = false);
 
         /** delete a file */
-        bool DeleteFile (const wxChar* pFile, bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
+        bool DeleteFile (const wxChar* pFile,
+                         bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
 
-        /** delete files and directories specified by the array
-            be carefull because it ignore write-protection and does not check if a directory is empty */
-        bool Delete (wxArrayString& arrDelete);
+        /** delete files and directories specified by the array */
+        bool Delete (wxArrayString& arrDelete,
+                     bool bOnlyIfEmpty = false,
+                     bool bIgnoreWriteprotection = false);
+
+        /** add all subdirectories of 'strDir' to 'arr' including subdirectories
+            in all levels. the point is it add the deepest (last) subdirectory
+            to 'arr' before the parent of the subdirectory
+            e.g. X:\dir\sub1\sub1a\sub1a_
+                 X:\dir\sub1\sub1a\
+                 X:\dir\sub2\sub2x
+                 X:\dir\sub2\
+            it searches for hidden directories, too
+            it is used by DeleteDir() */
+        wxArrayString& GetSubDirectories (const wxString& strDir, wxArrayString& arr);
 
         // >>> VERIFICATION methodes  <<<
     public:

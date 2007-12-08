@@ -21,7 +21,7 @@
  ***/
 
 #include "BFTaskBase.h"
-#include <wx/wx.h>
+#include "BFCore.h"
 
 BFTaskBase::BFTaskBase ()
 {
@@ -36,10 +36,10 @@ BFTaskBase::BFTaskBase ()
 /*static*/ wxString& BFTaskBase::FillBlackfiskPlaceholders (wxString& rStr)
 {
     // BFTASK_PLACEHOLDER_DATE
-    rStr.Replace(BFTASK_PLACEHOLDER_DATE, Core().GetDateString());
+    rStr.Replace(BFTASK_PLACEHOLDER_DATE, BFCore::Instance().GetDateString());
 
     // BFTASK_PLACEHOLDER_TIME
-    rStr.Replace(BFTASK_PLACEHOLDER_TIME, Core().GetTimeString());
+    rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
 
     return rStr;
 }

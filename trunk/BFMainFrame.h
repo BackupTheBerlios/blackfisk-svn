@@ -32,8 +32,6 @@ class BFDirCtrl;
 #include <wx/wx.h>
 #include <vector>
 
-#include "BFApp.h"
-
 ///
 typedef std::vector<wxThread*> BFThreadVector;
 
@@ -88,13 +86,12 @@ class BFMainFrame : public wxFrame
 
     public:
         /// constructor
-        BFMainFrame (BFApp& rApp);
+        BFMainFrame ();
         /// virtual destructor
         virtual ~BFMainFrame ();
 
         ///
-        static BFMainFrame* Instance()
-        { return wxGetApp().MainFrame(); }
+        static BFMainFrame* Instance();
 
         ///
         BFBackupCtrl* BackupCtrl ();

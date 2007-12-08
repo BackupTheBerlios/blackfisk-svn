@@ -53,7 +53,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
     Init();
     Show();
     Raise();
-    pCondition_ = new wxCondition(mutex_);
+    pCondition_ = new wxCondition(*(new wxMutex));
     BFRootTask::Instance().Run_Start();
 }
 
