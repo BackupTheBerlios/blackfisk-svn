@@ -95,26 +95,6 @@ class BFCountDirTraverser : public wxDirTraverser
 };  // class BFCountDirTraverser
 
 
-/*
-class BFDeleteDirTraverser : public wxDirTraverser
-{
-    private:
-        /** if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
-            if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them *
-        bool bIgnoreWriteprotection_;
-
-    public:
-        /// default ctor
-        BFDeleteDirTraverser (bool bIgnoreWriteprotection = false);
-
-        ///
-        virtual wxDirTraverseResult OnDir(const wxString& dirname);
-        ///
-        virtual wxDirTraverseResult OnFile(const wxString& filename);
-
-};  // class BFDeleteDirTraverser
-*/
-
 /// to copy a dir with all files and sub-dirs in it
 class BFCopyDirTraverser : public wxDirTraverser
 {

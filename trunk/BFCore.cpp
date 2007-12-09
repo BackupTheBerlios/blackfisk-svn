@@ -601,8 +601,6 @@ bool BFCore::DeleteDir (const wxString& strDir,
     GetSubDirectories(strDir, arrToDelete);
     arrToDelete.Add(strDir);
 
-    BFSystem::Fatal(wxJoin(arrToDelete, _T('\n'), _T('\0')));
-
     // backup message
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("delete %s"), strDir));
@@ -623,7 +621,6 @@ bool BFCore::DeleteDir (const wxString& strDir,
         {
             wxArrayString arrFilesToDelete;
             GetDirListing(arrToDelete[i], arrFilesToDelete);
-            BFSystem::Fatal(wxJoin(arrFilesToDelete, _T('\n'), _T('\0')));
             Delete(arrFilesToDelete, bOnlyIfEmpty, bIgnoreWriteprotection);
         }
         delete pDirSub;
@@ -717,7 +714,6 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
         pProgress->SetLabel ( _("delete unexisting files and directories") );
 
     // delete
-    BFSystem::Fatal(wxJoin(arrToSyncListing, _T('\n'), _T('\0')));
     Delete(arrToSyncListing, false, true);
 
     return true;

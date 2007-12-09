@@ -162,58 +162,6 @@ BFCountDirTraverser::BFCountDirTraverser ()
     return wxDIR_CONTINUE;
 }
 
-/*
-BFDeleteDirTraverser::BFDeleteDirTraverser (bool bIgnoreWriteprotection /*= false*)
-                    : bIgnoreWriteprotection_(bIgnoreWriteprotection)
-{
-}
-
-
-/*virtual* wxDirTraverseResult BFDeleteDirTraverser::OnDir(const wxString& dirname)
-{
-    // stop ?
-    if ( BFCore::IsStop() )
-        return wxDIR_STOP;
-
-    // remove write protection
-    if (bIgnoreWriteprotection_)
-        if (BFCore::Instance().IsWriteProtected(dirname))
-            BFCore::Instance().SetWriteProtected(dirname, false);
-
-    wxDir dir(dirname);
-
-    if (dir.HasFiles() || dir.HasSubDirs())
-    {
-        BFDeleteDirTraverser trav(bIgnoreWriteprotection_);
-        dir.Traverse(trav);
-    }
-
-    //if (::wxRmdir(dirname) == false)
-    wxRmDir(dirname);
-    int e = *(_errno());
-        BFSystem::Error(wxString::Format(_("error (%d) while removing %s\ncwd: %s"), e, dirname.c_str(), wxGetCwd().wx_str()), _T("BFDeleteDirTraverser::OnDir()"));
-
-    return wxDIR_IGNORE;
-}
-
-
-/*virtual* wxDirTraverseResult BFDeleteDirTraverser::OnFile(const wxString& filename)
-{
-    // stop ?
-    if ( BFCore::IsStop() )
-        return wxDIR_STOP;
-
-    // remove write protection
-    if (bIgnoreWriteprotection_)
-        if (BFCore::Instance().IsWriteProtected(filename))
-            BFCore::Instance().SetWriteProtected(filename, false);
-
-    if ( ::wxRemoveFile(filename) == false )
-        BFSystem::Error(wxString::Format(_("error while removing %s"), filename.c_str()), _T("BFDeleteDirTraverser::OnFile()"));
-
-    return wxDIR_CONTINUE;
-}
-*/
 
 BFCopyDirTraverser::BFCopyDirTraverser (const wxChar* pDestinationDirectory,
                                         MapStringPair* pRememberToVerify /*=NULL*/,

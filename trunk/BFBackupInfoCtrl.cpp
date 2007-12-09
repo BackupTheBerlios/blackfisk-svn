@@ -85,14 +85,17 @@ void BFBackupInfoCtrl::Init ()
 
     // sizer and arrange
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
-    wxFlexGridSizer* pGridSizer = new wxFlexGridSizer(3, 2, 7);
+    wxFlexGridSizer* pGridSizer = new wxFlexGridSizer(4, 2, 7);
     pGridSizer->Add(pStatVerbose);
+    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
     pGridSizer->Add(pStatWarning);
     pGridSizer->Add(pWarningsCounter_);
     pGridSizer->Add(pStatVerboseLvl, wxSizerFlags(0).Center());
+    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
     pGridSizer->Add(pStatError);
     pGridSizer->Add(pErrorsCounter_);
     pGridSizer->AddStretchSpacer(0);
+    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
     pGridSizer->Add(pStatFatalError);
     pGridSizer->Add(pFatalErrorsCounter_);
     pTopSizer->Add(pGridSizer, wxSizerFlags(0).Border().Center());
