@@ -115,7 +115,7 @@ class BFCore
         /// to patch for wxWidgets
         bool SetWriteProtected (const wxChar* pFilename, bool bWriteProtected);
 
-        /// return number of files and directories in a directory and its subdirectories
+        /// return number of files and directories in a directory and its subdirectories (return -1 on error)
         long GetDirFileCount(const wxChar* pDir, long* pDirCount = NULL, long* pFileCount = NULL);
 
         /** get all files and subdirectories in 'dir' and store them to 'arr'
@@ -203,7 +203,7 @@ class BFCore
         wxUint32 GetFileCrc (const wxChar* pFilename);
     private:
         /// compare the file-attributes of two files
-        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
+        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2, bool bIgnoreArchiveBit = false);
         /// compare the content of to files
         bool VerifyFileContents (wxFile& f1, wxFile& f2);
 };    // class BFCore

@@ -126,6 +126,7 @@ bool BFCore::SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry)
 
     // read file attributes
     wxUint32    wxAttr  = pEntry->GetExternalAttributes();
+    // PPP
     long        lAttr   = GetFileAttributes(rFn.GetFullPath());
 
     // process READ-ONLY
@@ -158,11 +159,25 @@ bool BFCore::SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry)
     return true;
 }
 
-bool BFCore::VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2)
+bool BFCore::VerifyFileAttributes (wxFileName& fn1,
+                                   wxFileName& fn2,
+                                   bool bIgnoreArchiveBit /*= false*/)
 {
+    // PPP
     long lAttr1 = GetFileAttributes(fn1.GetFullPath());
     long lAttr2 = GetFileAttributes(fn2.GetFullPath());
 
+    // remove archive bit if there is one
+    if (bIgnoreArchiveBit)
+    {
+        if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
+            lAttr1 = lAttr1 & ~FILE_ATTRIBUTE_ARCHIVE;
+
+        if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
+            lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
+    }
+
+    // compare attributes
     return lAttr1 == lAttr2;
 }
 
@@ -682,7 +697,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
 
         pProgress->SetActual( 0 );
         pProgress->SetRange ( GetDirFileCount(pOriginal, &lCountDir, &lCountFile) );
-        pProgress->SetLabel ( wxString::Format(_("synchronize to %s"), pToSynchronize) );
+        pProgress->SetLabel ( wxString::Format(_("synchronize from %s to %s"), pOriginal, pToSynchronize) );
     }
 
     if (bWhileBackup_)
@@ -724,6 +739,12 @@ long BFCore::GetDirFileCount(const wxChar* pDir, long* pDirCount /*= NULL*/, lon
     // check parameters
     if (pDir == NULL)
         return -1;
+
+    if ( !(wxDir::Exists(pDir)) )
+    {
+        BFSystem::Error(wxString::Format(_("Can not count the files in %s.\nDirectory doesn't exists!"), pDir), _T("BFCore::GetDirFileCount()"));
+        return -1;
+    }
 
     // count the files with a special traverser object
     wxDir dir(pDir);
@@ -791,6 +812,8 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
                       bool                  bVerify,
                       ProgressWithMessage*  pProgress /*= NULL*/)
 {
+    //XXX BFSystem::Fatal(wxString::Format(_T("%s\n%s"), pSourceDir, pDestinationDir));
+
     // stop ?
     if ( BFCore::IsStop() )
         return false;
@@ -1006,8 +1029,8 @@ bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
     if (dt1m != dt2m)
         return false;
 */
-    // verify file attributes
-    if ( !(VerifyFileAttributes(fn1, fn2)) )
+    // verify file attributes but ignore archive-bit
+    if ( !(VerifyFileAttributes(fn1, fn2, true)) )
         return false;
 
     // open the files

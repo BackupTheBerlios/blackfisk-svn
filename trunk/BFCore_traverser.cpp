@@ -108,12 +108,15 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
     // listing
     BFDirListingTraverser::OnFile(filename);
 
+    // XXX
+    //BFSystem::Fatal(wxString::Format(_T("currently verifing %s"), filename), _T("syncTraverser::OnFile()"));
+
     // target
     wxString strTarget = strToSynchronize_ + ListingArray().Last();
 
     // progress
     if (pProgress_ != NULL)
-        pProgress_->IncrementActualWithMessage(strTarget);
+        pProgress_->IncrementActualWithMessage(filename);
 
     // copy
     if ( !(BFCore::Instance().VerifyFile(filename, strTarget)) )

@@ -30,9 +30,9 @@
 #include "BFLogViewDlg.h"
 #include "BFBackupQuestionDlg.h"
 #include "BFThread_ProjectRunner.h"
-#include "BFApp.h"
 #include "BFMainFrame.h"
 #include "BFBackupInfoCtrl.h"
+#include "BFCore.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
@@ -49,7 +49,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
 {
     sp_backup_progress_dlg_ = this;
 
-    wxGetApp().MainFrame()->Iconize();
+    BFMainFrame::Instance()->Iconize();
     Init();
     Show();
     Raise();

@@ -1,13 +1,24 @@
+- "Applications" can not copy file X (Zugriff verweigert)
+- test: try to sync a write-protected-file
+- control the width of messages <http://wxforum.shadonet.com/viewtopic.php?p=74450#74450>
+- no correct progress messages on all tasks
+
 0.0.1
 ~~~~~
+- backup-context-menu in backupDirCtrl, too! (to backup a backup)
 - BUG: wxGenericDirCtrl change the working dir
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
+- a check routine before a backup: does all sources and destinations exsits? free space?
+- verify: compare modification time
+- verify: make verify-content optional; don't do it by default
 
 0.0.2
 ~~~~~
+- exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - changing the destination of a sync-task should move the exsiting destination, too (ask the user)
 - don't make a complete rebuild of BFBackupCtrl if just a new task is added
 - settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)
+- swap backupctrl and dirctrl
 - remember window position and size incl splitwindow
 - WebUpdater
 - correct sorting of dirs and tasks (first sub-dirs and then tasks) when DnD a task to a new destination
@@ -19,7 +30,6 @@
 - display "show-log" progress after a backup
 - calculate time while backup-process
 - sync directories: more detailed settings (delete?)
-- exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - using commandline without gui (controlable by things like cronjob)
 - new advanced-option: ask-on-message (true/false) while autorun (non-gui)
 - remember last concret backup files and delete them automaticly (by count, by timespan, by size)

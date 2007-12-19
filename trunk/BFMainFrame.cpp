@@ -430,7 +430,11 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    BFCore::Instance().DeleteDir(_T("E:\\MyOrg_sync"));
+    BFCore::Instance().CopyFile
+    (
+        _T("Z:\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1.bas"),
+        _T("E:\\Archive\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1_b.bas")
+    );
 }
 #endif
 
