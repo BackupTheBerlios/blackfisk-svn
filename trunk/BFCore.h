@@ -193,7 +193,7 @@ class BFCore
     public:
         /** verify the file in this order:
             file-size, file-attributes, file-content*/
-        bool VerifyFile (const wxChar* pFile1, const wxChar* pFile2);
+        bool VerifyFile (const wxString& strFile1, const wxString& strFile2);
         /** compare a pair-list (map) of files
             break on the first uncompare filepair */
         bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL);

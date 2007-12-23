@@ -1,5 +1,3 @@
-- "Applications" can not copy file X (Zugriff verweigert)
-- test: try to sync a write-protected-file
 - control the width of messages <http://wxforum.shadonet.com/viewtopic.php?p=74450#74450>
 - no correct progress messages on all tasks
 

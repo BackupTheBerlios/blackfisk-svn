@@ -433,7 +433,7 @@ void BFMainFrame::Test ()
     BFCore::Instance().CopyFile
     (
         _T("Z:\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1.bas"),
-        _T("E:\\Archive\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1_b.bas")
+        _T("E:\\Archive\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1.bas")
     );
 }
 #endif

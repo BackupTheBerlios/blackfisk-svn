@@ -413,7 +413,10 @@ bool BFCore::MoveFile (const wxChar* pSource, const wxChar* pDestination, bool b
 }
 
 
-bool BFCore::CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite /*= DEFAULT_OVERWRITE*/, bool bVerify /*= false*/)
+bool BFCore::CopyFile (const wxChar* pSource,
+                       const wxChar* pDestination,
+                       bool bOverwrite /*= DEFAULT_OVERWRITE*/,
+                       bool bVerify /*= false*/)
 {
     // check parameters
     if (pSource == NULL || pDestination == NULL)
@@ -991,31 +994,24 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 }
 
 
-bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
+bool BFCore::VerifyFile (const wxString& strFile1, const wxString& strFile2)
 {
-    // check parameters
-    if (pFile1 == NULL || pFile2 == NULL)
-    {
-        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::VerifyFile()"));
-        return false;
-    }
-
-    wxFileName  fn1(pFile1), fn2(pFile2);
+    wxFileName  fn1(strFile1), fn2(strFile2);
 
     // check file-objects
     if ( !(fn1.IsOk()) || !(fn2.IsOk()) )
     {
         BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
-                                         pFile1,
-                                         pFile2),
+                                         strFile1,
+                                         strFile2),
                         _T("BFCore::VerifyFile() - wxFileName"));
         return false;
     }
 
     // verify file size
     wxStructStat statBuf1, statBuf2;
-    wxStat(pFile1, &statBuf1);
-    wxStat(pFile2, &statBuf2);
+    wxStat(strFile1, &statBuf1);
+    wxStat(strFile2, &statBuf2);
     if ( statBuf1.st_size != statBuf2.st_size )
     //if ( f1.Length() != f2.Length() )
         return false;
@@ -1034,14 +1030,14 @@ bool BFCore::VerifyFile (const wxChar* pFile1, const wxChar* pFile2)
         return false;
 
     // open the files
-    wxFile f1(pFile1), f2(pFile2);
+    wxFile f1(strFile1), f2(strFile2);
 
     // check open files
     if ( !(f1.IsOpened()) || !(f2.IsOpened()) )
     {
         BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
-                                         pFile1,
-                                         pFile2),
+                                         strFile1,
+                                         strFile2),
                         _T("BFCore::VerifyFile() - wxFile"));
         return false;
     }
