@@ -46,16 +46,13 @@ typedef wxUint8 BFArchiveFormat;
 //#define CompressTAR   3
 //#define ...
 
-///
-typedef wxUint32 BFoid;
-#define BFInvalidOID (BFoid)-1
 
 ///
 typedef std::vector<BFTaskType> BFTypeVector;
 
 
 /// base class for a "BFTask"; represent the data-layer
-class BFTaskData : public BFTaskBase
+class BFTaskData
 {
     private:
         /// unique object identifier
@@ -202,11 +199,11 @@ class BFTask : public BFTaskData
             or
             a the object will be serialized(read) from 'rA' */
         bool Serialize (jbSerialize& rA);
+
+        /** search for blackfisk-specific placeholders in 'rStr'
+            and replace them with the needed value */
+        static wxString& FillBlackfiskPlaceholders (wxString& rStr);
 };    // class BFTask
 
-
-///
-typedef std::vector<BFTask*>    BFTaskVector;
-typedef BFTaskVector::iterator  BFTaskVectorIt;
 
 #endif    // BFTASK_H

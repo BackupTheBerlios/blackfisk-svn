@@ -530,3 +530,13 @@ bool BFTask::Run (ProgressWithMessage& rProgress)
     return true;
 }
 
+/*static*/ wxString& BFTask::FillBlackfiskPlaceholders (wxString& rStr)
+{
+    // BFTASK_PLACEHOLDER_DATE
+    rStr.Replace(BFTASK_PLACEHOLDER_DATE, BFCore::Instance().GetDateString());
+
+    // BFTASK_PLACEHOLDER_TIME
+    rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
+
+    return rStr;
+}

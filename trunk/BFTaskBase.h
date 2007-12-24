@@ -24,11 +24,31 @@
 #define BFTASKBASE_H
 
 #include <wx/wx.h>
+#include <vector>
 
 #define BFTASK_PLACEHOLDER_DATE   _T("<date>")
 #define BFTASK_PLACEHOLDER_TIME   _T("<time>")
 
-/// lowest base class for all Task classes
+///
+typedef wxUint32 BFoid;
+#define BFInvalidOID (BFoid)-1
+
+///
+enum BF_StopLevel
+{
+    BFDO_STOPPRJ,
+    BFDO_STOPTSK,
+    BFDO_ASK,
+    BFDO_IGNORE
+};
+
+
+///
+class BFTask;
+typedef std::vector<BFTask*>    BFTaskVector;
+typedef BFTaskVector::iterator  BFTaskVectorIt;
+
+/* lowest base class for all Task classes
 class BFTaskBase
 {
     public:
@@ -36,11 +56,7 @@ class BFTaskBase
         BFTaskBase ();
         /// virtual dtor
         virtual ~BFTaskBase ();
-
-        /** search for blackfisk-specific placeholders in 'rStr'
-            and replace them with the needed value */
-        static wxString& FillBlackfiskPlaceholders (wxString& rStr);
 };  // class BFTaskBase
-
+*/
 
 #endif    // BFTASKBASE_H

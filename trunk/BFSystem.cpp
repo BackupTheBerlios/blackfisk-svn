@@ -110,6 +110,26 @@ BFMessageType BFSystem::GetLastType ()
     return lastType_;
 }
 
+/*static*/ wxString BFSystem::GetVerboseString (BF_VerboseLevel verboseLevel)
+{
+    switch (verboseLevel)
+    {
+        case BFVERBOSE_ERROR:
+            return _("Error");
+
+        case BFVERBOSE_FATAL:
+            return _("Fatal Error");
+
+        case BFVERBOSE_WARNING:
+            return _("Warning");
+
+        case BFVERBOSE_INFO:
+            return _("Information");
+    };
+
+    return _("unknown verbose level");
+}
+
 /*static*/ wxString BFSystem::GetTypeString (BFMessageType type)
 {
     wxString str;

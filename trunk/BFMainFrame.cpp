@@ -43,7 +43,8 @@
 #include "BFLogViewDlg.h"
 #include "BFAboutDlg.h"
 #include "BFSettingsDlg2.h"
-#include "BFRootTask.h"
+//#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
@@ -165,7 +166,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     int iAnswer = wxYES;
 
     // check for a modified project
-    if (wxGetApp().IsProjectModified())
+    if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
@@ -309,7 +310,7 @@ void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
 {
     DeleteRememberedThreads();
     Iconize(false);
-    new BFLogViewDlg(this, BFRootTask::Instance().GetLastLogFiles());
+    new BFLogViewDlg(this, BFRootTaskApp::Instance().GetLastLogFiles());
 }
 
 void BFMainFrame::DeleteRememberedThreads ()
@@ -338,7 +339,7 @@ void BFMainFrame::RememberThread (wxThread* pThread)
 bool BFMainFrame::AskModification ()
 {
     // check for a modified project
-    if (wxGetApp().IsProjectModified())
+    if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
         int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
@@ -366,7 +367,7 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
     (
         this,
         _("Open a project"),
-        BFRootTask::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH),
+        BFRootTaskApp::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH),
         wxEmptyString,
         BF_PROJECT_EXTENSION_STRING,
         wxFD_OPEN
@@ -385,11 +386,11 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
 
 bool BFMainFrame::AskSaveProject (wxString& strProject)
 {
-    wxString strPath = BFRootTask::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH);
-    wxString strFile = BFRootTask::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
+    wxString strPath = BFRootTaskApp::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH);
+    wxString strFile = BFRootTaskApp::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
 
     if (strFile.IsEmpty())
-        strFile = BFRootTask::Instance().GetName();
+        strFile = BFRootTaskApp::Instance().GetProjectName();
 
     wxFileDialog dlg
     (
@@ -430,11 +431,6 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    BFCore::Instance().CopyFile
-    (
-        _T("Z:\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1.bas"),
-        _T("E:\\Archive\\Applications\\development\\Basic\\GW-Basic\\Files\\Ratzahl1.bas")
-    );
 }
 #endif
 
@@ -443,7 +439,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     int iAnswer = wxYES;
 
     // check for a modified project
-    if (wxGetApp().IsProjectModified())
+    if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it before running the backup?"));

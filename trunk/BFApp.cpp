@@ -34,7 +34,8 @@
 #include "BFMainFrame.h"
 #include "BFBackupProgressDlg.h"
 #include "BFTaskDlg.h"
-#include "BFRootTask.h"
+//#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "Progress.h"
 #include "BFSettings.h"
 #include "BFBackupQuestionDlg.h"
@@ -204,17 +205,17 @@ bool BFApp::OnInit()
 
 const wxString& BFApp::GetCurrentProjectFilename ()
 {
-    return BFRootTask::Instance().GetCurrentFilename();
+    return BFRootTaskApp::Instance().GetCurrentFilename();
 }
 
 wxString BFApp::GetCurrentProjectName ()
 {
-    return wxString(BFRootTask::Instance().GetName());
+    return wxString(BFRootTaskApp::Instance().GetProjectName());
 }
 
 bool BFApp::OpenProject (const wxChar* filename)
 {
-    bool rc = BFRootTask::Instance().ReadFromFile(filename);
+    bool rc = BFRootTaskApp::Instance().ReadFromFile(filename);
 
     if (rc)
         BFSettings::Instance().SetLastProject(filename);
@@ -224,7 +225,7 @@ bool BFApp::OpenProject (const wxChar* filename)
 
 bool BFApp::SaveProject (const wxChar* filename)
 {
-    bool rc = BFRootTask::Instance().StoreToFile(filename);
+    bool rc = BFRootTaskApp::Instance().StoreToFile(filename);
 
     if (rc)
         BFSettings::Instance().SetLastProject(filename);
@@ -234,24 +235,19 @@ bool BFApp::SaveProject (const wxChar* filename)
 
 bool BFApp::SaveCurrentProject ()
 {
-    return BFRootTask::Instance().StoreToFile
+    return BFRootTaskApp::Instance().StoreToFile
     (
-        BFRootTask::Instance().GetCurrentFilename()
+        BFRootTaskApp::Instance().GetCurrentFilename()
     );
 }
 
 bool BFApp::CloseCurrentProject (bool bCheckForModifications /*= true*/)
 {
     if (bCheckForModifications)
-        if (IsProjectModified())
+        if (BFRootTaskApp::Instance().IsProjectModified())
             return false;
 
-    BFRootTask::Instance().Close();
-}
-
-bool BFApp::IsProjectModified ()
-{
-    return BFRootTask::Instance().IsModified();
+    BFRootTaskApp::Instance().Close();
 }
 
 #ifdef _DEBUG

@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***/
 
+
 #ifndef BFAPP_H
 #define BFAPP_H
 
@@ -98,9 +99,6 @@ class BFApp : public wxApp
         bool SaveCurrentProject ();
         /** it close the current project */
         bool CloseCurrentProject (bool bCheckForModifications = true);
-
-        ///
-        bool IsProjectModified ();
 
         ///
         void Sound_BackupFinished ();

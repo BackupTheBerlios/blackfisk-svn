@@ -28,27 +28,8 @@
 
 #include "ObserverPattern.h"
 
-/// verbose level for message handling
-enum BF_VerboseLevel
-{
-    BFVERBOSE_INFO,
-    BFVERBOSE_WARNING,
-    BFVERBOSE_ERROR,
-    BFVERBOSE_FATAL
-};
+#include "BFSystemBase.h"
 
-///
-enum BFMessageType
-{
-    MsgUNKNOWN,
-    MsgBACKUP,
-    MsgINFO,
-    MsgWARNING,
-    MsgERROR,
-    MsgFATAL,
-    MsgLOG,
-    MsgDEBUG
-};
 
 /// manage handling of messages for errors and other messages
 class BFSystem : public Subject
@@ -99,6 +80,8 @@ class BFSystem : public Subject
 
         ///
         static BFSystem& Instance ();
+        ///
+        static wxString GetVerboseString (BF_VerboseLevel verboseLevel);
         ///
         static wxString GetTypeString (BFMessageType type);
         ///

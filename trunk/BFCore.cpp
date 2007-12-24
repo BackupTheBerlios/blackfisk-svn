@@ -32,7 +32,7 @@
 
 #include "BFCore_traverser.h"
 #include "BFApp.h"
-#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "Progress.h"
 #include "blackfisk.h"
 #include "BFundef.h"
@@ -90,8 +90,8 @@ bool BFCore::IsWhileBackup ()
 /*static*/ bool BFCore::IsStop ()
 {
     if (Instance().IsWhileBackup())
-        if ( BFRootTask::Instance().GetStopCurrentTask() == true
-          || BFRootTask::Instance().GetStopProject() == true)
+        if ( BFRootTaskApp::Instance().GetStopCurrentTask() == true
+          || BFRootTaskApp::Instance().GetStopProject() == true)
           return true;
 
     return false;

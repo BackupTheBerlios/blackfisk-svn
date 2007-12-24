@@ -26,7 +26,7 @@
 #include <wx/defs.h>
 
 #include "BFSystem.h"
-#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 
 BFBackupInfoCtrl::BFBackupInfoCtrl (wxWindow* pParent)
                 : wxPanel(pParent),
@@ -69,7 +69,7 @@ void BFBackupInfoCtrl::Init ()
 
     // message counters
     wxStaticText* pStatVerbose = new wxStaticText(this, wxID_ANY, _("Verbose-Level"));
-    wxStaticText* pStatVerboseLvl = new wxStaticText(this, wxID_ANY, BFProjectSettings::GetVerboseString(BFRootTask::Instance().GetSettings().GetVerboseLevel()));
+    wxStaticText* pStatVerboseLvl = new wxStaticText(this, wxID_ANY, BFSystem::GetVerboseString(BFRootTaskApp::Instance().GetVerboseLevel()));
     wxStaticText* pStatWarning = new wxStaticText(this, wxID_ANY, _("Warnings:"));
     wxStaticText* pStatError = new wxStaticText(this, wxID_ANY, _("Errors:"));
     wxStaticText* pStatFatalError = new wxStaticText(this, wxID_ANY, _("Fatal Errors:"));
@@ -121,7 +121,7 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
         return;
 
     // add message
-    if ( pSys->HandleLastMessage(BFRootTask::Instance().GetSettings().GetVerboseLevel()) )
+    if ( pSys->HandleLastMessage(BFRootTaskApp::Instance().GetVerboseLevel()) )
     {
         wxString str;
 

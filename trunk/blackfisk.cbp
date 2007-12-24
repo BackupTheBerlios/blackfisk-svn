@@ -261,6 +261,12 @@
 		<Unit filename="BFRootTask.h">
 			<Option virtualFolder="DataLayer\Task\" />
 		</Unit>
+		<Unit filename="BFRootTaskApp.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="BFRootTaskApp.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="BFSettings.cpp">
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
@@ -279,6 +285,9 @@
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFSystem.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="BFSystemBase.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="BFTask.cpp">
@@ -350,6 +359,7 @@
 			<code_completion />
 			<envvars />
 			<debugger />
+			<lib_finder />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

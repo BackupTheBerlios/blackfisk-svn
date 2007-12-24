@@ -1,6 +1,6 @@
 /**
  * Name:        BFRootTask.h
- * Purpose:     BFRootTask and BFRootTaskData class definition
+ * Purpose:     BFRootTask class definition
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-05-29
@@ -24,24 +24,23 @@
 #define BFROOTTASK_H
 
 #include <wx/wx.h>
-#include <wx/listbox.h>
 
 #include "BFTaskBase.h"
 #include "BFTask.h"
 #include "ObserverPattern.h"
-//#include "BFBackupTree.h"
 #include "BFProjectSettings.h"
 
-class BFBackupLog;
-class ProgressTotal;
-class ProgressWithMessage;
-
 /// data layer
-class BFRootTaskData : public BFTaskBase, public Subject
+class BFRootTask : public Subject
 {
     private:
         ///
-        BFRootTaskData (BFRootTaskData&);
+        BFRootTask (BFRootTask&);
+        ///
+        BFRootTask ();
+
+        ///
+        static BFRootTask sRootTask_;
 
         /// name of the RootTask; only for identification by the user
         wxString            strName_;
@@ -53,15 +52,10 @@ class BFRootTaskData : public BFTaskBase, public Subject
         /** indicates that the object or child of it has
             data that was not stored this time */
         bool                bModified_;
+        /// the last created oid
+        BFoid               oidLast_;
 
-    protected:
-        ///
-        BFRootTaskData ();
-        ///
-        virtual ~BFRootTaskData ();
 
-        ///
-        bool Serialize (jbSerialize& rA);
 
         /** it delete all task objects in the task-vector
             ATTENTION: it does not check if the project is saved !*/
@@ -78,9 +72,18 @@ class BFRootTaskData : public BFTaskBase, public Subject
 
     public:
         ///
-        BFTaskVector& TaskVector ()
-        { return vecTasks_; }
+        static BFRootTask& Instance ();
+        /// virtual dtor
+        virtual ~BFRootTask();
 
+        /** add all elements (BFTask*) from 'vecTasks_' in
+            'rVec' and return 'rVec'.
+            The methode doesn't cleaning 'rVec' before
+            filling it. */
+        BFTaskVector& GetAllTasks (BFTaskVector& rVec);
+
+        ///
+        bool Serialize (jbSerialize& rA);
         ///
         bool Has (BFProjectSettings* pPrjSet);
 
@@ -93,9 +96,6 @@ class BFRootTaskData : public BFTaskBase, public Subject
         const wxChar* GetName ();
         ///
         BFProjectSettings& GetSettings ();
-
-        ///
-        void ModifyDestination (const wxString& strOldDestination, const wxString& strNewDestination);
 
         /** create a new task and return its oid
             if an error occures it returns OBInvalidOID
@@ -131,47 +131,7 @@ class BFRootTaskData : public BFTaskBase, public Subject
         bool IsModified ();
         ///
         void SetModified (bool bModified = true);
-};  // class BFRootTaskData
 
-/// application layer
-class BFRootTask : public BFRootTaskData
-{
-    private:
-        /** array of log files from the last backup process
-            start with the project log */
-        wxArrayString       arrLastLogFiles_;
-        /** the complete filename of the current open project
-            if nothing is open it is empty */
-        wxString            strCurrentFilename_;
-
-        ///
-        BFRootTask ();
-        ///
-        BFRootTask (BFRootTask&);
-
-        /// the last created oid
-        BFoid               oidLast_;
-        /// current running task
-        BFTask*             pRunningTask_;
-        ///
-        bool                bStopProject_;
-        ///
-        bool                bStopTask_;
-        ///
-        BFBackupLog*        pBackupLog_;
-        ///
-        ProgressTotal*          pProgressTotal_;
-        ///
-        ProgressWithMessage*    pProgressTask_;
-
-        ///
-        static BFRootTask sRootTask_;
-
-    public:
-        ///
-        static BFRootTask& Instance ();
-        /// virtual dtor
-        virtual ~BFRootTask();
 
         /// create unique oid's for
         BFoid CreateOID ();
@@ -180,49 +140,7 @@ class BFRootTask : public BFRootTaskData
         wxArrayString GetDestinations ();
 
         ///
-        const wxString& GetCurrentFilename ();
-
-        ///
         void Close ();
-
-        /// run all tasks
-        bool Run_Start ();
-        ///
-        bool Run_NextTask ();
-        ///
-        bool Run_Finished ();
-
-        ///
-        Progress* GetProgressTotal ();
-        ///
-        ProgressWithMessage* GetProgressTask ();
-
-        ///
-        void StopCurrentTask ();
-        ///
-        void StopProject ();
-        ///
-        bool GetStopCurrentTask ();
-        ///
-        bool GetStopProject ();
-
-        // void InitThat (wxListBox& rListBox);
-        // void InitThat (BFBackupTree& rBackupTree);
-
-        ///
-        bool StoreToFile (const wxChar* strFilename);
-        ///
-        bool ReadFromFile (const wxChar* strFilename);
-
-        /** clear 'arrLastLogFiles_' */
-        void ClearLastLogFiles ();
-        /** insert 'strFilename' as the the project
-            log file as the first element of 'arrLastLogFiles_' */
-        void SetProjectLogFile (wxString& strFilename);
-        /** add 'strFilename' as a task log file to 'arrLastLogFiles_' */
-        void AddTaskLogFile (wxString& strFilename);
-        ///
-        const wxArrayString& GetLastLogFiles ();
 };  // class BFRootTask
 
 #endif    // BFROOTTASK_H

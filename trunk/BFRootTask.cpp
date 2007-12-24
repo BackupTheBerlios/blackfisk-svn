@@ -1,6 +1,6 @@
 /**
  * Name:        BFRootTask.cpp
- * Purpose:     BFRootTask and BFRootTaskData class implementation
+ * Purpose:     BFRootTask class implementation
  * Author:      Christian Buhtz
  * Modified by:
  * Created:     2006-05-29
@@ -22,34 +22,46 @@
 
 #include "BFRootTask.h"
 
-#include <wx/wfstream.h>
 #include <wx/tokenzr.h>
 
-#include "BFBackupProgressDlg.h"
-#include "BFBackupTree.h"
-#include "Progress.h"
-#include "BFIconTable.h"
-#include "BFBackupLog.h"
 #include "blackfisk.h"
-#include "BFwxLog.h"
-#include "BFThread_ProjectRunner.h"
-#include "BFApp.h"
 
 #define BFROOTTASK_DEFAULT_NAME _("unnamed")
 
-BFRootTaskData::BFRootTaskData ()
+BFRootTask BFRootTask::sRootTask_;
+
+BFRootTask& BFRootTask::Instance ()
+{
+    return sRootTask_;
+}
+
+BFRootTask::BFRootTask ()
               : strName_(BFROOTTASK_DEFAULT_NAME),
-                bModified_(false)
+                bModified_(false),
+                oidLast_(BFInvalidOID)
 {
 }
 
 
-/*virtual*/BFRootTaskData::~BFRootTaskData ()
+/*virtual*/BFRootTask::~BFRootTask ()
 {
     ClearTaskVector();
 }
 
-void BFRootTaskData::ClearTaskVector ()
+
+BFTaskVector& BFRootTask::GetAllTasks (BFTaskVector& rVec)
+{
+    BFTaskVectorIt itVec;
+
+	for (itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
+		 ++itVec)
+        rVec.push_back(*itVec);
+
+    return rVec;
+}
+
+void BFRootTask::ClearTaskVector ()
 {
     BFTaskVectorIt itVec;
 
@@ -61,7 +73,7 @@ void BFRootTaskData::ClearTaskVector ()
     vecTasks_.clear();
 }
 
-bool BFRootTaskData::Has (BFProjectSettings* pPrjSet)
+bool BFRootTask::Has (BFProjectSettings* pPrjSet)
 {
     if (pPrjSet == &projectSettings_)
         return true;
@@ -69,7 +81,7 @@ bool BFRootTaskData::Has (BFProjectSettings* pPrjSet)
     return false;
 }
 
-long BFRootTaskData::FindTask (BFTask* pTask)
+long BFRootTask::FindTask (BFTask* pTask)
 {
     BFTaskVectorIt  itVec;
     long            lPos;
@@ -83,7 +95,7 @@ long BFRootTaskData::FindTask (BFTask* pTask)
     return -1;
 }
 
-BFTask* BFRootTaskData::GetTask(BFoid oid)
+BFTask* BFRootTask::GetTask(BFoid oid)
 {
     BFTaskVectorIt itVec;
 
@@ -96,7 +108,7 @@ BFTask* BFRootTaskData::GetTask(BFoid oid)
     return NULL;
 }
 
-BFTask* BFRootTaskData::GetNextTask (BFTask* pTask)
+BFTask* BFRootTask::GetNextTask (BFTask* pTask)
 {
     if (vecTasks_.empty())
         return NULL;
@@ -110,7 +122,7 @@ BFTask* BFRootTaskData::GetNextTask (BFTask* pTask)
     return vecTasks_[lPos+1];
 }
 
-BFTask* BFRootTaskData::GetLastTask ()
+BFTask* BFRootTask::GetLastTask ()
 {
     if (vecTasks_.empty())
         return NULL;
@@ -118,7 +130,7 @@ BFTask* BFRootTaskData::GetLastTask ()
     return vecTasks_[vecTasks_.size()-1];
 }
 
-bool BFRootTaskData::DeleteTask (BFoid oid)
+bool BFRootTask::DeleteTask (BFoid oid)
 {
     BFTaskVectorIt itVec;
 
@@ -140,65 +152,22 @@ bool BFRootTaskData::DeleteTask (BFoid oid)
     return false;
 }
 
-bool BFRootTaskData::HasTask(BFoid oid)
+bool BFRootTask::HasTask(BFoid oid)
 {
     return (GetTask(oid) != NULL);
 }
 
-bool BFRootTaskData::IsModified ()
+bool BFRootTask::IsModified ()
 {
     return bModified_;
 }
 
-void BFRootTaskData::SetModified (bool bModified /*= true*/)
+void BFRootTask::SetModified (bool bModified /*= true*/)
 {
     bModified_ = bModified;
 }
 
-bool BFRootTask::StoreToFile (const wxChar* strFilename)
-{
-    if (strFilename == NULL)
-    {
-        wxLogError (_("wrong parameters in BFRootTask::StoreToFile (const wxChar*)"));
-        return false;
-    }
-
-    wxFileOutputStream  out(strFilename);
-    jbSerialize           archive(out, BF_PROJECT_CURRENT_VERSION);
-
-    if (Serialize(archive))
-    {
-        strCurrentFilename_ = strFilename;
-        SetModified(false);
-        return true;
-    }
-
-    return false;
-}
-
-
-bool BFRootTask::ReadFromFile (const wxChar* strFilename)
-{
-    if (strFilename == NULL)
-    {
-        BFSystem::Fatal(_("wrong parameters"), _T("BFRootTask::ReadFromFile()"));
-        return false;
-    }
-
-    wxFileInputStream   in(strFilename);
-    jbSerialize         archive(in, BF_PROJECT_CURRENT_VERSION);
-
-    if (Serialize(archive))
-    {
-        strCurrentFilename_ = strFilename;
-        return true;
-    }
-
-    return false;
-}
-
-
-bool BFRootTaskData::Serialize (jbSerialize& rA)
+bool BFRootTask::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
         return false;
@@ -257,12 +226,12 @@ bool BFRootTaskData::Serialize (jbSerialize& rA)
 }
 
 
-long BFRootTaskData::GetTaskCount ()
+long BFRootTask::GetTaskCount ()
 {
     return vecTasks_.size();
 }
 
-void BFRootTaskData::SetName (const wxChar* strName)
+void BFRootTask::SetName (const wxChar* strName)
 {
     if (strName == NULL)
         return;
@@ -273,49 +242,18 @@ void BFRootTaskData::SetName (const wxChar* strName)
 }
 
 
-const wxChar* BFRootTaskData::GetName ()
+const wxChar* BFRootTask::GetName ()
 {
     return strName_;
 }
 
 
-BFProjectSettings& BFRootTaskData::GetSettings ()
+BFProjectSettings& BFRootTask::GetSettings ()
 {
     return projectSettings_;
 }
 
-void BFRootTaskData::ModifyDestination (const wxString& strOldDestination,
-                                        const wxString& strNewDestination)
-{
-    BFTaskVectorIt it;
-    bool bMod = false;
-    wxString strCurrDest;
-
-    for (it = vecTasks_.begin();
-         it != vecTasks_.end();
-         ++it)
-    {
-        // the destination of the current task
-        strCurrDest = (*it)->GetDestination();
-
-        // has the destiantion to modify?
-        if (strCurrDest.StartsWith(strOldDestination))
-        {
-            // replace old with new destination
-            strCurrDest.Replace(strOldDestination, strNewDestination);
-            // set destination to the task
-            (*it)->SetDestination(strCurrDest);
-            // remember to mark the project as modified
-            bMod = true;
-        }
-    }
-
-    // mark the project modified if needed
-    if (bMod)
-        SetModified();
-}
-
-long BFRootTaskData::FindLastTaskWithDestination(const wxChar* destination)
+long BFRootTask::FindLastTaskWithDestination(const wxChar* destination)
 {
     if (destination == NULL)
         return -1;
@@ -334,7 +272,7 @@ long BFRootTaskData::FindLastTaskWithDestination(const wxChar* destination)
     return rc;
 }
 
-BFoid BFRootTaskData::AppendTask (BFTask& rTask)
+BFoid BFRootTask::AppendTask (BFTask& rTask)
 {
     if ( !(rTask.IsValid()) )
         return BFInvalidOID;
@@ -364,7 +302,7 @@ BFoid BFRootTaskData::AppendTask (BFTask& rTask)
     return rTask.GetOID();
 }
 
-BFoid BFRootTaskData::AppendTask (BFTaskType type,
+BFoid BFRootTask::AppendTask (BFTaskType type,
                              const wxChar* strSource,
                              const wxChar* strDestination,
                              const wxChar* strName,
@@ -405,29 +343,6 @@ BFoid BFRootTaskData::AppendTask (BFTaskType type,
 }
 
 
-
-BFRootTask BFRootTask::sRootTask_;
-
-BFRootTask& BFRootTask::Instance ()
-{
-    return sRootTask_;
-}
-
-BFRootTask::BFRootTask()
-          : oidLast_(BFInvalidOID),
-            bStopProject_(false),
-            bStopTask_(false),
-            pRunningTask_(NULL),
-            pBackupLog_(NULL),
-            pProgressTotal_(NULL),
-            pProgressTask_(NULL)
-{
-}
-
-/*virtual*/ BFRootTask::~BFRootTask()
-{
-}
-
 BFoid BFRootTask::CreateOID ()
 {
     ++oidLast_;
@@ -442,155 +357,13 @@ BFoid BFRootTask::CreateOID ()
 void BFRootTask::Close ()
 {
     ClearTaskVector();
+    oidLast_            = BFInvalidOID;
     SetName             (BFROOTTASK_DEFAULT_NAME);
     GetSettings()       .SetDefault();
     SetModified         (false);
-    strCurrentFilename_ = wxEmptyString;
-    oidLast_            = BFInvalidOID;
-    bStopProject_       = false;
-    bStopTask_          = false;
-    pRunningTask_       = NULL;
-    pBackupLog_         = NULL;
     broadcastObservers();
 }
 
-
-Progress* BFRootTask::GetProgressTotal ()
-{
-    if (pProgressTotal_ == NULL)
-        pProgressTotal_ = new ProgressTotal(GetTaskCount(), GetProgressTask());
-
-    return pProgressTotal_;
-}
-
-
-ProgressWithMessage* BFRootTask::GetProgressTask ()
-{
-    if (pProgressTask_ == NULL)
-        pProgressTask_ = new ProgressWithMessage();
-
-    return pProgressTask_;
-}
-
-bool BFRootTask::Run_Start ()
-{
-    if (BFBackupProgressDlg::Instance() == NULL)
-        return false;
-
-    /* deactivate the default wxLog target
-       and set a new one that handle messages
-       with BFSystem */
-    wxLog::SetActiveTarget(new BFwxLog);
-
-    // init
-    bStopProject_   = false;
-    bStopTask_      = false;
-    pBackupLog_     = new BFBackupLog();
-    pRunningTask_   = NULL;
-
-    // mark the backup start in the logfile
-    pBackupLog_->BackupStarted();
-    // the core need to create backup messages
-    BFCore::Instance().BackupStarted();
-
-    return Run_NextTask ();
-}
-
-bool BFRootTask::Run_NextTask ()
-{
-    // finished the last runned task
-    if (pRunningTask_ != NULL)
-    {
-        // increment task progress
-        GetProgressTotal()->IncrementActual();
-
-        // check how the task ended
-        if (GetStopCurrentTask())
-        {
-            pBackupLog_->TaskStoped();
-            bStopTask_ = false;
-        }
-        else
-        {
-            pBackupLog_->TaskFinished();
-        }
-    }
-
-    // all tasks runned or stoped?
-    if (pRunningTask_ == GetLastTask() || GetStopProject())
-        return Run_Finished();
-
-    // get the next task
-    pRunningTask_ = GetNextTask(pRunningTask_);
-
-    if (!GetStopProject())
-    {
-        // log running task
-        pBackupLog_->TaskStarted(*pRunningTask_);
-        //
-        BFBackupProgressDlg::Instance()->SetCurrentTaskName(pRunningTask_->GetName());
-        BFThread_ProjectRunner::Run(pRunningTask_);
-    }
-
-    return true;
-}
-
-bool BFRootTask::Run_Finished ()
-{
-    // mark the backup end in the log files
-    pBackupLog_->BackupFinished();
-    // there is no need to create backup messages
-    BFCore::Instance().BackupEnded();
-
-    delete pBackupLog_;
-    delete pProgressTask_;
-    delete pProgressTotal_;
-    pBackupLog_     = NULL;
-    pProgressTask_  = NULL;
-    pProgressTotal_ = NULL;
-
-    // reset the default wxLog target
-    delete wxLog::SetActiveTarget(NULL);
-
-    wxGetApp().Sound_BackupFinished();
-
-    BFBackupProgressDlg::Instance()->Close();
-
-    return true;
-}
-/*
-void BFRootTask::InitThat (wxListBox& rListBox)
-{
-    BFTaskVectorIt itVec;
-
-    for (itVec = TaskVector().begin();
-         itVec != TaskVector().end();
-         itVec++)
-        rListBox.Append((*itVec)->GetName(), (*itVec));
-}
-
-void BFRootTask::InitThat (BFBackupTree& rBackupTree)
-{
-    // add root
-    rBackupTree.AddRoot(GetName(), BFIconTable::logo);
-
-    // iterate throug the tasks
-    BFTaskVectorIt itVec;
-
-    for (itVec = TaskVector().begin();
-         itVec != TaskVector().end();
-         itVec++)
-    {
-        // create all for the task needed items in the tree
-        rBackupTree.AddTask
-                    (
-                        (*itVec)->GetOID(),
-                        (*itVec)->GetType(),
-                        (*itVec)->GetName(),
-                        (*itVec)->GetDestination()
-                    );
-    }
-}*/
 
 wxArrayString BFRootTask::GetDestinations ()
 {
@@ -599,67 +372,10 @@ wxArrayString BFRootTask::GetDestinations ()
     // iterate throug the tasks
     BFTaskVectorIt itVec;
 
-    for (itVec = TaskVector().begin();
-         itVec != TaskVector().end();
+    for (itVec = vecTasks_.begin();
+         itVec != vecTasks_.end();
          ++itVec)
         arr.Add((*itVec)->GetDestination());
 
     return arr;
-}
-
-void BFRootTask::StopCurrentTask ()
-{
-    BFSystem::Backup(_("try to stop the current running task"));
-
-    bStopTask_ = true;
-    bStopProject_ = false;
-
-    if (pRunningTask_ != NULL)
-        pRunningTask_->StopTask();
-}
-
-void BFRootTask::StopProject ()
-{
-    BFSystem::Backup(_("try to stop the current running project"));
-
-    bStopTask_ = true;
-    bStopProject_ = true;
-
-    if (pRunningTask_ != NULL)
-        pRunningTask_->StopTask();
-}
-
-bool BFRootTask::GetStopCurrentTask ()
-{
-    return bStopTask_;
-}
-
-bool BFRootTask::GetStopProject ()
-{
-    return bStopProject_;
-}
-
-const wxString& BFRootTask::GetCurrentFilename ()
-{
-    return strCurrentFilename_;
-}
-
-void BFRootTask::ClearLastLogFiles ()
-{
-    arrLastLogFiles_.Clear();
-}
-
-void BFRootTask::SetProjectLogFile (wxString& strFilename)
-{
-    arrLastLogFiles_.Insert(strFilename, 0);
-}
-
-void BFRootTask::AddTaskLogFile (wxString& strFilename)
-{
-    arrLastLogFiles_.Add(strFilename);
-}
-
-const wxArrayString& BFRootTask::GetLastLogFiles ()
-{
-    return arrLastLogFiles_;
 }

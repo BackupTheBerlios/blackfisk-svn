@@ -22,11 +22,10 @@
 
 
 #include "BFThread_ProjectRunner.h"
-#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "BFTask.h"
 #include "BFCore.h"
 #include "BFBackupProgressDlg.h"
-#include "BFApp.h"
 #include "BFMainFrame.h"
 #include "ctrlids.h"
 
@@ -36,7 +35,7 @@ DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
 
 /*static*/ bool BFThread_ProjectRunner::Run (BFTask* pTask)
 {
-    wxGetApp().MainFrame()->RememberThread( new BFThread_ProjectRunner(pTask) );
+    BFMainFrame::Instance()->RememberThread( new BFThread_ProjectRunner(pTask) );
 
     return true;
 }
@@ -65,19 +64,19 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
     wxString str = pTask_->GetDestination();
 
     // create directory if needed
-    if ( !(wxDir::Exists(BFTaskBase::FillBlackfiskPlaceholders(str))) )
+    if ( !(wxDir::Exists(BFTask::FillBlackfiskPlaceholders(str))) )
         BFCore::Instance().CreatePath(str);
 
     // run the task
-    pTask_->Run( *(BFRootTask::Instance().GetProgressTask()) );
+    pTask_->Run( *(BFRootTaskApp::Instance().GetProgressTask()) );
 
     // finish this and run next task
-    BFRootTask::Instance().Run_NextTask();
+    BFRootTaskApp::Instance().Run_NextTask();
 
     // last task
     if ( !(BFCore::Instance().IsWhileBackup()) )
         // send pending event
-        wxGetApp().MainFrame()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
+        BFMainFrame::Instance()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
 
     //delete this;
     return NULL;

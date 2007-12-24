@@ -23,18 +23,11 @@
 #ifndef BFPROJECTSETTINGS_H
 #define BFPROJECTSETTINGS_H
 
-#include "BFSystem.h"
 #include <wx/string.h>
+#include "BFSystem.h"
+#include "BFTaskBase.h"
 #include "jbSerialize.h"
 
-///
-enum BF_StopLevel
-{
-    BFDO_STOPPRJ,
-    BFDO_STOPTSK,
-    BFDO_ASK,
-    BFDO_IGNORE
-};
 
 ///
 class BFProjectSettings
@@ -65,11 +58,6 @@ class BFProjectSettings
 
         /// set all values to default
         void SetDefault();
-
-        ///
-        static wxString GetVerboseString (BF_VerboseLevel verboseLevel);
-        ///
-        static wxString GetStopLevelString (BF_StopLevel stopLevel);
 
         ///
         void SetVerboseLevel (BF_VerboseLevel iLevel);

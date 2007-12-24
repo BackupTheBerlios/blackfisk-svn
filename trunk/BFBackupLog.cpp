@@ -23,7 +23,8 @@
 
 #include "BFBackupLog.h"
 #include "BFSystem.h"
-#include "BFRootTask.h"
+//#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include <wx/file.h>
 
 BFTaskLog::BFTaskLog (BFTask& rTask)
@@ -93,7 +94,7 @@ bool BFTaskLog::Write ()
     }
 
     // remember the name of the logfile
-    BFRootTask::Instance().AddTaskLogFile(strFilename);
+    BFRootTaskApp::Instance().AddTaskLogFile(strFilename);
 
     // write the log
     wxString strLine;
@@ -107,7 +108,7 @@ bool BFTaskLog::Write ()
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Project: ") << BFRootTask::Instance().GetName() << _T("\n");
+    strLine << _("Project: ") << BFRootTaskApp::Instance().GetProjectName() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
@@ -132,19 +133,19 @@ bool BFTaskLog::Write ()
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings:\t\t") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnWarning()) << _T("\n");
+    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnWarning()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors:\t\t") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnError()) << _T("\n");
+    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnError()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors:\t") << BFProjectSettings::GetStopLevelString(BFRootTask::Instance().GetSettings().GetStopLevelOnFatal()) << _T("\n");
+    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnFatal()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Verbose-Level: ") << BFProjectSettings::GetVerboseString(BFRootTask::Instance().GetSettings().GetVerboseLevel()) << _T("\n");
+    strLine << _("Verbose-Level: ") << BFSystem::GetVerboseString(BFRootTaskApp::Instance().GetVerboseLevel()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
@@ -161,7 +162,7 @@ wxString BFTaskLog::GetFileName ()
 {
     wxString str;
     str << rTask_.GetDestination() << wxFILE_SEP_PATH << rTask_.GetName() << _T(".log");
-    BFTaskBase::FillBlackfiskPlaceholders(str);
+    BFTask::FillBlackfiskPlaceholders(str);
     return str;
 }
 
@@ -217,7 +218,7 @@ BFBackupLog::BFBackupLog ()
     if (pSys == NULL)
         return;
 
-    if ( pSys->HandleLastMessage(BFRootTask::Instance().GetSettings().GetVerboseLevel()) )
+    if ( pSys->HandleLastMessage(BFRootTaskApp::Instance().GetVerboseLevel()) )
     {
         if (vecTaskLogs_.back() != NULL)
             vecTaskLogs_.back()->Message
@@ -240,7 +241,7 @@ bool BFBackupLog::WhileBackup ()
 
 void BFBackupLog::BackupStarted ()
 {
-    BFRootTask::Instance().ClearLastLogFiles();
+    BFRootTaskApp::Instance().ClearLastLogFiles();
     timeStart_ = wxDateTime::Now();
 }
 
@@ -268,16 +269,14 @@ void BFBackupLog::TaskStoped ()
 
 bool BFBackupLog::Write ()
 {
-    BFRootTask& rPrj = BFRootTask::Instance();
-
     // create filename
     wxString strFile;
-    strFile = rPrj.GetSettings().GetBackupLogLocation();
-    strFile = strFile + wxFILE_SEP_PATH + rPrj.GetName() + _T(".log");
-    BFTaskBase::FillBlackfiskPlaceholders(strFile);
+    strFile = BFRootTaskApp::Instance().GetBackupLogLocation();
+    strFile = strFile + wxFILE_SEP_PATH + BFRootTaskApp::Instance().GetProjectName() + _T(".log");
+    BFTask::FillBlackfiskPlaceholders(strFile);
 
     // remember the filename
-    BFRootTask::Instance().SetProjectLogFile(strFile);
+    BFRootTaskApp::Instance().SetProjectLogFile(strFile);
 
     // open log-file
     wxFile file(strFile, wxFile::write);
@@ -292,7 +291,7 @@ bool BFBackupLog::Write ()
     wxString strLine;
 
     strLine.Clear();
-    strLine << _("Project: ") << rPrj.GetName() << _T("\n");
+    strLine << _("Project: ") << BFRootTaskApp::Instance().GetProjectName() << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
@@ -313,19 +312,19 @@ bool BFBackupLog::Write ()
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Verbose-Level:\t") << BFProjectSettings::GetVerboseString(rPrj.GetSettings().GetVerboseLevel()) << _T("\n");
+    strLine << _("Verbose-Level:\t") << BFSystem::GetVerboseString(BFRootTaskApp::Instance().GetVerboseLevel()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings:\t\t") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnWarning()) << _T("\n");
+    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnWarning()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors:\t\t") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnError()) << _T("\n");
+    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnError()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors:\t") << BFProjectSettings::GetStopLevelString(rPrj.GetSettings().GetStopLevelOnFatal()) << _T("\n");
+    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnFatal()) << _T("\n");
     file.Write(strLine);
 
     strLine.Clear();

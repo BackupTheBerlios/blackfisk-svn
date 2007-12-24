@@ -26,7 +26,7 @@
 
 #include "BFProgressCtrl.h"
 #include "Progress.h"
-#include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "BFLogViewDlg.h"
 #include "BFBackupQuestionDlg.h"
 #include "BFThread_ProjectRunner.h"
@@ -54,7 +54,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
     Show();
     Raise();
     pCondition_ = new wxCondition(*(new wxMutex));
-    BFRootTask::Instance().Run_Start();
+    BFRootTaskApp::Instance().Run_Start();
 }
 
 void BFBackupProgressDlg::OnClose(wxCloseEvent& rEvent)
@@ -78,8 +78,8 @@ void BFBackupProgressDlg::Init ()
     pListBox_           = new wxListBox(this, wxID_ANY);
 
     // progress ctrls
-    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTask::Instance().GetProgressTask());
-    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFRootTask::Instance().GetProgressTotal());
+    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTaskApp::Instance().GetProgressTask());
+    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFRootTaskApp::Instance().GetProgressTotal());
 
     // backup info ctrl
     BFBackupInfoCtrl* pInfoCtrl = new BFBackupInfoCtrl(this);
@@ -89,11 +89,7 @@ void BFBackupProgressDlg::Init ()
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
     // init controls
-    for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
-         itVec != BFRootTask::Instance().TaskVector().end();
-         ++itVec)
-        pListBox_->Append((*itVec)->GetName(), (*itVec));
-
+    BFRootTaskApp::Instance().InitThat(pListBox_);
 
     // arrange
     pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
@@ -139,12 +135,12 @@ void BFBackupProgressDlg::SetCurrentTaskName (const wxChar* name)
 
 void BFBackupProgressDlg::OnStopTask (wxCommandEvent& rEvent)
 {
-    BFRootTask::Instance().StopCurrentTask();
+    BFRootTaskApp::Instance().StopCurrentTask();
 }
 
 void BFBackupProgressDlg::OnStopProject (wxCommandEvent& rEvent)
 {
-    BFRootTask::Instance().StopProject();
+    BFRootTaskApp::Instance().StopProject();
 }
 
 wxCondition* BFBackupProgressDlg::GetCondition ()

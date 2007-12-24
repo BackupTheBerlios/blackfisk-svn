@@ -34,6 +34,7 @@
 #include "BFTask.h"
 #include "BFTaskBase.h"
 #include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "BFTaskDlg.h"
 #include "BFIconTable.h"
 #include "BFDestinationDlg.h"
@@ -95,28 +96,8 @@ void BFBackupTree::Init ()
 
     Freeze();
 
-    // delete all items in the treeCtrl
-    DeleteAllItems();
-
     // recreate the treeCtrl with all tasks
-    //BFRootTask::Instance().InitThat(*this);
-    // add root
-    AddRoot(BFRootTask::Instance().GetName(), BFIconTable::logo);
-
-    // iterate throug the tasks
-    for (BFTaskVectorIt itVec = BFRootTask::Instance().TaskVector().begin();
-         itVec != BFRootTask::Instance().TaskVector().end();
-         ++itVec)
-    {
-        // create all for the task needed items in the tree
-        AddTask
-        (
-            (*itVec)->GetOID(),
-            (*itVec)->GetType(),
-            (*itVec)->GetName(),
-            (*itVec)->GetDestination()
-        );
-    }
+    BFRootTaskApp::Instance().InitThat(this);
 
     // expand all items in the treeCtlr
     ExpandAll();
@@ -442,7 +423,7 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
         strCurr         = tkz.GetNextToken();
         strCurrFilled   = strCurr;
         if (bFillBlackfiskPlaceholders_)
-            BFTaskBase::FillBlackfiskPlaceholders(strCurrFilled);
+            BFTask::FillBlackfiskPlaceholders(strCurrFilled);
         idLast  = FindItem(idCurr, strCurrFilled, false);
 
         // does the item exists
@@ -583,7 +564,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* st
     strFull << strName;
 
     if (bFillBlackfiskPlaceholders_)
-        BFTaskBase::FillBlackfiskPlaceholders(str);
+        BFTask::FillBlackfiskPlaceholders(str);
 
     // add the destination items and the task item itself
     wxTreeItemId id = AppendItem
