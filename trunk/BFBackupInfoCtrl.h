@@ -29,7 +29,8 @@
 #include <wx/stattext.h>
 #include "ObserverPattern.h"
 
-///
+/** this control display the number of messages
+    while a backup */
 class BFBackupInfoCtrl : public wxPanel, public Observer
 {
     private:
