@@ -138,10 +138,48 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
         BFTaskDlg::Show (pTask);
 }
 
+
+/*static*/ wxMenu& BFBackupTree::GenerateBackupMenu (wxMenu& menu, bool bOnDir)
+{
+    wxMenuItem      *pItem          = NULL;
+
+    // ** backup menu **
+    //menu.AppendSubMenu(pMenu_backup, _("backup"));
+
+    // check if it is a dir
+    if ( bOnDir )
+    {
+        // ** backup dir copy **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_DIRCOPY, _("copy directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu.Append(pItem);
+
+        // ** backup sync dir **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu.Append(pItem);
+
+        // ** backup archive dir **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_ARCHIVEDIR, _("archive/compress directory"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        menu.Append(pItem);
+    }
+    else
+    {
+        // ** backup file copy **
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_FILECOPY, _("copy file"));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
+        menu.Append(pItem);
+    }
+
+    return menu;
+}
+
+
 void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 {
     wxPoint         point   (rEvent.GetPoint());
-    wxMenu          menu;
+    wxMenu          menu, menu_backup;
 
     // remember the selected item
     lastItemId_ = rEvent.GetItem();
@@ -153,18 +191,28 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
         if (pTask == NULL)
             return;
 
-        // create destination directory
+        // ** create destination directory **
         if (pTask->GetType() == TaskDIRCOPY)
             menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
 
-        // delete task
+        // ** delete task **
         menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
 
-        // separator if needed
-        if (menu.GetMenuItemCount() > 0)
-            menu.AppendSeparator();
+        // separator
+        menu.AppendSeparator();
 
-        // task settings
+        // ** backup **
+        if (pTask->GetType() == TaskFILECOPY)
+            BFBackupTree::GenerateBackupMenu(menu_backup, false);
+        else
+            BFBackupTree::GenerateBackupMenu(menu_backup, true);
+
+        menu.AppendSubMenu(&menu_backup, _("backup"));
+
+        // separator
+        menu.AppendSeparator();
+
+        // ** task settings **
         menu.Append(BFBACKUPCTRL_ID_TASKSETTINGS, _("Task settings"));
     }
     else
@@ -183,6 +231,9 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
         else
         {
             menu.Append(BFBACKUPCTRL_ID_MODIFYDDESTINATION, _("modify destination"));
+            menu.AppendSeparator();
+            BFBackupTree::GenerateBackupMenu(menu_backup, true);
+            menu.AppendSubMenu(&menu_backup, _("backup"));
         }
     }
 
@@ -228,35 +279,14 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
         return false;
 
     wxMenu                  menu;
-    wxMenuItem*             pItem;
     wxString                str;
 
-    // ** copy file **
     if ( wxFile::Exists(filenames[0]) )
-    {
-        // copy file
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
-        menu.Append(pItem);
-    }
+        // ** copy file **
+        BFBackupTree::GenerateBackupMenu(menu, false);
     else
-    // ** directory (existing and unexisting/created while backup) **
-    {
-        // copy directory
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_DIR, _("copy directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
-        menu.Append(pItem);
-
-        // sync directory
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronize directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
-        menu.Append(pItem);
-
-        // archive directory
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_ARCHIVE_DIR, _("archive/compress directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
-        menu.Append(pItem);
-    }
+        // ** directory (existing and unexisting/created while backup) **
+        BFBackupTree::GenerateBackupMenu(menu, true);
 
     // remember the filename for use in other methodes
     SetDropedFilename(filenames[0]);
@@ -587,6 +617,31 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
     BFArchiveFormat aformat     = CompressNOTUSED;
     bool            bVerify     = true /* DEBUG: get default value */;
     wxArrayString   arrString;
+
+    // created by "DnD" or "Backup a Backup" ?
+    if (strDropedFilename_.IsEmpty())
+    {
+        BFBackupTreeItemData* pItemData = (BFBackupTreeItemData*)GetItemData(lastItemId_);
+
+        if (pItemData == NULL)
+            return;
+
+        // a directory
+        if (pItemData->GetOID() == BFInvalidOID)
+        {
+            strDropedFilename_ = pItemData->GetPath();
+        }
+        // a task
+        else
+        {
+            BFTask* pTask = BFRootTask::Instance().GetTask(pItemData->GetOID());
+
+            if (pTask == NULL)
+                return;
+
+            strDropedFilename_ = strDropedFilename_ + pTask->GetDestination() + wxFILE_SEP_PATH + pTask->GetName();
+        }
+    }
 
     switch (rEvent.GetId())
     {

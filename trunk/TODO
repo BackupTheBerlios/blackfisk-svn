@@ -1,8 +1,5 @@
-- no correct progress messages on all tasks
-
 0.0.1
 ~~~~~
-- backup-context-menu in backupDirCtrl, too! (to backup a backup)
 - BUG: wxGenericDirCtrl change the working dir
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - a check routine before a backup: does all sources and destinations exsits? free space?

@@ -28,7 +28,6 @@
 #include "BFMainFrame.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
-#include "BFIconTable.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
@@ -123,8 +122,6 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
 
 void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
 {
-    wxMenuItem* pItem;
-
     // remember the item
     lastItemId_ = event.GetItem();
 
@@ -132,12 +129,7 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     pDirCtrl_->GetTreeCtrl()->SelectItem(event.GetItem());
 
     // create a menu object
-    wxMenu menu;
-    wxMenu menu_backup;
-
-    // ** backup menu **
-    menu.AppendSubMenu(&menu_backup, _("backup"));
-    menu.AppendSeparator();
+    wxMenu menu, menu_backup;
 
     // get selected item in the dir control
     wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(event.GetItem()));
@@ -145,36 +137,22 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     // check if it is a dir
     if ( pDirItem != NULL && pDirItem->m_isDir )
     {
+        BFBackupTree::GenerateBackupMenu(menu_backup, true);
+        menu.AppendSubMenu(&menu_backup, _("backup"));
+        menu.AppendSeparator();
         // ** add destination **
         menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination directory"));
-
         // ** create destination **
         menu.Append(BFDIRCTRL_ID_CREATEDESTINATION, _("create here a destination directory"));
-
-        // ** backup dir copy **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_DIRCOPY, _("copy directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
-        menu_backup.Append(pItem);
-
-        // ** backup sync dir **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
-        menu_backup.Append(pItem);
-
-        // ** backup archive dir **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_ARCHIVEDIR, _("archive/compress directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
-        menu_backup.Append(pItem);
     }
     else
     {
-        // ** backup file copy **
-        menu_backup.Append(BFDIRCTRL_ID_BACKUP_FILECOPY, _("file copy"));
+        BFBackupTree::GenerateBackupMenu(menu_backup, false);
+        menu.AppendSubMenu(&menu_backup, _("backup"));
     }
 
     // popup the menu
-    if (menu.GetMenuItemCount() > 0)
-        pDirCtrl_->PopupMenu(&menu, event.GetPoint());
+    pDirCtrl_->PopupMenu(&menu, event.GetPoint());
 }
 
 void BFDirCtrl::OnDestination (wxCommandEvent& event)

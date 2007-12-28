@@ -163,8 +163,6 @@
 		<Unit filename="BFDestinationCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
-		<Unit filename="BFDestinationCtrl2.cpp" />
-		<Unit filename="BFDestinationCtrl2.h" />
 		<Unit filename="BFDestinationDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
@@ -279,8 +277,6 @@
 		<Unit filename="BFSettingsDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
-		<Unit filename="BFSettingsDlg2.cpp" />
-		<Unit filename="BFSettingsDlg2.h" />
 		<Unit filename="BFSystem.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
