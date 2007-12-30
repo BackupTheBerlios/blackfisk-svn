@@ -1,10 +1,9 @@
 0.0.1
 ~~~~~
-- BUG: wxGenericDirCtrl change the working dir
-- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
-- a check routine before a backup: does all sources and destinations exsits? free space?
 - verify: compare modification time
 - verify: make verify-content optional; don't do it by default
+- BUG: wxGenericDirCtrl change the working dir
+- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 
 0.0.2
 ~~~~~

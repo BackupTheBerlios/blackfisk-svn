@@ -42,13 +42,13 @@
 #include "BFSettings.h"
 #include "BFLogViewDlg.h"
 #include "BFAboutDlg.h"
-#include "BFSettingsDlg2.h"
-//#include "BFRootTask.h"
 #include "BFRootTaskApp.h"
 #include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
 #include "ctrlids.h"
+#include "BFProcessMsgSubject.h"
+#include "BFProcessMsgDlg.h"
 
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
@@ -464,7 +464,15 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 
     if (iAnswer != wxCANCEL)
-        new BFBackupProgressDlg(this);
+    {
+        // pre-step to check sources and destination-volumes
+        //BFProcessMsgSubject msgSubject;
+        //BFProcessMsgDlg     dlgProcess(this, &msgSubject, 3, 40);
+
+        // start the backup if everything is fine
+        if ( BFRootTaskApp::Instance().PreBackupCheck(NULL) )
+            new BFBackupProgressDlg(this);
+    }
 }
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)

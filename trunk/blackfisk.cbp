@@ -229,6 +229,24 @@
 		<Unit filename="BFPlaceholderButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFPreBackupDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFPreBackupDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFProcessMsgDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFProcessMsgDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="BFProcessMsgSubject.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="BFProcessMsgSubject.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
 		<Unit filename="BFProgressCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>

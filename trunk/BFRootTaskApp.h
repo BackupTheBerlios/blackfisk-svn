@@ -38,6 +38,7 @@ class ProgressTotal;
 class ProgressWithMessage;
 class wxListBox;
 class BFBackupTree;
+class BFProcessMsgSubject;
 
 ///
 class BFRootTaskApp
@@ -151,6 +152,9 @@ class BFRootTaskApp
         ///
         void ModifyDestination (const wxString& strOldDestination,
                                 const wxString& strNewDestination);
+
+        /// check if all sources and backup-volumeas are there
+        bool PreBackupCheck (BFProcessMsgSubject* pMsg);
 };
 
 #endif    // BFROOTTASKAPP_H

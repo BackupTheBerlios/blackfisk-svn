@@ -37,6 +37,7 @@
 #include "BFBackupTree.h"
 #include "blackfisk.h"
 #include "BFIconTable.h"
+#include "BFProcessMsgSubject.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
 
@@ -395,3 +396,62 @@ void BFRootTaskApp::ModifyDestination (const wxString& strOldDestination,
         pRootTask_->SetModified();
 }
 
+bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
+{
+    // caption
+    if (pMsg)
+        pMsg->SetCaption(_("please wait..."));
+
+    // get the tasks
+    wxString str;
+    BFTaskVector vec;
+    pRootTask_->GetAllTasks(vec);
+
+    // iterate on them
+    for (BFTaskVectorIt it = vec.begin();
+         it != vec.end();
+         ++it)
+    {
+        // * check volume *
+        str = (*it)->GetDestination();
+        str = str.BeforeFirst(wxFILE_SEP_PATH);
+
+        if (pMsg)
+            pMsg->SetMsg(wxString::Format(_("current checking Task is %s\ncheck volume: %s"),
+                                          (*it)->GetName(),
+                                          str));
+
+        if ( wxDir::Exists( str ) == false )
+        {
+            BFSystem::Error(wxString::Format(_("The destination %s doesn't exsits!"), str));
+            return false;
+        }
+
+        // * check source *
+        str = (*it)->GetSource();
+
+        if (pMsg)
+            pMsg->SetMsg(wxString::Format(_("current checking Task is %s\nvolume OK\ncheck source: %s"),
+                                          (*it)->GetName(),
+                                          str));
+
+        if ((*it)->GetType() == TaskFILECOPY)
+        {
+            if ( ::wxFileExists( str ) == false )
+            {
+                BFSystem::Error(wxString::Format(_("The source %s doesn't exsits!"), str));
+                return false;
+            }
+        }
+        else
+        {
+            if ( wxDir::Exists( str ) == false )
+            {
+                BFSystem::Error(wxString::Format(_("The source %s doesn't exsits!"), str));
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
