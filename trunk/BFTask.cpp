@@ -27,12 +27,14 @@
 #include "BFundef.h"
 #include "BFIconTable.h"
 #include "BFSystem.h"
+#include "blackfisk.h"
 
 BFTaskData::BFTaskData (BFTaskType type,
                         const wxChar* strSource,
                         const wxChar* strDestination,
                         const wxChar* strName,
                         bool bVerify,
+                        bool bVerifyContent,
                         BFArchiveFormat archive,
                         wxArrayString& arrExclude)
           : type_(type),
@@ -40,6 +42,7 @@ BFTaskData::BFTaskData (BFTaskType type,
             strDestination_(strDestination),
             strName_(strName),
             bVerify_(bVerify),
+            bVerifyContent_(bVerifyContent),
             archiveFormat_(archive),
             arrExclude_(arrExclude)
 {
@@ -100,6 +103,11 @@ const wxChar* BFTaskData::GetName ()
 bool BFTaskData::Verify ()
 {
     return bVerify_;
+}
+
+bool BFTaskData::VerifyContent ()
+{
+    return bVerifyContent_;
 }
 
 BFArchiveFormat BFTaskData::GetArchiveFormat ()
@@ -184,6 +192,11 @@ void BFTaskData::SetName (const wxChar* name)
 void BFTaskData::SetVerify (bool verify)
 {
     bVerify_ = verify;
+}
+
+void BFTaskData::SetVerifyContent (bool verify_content)
+{
+    bVerifyContent_ = verify_content;
 }
 
 void BFTaskData::SetArchiveFormat (BFArchiveFormat archiveFormat)
@@ -305,6 +318,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         rA << GetDestination();
         rA << GetName();
         rA << Verify();
+        rA << VerifyContent();
         rA << GetArchiveFormat();
         rA << GetExclude();
     }
@@ -314,7 +328,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         BFTaskType      type;
         BFArchiveFormat archiveFormat;
         wxString        strSource, strDestination, strName;
-        bool            bVerify;
+        bool            bVerify, bVerifyContent;
         wxArrayString   arrExclude;
         BFoid           oid;
 
@@ -324,6 +338,17 @@ bool BFTask::Serialize (jbSerialize& rA)
         rA >> strDestination;
         rA >> strName;
         rA >> bVerify;
+
+        if (rA.GetVersion() < BF_PROJECT_CURRENT_VERSION)
+        {
+            bVerifyContent = false;
+            BFRootTask::Instance().SetModified(true);
+        }
+        else
+        {
+            rA >> bVerifyContent;
+        }
+
         rA >> archiveFormat;
         rA >> arrExclude;
 
@@ -332,6 +357,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         SetDestination(strDestination);
         SetName(strName);
         SetVerify(bVerify);
+        SetVerifyContent(bVerifyContent);
         SetArchiveFormat(archiveFormat);
         SetExclude(arrExclude);
 
@@ -365,9 +391,10 @@ BFTask::BFTask (BFTaskType type,
                 const wxChar* strDestination,
                 const wxChar* strName,
                 bool bVerify,
+                bool bVerifyContent,
                 BFArchiveFormat archiveFormat,
                 wxArrayString& arrExclude)
-      : BFTaskData(type, strSource, strDestination, strName, bVerify, archiveFormat, arrExclude),
+      : BFTaskData(type, strSource, strDestination, strName, bVerify, bVerifyContent, archiveFormat, arrExclude),
         bStopTask_(false)
 {
 }
@@ -453,6 +480,7 @@ bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
         strSrc.c_str(),
         strDest.c_str(),
         Verify(),
+        VerifyContent(),
         &rProgress
     );
 }
@@ -473,7 +501,8 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
         strSrc.c_str(),
         strDest.c_str(),
         true,
-        Verify()
+        Verify(),
+        VerifyContent()
     );
 }
 
@@ -491,6 +520,7 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
         strSrc.wx_str(),
         strDest.wx_str(),
         Verify(),
+        VerifyContent(),
         &rProgress
     );
 }

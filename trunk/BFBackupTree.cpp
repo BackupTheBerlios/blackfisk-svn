@@ -615,7 +615,6 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
     BFTask*         pTask       = NULL;
     BFTaskType      type;
     BFArchiveFormat aformat     = CompressNOTUSED;
-    bool            bVerify     = true /* DEBUG: get default value */;
     wxArrayString   arrString;
 
     // created by "DnD" or "Backup a Backup" ?
@@ -673,7 +672,8 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
                         strDropedFilename_,
                         strCurrentDestination_,
                         strDropedFilename_.AfterLast(wxFILE_SEP_PATH),
-                        true /* DEBUG */,
+                        true,   // verify files by default
+                        false,  // don't verify file content by default
                         aformat,
                         arrString);
 

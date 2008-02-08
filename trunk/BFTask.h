@@ -67,6 +67,8 @@ class BFTaskData
         wxString                    strName_;
         ///
         bool                        bVerify_;
+        ///
+        bool                        bVerifyContent_;
         /** specify the format of the archive if
             'type_' == TaskARCHIVE
             it is CompressNOTUSED if it is not in use */
@@ -85,6 +87,7 @@ class BFTaskData
                     const wxChar* strDestination,
                     const wxChar* strName,
                     bool bVerify,
+                    bool bVerifyContent,
                     BFArchiveFormat archive,
                     wxArrayString& arrExclude);
 
@@ -117,6 +120,8 @@ class BFTaskData
         ///
         bool Verify ();
         ///
+        bool VerifyContent ();
+        ///
         BFArchiveFormat GetArchiveFormat ();
         ///
         const wxArrayString& GetExclude ();
@@ -131,6 +136,8 @@ class BFTaskData
         void SetName (const wxChar* name);
         ///
         void SetVerify (bool verify);
+        ///
+        void SetVerifyContent (bool verify_content);
         ///
         void SetArchiveFormat (BFArchiveFormat archive);
         ///
@@ -162,6 +169,7 @@ class BFTask : public BFTaskData
                 const wxChar* strDestination,
                 const wxChar* strName,
                 bool bVerify,
+                bool bVerifyContent,
                 BFArchiveFormat archive,
                 wxArrayString& arrExclude);
 

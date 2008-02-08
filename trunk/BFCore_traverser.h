@@ -128,13 +128,16 @@ class BFSynchronizeDirTraverser : public BFDirListingTraverser
         ProgressWithMessage*    pProgress_;
         ///
         bool                    bVerify_;
+        ///
+        bool                    bVerifyContent_;
 
     public:
         /// ctor
         BFSynchronizeDirTraverser (const wxChar* pOriginalDirectory,
                                    const wxChar* pToSynchronizeDirectory,
                                    wxArrayString& rList,
-                                   bool bVerify = false,
+                                   bool bVerify,
+                                   bool bVerifyContent,
                                    ProgressWithMessage* pProgress = NULL);
 
         ///

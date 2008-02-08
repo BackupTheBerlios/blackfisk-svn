@@ -105,6 +105,7 @@ class BFRootTask : public Subject
                           const wxChar* strDestination,
                           const wxChar* strName,
                           bool bVerify,
+                          bool bVerifyContent,
                           wxArrayString* pArrExclude = NULL,
                           BFArchiveFormat archive = CompressNOTUSED);
         /** add an existing task to root and return its oid

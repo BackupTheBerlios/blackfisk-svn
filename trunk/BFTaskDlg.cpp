@@ -40,6 +40,7 @@ BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONOK,       BFTaskDlg::OnButton_Ok)
   EVT_BUTTON  (BFTASKDLG_ID_BUTTONCANCEL,   BFTaskDlg::OnButton_Cancel)
   EVT_COMBOBOX(BFTASKDGL_ID_CBTYPE,         BFTaskDlg::OnCombo_TypeSelect)
+  EVT_CHECKBOX(BF_TASKDLG_CBVERIFY,         BFTaskDlg::OnCheckBox_Verify)
 END_EVENT_TABLE()
 
 /*static*/ const long BFTaskDlg::lWidth1_ = 95;
@@ -55,7 +56,8 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
            pNameCtrl_(NULL),
            pSourceCtrl_(NULL),
            pDestCtrl_(NULL),
-           pVerifyCheck_(NULL)/*,
+           pVerifyCheck_(NULL),
+           pVerifyContentCheck_(NULL)/*,
            pExcludeCtrl_(NULL)*/
 {
     // arrange and create controls
@@ -117,9 +119,14 @@ wxSizer* BFTaskDlg::CreateControls ()
     pDestCtrl_ = new BFDestinationCtrl(this, wxEmptyString, false);
 
     // verify
-    pVerifyCheck_ = new wxCheckBox(this, -1, wxEmptyString);
+    pVerifyCheck_ = new wxCheckBox(this, BF_TASKDLG_CBVERIFY, wxEmptyString);
     wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
     SetRowSize(pVerifyStatic, pVerifyCheck_);
+
+    // verify content
+    pVerifyContentCheck_ = new wxCheckBox(this, -1, wxEmptyString);
+    wxStaticText* pVerifyContentStatic = new wxStaticText(this, -1, _("verify content:"));
+    SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
 
     // sizer and arrange
     wxGridSizer* pBodySizer     = new wxFlexGridSizer(2);
@@ -143,6 +150,8 @@ wxSizer* BFTaskDlg::CreateControls ()
     pBodySizer->Add(pDestCtrl_);
     pBodySizer->Add(pVerifyStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBodySizer->Add(pVerifyCheck_,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pVerifyContentStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pBodySizer->Add(pVerifyContentCheck_,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
 
     return pBodySizer;
 }
@@ -209,6 +218,19 @@ void BFTaskDlg::OnCombo_TypeSelect (wxCommandEvent& rEvent)
     InitTypeCtrl();
 }
 
+void BFTaskDlg::OnCheckBox_Verify (wxCommandEvent& rEvent)
+{
+    if (pVerifyCheck_->GetValue())
+    {
+        pVerifyContentCheck_->Enable(true);
+    }
+    else
+    {
+        pVerifyContentCheck_->SetValue(false);
+        pVerifyContentCheck_->Enable(false);
+    }
+}
+
 void BFTaskDlg::InitTypeCtrl ()
 {
     BFTypeVector vecTaskTypes;
@@ -235,6 +257,11 @@ void BFTaskDlg::GetData ()
     pSourceCtrl_    ->SetValue(pTask_->GetSource());
     pDestCtrl_      ->SetPath(pTask_->GetDestination());
     pVerifyCheck_   ->SetValue(pTask_->Verify());
+    pVerifyContentCheck_->SetValue(pTask_->VerifyContent());
+
+    wxCommandEvent event;
+    OnCheckBox_Verify(event);
+
     //pExcludeList_   ->Clear();
     //pExcludeList_   ->Set(rTask_.GetExclude());
 }
@@ -285,6 +312,13 @@ void BFTaskDlg::SetData ()
     if (pVerifyCheck_->GetValue() != pTask_->Verify())
     {
         pTask_->SetVerify(pVerifyCheck_->GetValue());
+        BFRootTask::Instance().SetModified();
+    }
+
+    // verify content
+    if (pVerifyContentCheck_->GetValue() != pTask_->VerifyContent())
+    {
+        pTask_->SetVerifyContent(pVerifyContentCheck_->GetValue());
         BFRootTask::Instance().SetModified();
     }
 

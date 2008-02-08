@@ -193,10 +193,14 @@ bool BFRootTask::Serialize (jbSerialize& rA)
             if (!rc)
                 break;
         }
+
+        SetModified(false);
     }
     else
     // ** serialize FROM file **
     {
+        SetModified(false);
+
         int iObjCount;
 
         rA >> strName_;
@@ -219,8 +223,6 @@ bool BFRootTask::Serialize (jbSerialize& rA)
         broadcastObservers();
     }
     rA.LeaveObject();
-
-    SetModified(false);
 
     return rc;
 }
@@ -307,6 +309,7 @@ BFoid BFRootTask::AppendTask (BFTaskType type,
                              const wxChar* strDestination,
                              const wxChar* strName,
                              bool bVerify,
+                             bool bVerifyContent,
                              wxArrayString* pArrExclude /*= NULL*/,
                              BFArchiveFormat archive /*= CompressNOTUSED*/)
 {
@@ -330,6 +333,7 @@ BFoid BFRootTask::AppendTask (BFTaskType type,
                         strDestination,
                         strName,
                         bVerify,
+                        bVerifyContent,
                         archive,
                         arrExclude
                     );

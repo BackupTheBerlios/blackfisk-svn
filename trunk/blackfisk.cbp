@@ -8,9 +8,9 @@
 		<Option compiler="gcc" />
 		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;" />
 		<Build>
-			<Target title="Static Debug Unicode">
-				<Option output=".\blackfiskDus.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_debus" />
+			<Target title="Debug Static">
+				<Option output=".\blackfiskDs.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_debs" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -18,7 +18,6 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D__WXDEBUG__" />
-					<Add option="-DwxUSE_UNICODE" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxmsw$(#wxversion)ud.a" />
@@ -32,9 +31,9 @@
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
 			</Target>
-			<Target title="Dynamic Debug Unicode">
-				<Option output=".\blackfiskDud.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_debud" />
+			<Target title="Debug Dynamic">
+				<Option output=".\blackfiskDd.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_debd" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -42,7 +41,6 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D__WXDEBUG__" />
-					<Add option="-DwxUSE_UNICODE" />
 					<Add option="-DWXUSINGDLL" />
 				</Compiler>
 				<Linker>
@@ -51,15 +49,12 @@
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
 			</Target>
-			<Target title="Static Release Unicode">
-				<Option output=".\blackfiskRus.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_relus" />
+			<Target title="Release Static">
+				<Option output=".\blackfiskRs.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_rels" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
-				<Compiler>
-					<Add option="-DwxUSE_UNICODE" />
-				</Compiler>
 				<Linker>
 					<Add library="libwxmsw$(#wxversion)u.a" />
 					<Add library="libwxzlib.a" />
@@ -72,14 +67,13 @@
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
 			</Target>
-			<Target title="Dynamic Release Unicode">
-				<Option output=".\blackfiskRud.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_relud" />
+			<Target title="Release Dynamic">
+				<Option output=".\blackfiskRd.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs_reld" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Compiler>
-					<Add option="-DwxUSE_UNICODE" />
 					<Add option="-DWXUSINGDLL" />
 				</Compiler>
 				<Linker>
@@ -90,7 +84,7 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Static Debug Unicode;" />
+			<Add alias="All" targets="Debug Static;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="$(#wx)\include" />
@@ -228,12 +222,6 @@
 		</Unit>
 		<Unit filename="BFPlaceholderButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFPreBackupDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFPreBackupDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="BFProcessMsgDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
@@ -373,7 +361,6 @@
 			<code_completion />
 			<envvars />
 			<debugger />
-			<lib_finder />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

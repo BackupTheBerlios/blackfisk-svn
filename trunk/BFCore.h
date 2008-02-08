@@ -45,7 +45,8 @@ class wxZipEntry;
 class Progress;
 class ProgressWithMessage;
 
-#define BF_DEFAULT_OVERWRITE       true
+#define BF_DEFAULT_OVERWRITE        true
+#define BF_VERIFY_CONTENT_DEFAULT   false
 
 /** implement standardroutins for the application
  for example: file handling */
@@ -105,10 +106,18 @@ class BFCore
             'pSource' can have placeholders
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
-        bool CopyFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE, bool bVerify = false);
+        bool CopyFile (const wxChar* pSource,
+                       const wxChar* pDestination,
+                       bool bOverwrite = BF_DEFAULT_OVERWRITE,
+                       bool bVerify = false,
+                       bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
         /** synchroinze two directories */
-        bool Synchronize (const wxChar* pOriginal, const wxChar* pToSynchronize, bool bVerify, ProgressWithMessage* pProgress = NULL);
+        bool Synchronize (const wxChar* pOriginal,
+                          const wxChar* pToSynchronize,
+                          bool bVerify,
+                          bool bVerifyContent,
+                          ProgressWithMessage* pProgress = NULL);
 
         /// to patch for wxWidgets
         bool IsWriteProtected (const wxChar* pFilename);
@@ -139,6 +148,7 @@ class BFCore
         bool CopyDir (const wxChar* pSourceDir,
                       const wxChar* pDestinationDir,
                       bool bVerify,
+                      bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT,
                       ProgressWithMessage* pProgress = NULL);
 
 
@@ -193,10 +203,10 @@ class BFCore
     public:
         /** verify the file in this order:
             file-size, file-attributes, file-content*/
-        bool VerifyFile (const wxString& strFile1, const wxString& strFile2);
+        bool VerifyFile (const wxString& strFile1, const wxString& strFile2, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
         /** compare a pair-list (map) of files
             break on the first uncompare filepair */
-        bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL);
+        bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
         /** compare the zip entries by checksum (CRC) with the original files */
         bool VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
         /** create a CRC checksum of a file */

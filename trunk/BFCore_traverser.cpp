@@ -90,11 +90,13 @@ const wxArrayString& BFDirListingTraverser::ListingArray ()
 BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDirectory,
                                                       const wxChar* pToSynchronizeDirectory,
                                                       wxArrayString& rList,
-                                                      bool bVerify /*= false*/,
+                                                      bool bVerify,
+                                                      bool bVerifyContent,
                                                       ProgressWithMessage* pProgress /*= NULL*/)
                           : BFDirListingTraverser(rList, pOriginalDirectory),
                             strToSynchronize_(pToSynchronizeDirectory),
                             bVerify_(bVerify),
+                            bVerifyContent_(bVerifyContent),
                             pProgress_(pProgress)
 {
 }
@@ -119,7 +121,7 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
         pProgress_->IncrementActualWithMessage(filename);
 
     // copy
-    if ( !(BFCore::Instance().VerifyFile(filename, strTarget)) )
+    if ( !(BFCore::Instance().VerifyFile(filename, strTarget, bVerifyContent_)) )
     {
         // get write-protection from destination
         bool bWriteprotectionDestination = BFCore::Instance().IsWriteProtected(strTarget);
@@ -147,7 +149,7 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
 
                 if (bVerify_)
                 {
-                    if (BFCore::Instance().VerifyFile(filename, strTarget) == false)
+                    if (BFCore::Instance().VerifyFile(filename, strTarget, bVerifyContent_) == false)
                     {
                         BFSystem::Error(wxString::Format(_("files %s and %s are not verify (unknown reason)"), strTarget, filename),
                                         _T("BFSynchronizeDirTraverser::OnFile() - VerifyFile explicite"));
@@ -158,7 +160,7 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
         else
         {
             // copy the file
-            if ( BFCore::Instance().CopyFile(filename, strTarget, true, bVerify_) == false )
+            if ( BFCore::Instance().CopyFile(filename, strTarget, true, bVerify_, bVerifyContent_) == false )
             {
                 BFSystem::Error(wxString::Format(_("not able to synchronize %s with %s (unknown reason)"), strTarget, filename),
                                 _T("BFSynchronizeDirTraverser::OnFile() - copy with 'bVerify_'"));
@@ -183,7 +185,7 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
 
     // does it exist
     if ( !(wxDir::Exists(strTarget)) )
-        BFCore::Instance().CopyDir(dirname, strTarget, bVerify_);
+        BFCore::Instance().CopyDir(dirname, strTarget, bVerify_, bVerifyContent_, NULL);
 
     return wxDIR_CONTINUE;
 }

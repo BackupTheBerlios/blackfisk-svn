@@ -416,7 +416,8 @@ bool BFCore::MoveFile (const wxChar* pSource, const wxChar* pDestination, bool b
 bool BFCore::CopyFile (const wxChar* pSource,
                        const wxChar* pDestination,
                        bool bOverwrite /*= DEFAULT_OVERWRITE*/,
-                       bool bVerify /*= false*/)
+                       bool bVerify /*= false*/,
+                       bool bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/)
 {
     // check parameters
     if (pSource == NULL || pDestination == NULL)
@@ -479,7 +480,7 @@ bool BFCore::CopyFile (const wxChar* pSource,
 
         // verify the file
         if (bVerify && rc)
-            rc = VerifyFile(strSource, strDest);
+            rc = VerifyFile(strSource, strDest, bVerifyContent);
     }
     else
     {   // more then one files to copy because of placeholders
@@ -501,7 +502,7 @@ bool BFCore::CopyFile (const wxChar* pSource,
                 if ( BFCore::IsStop() )
                     return true;
 
-                if ( !(VerifyFile(arrSource[i], strDest + arrSource[i].AfterLast(wxFILE_SEP_PATH))) )
+                if ( !(VerifyFile(arrSource[i], strDest + arrSource[i].AfterLast(wxFILE_SEP_PATH), bVerifyContent)) )
                     rc = false;
             }
     }
@@ -674,6 +675,7 @@ bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bo
 bool BFCore::Synchronize (const wxChar* pOriginal,
                           const wxChar* pToSynchronize,
                           bool bVerify,
+                          bool bVerifyContent,
                           ProgressWithMessage* pProgress /*= NULL*/)
 {
     // stop ?
@@ -713,6 +715,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
                                    pToSynchronize,
                                    arrOriginalListing,
                                    bVerify,
+                                   bVerifyContent,
                                    pProgress);
     dir.Traverse(trav);
 
@@ -813,6 +816,7 @@ bool BFCore::CreatePath (const wxChar* pPath)
 bool BFCore::CopyDir (const wxChar*         pSourceDir,
                       const wxChar*         pDestinationDir,
                       bool                  bVerify,
+                      bool                  bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/,
                       ProgressWithMessage*  pProgress /*= NULL*/)
 {
     //XXX BFSystem::Fatal(wxString::Format(_T("%s\n%s"), pSourceDir, pDestinationDir));
@@ -882,7 +886,7 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
         if (bWhileBackup_)
             BFSystem::Backup(wxString::Format(_("verify %s"), pDestinationDir));
 
-        return VerifyFiles (mapRememberToVerify, pProgress);
+        return VerifyFiles (mapRememberToVerify, pProgress, bVerifyContent);
     }
 
     return true;
@@ -970,7 +974,9 @@ bool BFCore::VerifyFileContents (wxFile& f1, wxFile& f2)
 }
 
 
-bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*= NULL*/)
+bool BFCore::VerifyFiles(MapStringPair& rMap,
+                         ProgressWithMessage* pProgress /*= NULL*/,
+                         bool bVerifyContent /*=BF_VERIFY_CONTENT_DEFAULT*/)
 {
     for (int i = 0; i < rMap.size(); ++i)
     {
@@ -980,7 +986,7 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
         if (pProgress != NULL)
             pProgress->IncrementActualWithMessage(wxString::Format(_("compare %s with %s"), rMap[i].first.c_str(), rMap[i].second.c_str()));
 
-        if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str()) )
+        if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str(), bVerifyContent) )
         {
             if (IsWhileBackup())
                 BFSystem::Backup(wxString::Format(_("the files %s and %s NOT identically"),
@@ -994,7 +1000,9 @@ bool BFCore::VerifyFiles(MapStringPair& rMap, ProgressWithMessage* pProgress /*=
 }
 
 
-bool BFCore::VerifyFile (const wxString& strFile1, const wxString& strFile2)
+bool BFCore::VerifyFile (const wxString& strFile1,
+                         const wxString& strFile2,
+                         bool bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/)
 {
     wxFileName  fn1(strFile1), fn2(strFile2);
 
@@ -1016,32 +1024,45 @@ bool BFCore::VerifyFile (const wxString& strFile1, const wxString& strFile2)
     //if ( f1.Length() != f2.Length() )
         return false;
 
-    /* verify file times
+    /* verify file times */
     wxDateTime dt1m;
     wxDateTime dt2m;
     fn1.GetTimes(NULL, &dt1m, NULL);
     fn2.GetTimes(NULL, &dt2m, NULL);
 
+    /* XXX */
     if (dt1m != dt2m)
-        return false;
-*/
+    {
+        if (wxMax(dt1m.GetValue(), dt2m.GetValue()) % wxMin(dt1m.GetValue(), dt2m.GetValue()) > 2001)
+        {
+            return false;
+        }
+    }
+
     // verify file attributes but ignore archive-bit
     if ( !(VerifyFileAttributes(fn1, fn2, true)) )
         return false;
 
-    // open the files
-    wxFile f1(strFile1), f2(strFile2);
-
-    // check open files
-    if ( !(f1.IsOpened()) || !(f2.IsOpened()) )
-    {
-        BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
-                                         strFile1,
-                                         strFile2),
-                        _T("BFCore::VerifyFile() - wxFile"));
-        return false;
-    }
-
     // verify byte-by-byte
-    return VerifyFileContents(f1, f2);
+    if (bVerifyContent)
+    {
+        // open the files
+        wxFile f1(strFile1), f2(strFile2);
+
+        // check open files
+        if ( !(f1.IsOpened()) || !(f2.IsOpened()) )
+        {
+            BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
+                                             strFile1,
+                                             strFile2),
+                            _T("BFCore::VerifyFile() - wxFile"));
+            return false;
+        }
+
+        return VerifyFileContents(f1, f2);
+    }
+    else
+    {
+        return true;
+    }
 }

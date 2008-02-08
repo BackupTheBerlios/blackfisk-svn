@@ -1,7 +1,6 @@
 0.0.1
 ~~~~~
-- verify: compare modification time
-- verify: make verify-content optional; don't do it by default
+- wxCore::strLastMessage_ to read from a MsgBox or something like that
 - BUG: wxGenericDirCtrl change the working dir
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 
@@ -44,4 +43,6 @@
 - backup to password-protected-samba
 - backup to ftp
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
-look on "abakt" for more ideas
+
++ look on "abakt" for more ideas
++ beautyize the dialogs

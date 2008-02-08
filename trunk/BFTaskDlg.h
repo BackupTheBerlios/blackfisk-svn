@@ -56,8 +56,10 @@ class BFTaskDlg : public wxDialog
         wxTextCtrl*         pSourceCtrl_;
         /// task destination
         BFDestinationCtrl*  pDestCtrl_;
-        /// verify
+        /// verify general
         wxCheckBox*         pVerifyCheck_;
+        /// verify inclusive content
+        wxCheckBox*         pVerifyContentCheck_;
         /* exclude control
         wxListBox*          pExcludeCtrl_;*/
 
@@ -99,6 +101,8 @@ class BFTaskDlg : public wxDialog
         void OnButton_Cancel (wxCommandEvent& rEvent);
         ///
         void OnCombo_TypeSelect (wxCommandEvent& rEvent);
+        ///
+        void OnCheckBox_Verify (wxCommandEvent& rEvent);
 
         /** this static methode display the given task
             with a dialog specified by type of the task */
