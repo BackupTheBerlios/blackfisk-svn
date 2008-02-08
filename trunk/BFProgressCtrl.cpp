@@ -23,6 +23,7 @@
 #include "BFProgressCtrl.h"
 
 #include <wx/sizer.h>
+#include <wx/dcclient.h>
 
 #include "Progress.h"
 
