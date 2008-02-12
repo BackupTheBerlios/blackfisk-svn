@@ -30,7 +30,8 @@
 Progress::Progress()
         : lBEGIN_(0),
           end_(100),
-          actual_(0)
+          actual_(0),
+          bLocked_(false)
 {
 }
 
@@ -39,9 +40,26 @@ Progress::Progress()
 {
 }
 
+void Progress::Lock ()
+{
+    bLocked_ = true;
+}
+
+void Progress::Unlock ()
+{
+    bLocked_ = false;
+}
+
+bool Progress::IsLocked ()
+{
+    return bLocked_;
+}
 
 void Progress::SetRange (long end)
 {
+    if (IsLocked())
+        return;
+
     end_ = end;
 
 	//SetActual(lBEGIN_);
@@ -50,7 +68,7 @@ void Progress::SetRange (long end)
 
 bool Progress::SetActual (long actual)
 {
-	if (actual > end_ || actual < lBEGIN_)
+	if (IsLocked() || actual > end_ || actual < lBEGIN_)
         return false;
 
 	actual_ = actual;
@@ -59,6 +77,19 @@ bool Progress::SetActual (long actual)
 	return true;
 }
 
+/*virtual*/ bool Progress::IncrementActual ()
+{
+    bool bL = IsLocked();
+
+    Unlock();
+
+    bool rc = SetActual(GetActual() + 1);
+
+    if (bL)
+        Lock();
+
+    return rc;
+}
 
 bool Progress::IsEnd ()
 {
@@ -139,6 +170,8 @@ void ProgressWithMessage::SetLabel (const wxChar* label)
         return;
 
     strLabel_ = label;
+
+    broadcastObservers();
 }
 
 
@@ -156,7 +189,7 @@ ProgressTotal::ProgressTotal(long lProgressCount,
 }
 
 
-/*virtual*/ bool ProgressTotal::IncrementActual ()
+bool ProgressTotal::IncrementActual ()
 {
     ++lProgressCurrent_;
 

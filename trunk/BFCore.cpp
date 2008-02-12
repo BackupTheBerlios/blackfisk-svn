@@ -342,7 +342,7 @@ bool BFCore::VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, Pro
             // compare crc's
             if ( entry->GetCrc() != GetFileCrc(arrFiles[i]) )
             {
-                BFSystem::Error(wxString::Format(_("zip-file %s is corrupt because of the entry %s (crc compared with %s)"),
+                BFSystem::Error(wxString::Format(_("zip-file %s is corrupt\nbecause of the entry %s\n(crc compared with %s)"),
                                                  pZipFileName,
                                                  entry->GetName().c_str(),
                                                  arrFiles[i].c_str()),
@@ -458,7 +458,7 @@ bool BFCore::CopyFile (const wxChar* pSource,
     {
         if ( arrSource.Count() > 0 )
         {
-            BFSystem::Error(wxString::Format(_("can not copy %s to %s"),
+            BFSystem::Error(wxString::Format(_("can not copy %s\nto %s"),
                                               pSource,
                                               pDestination),
                             _T("BFCore::CopyFile"));
@@ -700,6 +700,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     {
         long lCountFile, lCountDir;
 
+        pProgress->SetLabel ( wxString::Format(_("synchronize from %s to %s\ncounting directories and files"), pOriginal, pToSynchronize) );
         pProgress->SetActual( 0 );
         pProgress->SetRange ( GetDirFileCount(pOriginal, &lCountDir, &lCountFile) );
         pProgress->SetLabel ( wxString::Format(_("synchronize from %s to %s"), pOriginal, pToSynchronize) );
@@ -722,6 +723,10 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
 
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
     // check for deletable files ...
     wxArrayString arrToSyncListing;
     GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
@@ -732,7 +737,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
 
     // init delete progress
     if (pProgress != NULL)
-        pProgress->SetLabel ( _("delete unexisting files and directories") );
+        pProgress->SetLabel ( _("<i>delete unexisting files and directories</i>") );
 
     // delete
     Delete(arrToSyncListing, false, true);
@@ -819,8 +824,6 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
                       bool                  bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/,
                       ProgressWithMessage*  pProgress /*= NULL*/)
 {
-    //XXX BFSystem::Fatal(wxString::Format(_T("%s\n%s"), pSourceDir, pDestinationDir));
-
     // stop ?
     if ( BFCore::IsStop() )
         return false;
@@ -841,17 +844,21 @@ bool BFCore::CopyDir (const wxChar*         pSourceDir,
     // init copy progress
     if (pProgress != NULL)
     {
-        long lCountFile, lCountDir, lRange;
+        if ( !(pProgress->IsLocked()) )
+        {
+            long lCountFile, lCountDir, lRange;
 
-        GetDirFileCount(pSourceDir, &lCountDir, &lCountFile);
+            GetDirFileCount(pSourceDir, &lCountDir, &lCountFile);
 
-        if (bVerify)
-            lRange = lCountDir + lCountFile + lCountFile;
-        else
-            lRange = lCountDir + lCountFile;
+            if (bVerify)
+                lRange = lCountDir + lCountFile + lCountFile;
+            else
+                lRange = lCountDir + lCountFile;
 
-        pProgress->SetActual( 0 );
-        pProgress->SetRange ( lRange );
+            pProgress->SetActual( 0 );
+            pProgress->SetRange ( lRange );
+        }
+
         pProgress->SetLabel ( wxString::Format(_("copy to %s"), pDestinationDir) );
     }
 
@@ -1009,7 +1016,7 @@ bool BFCore::VerifyFile (const wxString& strFile1,
     // check file-objects
     if ( !(fn1.IsOk()) || !(fn2.IsOk()) )
     {
-        BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
+        BFSystem::Error(wxString::Format(_("file objects (%s\nand %s) not open"),
                                          strFile1,
                                          strFile2),
                         _T("BFCore::VerifyFile() - wxFileName"));
@@ -1033,6 +1040,7 @@ bool BFCore::VerifyFile (const wxString& strFile1,
     /* XXX */
     if (dt1m != dt2m)
     {
+        // take care of the low-resolution of some filesystems (e.g. FAT32 2sec-steps)
         if (wxMax(dt1m.GetValue(), dt2m.GetValue()) % wxMin(dt1m.GetValue(), dt2m.GetValue()) > 2001)
         {
             return false;
@@ -1052,7 +1060,7 @@ bool BFCore::VerifyFile (const wxString& strFile1,
         // check open files
         if ( !(f1.IsOpened()) || !(f2.IsOpened()) )
         {
-            BFSystem::Error(wxString::Format(_("file objects (%s and %s) not open"),
+            BFSystem::Error(wxString::Format(_("file objects (%s\nand %s) not open"),
                                              strFile1,
                                              strFile2),
                             _T("BFCore::VerifyFile() - wxFile"));

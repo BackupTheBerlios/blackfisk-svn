@@ -30,7 +30,8 @@ BFSystem BFSystem::sSystem_;
 }
 
 BFSystem::BFSystem()
-        : lBackupObservers_(0)
+        : lBackupObservers_(0),
+          bWhileBroadcast_(false)
 {
     //ctor
 }
@@ -59,48 +60,84 @@ long BFSystem::GetBackupObservers ()
 }
 
 void BFSystem::Message (BFMessageType msgType,
-                                   const wxChar* strMessage,
-                                   const wxChar* strLocation)
+                        const wxString& strMessage,
+                        const wxString& strLocation /*= wxEmptyString*/)
 {
+    // remember the message for later use because another one is currently proceeded
+    if (bWhileBroadcast_)
+    {
+        vecWaiting_Type_.push_back(msgType);
+        vecWaiting_Message_.push_back(strMessage);
+        vecWaiting_Location_.push_back(strLocation);
+        return;
+    }
+
+    // set current message
     lastTimestamp_   .SetToCurrent();
     lastType_        = msgType;
     strLastLocation_ = strLocation;
     strLastMessage_  = strMessage;
 
+    /* mark beginning of broadcasting the observers
+       all new messages (while broadcasting) will be remmembered */
+    bWhileBroadcast_ = true;
+
+    //
     broadcastObservers();
+
+    // check for remembered messages and proceed them
+    while (vecWaiting_Type_.size() > 0)
+    {
+        // set current message
+        lastTimestamp_   .SetToCurrent();
+        lastType_        = vecWaiting_Type_[0];
+        strLastLocation_ = vecWaiting_Location_[0];
+        strLastMessage_  = vecWaiting_Message_[0];
+
+        // erase the unremembered messages
+        vecWaiting_Type_.erase(vecWaiting_Type_.begin());
+        vecWaiting_Message_.erase(vecWaiting_Message_.begin());
+        vecWaiting_Location_.erase(vecWaiting_Location_.begin());
+
+        //
+        broadcastObservers();
+    }
+
+    // mark the end of broadcasting
+    bWhileBroadcast_ = false;
 }
 
-/*static*/ void BFSystem::Backup (const wxChar* strMessage)
+/*static*/ void BFSystem::Backup (const wxString& strMessage)
 {
-    Instance().Message(MsgBACKUP, strMessage, NULL);
+    Instance().Message(MsgBACKUP, strMessage);
 }
 
-/*static*/ void BFSystem::Info (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Info (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgINFO, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Log (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Log (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgLOG, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Warning (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Warning (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgWARNING, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Fatal (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Fatal (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgFATAL, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Error (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Error (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgERROR, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Debug (const wxChar* strMessage, const wxChar* strLocation/* = NULL*/)
+/*static*/ void BFSystem::Debug (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
 {
     Instance().Message(MsgDEBUG, strMessage, strLocation);
 }

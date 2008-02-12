@@ -65,11 +65,6 @@ class BFRootTask : public Subject
             return -1 if nothing is found */
         long FindTask (BFTask* pTask);
 
-        /** return the position in the task-vector of the last BFTask
-            with the destination
-            return -1 if nothing is found */
-        long FindLastTaskWithDestination(const wxChar* destination);
-
     public:
         ///
         static BFRootTask& Instance ();
@@ -139,6 +134,11 @@ class BFRootTask : public Subject
 
         /// return the destinations of each task as a string array
         wxArrayString GetDestinations ();
+
+        /** return the position in the task-vector of the last BFTask
+            with the destination
+            return -1 if nothing is found */
+        long FindLastTaskWithDestination(const wxChar* destination);
 
         ///
         void Close ();

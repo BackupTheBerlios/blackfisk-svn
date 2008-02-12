@@ -209,6 +209,10 @@ BFBackupLog::BFBackupLog ()
     BFSystem::Instance().DecrementBackupObservers();
 }
 
+BFTaskLog* BFBackupLog::GetCurrentTaskLog ()
+{
+    return vecTaskLogs_.back();
+}
 
 /*virtual*/ void BFBackupLog::ValueChanged (Subject* pSender)
 {

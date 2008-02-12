@@ -68,8 +68,29 @@ BFBackupQuestionDlg::BFBackupQuestionDlg (const wxString& strMsg, BFMessageType 
 
     pIconText->Add (new wxStaticBitmap(this, wxID_ANY, wxArtProvider::GetIcon(artId, wxART_MESSAGE_BOX)), 0, wxCENTER);
 
+    // check msg width
+    wxString strMyMsg = strMsg;
+    wxClientDC dc(this);
+    dc.SetFont(GetFont());
+    wxSize sizeMsg = dc.GetTextExtent(strMyMsg);
+    int iWidthToUse = ::wxGetDisplaySize().GetWidth() / 10 * 9;
+
+    if (sizeMsg.GetWidth() > iWidthToUse)
+    {
+        int idx = 0;
+        while (idx < strMyMsg.Length() / 2)
+        {
+            idx = strMyMsg.Mid(idx).Find(' ');
+
+            if (idx == wxNOT_FOUND)
+                idx = strMyMsg.Length() / 2;
+        }
+
+        strMyMsg.insert(idx, '\n');
+    }
+
     // text
-    pIconText->Add (CreateTextSizer(strMsg + _("\n\nHow do you want to continue?")), 0, wxALIGN_CENTER | wxLEFT, 10);
+    pIconText->Add (CreateTextSizer(strMyMsg + _("\n\nHow do you want to continue?")), 0, wxALIGN_CENTER | wxLEFT, 10);
 
     // buttons
     pButtons->Add (new wxButton(this, BF_BTNID_STOPTASK, _("stop task")),   wxSizerFlags(0).Expand().Border());

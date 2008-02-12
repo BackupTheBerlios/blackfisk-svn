@@ -106,9 +106,6 @@ void BFProgressCtrlBase::SetTextA (const wxChar* text)
     wxString strLeft    = strPath.Left(strPath.Len()/2);
     wxString strRight   = strPath.Right(strPath.Len()-strLeft.Len());
 
-    // XXX BFSystem::Fatal(wxString::Format(_T("strPath: %s\nlen: %d\tiCut: %d\t iCutLeft: %d  iCutRight: %d\nstrLeft: %s\nstrRight: %s"),
-    // XXX                                  strPath, len, iCut, iCutLeft, iCutRight, strLeft, strRight));
-
     strLeft.Replace(strLeft.Right(iCutLeft), _T(".."));
     strRight.Replace(strRight.Left(iCutRight), _T("."));
 
@@ -116,67 +113,6 @@ void BFProgressCtrlBase::SetTextA (const wxChar* text)
 
     return strPath;
 }
-
-/*
-void BFProgressCtrlBase::ShortenPath(wxString& strPath, int len)
-{
-    // check parameters
-    if ( len > strPath.Len() || !(strPath.Contains(wxFILE_SEP_PATH)) )
-        return;
-
-    // number of characters to cut incl "..."
-    int iCut = strPath.Len() - len - 3;
-
-    // tokenize
-    wxStringTokenizer tkz(strPath, wxFILE_SEP_PATH);
-    wxArrayString arrPath;
-
-    while ( tkz.HasMoreTokens() )
-        arrPath.Add(tkz.GetNextToken());
-
-    // number of tokens (folders) that could be cut
-    int iTokensCut = 1;
-
-    // find out the number of tokens that could be cut
-    ...
-    {
-        /* find out the position of the tokens
-           begin from the middle to left *
-        for (int i = (arrPath.GetCount() / 2);
-             i > 1;
-             --i)
-        {
-            // check if there was a cut
-            if (iCut < 0)
-                break;
-
-            wxString strTokensCut;
-
-            for (int iT = i;
-                 i >
-            // enough to cut?
-            if (arrPath[i].Len() >= iCut)
-            {
-                arrPath[i].Replace( arrPath[i].Right(iCut), _T("...") );
-                iCut = -1;
-            }
-        }
-
-        // check if there was a cut
-        if (iCut < 0)
-            break;
-
-        // increment tokens to cut
-        ++iTokensCut;
-
-        // check if there are enough tokens
-        if (iTokensCut > arrPath.GetCount())
-        {
-            iTokensCut = 0;
-            break;
-        }
-    }
-}*/
 
 // +++++++++++++++++++++++++++++++
 // ++ class BFProgressTotalCtrl ++
@@ -243,9 +179,18 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
     pTextA_->SetFont(font);
     pTextC_ = new wxStaticText(this, -1, wxEmptyString);
     pTextC_->SetFont(font);
-    pBar_   = new wxGauge(this, -1, 100, wxDefaultPosition, wxSize(450, 15), wxGA_HORIZONTAL | wxGA_SMOOTH);
-    pTextB_ = new wxStaticText(this, -1, _T("<message>\n<message2>"));
-    pTextB_->SetWindowStyle(wxST_NO_AUTORESIZE);
+    pBar_   = new wxGauge(this,
+                          -1,
+                          100,
+                          wxDefaultPosition,
+                          wxSize(450, 15),
+                          wxGA_HORIZONTAL | wxGA_SMOOTH);
+    pTextB_ = new wxStaticText(this,
+                               -1,
+                               "   \n   ",
+                               wxDefaultPosition,
+                               wxDefaultSize,
+                               wxST_NO_AUTORESIZE | wxST_MARKUP);
 
     // arange
     pSubSizer->Add(pTextA_, wxSizerFlags(0).Center() );
@@ -289,7 +234,6 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
 
     if ( widthText > widthCtrl )
     {
-        // XXX BFSystem::Fatal(strMsg);
         // shorten the path
         ShortenPath(strMsg, (int)((double)strMsg.Len() / (double)widthText * (double)widthCtrl));
 
@@ -299,7 +243,6 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
 
     while ( widthText > widthCtrl )
     {
-        // XXX BFSystem::Fatal(strMsg);
         // cut the path on one character
         ShortenPath(strMsg, strMsg.Len()-1);
         // get the new text width in pixel

@@ -116,6 +116,9 @@ class BFBackupLog : public Observer
         void BackupFinished ();
 
         ///
+        BFTaskLog* GetCurrentTaskLog ();
+
+        ///
         void TaskStarted (BFTask& rTask);
         ///
         void TaskFinished ();

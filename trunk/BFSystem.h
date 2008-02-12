@@ -46,6 +46,17 @@ class BFSystem : public Subject
         /// count observers for messages of type MsgBACKUP
         long                lBackupObservers_;
 
+        /** if there are more then one message at one time
+            they need to be stored for later processing
+            please see BFSystem::Message() for more detailes */
+        std::vector<BFMessageType>  vecWaiting_Type_;
+        /// see 'vecWaiting_Type_' for more detailes
+        std::vector<wxString>       vecWaiting_Message_;
+        /// see 'vecWaiting_Type_' for more detailes
+        std::vector<wxString>       vecWaiting_Location_;
+        /// see 'vecWaiting_Type_' for more detailes
+        bool                        bWhileBroadcast_;
+
         /// ctor
         BFSystem();
 
@@ -91,22 +102,22 @@ class BFSystem : public Subject
         static bool HandleThisMessage (BFMessageType msgType, BF_VerboseLevel lvlVerbose);
 
         /// create a message
-        void Message (BFMessageType msgType, const wxChar* strMessage, const wxChar* strLocation);
+        void Message (BFMessageType msgType, const wxString& strMessage, const wxString& strLocation = wxEmptyString);
 
         /// create a backup message to "log" a running backup process
-        static void Backup (const wxChar* strMessage);
+        static void Backup (const wxString& strMessage);
         /// create a info message
-        static void Info (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Info (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a log message
-        static void Log (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Log (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a warning message
-        static void Warning (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Warning (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a fatal error message
-        static void Fatal (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Fatal (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a errror message
-        static void Error (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Error (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a debug message
-        static void Debug (const wxChar* strMessage, const wxChar* strLocation = NULL);
+        static void Debug (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
 };
 
 

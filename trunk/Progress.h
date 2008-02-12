@@ -36,6 +36,10 @@ class Progress : public Subject
 		long            end_;
         ///
 		long            actual_;
+		/** if 'bLocked_' is true calls of SetRange() and SetActual() has no effect
+            but all other methodes including IncrementActual() will work
+            see BFSynchronizeDirTraverser::OnDir() for an example how to use it */
+		bool            bLocked_;
 
 	public:
         ///
@@ -43,12 +47,24 @@ class Progress : public Subject
         ///
 		virtual ~Progress();
 
-        ///
-        virtual bool IncrementActual ()
-        { return SetActual(GetActual() + 1); }
-        ///
+        /** lock the progress object
+            please see the member 'bLocked_' for more detailes */
+        void Lock ();
+        /** unlock the progress object
+            please see the member 'bLocked_' for more detailes */
+        void Unlock ();
+        /// please see the member 'bLocked_' for more detailes
+        bool IsLocked ();
+
+        /** If you overload this methode you need to take care
+            of 'bLocked_'! The methode should work if IsLocked(), too. */
+        virtual bool IncrementActual ();
+        /** if IsLocked() it has no effect
+            please see 'bLocked_' for more detailes */
 		bool SetActual (long actual);
-        /// from 0 to 'end'
+        /** set the range from 0 to 'end'
+            if IsLocked() it has no effect
+            please see 'bLocked_' for more detailes */
 		void SetRange (long end);
         ///
         void DoEnd ();

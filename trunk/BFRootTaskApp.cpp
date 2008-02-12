@@ -437,7 +437,8 @@ bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
 
         if ((*it)->GetType() == TaskFILECOPY)
         {
-            if ( ::wxFileExists( str ) == false )
+            if ( ::wxFileExists( str ) == false
+                && pRootTask_->FindLastTaskWithDestination(str) == -1)
             {
                 BFSystem::Error(wxString::Format(_("The source %s doesn't exsits!"), str));
                 return false;
@@ -445,7 +446,8 @@ bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
         }
         else
         {
-            if ( wxDir::Exists( str ) == false )
+            if ( wxDir::Exists( str ) == false
+              && pRootTask_->FindLastTaskWithDestination(str) == -1)
             {
                 BFSystem::Error(wxString::Format(_("The source %s doesn't exsits!"), str));
                 return false;
