@@ -112,6 +112,8 @@ BFMsgObserver::BFMsgObserver ()
             event.SetExtraLong  (pSys->GetLastType());
             // the question
             event.SetString     (strMsg);
+            //
+            BFBackupProgressDlg::Instance()->GetMutex()->Lock();
             // send event
             BFBackupProgressDlg::Instance()->AddPendingEvent(event);
             // want for answer from main-thread/user

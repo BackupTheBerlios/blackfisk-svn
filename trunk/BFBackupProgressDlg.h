@@ -51,6 +51,8 @@ class BFBackupProgressDlg : public wxDialog
         BFProgressTaskCtrl*         pCtrlTaskProgress_;
 
         ///
+        wxMutex*                    pMutex_;
+        ///
         wxCondition*                pCondition_;
 
         ///
@@ -76,6 +78,8 @@ class BFBackupProgressDlg : public wxDialog
         static BFBackupProgressDlg* Instance ()
         { return sp_backup_progress_dlg_; }
 
+        ///
+        wxMutex* GetMutex ();
         ///
         wxCondition* GetCondition ();
 

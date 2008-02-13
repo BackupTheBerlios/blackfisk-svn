@@ -2,11 +2,9 @@
 ~~~~~
 - check Progress calculation on sync-tasks
 - delete taskS (context menu "delete tasks" on a common destination-dir)
-- custom BFTaskListCtrl
 - class BFStoreDuration
 - Zeitdaueranzeige: "elapsed time" and "(anitcipated) remaining time"
 - progress-values depend on BFStoreDuration
-- wrap error messages "copy %s\nto %s\nXXX"
 - wxCore::strLastMessage_ to read from a MsgBox or something like that
 - BUG: wxGenericDirCtrl change the working dir
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)

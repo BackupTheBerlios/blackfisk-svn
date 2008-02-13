@@ -56,7 +56,8 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
     Show();
     Raise();
     Center();
-    pCondition_ = new wxCondition(*(new wxMutex));
+    pMutex_ = new wxMutex();
+    pCondition_ = new wxCondition(*pMutex_);
     BFRootTaskApp::Instance().Run_Start();
 }
 
@@ -143,6 +144,11 @@ void BFBackupProgressDlg::OnStopProject (wxCommandEvent& rEvent)
     BFRootTaskApp::Instance().StopProject();
 }
 
+wxMutex* BFBackupProgressDlg::GetMutex ()
+{
+    return pMutex_;
+}
+
 wxCondition* BFBackupProgressDlg::GetCondition ()
 {
     return pCondition_;
@@ -157,5 +163,6 @@ void BFBackupProgressDlg::OnQuestion (wxCommandEvent& rEvent)
     BFThread_ProjectRunner::CurrentlyRunning()->SetUsersStopAnswer(answer);
 
     // resume the asking thread
+    wxMutexLocker lock( *pMutex_ );
     GetCondition()->Signal();
 }
