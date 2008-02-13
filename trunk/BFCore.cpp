@@ -55,6 +55,17 @@ BFCore& BFCore::Instance ()
 BFCore::BFCore ()
       : bWhileBackup_(false)
 {
+    SetCurrentDateTime();
+}
+
+
+/*virtual*/ BFCore::~BFCore ()
+{
+    int i = 0;
+}
+
+void BFCore::SetCurrentDateTime ()
+{
     // remember current date in a string
     strCurrentDate_ = wxDateTime::Now().FormatISODate();
 
@@ -65,16 +76,11 @@ BFCore::BFCore ()
     strCurrentTime_ << _T("s");
 }
 
-
-/*virtual*/ BFCore::~BFCore ()
-{
-    int i = 0;
-}
-
-
 void BFCore::BackupStarted ()
 {
     bWhileBackup_ = true;
+
+    SetCurrentDateTime();
 }
 
 void BFCore::BackupEnded ()

@@ -74,6 +74,9 @@ class BFCore
             this methode should be to encapsulate plattformdependend code! */
         bool SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry);
 
+        /// set 'strCurrentDate_' and 'strCurrentTime_'
+        void SetCurrentDateTime ();
+
         ///
         static BFCore sCore_;
 

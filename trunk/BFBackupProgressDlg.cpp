@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 /*static*/ BFBackupProgressDlg* BFBackupProgressDlg::sp_backup_progress_dlg_ = NULL;
 
 BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
-                 : wxDialog(pParent, -1, wxString(_("Task Progress")))
+                   : wxDialog(pParent, -1, wxString(_("Task Progress")))
 {
     sp_backup_progress_dlg_ = this;
 
@@ -77,9 +77,6 @@ void BFBackupProgressDlg::Init ()
     wxBoxSizer*         pSizerRight     = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer*         pSizerRightSub  = new wxBoxSizer(wxVERTICAL);
 
-    // list box
-    //pListBox_           = new wxListBox(this, wxID_ANY);
-
     // task list
     pCtrlTaskList_      = new BFTaskListCtrl(this);
 
@@ -94,16 +91,12 @@ void BFBackupProgressDlg::Init ()
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPTASK, _("stop task")),   wxSizerFlags(0).Expand().Border());
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
-    // init controls
-    //BFRootTaskApp::Instance().InitThat(pListBox_);
-
     // arrange
     pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
     pSizerRightSub  ->Add(pInfoCtrl,            wxSizerFlags(0).Expand());
     pSizerRight     ->Add(pSizerRightSub);
     pSizerRight     ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxLEFT, 5));
     pSideSizer      ->Add(pCtrlTaskList_,       wxSizerFlags(0).Expand().Border());
-    //pSideSizer      ->Add(pListBox_,            wxSizerFlags(0).Expand());
     pSideSizer      ->Add(pSizerRight,          wxSizerFlags(0).Border(wxLEFT | wxRIGHT));
     pTopSizer       ->Add(pSideSizer);
     pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center().Border());
@@ -135,9 +128,6 @@ void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
                             lPos+1,
                             BFRootTaskApp::Instance().GetTaskCount())
     );
-
-    // select current task in list box
-    //pListBox_->Select(lPos);
 
     // set active task in task-list-ctrl
     pCtrlTaskList_->SetTask_Active(pTask->GetOID());

@@ -44,8 +44,6 @@ class BFBackupProgressDlg : public wxDialog
 {
     private:
         ///
-        wxListBox*                  pListBox_;
-        ///
         BFTaskListCtrl*             pCtrlTaskList_;
         ///
         BFProgressTotalCtrl*        pCtrlTotalProgress_;
