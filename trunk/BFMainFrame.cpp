@@ -49,6 +49,7 @@
 #include "ctrlids.h"
 #include "BFProcessMsgSubject.h"
 #include "BFProcessMsgDlg.h"
+#include "BFIsWorkingCtrl.h"
 
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)

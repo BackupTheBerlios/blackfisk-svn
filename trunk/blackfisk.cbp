@@ -187,6 +187,12 @@
 		<Unit filename="BFIconTable.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="BFIsWorkingCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFIsWorkingCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFLog.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>

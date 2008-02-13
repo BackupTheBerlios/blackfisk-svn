@@ -1,9 +1,10 @@
 0.0.1
 ~~~~~
+- check Progress calculation on sync-tasks
 - delete taskS (context menu "delete tasks" on a common destination-dir)
 - custom BFTaskListCtrl
 - class BFStoreDuration
-- Zeitdaueranzeige
+- Zeitdaueranzeige: "elapsed time" and "(anitcipated) remaining time"
 - progress-values depend on BFStoreDuration
 - wrap error messages "copy %s\nto %s\nXXX"
 - wxCore::strLastMessage_ to read from a MsgBox or something like that

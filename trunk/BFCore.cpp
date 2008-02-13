@@ -728,6 +728,8 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
         return false;
 
     // check for deletable files ...
+    if (pProgress != NULL)
+        pProgress->SetLabel ( _("check for deletable files and directories") );
     wxArrayString arrToSyncListing;
     GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
     BFApp::PrependString(arrToSyncListing, pToSynchronize);
@@ -737,7 +739,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
 
     // init delete progress
     if (pProgress != NULL)
-        pProgress->SetLabel ( _("<i>delete unexisting files and directories</i>") );
+        pProgress->SetLabel ( _("delete unexisting files and directories<") );
 
     // delete
     Delete(arrToSyncListing, false, true);
