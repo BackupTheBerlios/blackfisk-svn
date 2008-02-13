@@ -316,6 +316,12 @@
 		<Unit filename="BFTaskDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
+		<Unit filename="BFTaskListCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFTaskListCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFThread_ProjectRunner.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>

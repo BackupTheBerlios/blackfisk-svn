@@ -34,6 +34,8 @@
 #include "BFBackupInfoCtrl.h"
 #include "BFCore.h"
 #include "ctrlids.h"
+#include "BFTaskListCtrl.h"
+#include "BFTask.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
   EVT_CLOSE   (                         BFBackupProgressDlg::OnClose)
@@ -53,6 +55,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
     Init();
     Show();
     Raise();
+    Center();
     pCondition_ = new wxCondition(*(new wxMutex));
     BFRootTaskApp::Instance().Run_Start();
 }
@@ -75,7 +78,10 @@ void BFBackupProgressDlg::Init ()
     wxBoxSizer*         pSizerRightSub  = new wxBoxSizer(wxVERTICAL);
 
     // list box
-    pListBox_           = new wxListBox(this, wxID_ANY);
+    //pListBox_           = new wxListBox(this, wxID_ANY);
+
+    // task list
+    pCtrlTaskList_      = new BFTaskListCtrl(this);
 
     // progress ctrls
     pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTaskApp::Instance().GetProgressTask());
@@ -89,14 +95,15 @@ void BFBackupProgressDlg::Init ()
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
     // init controls
-    BFRootTaskApp::Instance().InitThat(pListBox_);
+    //BFRootTaskApp::Instance().InitThat(pListBox_);
 
     // arrange
     pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
     pSizerRightSub  ->Add(pInfoCtrl,            wxSizerFlags(0).Expand());
     pSizerRight     ->Add(pSizerRightSub);
     pSizerRight     ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxLEFT, 5));
-    pSideSizer      ->Add(pListBox_,            wxSizerFlags(0).Expand());
+    pSideSizer      ->Add(pCtrlTaskList_,       wxSizerFlags(0).Expand().Border());
+    //pSideSizer      ->Add(pListBox_,            wxSizerFlags(0).Expand());
     pSideSizer      ->Add(pSizerRight,          wxSizerFlags(0).Border(wxLEFT | wxRIGHT));
     pTopSizer       ->Add(pSideSizer);
     pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center().Border());
@@ -112,25 +119,28 @@ void BFBackupProgressDlg::Init ()
     sp_backup_progress_dlg_ = NULL;
 }
 
-void BFBackupProgressDlg::SetCurrentTaskName (const wxChar* name)
+void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
 {
-    if (name == NULL || pCtrlTaskProgress_ == NULL)
+    if (pTask == NULL || pCtrlTaskProgress_ == NULL || pCtrlTaskList_ == NULL)
         return;
 
     // get pos of current task
-    long lPos = pListBox_->FindString(name);
+    long lPos = BFRootTaskApp::Instance().GetTaskPosition(pTask);
 
     // set task name in progress ctrl
     pCtrlTaskProgress_->SetTextA
     (
         wxString::Format(_("%s (%d of %d)"),
-                            name,
+                            pTask->GetName(),
                             lPos+1,
-                            pListBox_->GetCount())
+                            BFRootTaskApp::Instance().GetTaskCount())
     );
 
     // select current task in list box
-    pListBox_->Select(lPos);
+    //pListBox_->Select(lPos);
+
+    // set active task in task-list-ctrl
+    pCtrlTaskList_->SetTask_Active(pTask->GetOID());
 }
 
 void BFBackupProgressDlg::OnStopTask (wxCommandEvent& rEvent)

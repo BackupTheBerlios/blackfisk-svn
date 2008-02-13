@@ -61,10 +61,6 @@ class BFRootTask : public Subject
             ATTENTION: it does not check if the project is saved !*/
         void ClearTaskVector ();
 
-        /** return the position in the task-vector of the specified BFTask
-            return -1 if nothing is found */
-        long FindTask (BFTask* pTask);
-
     public:
         ///
         static BFRootTask& Instance ();
@@ -122,6 +118,9 @@ class BFRootTask : public Subject
         BFTask* GetNextTask (BFTask* pTask);
         ///
         BFTask* GetLastTask ();
+        /** return the position in the task-vector of the specified BFTask
+            return -1 if nothing is found */
+        long FindTask (BFTask* pTask);
 
         ///
         bool IsModified ();

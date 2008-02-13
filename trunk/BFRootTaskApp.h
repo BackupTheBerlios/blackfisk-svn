@@ -39,6 +39,7 @@ class ProgressWithMessage;
 class wxListBox;
 class BFBackupTree;
 class BFProcessMsgSubject;
+class BFTaskListCtrl;
 
 ///
 class BFRootTaskApp
@@ -81,6 +82,10 @@ class BFRootTaskApp
         /// virtual dtor
         virtual ~BFRootTaskApp ();
 
+        ///
+        long GetTaskPosition (BFTask* pTask);
+        ///
+        long GetTaskCount ();
 
         ///
         const wxChar* GetProjectName();
@@ -136,8 +141,9 @@ class BFRootTaskApp
         ///
         const wxArrayString& GetLastLogFiles ();
 
+        // oid InitThat (wxListBox* pListBox);
         ///
-        void InitThat (wxListBox* pListBox);
+        void InitThat (BFTaskListCtrl* pTaskList);
         ///
         void InitThat (BFBackupTree* pBackupTree);
 

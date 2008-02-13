@@ -110,21 +110,21 @@ class BFTaskData
         ///
         BFoid GetOID () const;
         ///
-        BFTaskType GetType ();
+        BFTaskType GetType () const;
         ///
-        const wxChar* GetSource ();
+        const wxChar* GetSource () const;
         ///
-        const wxChar* GetDestination ();
+        const wxChar* GetDestination () const;
         ///
-        const wxChar* GetName ();
+        const wxChar* GetName () const;
         ///
-        bool Verify ();
+        bool Verify () const;
         ///
-        bool VerifyContent ();
+        bool VerifyContent () const;
         ///
-        BFArchiveFormat GetArchiveFormat ();
+        BFArchiveFormat GetArchiveFormat () const;
         ///
-        const wxArrayString& GetExclude ();
+        const wxArrayString& GetExclude () const;
 
         ///
         void SetTaskType (BFTaskType type);

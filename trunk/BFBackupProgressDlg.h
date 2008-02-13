@@ -36,6 +36,8 @@ class ProgressTotal;
 class ProgressWithMessage;
 class BFProgressTaskCtrl;
 class BFProgressTotalCtrl;
+class BFTaskListCtrl;
+class BFTask;
 
 ///
 class BFBackupProgressDlg : public wxDialog
@@ -43,6 +45,8 @@ class BFBackupProgressDlg : public wxDialog
     private:
         ///
         wxListBox*                  pListBox_;
+        ///
+        BFTaskListCtrl*             pCtrlTaskList_;
         ///
         BFProgressTotalCtrl*        pCtrlTotalProgress_;
         ///
@@ -78,7 +82,7 @@ class BFBackupProgressDlg : public wxDialog
         wxCondition* GetCondition ();
 
         ///
-        void SetCurrentTaskName (const wxChar* name);
+        void SetCurrentTask (BFTask* pTask);
 
         ///
         void OnClose (wxCloseEvent& rEvent);

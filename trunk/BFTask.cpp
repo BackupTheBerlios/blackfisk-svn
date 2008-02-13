@@ -80,42 +80,42 @@ bool BFTaskData::IsValid ()
     return true;
 }
 
-BFTaskType BFTaskData::GetType ()
+BFTaskType BFTaskData::GetType () const
 {
     return type_;
 }
 
-const wxChar* BFTaskData::GetSource ()
+const wxChar* BFTaskData::GetSource () const
 {
     return strSource_.c_str();
 }
 
-const wxChar* BFTaskData::GetDestination ()
+const wxChar* BFTaskData::GetDestination () const
 {
     return strDestination_.c_str();
 }
 
-const wxChar* BFTaskData::GetName ()
+const wxChar* BFTaskData::GetName () const
 {
     return strName_.c_str();
 }
 
-bool BFTaskData::Verify ()
+bool BFTaskData::Verify () const
 {
     return bVerify_;
 }
 
-bool BFTaskData::VerifyContent ()
+bool BFTaskData::VerifyContent () const
 {
     return bVerifyContent_;
 }
 
-BFArchiveFormat BFTaskData::GetArchiveFormat ()
+BFArchiveFormat BFTaskData::GetArchiveFormat () const
 {
     return archiveFormat_;
 }
 
-const wxArrayString& BFTaskData::GetExclude ()
+const wxArrayString& BFTaskData::GetExclude () const
 {
     return arrExclude_;
 }

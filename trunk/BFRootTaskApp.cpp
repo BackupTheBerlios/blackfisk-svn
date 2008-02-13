@@ -38,6 +38,7 @@
 #include "blackfisk.h"
 #include "BFIconTable.h"
 #include "BFProcessMsgSubject.h"
+#include "BFTaskListCtrl.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
 
@@ -68,6 +69,16 @@ void BFRootTaskApp::Close ()
     bStopTask_          = false;
     pRunningTask_       = NULL;
     pBackupLog_         = NULL;
+}
+
+long BFRootTaskApp::GetTaskPosition (BFTask* pTask)
+{
+    return pRootTask_->FindTask(pTask);
+}
+
+long BFRootTaskApp::GetTaskCount ()
+{
+    return pRootTask_->GetTaskCount();
 }
 
 Progress* BFRootTaskApp::GetProgressTotal ()
@@ -193,7 +204,7 @@ bool BFRootTaskApp::Run_NextTask ()
         // log running task
         pBackupLog_->TaskStarted(*pRunningTask_);
         //
-        BFBackupProgressDlg::Instance()->SetCurrentTaskName(pRunningTask_->GetName());
+        BFBackupProgressDlg::Instance()->SetCurrentTask(pRunningTask_);
         BFThread_ProjectRunner::Run(pRunningTask_);
     }
 
@@ -227,10 +238,10 @@ bool BFRootTaskApp::Run_Finished ()
 
 void BFRootTaskApp::StopCurrentTask ()
 {
-    BFSystem::Backup(_("try to stop the current running task"));
-
     bStopTask_ = true;
     bStopProject_ = false;
+
+    BFSystem::Backup(_("try to stop the current running task"));
 
     if (pRunningTask_ != NULL)
         pRunningTask_->StopTask();
@@ -238,10 +249,10 @@ void BFRootTaskApp::StopCurrentTask ()
 
 void BFRootTaskApp::StopProject ()
 {
-    BFSystem::Backup(_("try to stop the current running project"));
-
     bStopTask_ = true;
     bStopProject_ = true;
+
+    BFSystem::Backup(_("try to stop the current running project"));
 
     if (pRunningTask_ != NULL)
         pRunningTask_->StopTask();
@@ -316,14 +327,13 @@ void BFRootTaskApp::InitThat (BFBackupTree* pBackupTree)
         );
     }
 }
-
+/*
 void BFRootTaskApp::InitThat (wxListBox* pListBox)
 {
     if (pListBox == NULL)
         return;
 
     BFTaskVector vec;
-
     pRootTask_->GetAllTasks(vec);
 
     // init controls
@@ -331,6 +341,21 @@ void BFRootTaskApp::InitThat (wxListBox* pListBox)
          itVec != vec.end();
          ++itVec)
         pListBox->Append((*itVec)->GetName(), (*itVec));
+}*/
+
+void BFRootTaskApp::InitThat (BFTaskListCtrl* pTaskList)
+{
+    if (pTaskList == NULL)
+        return;
+
+    BFTaskVector vec;
+    pRootTask_->GetAllTasks(vec);
+
+    // init controls
+    for (BFTaskVectorIt itVec = vec.begin();
+         itVec != vec.end();
+         ++itVec)
+        pTaskList->Append((*itVec));
 }
 
 bool BFRootTaskApp::StoreToFile (const wxString& strFilename)

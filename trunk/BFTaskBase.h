@@ -48,15 +48,4 @@ class BFTask;
 typedef std::vector<BFTask*>    BFTaskVector;
 typedef BFTaskVector::iterator  BFTaskVectorIt;
 
-/* lowest base class for all Task classes
-class BFTaskBase
-{
-    public:
-        /// ctor
-        BFTaskBase ();
-        /// virtual dtor
-        virtual ~BFTaskBase ();
-};  // class BFTaskBase
-*/
-
 #endif    // BFTASKBASE_H

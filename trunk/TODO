@@ -1,5 +1,6 @@
 0.0.1
 ~~~~~
+- set currentTimeString on backup-start not on application-start
 - check Progress calculation on sync-tasks
 - delete taskS (context menu "delete tasks" on a common destination-dir)
 - custom BFTaskListCtrl

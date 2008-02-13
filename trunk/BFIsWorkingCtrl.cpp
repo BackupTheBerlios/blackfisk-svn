@@ -32,7 +32,7 @@
 BFIsWorkingCtrl::BFIsWorkingCtrl (wxWindow* pParent, long lLength)
                : wxPanel (pParent)
 {
-    pGBSizer_ = new wxGridBagSizer();
+    pGBSizer_ = new wxGridBagSizer(0, 10);
 
     CreatePositions (lLength);
 
