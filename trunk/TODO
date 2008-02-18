@@ -1,9 +1,9 @@
 0.0.1
 ~~~~~
-- check Progress calculation on sync-tasks
-- delete taskS (context menu "delete tasks" on a common destination-dir)
-- class BFStoreDuration
+- BUG: freez on not enoghe space
 - Zeitdaueranzeige: "elapsed time" and "(anitcipated) remaining time"
+- class BFStoreDuration
+- delete taskS (context menu "delete tasks" on a common destination-dir)
 - progress-values depend on BFStoreDuration
 - wxCore::strLastMessage_ to read from a MsgBox or something like that
 - BUG: wxGenericDirCtrl change the working dir

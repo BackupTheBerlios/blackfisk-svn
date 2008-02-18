@@ -73,10 +73,9 @@ void BFBackupProgressDlg::Init ()
 {
     // sizer
     wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer*         pSideSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer*         pSizerA         = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer*         pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer*         pSizerRight     = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer*         pSizerRightSub  = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer*         pSizerB         = new wxBoxSizer(wxVERTICAL);
 
     // task list
     pCtrlTaskList_      = new BFTaskListCtrl(this);
@@ -93,16 +92,21 @@ void BFBackupProgressDlg::Init ()
     pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
 
     // arrange
-    pSizerRightSub  ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Border(wxBOTTOM, 5));
-    pSizerRightSub  ->Add(pInfoCtrl,            wxSizerFlags(0).Expand());
-    pSizerRight     ->Add(pSizerRightSub);
-    pSizerRight     ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxLEFT, 5));
-    pSideSizer      ->Add(pCtrlTaskList_,       wxSizerFlags(0).Expand().Border());
-    pSideSizer      ->Add(pSizerRight,          wxSizerFlags(0).Border(wxLEFT | wxRIGHT));
-    pTopSizer       ->Add(pSideSizer);
-    pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center().Border());
+    pSizerB         ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Expand().Border(wxBOTTOM, 5));
+    pSizerB         ->Add(pInfoCtrl,            wxSizerFlags(0).Expand());
+    pSizerA         ->Add(pCtrlTaskList_,       wxSizerFlags(0).Expand());
+    pSizerA         ->Add(pSizerB,              wxSizerFlags(0).Expand().Border(wxLEFT | wxRIGHT));
+    pSizerA         ->Add(pCtrlTotalProgress_,  wxSizerFlags(0).Expand().Border(wxRIGHT, 15));
+    pTopSizer       ->Add(pSizerA,              wxSizerFlags(0));
+    pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center());
 
     SetSizerAndFit(pTopSizer);
+/*
+    wxSize sizeMin = GetSize();
+    sizeMin.SetWidth(sizeMin.GetWidth() + 50);
+    sizeMin.SetHeight(sizeMin.GetHeight() + 50);
+    SetMinSize(sizeMin);
+*/
 }
 
 

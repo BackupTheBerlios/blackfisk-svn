@@ -207,13 +207,21 @@ class BFCore
         /** verify the file in this order:
             file-size, file-attributes, file-content*/
         bool VerifyFile (const wxString& strFile1, const wxString& strFile2, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
-        /** compare a pair-list (map) of files
-            break on the first uncompare filepair */
+
+        /** compare a pair-list (map) of files and break on the first uncompare filepair
+            if 'pProgress' is used it call IncrementActualWithMessage() on it with each compared file
+            it only increment the progress but don't set the range on it
+            if 'pProgress' IsLocked() it only call SetMessage() on it and don't IncrementActual()
+            for more detailes about that look an how a sync-task handle its progress object
+            sometimes a sync-task need to call BFCore::CopyDir() */
         bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
+
         /** compare the zip entries by checksum (CRC) with the original files */
         bool VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
+
         /** create a CRC checksum of a file */
         wxUint32 GetFileCrc (const wxChar* pFilename);
+
     private:
         /// compare the file-attributes of two files
         bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2, bool bIgnoreArchiveBit = false);

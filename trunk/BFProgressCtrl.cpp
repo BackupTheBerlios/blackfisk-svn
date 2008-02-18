@@ -59,8 +59,10 @@
     if (pP == NULL)
         return;
 
+    Freeze();
     UpdateBar   (pP);
     UpdateText  (pP);
+    Thaw();
 }
 
 
@@ -69,7 +71,8 @@
     if (pP == NULL || pBar_ == NULL)
         return;
 
-    pBar_->SetValue ( pP->GetProgress() );
+    if (pBar_->GetValue() != pP->GetProgress())
+        pBar_->SetValue ( pP->GetProgress() );
 }
 
 
@@ -78,8 +81,13 @@
     if (pP == NULL || pTextB_ == NULL)
         return;
 
-    pTextB_->SetLabel ( wxString::Format(_T("%d %%"), pP->GetProgress()) );
-    Layout();
+    wxString strLabel = wxString::Format(_T("%d %%"), pP->GetProgress());
+
+    if (strLabel != pTextB_->GetLabel())
+    {
+        pTextB_->SetLabel ( strLabel );
+        Layout();
+    }
 }
 
 

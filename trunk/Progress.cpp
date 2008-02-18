@@ -31,13 +31,20 @@ Progress::Progress()
         : lBEGIN_(0),
           end_(100),
           actual_(0),
-          bLocked_(false)
+          bLocked_(false),
+          bDeadCountMode_(false),
+          deadcounts_(0)
 {
 }
 
 
 /*virtual*/ Progress::~Progress()
 {
+}
+
+void Progress::SetDeadCountMode (bool bOn)
+{
+    bDeadCountMode_ = bOn;
 }
 
 void Progress::Lock ()
@@ -79,13 +86,36 @@ bool Progress::SetActual (long actual)
 
 /*virtual*/ bool Progress::IncrementActual ()
 {
-    bool bL = IsLocked();
+    if (bDeadCountMode_)
+    /* DEAD COUNT MODE */
+    {
+        ++deadcounts_;
+    }
+    else
+    /* NORMALE MODE */
+    {
+        /* don't increment the normale count before
+           deadcounts_ is still 0 */
+        if (deadcounts_ > 0)
+        {
+            // decrement the deadcounts
+            --deadcounts_;
+            /* we need to return false to show the caller
+               that no observer is broadcasted */
+            return false;
+        }
+    }
 
+    // temporary unlock because SetActual()
+    // won't work if the progress object is locked
+    bool bLock = IsLocked();
     Unlock();
 
+    // increment
     bool rc = SetActual(GetActual() + 1);
 
-    if (bL)
+    // reset the lock-status
+    if (bLock)
         Lock();
 
     return rc;
@@ -143,12 +173,19 @@ ProgressWithMessage::ProgressWithMessage ()
 }
 
 
-bool ProgressWithMessage::IncrementActualWithMessage (const wxChar* message)
+bool ProgressWithMessage::IncrementActualWithMessage (const wxString& strMessage)
 {
-    if (message != NULL)
-        strMessage_ = message;
+    SetMessage(strMessage);
 
-    return Progress::IncrementActual();
+    if (Progress::IncrementActual())
+    {
+        return true;
+    }
+    else
+    {
+        broadcastObservers();
+        return false;
+    }
 }
 
 
@@ -164,16 +201,17 @@ const wxChar* ProgressWithMessage::GetLabel ()
 }
 
 
-void ProgressWithMessage::SetLabel (const wxChar* label)
+void ProgressWithMessage::SetLabel (const wxString& strLabel)
 {
-    if (label == NULL)
-        return;
-
-    strLabel_ = label;
+    strLabel_ = strLabel;
 
     broadcastObservers();
 }
 
+void ProgressWithMessage::SetMessage (const wxString& strMessage)
+{
+    strMessage_ = strMessage;
+}
 
 ProgressTotal::ProgressTotal(long lProgressCount,
                              Progress* pSubProgress)

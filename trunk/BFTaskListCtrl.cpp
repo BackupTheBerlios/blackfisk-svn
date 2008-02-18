@@ -41,7 +41,7 @@ BFTaskListCtrl::BFTaskListCtrl (wxWindow* pParent)
     BFRootTaskApp::Instance().InitThat(this);
 
     this->AddStretchSpacer(1);
-    this->Add(new BFIsWorkingCtrl(pParent, 5), wxSizerFlags(0).Center());
+    this->Add(new BFIsWorkingCtrl(pParent, 5), wxSizerFlags(0).Center().Border());
 }
 
 
@@ -92,7 +92,7 @@ void BFTaskListCtrl::Append (const BFTask* pTask)
     // create ctrl
     wxStaticText* pST = new wxStaticText(pParent_,
                                          wxID_ANY,
-                                         pTask->GetName());
+                                         pTask->GetName());//, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN);
 
     // arrange
     this->Add(pST, wxSizerFlags(0).Center().Border());

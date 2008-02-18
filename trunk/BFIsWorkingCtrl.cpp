@@ -32,7 +32,7 @@
 BFIsWorkingCtrl::BFIsWorkingCtrl (wxWindow* pParent, long lLength)
                : wxPanel (pParent)
 {
-    pGBSizer_ = new wxGridBagSizer(0, 10);
+    pGBSizer_ = new wxGridBagSizer();
 
     CreatePositions (lLength);
 
@@ -46,7 +46,7 @@ BFIsWorkingCtrl::BFIsWorkingCtrl (wxWindow* pParent, long lLength)
     );
 
     pTimer_ = new wxTimer(this);
-    pTimer_->Start(150);
+    pTimer_->Start(200);
 
     SetSizerAndFit(pGBSizer_);
 }
@@ -119,6 +119,7 @@ void BFIsWorkingCtrl::CreatePositions (long lLength)
     sizeMin.SetWidth(wxMax(sizeMin.GetWidth(), sizeMin.GetHeight()));
     sizeMin.SetHeight(sizeMin.GetWidth());
     pST->Destroy();
+    pGBSizer_->SetEmptyCellSize(sizeMin);
     for (std::vector<wxGBPosition>::iterator it = vecP.begin();
          it != vecP.end();
          ++it)

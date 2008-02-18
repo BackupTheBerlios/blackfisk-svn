@@ -174,6 +174,12 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
     if ( BFCore::IsStop() )
         return wxDIR_STOP;
 
+    // progress
+    if (pProgress_ != NULL)
+    {
+        pProgress_->IncrementActualWithMessage(dirname);
+    }
+
     // listing
     BFDirListingTraverser::OnDir(dirname);
 
@@ -183,11 +189,13 @@ BFSynchronizeDirTraverser::BFSynchronizeDirTraverser (const wxChar* pOriginalDir
     // does it exist
     if ( !(wxDir::Exists(strTarget)) )
     {
-        // XXX BFSystem::Fatal(wxString::Format(_T("dirname: %s\nstrTarget: %s"), dirname, strTarget), _T("syncTraverser::OnDir()"));
-
+        wxString strLabel = pProgress_->GetLabel();
+        pProgress_->SetDeadCountMode(true);
         pProgress_->Lock();
-        BFCore::Instance().CopyDir(dirname, strTarget, bVerify_, bVerifyContent_, pProgress_);
+        BFCore::Instance().CopyDir(dirname, strTarget, false, false, pProgress_);
         pProgress_->Unlock();
+        pProgress_->SetLabel(strLabel);
+        pProgress_->SetDeadCountMode(false);
     }
 
     return wxDIR_CONTINUE;

@@ -36,16 +36,23 @@ class Progress : public Subject
 		long            end_;
         ///
 		long            actual_;
-		/** if 'bLocked_' is true calls of SetRange() and SetActual() has no effect
-            but all other methodes including IncrementActual() will work
+		/** if 'bLocked_' is true calls of SetRange(), SetActual()
             see BFSynchronizeDirTraverser::OnDir() for an example how to use it */
 		bool            bLocked_;
+
+		/** */
+		bool            bDeadCountMode_;
+		/** */
+		long            deadcounts_;
 
 	public:
         ///
 		Progress();
         ///
 		virtual ~Progress();
+
+        ///
+        void SetDeadCountMode (bool bOn);
 
         /** lock the progress object
             please see the member 'bLocked_' for more detailes */
@@ -95,10 +102,12 @@ class ProgressWithMessage : public Progress
         ///
         virtual ~ProgressWithMessage ();
 
-        ///
-        bool IncrementActualWithMessage (const wxChar* message);
-        ///
-        void SetLabel (const wxChar* label);
+        /// call SetMessage() and Progress::IncrementActual() and broadcast the observers
+        bool IncrementActualWithMessage (const wxString& strMessage);
+        /// set 'strLabel_' and broadcast the observer
+        void SetLabel (const wxString& strLabel);
+        /// set 'strMessage_'
+        void SetMessage (const wxString& strMessage);
         ///
         const wxChar* GetMessage ();
         ///

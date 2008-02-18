@@ -999,7 +999,26 @@ bool BFCore::VerifyFiles(MapStringPair& rMap,
             return true;
 
         if (pProgress != NULL)
-            pProgress->IncrementActualWithMessage(wxString::Format(_("compare %s with %s"), rMap[i].first.c_str(), rMap[i].second.c_str()));
+        {
+            wxString strMsg = wxString::Format(_("compare %s with %s"), rMap[i].first.c_str(), rMap[i].second.c_str());
+
+            if (pProgress->IsLocked())
+            {
+                /* this could be called a workaround for the following situation:
+                   a sync-task sometimes need to call BFCore::CopyDir() with bVerify == true
+                   so it could be called a sub-task inside the sync-task.
+                   But the sync-task doesn't calculate the verify-steps of the sub-copy-task
+                   for its progress-object. Of course there is a need for verifying the copied files
+                   but don't tell it the Progress object because it only count the files and dirs
+                   they need to synchronized. */
+                pProgress->SetMessage(strMsg);
+                pProgress->broadcastObservers();
+            }
+            else
+            {
+                pProgress->IncrementActualWithMessage(strMsg);
+            }
+        }
 
         if ( !VerifyFile(rMap[i].first.c_str(), rMap[i].second.c_str(), bVerifyContent) )
         {
