@@ -1,6 +1,12 @@
 needed icons
 ~~~~~~~~~~~~
 
+Tasks
+ - file copy
+ - dir copy
+ - dir compression (zip, ...)
+ - dir syncronisation
+
 Message
  - information
  - warning
@@ -18,14 +24,8 @@ Filesystem
  - drive
  - closed existing folder
  - open existing folder (select in tree)
- - closed non-existing folder (transparent)
- - open non-existing folder (transparent)
- 
-Tasks
- - file copy
- - dir copy
- - dir compression (zip, etc)
- - dir syncronisation
+ - closed non-existing folder (maybe transparent)
+ - open non-existing folder (maybe transparent)
  
 Toolbar
  - start backup

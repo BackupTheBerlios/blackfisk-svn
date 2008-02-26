@@ -182,8 +182,6 @@ bool BFApp::OnInit()
 
 /*static*/ bool BFApp::ReadSettings ()
 {
-    // XXX    BFSystem::Info(wxGetCwd());
-
     if ( !(wxFileName::FileExists(BF_SETTINGS)) )
         SaveSettings();
 
@@ -195,8 +193,6 @@ bool BFApp::OnInit()
 
 /*static*/ bool BFApp::SaveSettings ()
 {
-    // XXX    BFSystem::Info(wxGetCwd());
-
     wxFileOutputStream  out(BF_SETTINGS);
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
 
@@ -218,7 +214,10 @@ bool BFApp::OpenProject (const wxChar* filename)
     bool rc = BFRootTaskApp::Instance().ReadFromFile(filename);
 
     if (rc)
+    {
         BFSettings::Instance().SetLastProject(filename);
+        SaveSettings();
+    }
 
     return rc;
 }

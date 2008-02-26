@@ -24,9 +24,11 @@
 #include "BFBackupInfoCtrl.h"
 
 #include <wx/defs.h>
+#include <wx/gbsizer.h>
 
 #include "BFSystem.h"
 #include "BFRootTaskApp.h"
+#include "BFTimeDurationCtrl.h"
 
 BFBackupInfoCtrl::BFBackupInfoCtrl (wxWindow* pParent)
                 : wxPanel(pParent),
@@ -83,23 +85,26 @@ void BFBackupInfoCtrl::Init ()
     pErrorsCounter_ = new wxStaticText(this, wxID_ANY, _T("000"));
     pFatalErrorsCounter_ = new wxStaticText(this, wxID_ANY, _T("000"));
 
+    // time duration
+    BFTimeDurationCtrl* pTimeDurationCtrl = new BFTimeDurationCtrl(this, BFRootTaskApp::Instance().GetProgressTotal());
+
     // sizer and arrange
-    wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
-    wxFlexGridSizer* pGridSizer = new wxFlexGridSizer(4, 2, 7);
-    pGridSizer->Add(pStatVerbose);
-    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
-    pGridSizer->Add(pStatWarning);
-    pGridSizer->Add(pWarningsCounter_);
-    pGridSizer->Add(pStatVerboseLvl, wxSizerFlags(0).Center());
-    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
-    pGridSizer->Add(pStatError);
-    pGridSizer->Add(pErrorsCounter_);
-    pGridSizer->AddStretchSpacer(0);
-    pGridSizer->Add(new wxStaticText(this, wxID_ANY, _T("              ")));
-    pGridSizer->Add(pStatFatalError);
-    pGridSizer->Add(pFatalErrorsCounter_);
-    pTopSizer->Add(pGridSizer, wxSizerFlags(0).Border().Center());
-    pTopSizer->Add(pLogCtrl_, wxSizerFlags(0).Expand());
+    wxBoxSizer*     pTopSizer   = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer*     pSubSizer   = new wxBoxSizer(wxHORIZONTAL);
+    wxGridBagSizer* pGBSizer    = new wxGridBagSizer(0, 10);
+    pGBSizer->Add(pStatVerbose,         wxGBPosition(0, 0), wxGBSpan());
+    pGBSizer->Add(pStatVerboseLvl,      wxGBPosition(1, 0), wxGBSpan(), wxALIGN_CENTER_HORIZONTAL);
+    pGBSizer->Add(pStatWarning,         wxGBPosition(0, 2), wxGBSpan());
+    pGBSizer->Add(pWarningsCounter_,    wxGBPosition(0, 3), wxGBSpan());
+    pGBSizer->Add(pStatError,           wxGBPosition(1, 2), wxGBSpan());
+    pGBSizer->Add(pErrorsCounter_,      wxGBPosition(1, 3), wxGBSpan());
+    pGBSizer->Add(pStatFatalError,      wxGBPosition(2, 2), wxGBSpan());
+    pGBSizer->Add(pFatalErrorsCounter_, wxGBPosition(2, 3), wxGBSpan());
+    pSubSizer->Add(pTimeDurationCtrl, wxSizerFlags(0));
+    pSubSizer->AddSpacer(40);
+    pSubSizer->Add(pGBSizer);
+    pTopSizer->Add(pSubSizer,   wxSizerFlags(0).Border().Center());
+    pTopSizer->Add(pLogCtrl_,   wxSizerFlags(0).Expand());
     SetSizer(pTopSizer);
 
     RefreshCounterCtrls();

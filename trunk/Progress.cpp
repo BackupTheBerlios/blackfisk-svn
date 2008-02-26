@@ -68,8 +68,6 @@ void Progress::SetRange (long end)
         return;
 
     end_ = end;
-
-	//SetActual(lBEGIN_);
 }
 
 

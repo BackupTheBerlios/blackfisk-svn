@@ -133,15 +133,6 @@ wxSizer* BFTaskDlg::CreateControls ()
     pBodySizer->SetVGap(5);
     pBodySizer->Add(pTypeStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBodySizer->Add(pTypeCtrl_,     wxSizerFlags(0).Expand());
-/* DEBUG
-    pBodySizer->AddStretchSpacer();
-    wxPanel* pP = new wxPanel(this);
-    wxTextCtrl* pT = new wxTextCtrl(pP, wxID_ANY, _T("xxx"));
-    wxBoxSizer* pS = new wxBoxSizer(wxHORIZONTAL);
-    pS->Add(pT);
-    pP->SetSizer(pS);
-    pBodySizer->Add(pP);
-// DEBUG off */
     pBodySizer->Add(pNameStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBodySizer->Add(pNamePanel);
     pBodySizer->Add(pSourceStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
