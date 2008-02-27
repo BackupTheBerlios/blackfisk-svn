@@ -39,6 +39,9 @@ typedef std::pair<wxString, wxTreeItemId>   PairVolItemId;
 typedef std::vector<PairVolItemId>          VecPairVolItemId;
 typedef VecPairVolItemId::iterator          ItVecPairVolItemId;
 
+typedef std::vector<wxTreeItemId>           VectorTreeItemId;
+typedef VectorTreeItemId::iterator          ItVectorTreeItemId;
+
 ///
 class BFBackupTree : public wxTreeCtrl, public Observer
 {
@@ -103,10 +106,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             if 'bGoDeep' is true grand-child-items in all layers will be searched
             if nothing is found can be checked be wxTreeItemId::IsOk() */
         wxTreeItemId FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep = true);
-        /* search for an item by its corrosponding BFTask starting at 'idStart'
-            and return the item-id for the first match.
-            if nothing is found can be checked be wxTreeItemId::IsOk() *
-        wxTreeItemId FindItem (wxTreeItemId idStart, const BFTask* pTask);*/
+        /** Search for all items corrosponding to a BFTask and return them in a vector.
+            If 'bGoDeep' is false only child-items of 'idParent' will be searched.
+            Ff 'bGoDeep' is true all child-items of 'idParent' in all layers will be searched. */
+        VectorTreeItemId GetTaskItems (wxTreeItemId idParent, bool bGoDeep = true);
 
         /// open the TaskDialog for the Task specified by 'id'
         void ShowTaskSettings (wxTreeItemId id);

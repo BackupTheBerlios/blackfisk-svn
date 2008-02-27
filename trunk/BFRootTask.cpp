@@ -130,26 +130,56 @@ BFTask* BFRootTask::GetLastTask ()
     return vecTasks_[vecTasks_.size()-1];
 }
 
-bool BFRootTask::DeleteTask (BFoid oid)
+bool BFRootTask::DeleteTask (BFoid oid, bool bBroadcast /*= true*/)
 {
     BFTaskVectorIt itVec;
 
+    //
 	for (itVec = vecTasks_.begin();
 		 itVec != vecTasks_.end();
 		 ++itVec)
     {
+        // does the OID match?
         if ((*itVec)->GetOID() == oid)
         {
+            //
             BFTask* pTask = (BFTask*)(*itVec);
+
+            // erase the task from vector
             vecTasks_.erase(itVec);
+
+            // kill the task itself
             delete pTask;
+
+            // the the project modified
             SetModified(true);
-            broadcastObservers();
+
+            // broadcast the observers
+            if (bBroadcast)
+                broadcastObservers();
+
+            //
             return true;
         }
     }
 
+    //
     return false;
+}
+
+bool BFRootTask::DeleteTasks (BFTaskVector& vecTasks)
+{
+    BFTaskVectorIt it;
+
+    for (it = vecTasks.begin();
+         it != vecTasks.end();
+         ++it)
+    {
+        // delete the task but don't broadcast the observers
+        DeleteTask((*it)->GetOID(), false);
+    }
+
+    broadcastObservers();
 }
 
 bool BFRootTask::HasTask(BFoid oid)

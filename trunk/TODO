@@ -1,11 +1,9 @@
 0.0.1
 ~~~~~
-- BUG: freez on not enoghe space
-- delete taskS (context menu "delete tasks" on a common destination-dir)
-- progress-values depend on BFStoreDuration
 - wxCore::strLastMessage_ to read from a MsgBox or something like that
-- BUG: wxGenericDirCtrl change the working dir
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
+- BUG: freez on not enoghe space
+- BUG: wxGenericDirCtrl change the working dir
 
 0.0.2
 ~~~~~

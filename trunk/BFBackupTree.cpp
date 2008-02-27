@@ -225,12 +225,14 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
         {
             // for real existing directories
             menu.Append(BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
+            menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
             menu.AppendSeparator();
             menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS, _("Project settings"));
         }
         else
         {
             menu.Append(BFBACKUPCTRL_ID_MODIFYDDESTINATION, _("modify destination"));
+            menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
             menu.AppendSeparator();
             BFBackupTree::GenerateBackupMenu(menu_backup, true);
             menu.AppendSubMenu(&menu_backup, _("backup"));
@@ -429,13 +431,48 @@ void BFBackupTree::OnTaskSettings (wxCommandEvent& rEvent)
 
 void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
 {
-    BFTask* pTask = GetTaskByItem(lastItemId_);
+    if ( IsTask(lastItemId_) )
+    /* one task */
+    {
+        BFTask* pTask = GetTaskByItem(lastItemId_);
 
-    if (pTask == NULL)
-        return;
+        if (pTask == NULL)
+            return;
 
-    if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
-        BFRootTask::Instance().DeleteTask(pTask->GetOID());
+        if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
+            BFRootTask::Instance().DeleteTask(pTask->GetOID());
+    }
+    else
+    /* a couple of tasks */
+    {
+        // get the affected tree-item-ids
+        VectorTreeItemId vecIds( GetTaskItems(lastItemId_, true) );
+
+        // get the corrosponding BFTask
+        BFTaskVector vecTasks;
+        for (ItVectorTreeItemId it = vecIds.begin();
+             it != vecIds.end();
+             ++it)
+        {
+            vecTasks.push_back(GetTaskByItem(*it));
+        }
+
+        // create the question string
+        wxString str = wxString::Format("Are you sure to delete this %d tasks?\n", vecTasks.size());
+        for (BFTaskVectorIt it = vecTasks.begin();
+             it != vecTasks.end();
+             ++it)
+        {
+            str = str + "\n\t" + (*it)->GetName();
+        }
+
+        // ask the user
+        if ( BFMainFrame::Instance()->QuestionYesNo(str) )
+        {
+            // delete the tasks
+            BFRootTask::Instance().DeleteTasks(vecTasks);
+        }
+    }
 }
 
 
@@ -799,6 +836,40 @@ wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, 
     return wxTreeItemId();
 }
 
+VectorTreeItemId BFBackupTree::GetTaskItems (wxTreeItemId idParent, bool bGoDeep /*= true*/)
+{
+    VectorTreeItemId vec;
+
+    wxTreeItemId idCurr;
+    wxTreeItemIdValue idCookie;
+
+    if (ItemHasChildren(idParent))
+    {
+        for (idCurr = GetFirstChild(idParent, idCookie);
+             idCurr.IsOk();
+             idCurr = GetNextChild(idParent, idCookie))
+        {
+            if (ItemHasChildren(idCurr) == bGoDeep)
+            {
+                VectorTreeItemId vecSub(GetTaskItems(idCurr, true));
+
+                for (ItVectorTreeItemId it = vecSub.begin();
+                     it != vecSub.end();
+                     it++)
+                {
+                    vec.push_back(*it);
+                }
+            }
+            else
+            {
+                if (IsTask(idCurr))
+                    vec.push_back(idCurr);
+            }
+        }
+    }
+
+    return vec;
+}
 
 void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 {

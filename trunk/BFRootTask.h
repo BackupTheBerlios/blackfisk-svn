@@ -108,7 +108,9 @@ class BFRootTask : public Subject
         ///
         BFTask* GetTask(BFoid oid);
         ///
-        bool DeleteTask (BFoid oid);
+        bool DeleteTask (BFoid oid, bool bBroadcast = true);
+        ///
+        bool DeleteTasks (BFTaskVector& vecTasks);
 
         /** search in 'vecTasks_' for 'pTask'
             and return the BFTask pointer behind it
