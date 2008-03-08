@@ -11,6 +11,7 @@ Message
  - information
  - warning
  - error / fatal error
+ - question
 
 User interaction
  - OK
@@ -21,7 +22,7 @@ User interaction
  - STOP project/backup
 
 Filesystem
- - drive
+ - volume
  - closed existing folder
  - open existing folder (select in tree)
  - closed non-existing folder (maybe transparent)
