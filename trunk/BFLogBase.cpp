@@ -24,7 +24,7 @@
 #include "blackfisk.h"
 #include "BFCore.h"
 
-BFLogBase::BFLogBase (const wxChar* strLogFileName, long lMaxSizeInBytes /*= 0*/ )
+BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0*/ )
      : Observer(&(BFSystem::Instance())),
        fileLog_(strLogFileName, wxFile::write_append),
        strLogFileName_(strLogFileName),

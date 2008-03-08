@@ -52,7 +52,7 @@ class BFLogBase : public Observer
         void SetMaxSize (long lMaxSizeInBytes);
 
         /// the ctor set its 'subject' by itself
-        BFLogBase (const wxChar* strLogFileName, long lMaxSize = 0);
+        BFLogBase (const wxString& strLogFileName, long lMaxSize = 0);
 
     public:
         /// virtual destructor

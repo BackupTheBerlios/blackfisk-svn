@@ -67,6 +67,9 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
     EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
     EVT_MENU    (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
+    EVT_BUTTON  (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
+    EVT_MENU    (ID_FeauterRequest,     BFMainFrame::OnFeauterRequest)
+    EVT_BUTTON  (ID_FeauterRequest,     BFMainFrame::OnFeauterRequest)
     EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
     EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
 #ifdef _DEBUG
@@ -124,6 +127,7 @@ END_EVENT_TABLE()
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append( ID_OpenWebSite,   _("&Website") );
     menuHelp->Append( ID_SubmitBug,     _("Report a &Bug") );
+    menuHelp->Append( ID_FeauterRequest,_("Submit a &Feauter Request") );
     menuHelp->Append( ID_ShowLicense,   _("&License") );
     menuHelp->Append( ID_ShowHistory,   _("&History") );
     menuHelp->AppendSeparator();
@@ -142,20 +146,26 @@ END_EVENT_TABLE()
     pDirCtrl_       = new BFDirCtrl(pSplitter);
     pSplitter->SplitVertically(pBackupCtrl_, pDirCtrl_);
 
+    // buttons
+    wxBoxSizer* pButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxButton* pButtonBug        = new wxButton(this, ID_SubmitBug, _("Bug Report"));
+    wxButton* pButtonFeauter    = new wxButton(this, ID_FeauterRequest, _("Feauter Request"));
+    pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
+    pButtonSizer->AddStretchSpacer(1);
+    pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
+
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
-    pSizer->Add( pSplitter, wxSizerFlags(3).Expand() );
-
-    CreateStatusBar();
-    SetStatusText( _("Welcome to wxWindows!") );
-
+    pSizer->Add( pSplitter,     wxSizerFlags(6).Expand() );
+    pSizer->Add( pButtonSizer,  wxSizerFlags(0).Center() );
     SetSizer(pSizer);
 
-    RefreshTitle();
-
+    SetBackgroundColour(menuBar->GetBackgroundColour());
     SetSize(wxSize(650, 600));
     Center();
     Show(TRUE);
+
+    RefreshTitle();
 
 #ifdef _DEBUG
     //Test();
@@ -249,12 +259,17 @@ void BFMainFrame::OnShowHistory (wxCommandEvent& event)
 
 void BFMainFrame::OnOpenWebSite (wxCommandEvent& event)
 {
-    new BFThread_LaunchBrowser(_T("http://www.blackfisk.org"));
+    new BFThread_LaunchBrowser(BF_URL_WEBSITE);
 }
 
 void BFMainFrame::OnSubmitBug (wxCommandEvent& event)
 {
-    new BFThread_LaunchBrowser(_T("http://developer.berlios.de/bugs/?group_id=8687"));
+    new BFThread_LaunchBrowser(BF_URL_BUGREPORT);
+}
+
+void BFMainFrame::OnFeauterRequest (wxCommandEvent& event)
+{
+    new BFThread_LaunchBrowser(BF_URL_FEAUTERREQUEST);
 }
 
 void BFMainFrame::OnProject (wxCommandEvent& event)

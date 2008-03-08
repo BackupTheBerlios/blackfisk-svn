@@ -55,7 +55,8 @@ enum
     ID_ShowLicense,
     ID_ShowHistory,
     ID_OpenWebSite,
-    ID_SubmitBug
+    ID_SubmitBug,
+    ID_FeauterRequest
 };
 
 /// main window of the application
@@ -124,6 +125,8 @@ class BFMainFrame : public wxFrame
         void OnOpenWebSite (wxCommandEvent& event);
         ///
         void OnSubmitBug (wxCommandEvent& event);
+        ///
+        void OnFeauterRequest (wxCommandEvent& event);
         ///
         void OnThreadEnd (wxCommandEvent& event);
 

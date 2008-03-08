@@ -23,23 +23,27 @@
 #ifndef BLACKFISK_H
 #define BLACKFISK_H
 
-#define BF_PRGNAME                  _T("blackfisk")
+#define BF_PRGNAME                  "blackfisk"
 #define BF_VERSION_MAJOR            0
 #define BF_VERSION_MINOR            0
 #define BF_VERSION_RELEASE          0
-#define BF_VERSION_EXTENSION        _T("alpha (SVN)")
-#define BF_AUTHOR                   _T("Christian Buhtz")
+#define BF_VERSION_EXTENSION        "alpha (SVN)"
+#define BF_AUTHOR                   "Christian Buhtz"
 //__VERSION__ (gcc version)
 
-#define BF_GRAPHICDIR               _T("graphic/")
+#define BF_URL_WEBSITE              "http://www.blackfisk.org"
+#define BF_URL_BUGREPORT            "http://developer.berlios.de/bugs/?func=addbug&group_id=8687"
+#define BF_URL_FEAUTERREQUEST       "http://developer.berlios.de/feature/?func=addfeature&group_id=8687"
 
-#define BF_SETTINGS                 _T("blackfisk.cfg")
+#define BF_GRAPHICDIR               "graphic/"
+
+#define BF_SETTINGS                 "blackfisk.cfg"
 #define BF_SETTINGS_CURRENT_VERSION 1000
 #define BF_PROJECT_CURRENT_VERSION  1010
 
-#define BF_LOGFILE_NAME             _T("bf.log")
-#define BF_LOGFILE_BAKSUFFIX        _T(".bak")
+#define BF_LOGFILE_NAME             "bf.log"
+#define BF_LOGFILE_BAKSUFFIX        ".bak"
 
-#define BF_PROJECT_EXTENSION        _T(".bfp")
-#define BF_PROJECT_EXTENSION_STRING _("Blackfisk project files (*.bfp)|*.bfp")
+#define BF_PROJECT_EXTENSION        ".bfp"
+#define BF_PROJECT_EXTENSION_STRING "Blackfisk project files (*.bfp)|*.bfp"
 #endif // BLACKFISK_H

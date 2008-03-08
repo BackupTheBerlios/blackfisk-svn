@@ -54,17 +54,17 @@ BFIconTable::BFIconTable ()
 void BFIconTable::Init ()
 {
     RemoveAll();
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo.ico")), wxBITMAP_TYPE_ICO));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo.png")), wxBITMAP_TYPE_PNG));
     Add(wxArtProvider::GetIcon(wxART_HARDDISK));
     Add(wxArtProvider::GetIcon(wxART_FLOPPY));
     Add(wxArtProvider::GetIcon(wxART_CDROM));
     Add(wxArtProvider::GetIcon(wxART_REMOVABLE));
     Add(wxArtProvider::GetIcon(wxART_FOLDER));
     Add(wxArtProvider::GetIcon(wxART_FOLDER_OPEN));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual.ico")), wxBITMAP_TYPE_ICO));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_open.ico")), wxBITMAP_TYPE_ICO));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.ico")),   wxBITMAP_TYPE_ICO));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.ico")),   wxBITMAP_TYPE_ICO));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_zip.ico")),  wxBITMAP_TYPE_ICO));
-    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_syn.ico")),  wxBITMAP_TYPE_ICO));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_closed.png")), wxBITMAP_TYPE_PNG));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_open.png")), wxBITMAP_TYPE_PNG));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.png")),   wxBITMAP_TYPE_PNG));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.png")),   wxBITMAP_TYPE_PNG));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_ar.png")),  wxBITMAP_TYPE_PNG));
+    Add(wxIcon(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_sy.png")),  wxBITMAP_TYPE_PNG));
 }
