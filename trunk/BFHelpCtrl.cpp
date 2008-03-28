@@ -26,7 +26,8 @@
 
 BFHelpCtrl::BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines /*= 3*/)
           : wxPanel(pParent),
-            pLastWindow_(NULL)
+            pLastWindow_(NULL),
+            bOnEnter_(false)
 {
     // sub panel
     wxPanel* pSubPanel = new wxPanel(this);
@@ -35,8 +36,9 @@ BFHelpCtrl::BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines /*= 3*/)
     wxString strDefault;
     for (int i = 0; i < iMaxHelpLines; ++i)
         strDefault << _T('\n');
-    pHelpText_ = new wxStaticText(pSubPanel, wxID_ANY, strDefault, wxDefaultPosition, wxDefaultSize, wxST_MARKUP);
-
+    pHelpText_ = new wxStaticText(pSubPanel,
+                                  wxID_ANY,
+                                  strDefault);
 
     // colour
     wxColour colour = pSubPanel->GetBackgroundColour();
@@ -56,21 +58,82 @@ BFHelpCtrl::BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines /*= 3*/)
 {
 }
 
+
 void BFHelpCtrl::ConnectMotionEvent (wxWindow* pWindow)
 {
     if (pWindow == NULL)
         return;
 
-    pWindow->Connect
+/*    pWindow->Connect
     (
         wxID_ANY,
         wxEVT_MOTION,
         wxMouseEventHandler (BFHelpCtrl::OnMotion),
         NULL,
         this
+    );*/
+
+    pWindow->Connect
+    (
+        wxID_ANY,
+        wxEVT_ENTER_WINDOW,
+        wxMouseEventHandler (BFHelpCtrl::OnEnterWindow),
+        NULL,
+        this
+    );
+
+    pWindow->Connect
+    (
+        wxID_ANY,
+        wxEVT_LEAVE_WINDOW,
+        wxMouseEventHandler (BFHelpCtrl::OnLeaveWindow),
+        NULL,
+        this
     );
 }
 
+void BFHelpCtrl::OnEnterWindow (wxMouseEvent& rEvent)
+{
+    bOnEnter_ = true;
+
+    wxPoint point;
+    wxWindow* pWindow = wxFindWindowAtPointer(point);
+
+    if (pLastWindow_ == pWindow)
+    {
+        bOnEnter_ = false;
+        return;
+    }
+    else
+        pLastWindow_ = pWindow;
+
+    if (pWindow != NULL)
+    {
+        pHelpText_->SetLabel(pWindow->GetHelpText());
+        pHelpText_->Wrap(pHelpText_->GetParent()->GetSize().GetWidth()-5);
+    }
+
+    bOnEnter_ = false;
+}
+
+void BFHelpCtrl::OnLeaveWindow (wxMouseEvent& rEvent)
+{
+    if (bOnEnter_)
+        return;
+
+    /*wxPoint point;
+    wxWindow* pWindow = wxFindWindowAtPointer(point);
+
+    if (pLastWindow_ == pWindow)
+        return;
+    else
+        pLastWindow_ = pWindow;
+
+    if (pWindow != NULL)
+    {*/
+    pHelpText_->SetLabel("");
+}
+/*
 void BFHelpCtrl::OnMotion (wxMouseEvent& rEvent)
 {
     wxPoint point;
@@ -86,4 +149,4 @@ void BFHelpCtrl::OnMotion (wxMouseEvent& rEvent)
         pHelpText_->SetLabel(pWindow->GetHelpText());
         pHelpText_->Wrap(pHelpText_->GetParent()->GetSize().GetWidth()-5);
     }
-}
+}*/

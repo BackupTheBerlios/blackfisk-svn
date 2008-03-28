@@ -1,13 +1,15 @@
 0.0.1
 ~~~~~
+- language-settings
 - wxCore::strLastMessage_ to read from a MsgBox or something like that
 - help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - BUG: freez on not enoghe space
-- BUG: wxGenericDirCtrl change the working dir
+- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 
 0.0.2
 ~~~~~
-- exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
+- localize to german
+- improved exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
 - changing the destination of a sync-task should move the exsiting destination, too (ask the user)
 - don't make a complete rebuild of BFBackupCtrl if just a new task is added
 - settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)

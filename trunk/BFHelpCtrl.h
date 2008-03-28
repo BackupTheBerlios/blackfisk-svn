@@ -39,6 +39,8 @@ class BFHelpCtrl : public wxPanel
         wxStaticText*   pHelpText_;
         /// the last window its help text was displayed
         wxWindow*       pLastWindow_;
+        /// mark that a call of OnEnterWindow() is running
+        bool            bOnEnter_;
 
     protected:
         /// proteced members
@@ -52,6 +54,11 @@ class BFHelpCtrl : public wxPanel
 
         /// handle mouse-motion events
         void OnMotion (wxMouseEvent& rEvent);
+        ///
+        void OnEnterWindow (wxMouseEvent& rEvent);
+        ///
+        void OnLeaveWindow (wxMouseEvent& rEvent);
+
         /// conect 'pWindow' to 'OnMotion' on mouse-motion-events
         void ConnectMotionEvent (wxWindow* pWindow);
 };

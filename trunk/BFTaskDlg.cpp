@@ -24,6 +24,8 @@
 
 #include <wx/statbmp.h>
 #include <wx/panel.h>
+#include <wx/notebook.h>
+#include <wx/gbsizer.h>
 
 #include "blackfisk.h"
 #include "BFCore.h"
@@ -33,6 +35,8 @@
 #include "BFIconTable.h"
 #include "BFDestinationCtrl.h"
 #include "BFPlaceholderButton.h"
+#include "BFHelpCtrl.h"
+#include "BFExcludeCtrl.h"
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
@@ -57,14 +61,19 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
            pSourceCtrl_(NULL),
            pDestCtrl_(NULL),
            pVerifyCheck_(NULL),
-           pVerifyContentCheck_(NULL)/*,
-           pExcludeCtrl_(NULL)*/
+           pVerifyContentCheck_(NULL),
+           pExcludeCtrl_(NULL)
 {
+    // help ctrl
+    pHelpCtrl_ = new BFHelpCtrl(this);
+    // XXX pHelpCtrl_->ConnectMotionEvent(this);
+
     // arrange and create controls
-    wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
-    pMainSizer->Add (CreateControls(),  wxSizerFlags(0).Border(wxALL, 10).Center());
-    pMainSizer->Add (CreateButtons(),   wxSizerFlags(0).Border().Center());
-    SetSizerAndFit(pMainSizer);
+    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
+    pSizer->Add (CreateBook(),      wxSizerFlags(0).Center());
+    pSizer->Add (pHelpCtrl_,        wxSizerFlags(0).Center().Border().Expand());
+    pSizer->Add (CreateButtons(),   wxSizerFlags(0).Center().Border(wxALL, 10));
+    SetSizerAndFit(pSizer);
 
     // init the dialog with data
     GetData();
@@ -77,17 +86,35 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
     /* if the dialog is shown modal it occures
        in a race condition somewhere in the wx-code
        so we need to simulate a modal dialog */
+
+    Fit();
 }
 
 /*virtual*/ BFTaskDlg::~BFTaskDlg ()
 {
 }
 
-wxSizer* BFTaskDlg::CreateControls ()
+wxBookCtrlBase* BFTaskDlg::CreateBook ()
 {
+    wxNotebook* pBook = new wxNotebook(this, wxID_ANY);
+    // XXXpHelpCtrl_->ConnectMotionEvent(pBook);
+
+    pBook->AddPage(CreateBookPageA(pBook), _("General"), true);
+    pBook->AddPage(CreateBookPageB(pBook), _("Advanced"), false);
+
+    return pBook;
+}
+
+wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
+{
+    wxString strTip;
+
+    wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
+    // XXX pHelpCtrl_->ConnectMotionEvent(pPanel);
+
     // type
-    wxStaticText* pTypeStatic = new wxStaticText(this, -1, _("type:"));
-    pTypeCtrl_ = new wxBitmapComboBox(this,
+    wxStaticText* pTypeStatic = new wxStaticText(pPanel, -1, _("type:"));
+    pTypeCtrl_ = new wxBitmapComboBox(pPanel,
                                       BFTASKDGL_ID_CBTYPE,
                                       wxEmptyString,
                                       wxDefaultPosition,
@@ -95,40 +122,41 @@ wxSizer* BFTaskDlg::CreateControls ()
                                       0,
                                       NULL,
                                       wxCB_READONLY);
+    strTip = _("This is the type of the backup task.");
+    pTypeStatic->SetHelpText(strTip);
+    pTypeCtrl_->SetHelpText(strTip);
+    pHelpCtrl_->ConnectMotionEvent(pTypeStatic);
+    pHelpCtrl_->ConnectMotionEvent(pTypeCtrl_);
 
     // name
-    wxPanel*        pNamePanel      = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    wxPanel*        pNamePanel      = new wxPanel(pPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
                     pNameCtrl_      = new wxTextCtrl(pNamePanel, -1);
     wxButton*       pPlaceholderButton    = new BFPlaceholderButton(pNamePanel, *pNameCtrl_);
-    wxStaticText*   pNameStatic     = new wxStaticText(this, -1, _("destination name:"));
+    wxStaticText*   pNameStatic     = new wxStaticText(pPanel, -1, _("destination name:"));
     pNameStatic ->SetMinSize(wxSize(BFTaskDlg::lWidth1_, pNameStatic->GetSize().GetHeight()));
     pNamePanel  ->SetMinSize(wxSize(BFTaskDlg::lWidth2_, pNamePanel->GetSize().GetHeight()+3));
     wxBoxSizer* pNameSubSizer   = new wxBoxSizer(wxHORIZONTAL);
     pNameSubSizer->Add(pNameCtrl_,          wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
     pNameSubSizer->Add(pPlaceholderButton,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pNamePanel->SetSizer(pNameSubSizer);
+    strTip = _("The name of the Task. It is the same as the destination.");
+    pNameStatic->SetHelpText(strTip);
+    pNameCtrl_->SetHelpText(strTip);
+    pHelpCtrl_->ConnectMotionEvent(pNameStatic);
+    pHelpCtrl_->ConnectMotionEvent(pNameCtrl_);
 
     // source
-    pSourceCtrl_ = new wxTextCtrl(this, -1);
-    wxStaticText* pSourceStatic   = new wxStaticText(this, -1, _("source:"));
+    pSourceCtrl_ = new wxTextCtrl(pPanel, -1);
+    wxStaticText* pSourceStatic   = new wxStaticText(pPanel, -1, _("source:"));
     pSourceCtrl_->Disable();
     SetRowSize(pSourceStatic, pSourceCtrl_);
 
     // destination
-    wxStaticText* pDestStatic = new wxStaticText(this, -1, _("destination path:"));
-    pDestCtrl_ = new BFDestinationCtrl(this, wxEmptyString, false);
-
-    // verify
-    pVerifyCheck_ = new wxCheckBox(this, BF_TASKDLG_CBVERIFY, wxEmptyString);
-    wxStaticText* pVerifyStatic   = new wxStaticText(this, -1, _("verify:"));
-    SetRowSize(pVerifyStatic, pVerifyCheck_);
-
-    // verify content
-    pVerifyContentCheck_ = new wxCheckBox(this, -1, wxEmptyString);
-    wxStaticText* pVerifyContentStatic = new wxStaticText(this, -1, _("verify content:"));
-    SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
+    wxStaticText* pDestStatic = new wxStaticText(pPanel, -1, _("destination path:"));
+    pDestCtrl_ = new BFDestinationCtrl(pPanel, wxEmptyString, false);
 
     // sizer and arrange
+    wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
     wxGridSizer* pBodySizer     = new wxFlexGridSizer(2);
     pBodySizer->SetVGap(5);
     pBodySizer->Add(pTypeStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
@@ -139,25 +167,56 @@ wxSizer* BFTaskDlg::CreateControls ()
     pBodySizer->Add(pSourceCtrl_);
     pBodySizer->Add(pDestStatic,    wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBodySizer->Add(pDestCtrl_);
-    pBodySizer->Add(pVerifyStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pBodySizer->Add(pVerifyCheck_,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pBodySizer->Add(pVerifyContentStatic,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pBodySizer->Add(pVerifyContentCheck_,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pSizer->Add(pBodySizer, wxSizerFlags(0).Border());
+    pPanel->SetSizer(pSizer);
 
-    return pBodySizer;
+    return pPanel;
+}
+
+wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
+{
+    wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
+    // XXX pHelpCtrl_->ConnectMotionEvent(pPanel);
+
+    // verify
+    pVerifyCheck_ = new wxCheckBox(pPanel, BF_TASKDLG_CBVERIFY, wxEmptyString);
+    wxStaticText* pVerifyStatic   = new wxStaticText(pPanel, -1, _("verify:"));
+    SetRowSize(pVerifyStatic, pVerifyCheck_);
+
+    // verify content
+    pVerifyContentCheck_ = new wxCheckBox(pPanel, -1, wxEmptyString);
+    wxStaticText* pVerifyContentStatic = new wxStaticText(pPanel, -1, _("verify content:"));
+    SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
+
+    // exclude
+    wxStaticText* pExcludeStatic = new wxStaticText(pPanel, -1, _("exclude this directories:\nto delete a entry double-click on it"));
+    pExcludeCtrl_ = new BFExcludeCtrl(pPanel, pTask_);
+
+    // sizer and arrange
+    wxBoxSizer*     pSizer      = new wxBoxSizer(wxVERTICAL);
+    wxGridBagSizer* pBodySizer  = new wxGridBagSizer(5);
+    pBodySizer->Add(pVerifyStatic,          wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pVerifyCheck_,          wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pVerifyContentStatic,   wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pVerifyContentCheck_,   wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pExcludeStatic,         wxGBPosition(2, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pExcludeCtrl_,          wxGBPosition(3, 0), wxGBSpan(2, 2), wxALIGN_CENTER | wxEXPAND);
+    pSizer->Add(pBodySizer, wxSizerFlags(0).Border());
+
+    pPanel->SetSizer(pSizer);
+
+    return pPanel;
 }
 
 wxSizer* BFTaskDlg::CreateButtons ()
 {
-    wxButton* pButtonOk     = new wxButton(this, BFTASKDLG_ID_BUTTONOK, _("&OK"));
-    wxButton* pButtonCancel = new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("&Cancel"));
+    wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
+    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONOK,     _("&OK")),       wxSizerFlags(0));
+    pSizer->AddSpacer(20);
+    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("&Cancel")),   wxSizerFlags(0));
 
-    pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
-    pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-
-    return pButtonSizer;
+    return pSizer;
 }
 
 void BFTaskDlg::OnClose(wxCloseEvent& rEvent)
@@ -249,12 +308,10 @@ void BFTaskDlg::GetData ()
     pDestCtrl_      ->SetPath(pTask_->GetDestination());
     pVerifyCheck_   ->SetValue(pTask_->Verify());
     pVerifyContentCheck_->SetValue(pTask_->VerifyContent());
+    pExcludeCtrl_   ->GetData(pTask_->GetExclude());
 
     wxCommandEvent event;
     OnCheckBox_Verify(event);
-
-    //pExcludeList_   ->Clear();
-    //pExcludeList_   ->Set(rTask_.GetExclude());
 }
 
 bool BFTaskDlg::IsPlausible ()
@@ -314,11 +371,13 @@ void BFTaskDlg::SetData ()
     }
 
     // exclude list
-/*    wxArrayString arrExclude = pExcludeList_->GetStrings();
-
-    if (arrExclude != rTask_.GetExclude())
-        rTask_.SetExclude(arrExclude);
-*/
+    wxArrayString arrExclude;
+    pExcludeCtrl_->SetData(arrExclude);
+    if (arrExclude != pTask_->GetExclude())
+    {
+        pTask_->SetExclude(arrExclude);
+        BFRootTask::Instance().SetModified();
+    }
 
     // add task if needed
     if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )

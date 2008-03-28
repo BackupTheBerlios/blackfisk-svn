@@ -38,16 +38,21 @@
 #define BFTASKDLG_ID_BUTTONCANCEL   2 + wxID_HIGHEST
 #define BFTASKDGL_ID_CBTYPE         3 + wxID_HIGHEST
 
+class wxBookCtrlBase;
 class wxSizer;
 class BFDestinationCtrl;
+class BFHelpCtrl;
+class BFExcludeCtrl;
 
 /// task dialog
 class BFTaskDlg : public wxDialog
 {
-    protected:
+    private:
         /** reference to the object holding the data */
         BFTask*             pTask_;
 
+        /// help control
+        BFHelpCtrl*         pHelpCtrl_;
         /// type control
         wxBitmapComboBox*   pTypeCtrl_;
         /// task name
@@ -60,8 +65,8 @@ class BFTaskDlg : public wxDialog
         wxCheckBox*         pVerifyCheck_;
         /// verify inclusive content
         wxCheckBox*         pVerifyContentCheck_;
-        /* exclude control
-        wxListBox*          pExcludeCtrl_;*/
+        ///
+        BFExcludeCtrl*      pExcludeCtrl_;
 
         /** init the type control */
         void InitTypeCtrl ();
@@ -75,7 +80,11 @@ class BFTaskDlg : public wxDialog
         bool IsPlausible ();
 
         ///
-        virtual wxSizer* CreateControls ();
+        wxBookCtrlBase* CreateBook ();
+        ///
+        wxWindow* CreateBookPageA (wxWindow* pParent);
+        ///
+        wxWindow* CreateBookPageB (wxWindow* pParent);
         /** init the buttons in the dialog*/
         virtual wxSizer* CreateButtons ();
 

@@ -169,6 +169,12 @@
 		<Unit filename="BFDirCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="BFExcludeCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="BFExcludeCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="BFHelpCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>

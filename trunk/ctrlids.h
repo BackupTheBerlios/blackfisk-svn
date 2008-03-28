@@ -50,5 +50,6 @@
 #define BFBACKUPCTRL_ID_MODIFYDDESTINATION          19 + wxID_HIGHEST
 #define BF_BACKUPTREE_REBUILD                       20 + wxID_HIGHEST  // custom event
 #define BF_TASKDLG_CBVERIFY                         21 + wxID_HIGHEST
+#define BF_EXCLUDECTRL_BUTTON_ADD                   22 + wxID_HIGHEST
 
 #endif  // CTRLIDS_H
