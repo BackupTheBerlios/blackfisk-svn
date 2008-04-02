@@ -66,7 +66,6 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
 {
     // help ctrl
     pHelpCtrl_ = new BFHelpCtrl(this);
-    // XXX pHelpCtrl_->ConnectMotionEvent(this);
 
     // arrange and create controls
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
@@ -97,7 +96,6 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
 wxBookCtrlBase* BFTaskDlg::CreateBook ()
 {
     wxNotebook* pBook = new wxNotebook(this, wxID_ANY);
-    // XXXpHelpCtrl_->ConnectMotionEvent(pBook);
 
     pBook->AddPage(CreateBookPageA(pBook), _("General"), true);
     pBook->AddPage(CreateBookPageB(pBook), _("Advanced"), false);
@@ -110,7 +108,6 @@ wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
     wxString strTip;
 
     wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
-    // XXX pHelpCtrl_->ConnectMotionEvent(pPanel);
 
     // type
     wxStaticText* pTypeStatic = new wxStaticText(pPanel, -1, _("type:"));
@@ -176,7 +173,6 @@ wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
 wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
 {
     wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
-    // XXX pHelpCtrl_->ConnectMotionEvent(pPanel);
 
     // verify
     pVerifyCheck_ = new wxCheckBox(pPanel, BF_TASKDLG_CBVERIFY, wxEmptyString);
@@ -189,8 +185,12 @@ wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
     SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
 
     // exclude
-    wxStaticText* pExcludeStatic = new wxStaticText(pPanel, -1, _("exclude this directories:\nto delete a entry double-click on it"));
-    pExcludeCtrl_ = new BFExcludeCtrl(pPanel, pTask_);
+    wxStaticText* pExcludeStatic = NULL;
+    if (pTask_->GetType() != TaskFILECOPY)
+    {
+        pExcludeStatic = new wxStaticText(pPanel, -1, _("exclude this directories:\nto delete a entry double-click on it"));
+        pExcludeCtrl_ = new BFExcludeCtrl(pPanel, pTask_);
+    }
 
     // sizer and arrange
     wxBoxSizer*     pSizer      = new wxBoxSizer(wxVERTICAL);
@@ -199,8 +199,11 @@ wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
     pBodySizer->Add(pVerifyCheck_,          wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
     pBodySizer->Add(pVerifyContentStatic,   wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
     pBodySizer->Add(pVerifyContentCheck_,   wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-    pBodySizer->Add(pExcludeStatic,         wxGBPosition(2, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-    pBodySizer->Add(pExcludeCtrl_,          wxGBPosition(3, 0), wxGBSpan(2, 2), wxALIGN_CENTER | wxEXPAND);
+    if (pExcludeCtrl_)
+    {
+        pBodySizer->Add(pExcludeStatic,         wxGBPosition(2, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+        pBodySizer->Add(pExcludeCtrl_,          wxGBPosition(3, 0), wxGBSpan(2, 2), wxALIGN_CENTER | wxEXPAND);
+    }
     pSizer->Add(pBodySizer, wxSizerFlags(0).Border());
 
     pPanel->SetSizer(pSizer);
@@ -308,7 +311,8 @@ void BFTaskDlg::GetData ()
     pDestCtrl_      ->SetPath(pTask_->GetDestination());
     pVerifyCheck_   ->SetValue(pTask_->Verify());
     pVerifyContentCheck_->SetValue(pTask_->VerifyContent());
-    pExcludeCtrl_   ->GetData(pTask_->GetExclude());
+    if (pExcludeCtrl_)
+        pExcludeCtrl_   ->GetData(pTask_->GetExclude());
 
     wxCommandEvent event;
     OnCheckBox_Verify(event);
@@ -371,12 +375,15 @@ void BFTaskDlg::SetData ()
     }
 
     // exclude list
-    wxArrayString arrExclude;
-    pExcludeCtrl_->SetData(arrExclude);
-    if (arrExclude != pTask_->GetExclude())
+    if (pExcludeCtrl_)
     {
-        pTask_->SetExclude(arrExclude);
-        BFRootTask::Instance().SetModified();
+        wxArrayString arrExclude;
+        pExcludeCtrl_->SetData(arrExclude);
+        if (arrExclude != pTask_->GetExclude())
+        {
+            pTask_->SetExclude(arrExclude);
+            BFRootTask::Instance().SetModified();
+        }
     }
 
     // add task if needed
