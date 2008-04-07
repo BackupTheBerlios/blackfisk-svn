@@ -215,7 +215,7 @@ wxSizer* BFTaskDlg::CreateButtons ()
 {
     wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONOK,     _("&OK")),       wxSizerFlags(0));
+    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONOK,     "&OK"),       wxSizerFlags(0));
     pSizer->AddSpacer(20);
     pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("&Cancel")),   wxSizerFlags(0));
 

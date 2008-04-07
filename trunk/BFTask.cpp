@@ -154,7 +154,7 @@ void BFTaskData::SetTaskType (BFTaskType type)
         }
     }
 
-    BFSystem::Fatal(_T("not able to set task type"), _T("BFTaskData::SetTaskType()"));
+    BFSystem::Fatal("not able to set task type", "BFTaskData::SetTaskType()");
 }
 
 BFoid BFTaskData::GetOID () const
@@ -232,7 +232,7 @@ void BFTaskData::SetExclude (const wxArrayString& exclude)
             break;
 
         default:
-            strDesc = _("unknown task type");
+            strDesc = "unknown task type";
             break;
     };
 
@@ -272,7 +272,7 @@ int BFTask::GetTypeIconId ()
             break;
 
         default:
-            BFSystem::Fatal(_T("no matching TaskType"), _T("BFTask::GetTypeIconId"));
+            BFSystem::Fatal("no matching TaskType", "BFTask::GetTypeIconId");
             break;
     };
 
@@ -363,7 +363,7 @@ bool BFTask::Serialize (jbSerialize& rA)
 
         if ( !(SetOID(oid)) )
         {
-            BFSystem::Fatal(_("Unable to set an OID while loading a project file.\nThe file is corrupt!"), _T("BFTask::Serialize()"));
+            BFSystem::Fatal("Unable to set an OID while loading a project file.\nThe file is corrupt!", "BFTask::Serialize()");
             rc = false;
         }
     }
@@ -419,18 +419,18 @@ wxString BFTask::GetArchiveExtension()
     switch (format)
     {
         case CompressZIP:
-            return _T("zip");
+            return "zip";
             break;
     }
 
-    return _T("unknown");
+    return "unknown";
 }
 
 bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
 {
     // create destination string
     wxString strDest, strSrc;
-    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName() + _T(".") + GetArchiveExtension();
+    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName() + "." + GetArchiveExtension();
     strSrc  = GetSource();
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
@@ -454,7 +454,7 @@ bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
         break;
 
         default:
-            BFSystem::Fatal(_T("unknown archive type"), _T("BFTask::RunForArchive()"));
+            BFSystem::Fatal("unknown archive type", "BFTask::RunForArchive()");
             break;
     }
 

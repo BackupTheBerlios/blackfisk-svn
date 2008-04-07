@@ -110,7 +110,7 @@ END_EVENT_TABLE()
     menuBlackfisk->Append( ID_Quit,         _("E&xit") );
 #ifdef _DEBUG
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( ID_Test,         _("&Testen") );
+    menuBlackfisk->Append( ID_Test,         "&Test" );
 #endif
 
     // ** menu PROJECT **
@@ -118,7 +118,7 @@ END_EVENT_TABLE()
     menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
     menuProject_->Append( ID_Backup,             _("&Run Backup...") );
     menuProject_->AppendSeparator();
-    menuProject_->Append( ID_NewProject,         _("&New/Close Project") );
+    menuProject_->Append( ID_NewProject,         _("&New Project") );
     menuProject_->Append( ID_OpenProject,        _("&Open Project") );
     menuProject_->Append( ID_SaveProject,        _("&Save Project") );
     menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
@@ -135,7 +135,7 @@ END_EVENT_TABLE()
 
     // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append( menuBlackfisk,     _("&blackfisk") );
+    menuBar->Append( menuBlackfisk,     "&blackfisk" );
     menuBar->Append( menuProject_,      _("&Project") );
     menuBar->Append( menuHelp,          _("&Help") );
     SetMenuBar( menuBar );
@@ -180,7 +180,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
-        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
+        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
 
         // cancel/abort
         if (iAnswer == wxCANCEL)
@@ -358,7 +358,7 @@ bool BFMainFrame::AskModification ()
     if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
-        int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it?"));
+        int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
 
         // cancel/abort
         if (iAnswer == wxCANCEL)
@@ -458,7 +458,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
-        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nDo you want to save it before running the backup?"));
+        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it before running the backup?"));
 
         // save
         if (iAnswer == wxYES)

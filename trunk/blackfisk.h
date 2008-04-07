@@ -38,7 +38,7 @@
 #define BF_GRAPHICDIR               "graphic/"
 
 #define BF_SETTINGS                 "blackfisk.cfg"
-#define BF_SETTINGS_CURRENT_VERSION 1000
+#define BF_SETTINGS_CURRENT_VERSION 1010
 #define BF_PROJECT_CURRENT_VERSION  1010
 
 #define BF_LOGFILE_NAME             "bf.log"

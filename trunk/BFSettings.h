@@ -27,11 +27,17 @@
 #include "BFSystem.h"
 #include "jbSerialize.h"
 
-#define BFSETTINGS_CURRENT_VERSION 1000
-
 ///
 class BFSettings
 {
+    public:
+        ///
+        static const long langCount_ = 3;
+        ///
+        static const wxLanguage langIds_[3];
+        ///
+        static const wxString langNames_[3];
+
     private:
         /** project-specific settings by default */
         BFProjectSettings   defaultPrj_;
@@ -50,6 +56,8 @@ class BFSettings
         wxString            strLastProject_;
         /** verbose level for the application log file*/
         BFMessageType       verboseLog_;
+        /** language for the application */
+        wxLanguage          lang_;
 
         ///
         static BFSettings   sSettings_;
@@ -93,6 +101,10 @@ class BFSettings
         void SetVerboseLevelLog (BFMessageType lvl);
         ///
         BFMessageType GetVerboseLevelLog ();
+        ///
+        void SetLanguage (wxLanguage lang);
+        ///
+        wxLanguage GetLanguage ();
 
         ///
         bool Serialize (jbSerialize& rA);

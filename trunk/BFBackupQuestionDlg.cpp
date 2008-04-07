@@ -90,7 +90,7 @@ BFBackupQuestionDlg::BFBackupQuestionDlg (const wxString& strMsg, BFMessageType 
     }
 
     // text
-    pIconText->Add (CreateTextSizer(strMyMsg + _("\n\nHow do you want to continue?")), 0, wxALIGN_CENTER | wxLEFT, 10);
+    pIconText->Add (CreateTextSizer(strMyMsg + _("\n\nHow is to be continued?")), 0, wxALIGN_CENTER | wxLEFT, 10);
 
     // buttons
     pButtons->Add (new wxButton(this, BF_BTNID_STOPTASK, _("stop task")),   wxSizerFlags(0).Expand().Border());

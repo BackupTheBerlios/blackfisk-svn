@@ -137,21 +137,11 @@ bool BFApp::OnInit()
 
     BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName().wx_str()));
 
-    // available languages
-    // TODO just look at the locals directory to know what is available
-    static const wxLanguage langIds[] =
-    {
-        wxLANGUAGE_DEFAULT,
-        wxLANGUAGE_FRENCH,
-        wxLANGUAGE_GERMAN,
-        wxLANGUAGE_ENGLISH
-    };
+    locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
+    locale_.AddCatalogLookupPathPrefix(".\\locale");
+    locale_.AddCatalog("bf");
 
-    locale_.AddCatalogLookupPathPrefix(_T(".\\locale"));
-    locale_.Init( langIds[2] );
-    locale_.AddCatalog(_T("ob"));
-
-    wxHelpProvider::Set(new wxSimpleHelpProvider);
+    // do we need this? XXX wxHelpProvider::Set(new wxSimpleHelpProvider);
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
@@ -188,6 +178,8 @@ bool BFApp::OnInit()
     wxFileInputStream   in(BF_SETTINGS);
     jbSerialize         archive(in, BF_SETTINGS_CURRENT_VERSION);
 
+    size_t v = archive.GetVersion();
+
     return BFSettings::Instance().Serialize(archive);
 }
 
@@ -195,6 +187,8 @@ bool BFApp::OnInit()
 {
     wxFileOutputStream  out(BF_SETTINGS);
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
+
+    size_t v = archive.GetVersion();
 
     return BFSettings::Instance().Serialize(archive);
 }

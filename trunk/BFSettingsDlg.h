@@ -29,6 +29,7 @@ class wxCheckBox;
 class wxSpinCtrl;
 class wxListbook;
 class wxComboBox;
+class wxTreebook;
 class BFProjectSettingsCtrl;
 
 #define BFSETTINGSDLG_ID_BUTTONOK        1 + wxID_HIGHEST
@@ -50,13 +51,22 @@ class BFSettingsDlg : public wxDialog
         BFProjectSettingsCtrl*  pPrjCtrl_;
         ///
         wxComboBox*             pComboVerboseLog_;
-        /**
-        wxComboBox*             pComboVerboseMsg_;*/
+        ///
+        wxComboBox*             pComboLanguage_;
 
         /// read data from the settings data
         void GetData ();
         /// write data from the dialog to the settings data object
         void SetData ();
+
+        ///
+        wxWindow* CreatePage_General (wxTreebook* pBook);
+        ///
+        wxWindow* CreatePage_View (wxTreebook* pBook);
+        ///
+        wxWindow* CreatePage_Log (wxTreebook* pBook);
+        ///
+        wxWindow* CreatePage_Project (wxTreebook* pBook);
 
     public:
         /// constructor

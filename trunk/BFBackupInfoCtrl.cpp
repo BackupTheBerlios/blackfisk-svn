@@ -70,11 +70,11 @@ void BFBackupInfoCtrl::Init ()
     pLogCtrl_->SetFont(font);
 
     // message counters
-    wxStaticText* pStatVerbose = new wxStaticText(this, wxID_ANY, _("Verbose-Level"));
+    wxStaticText* pStatVerbose = new wxStaticText(this, wxID_ANY, _("verbose level"));
     wxStaticText* pStatVerboseLvl = new wxStaticText(this, wxID_ANY, BFSystem::GetVerboseString(BFRootTaskApp::Instance().GetVerboseLevel()));
-    wxStaticText* pStatWarning = new wxStaticText(this, wxID_ANY, _("Warnings:"));
-    wxStaticText* pStatError = new wxStaticText(this, wxID_ANY, _("Errors:"));
-    wxStaticText* pStatFatalError = new wxStaticText(this, wxID_ANY, _("Fatal Errors:"));
+    wxStaticText* pStatWarning = new wxStaticText(this, wxID_ANY, _("warnings:"));
+    wxStaticText* pStatError = new wxStaticText(this, wxID_ANY, _("errors:"));
+    wxStaticText* pStatFatalError = new wxStaticText(this, wxID_ANY, _("fatal errors:"));
     font = pStatVerbose->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pStatVerbose->SetFont(font);

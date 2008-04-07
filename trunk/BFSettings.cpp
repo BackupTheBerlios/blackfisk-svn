@@ -21,9 +21,24 @@
  ***/
 
 #include "BFSettings.h"
+#include "blackfisk.h"
 
 
 /*static*/ BFSettings BFSettings::sSettings_;
+
+/*static*/ const wxLanguage BFSettings::langIds_[] =
+{
+    wxLANGUAGE_DEFAULT,
+    wxLANGUAGE_ENGLISH,
+    wxLANGUAGE_GERMAN
+};
+
+/*static*/ const wxString BFSettings::langNames_[] =
+{
+    "System default",
+    "English",
+    "German"
+};
 
 //
 BFSettings::BFSettings ()
@@ -113,6 +128,15 @@ BFMessageType BFSettings::GetVerboseLevelLog ()
     return verboseLog_;
 }
 
+void BFSettings::SetLanguage (wxLanguage lang)
+{
+    lang_ = lang;
+}
+
+wxLanguage BFSettings::GetLanguage ()
+{
+    return lang_;
+}
 
 bool BFSettings::Serialize (jbSerialize& rA)
 {
@@ -131,6 +155,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << strLastProject_;
         rA << bOpenLastProject_;
         rA << (int)verboseLog_;
+        rA << (int)lang_;
     }
     else
     // ** serialize FROM file **
@@ -142,6 +167,15 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA >> strLastProject_;
         rA >> bOpenLastProject_;
         rA >> (int&)verboseLog_;
+
+        if (rA.GetVersion() < BF_SETTINGS_CURRENT_VERSION)
+        {
+            lang_ = wxLANGUAGE_DEFAULT;
+        }
+        else
+        {
+            rA >> (int&)lang_;
+        }
     }
 
     rA.LeaveObject();

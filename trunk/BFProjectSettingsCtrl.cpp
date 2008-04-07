@@ -73,7 +73,7 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
 
     // verbose
     wxString arrVerbose[] = { _("information"), _("warning"), _("error"), _("fatal error") };
-    wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("Verbose Level:"));
+    wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("verbose level: "));
     pVerboseLabel->SetMinSize(wxSize(GetLabelWidth(), pVerboseLabel->GetSize().GetHeight()));
     pComboVerbose_ = new wxComboBox(this,
                                     wxID_ANY,
@@ -83,7 +83,7 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
                                     4,
                                     arrVerbose,
                                     wxCB_READONLY);
-    strTip = _("verbose level while the running backup process it differs from the application log verbose-level in the global settings");
+    strTip = _("verbose level while the running backup process it differs from the application log verbosity level in the global settings");
     pVerboseLabel->SetHelpText(strTip);
     pComboVerbose_->SetHelpText(strTip);
 

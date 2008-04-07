@@ -439,7 +439,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
         if (pTask == NULL)
             return;
 
-        if ( BFMainFrame::Instance()->QuestionYesNo(_("Do you realy want to delete this task?")) )
+        if ( BFMainFrame::Instance()->QuestionYesNo(_("Should this task be deleted?")) )
             BFRootTask::Instance().DeleteTask(pTask->GetOID());
     }
     else
@@ -458,7 +458,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
         }
 
         // create the question string
-        wxString str = wxString::Format("Are you sure to delete this %d tasks?\n", vecTasks.size());
+        wxString str = wxString::Format("Should this %d tasks be deleted?\n", vecTasks.size());
         for (BFTaskVectorIt it = vecTasks.begin();
              it != vecTasks.end();
              ++it)
@@ -781,7 +781,7 @@ const wxChar* BFBackupTree::GetPathByItem (wxTreeItemId itemId)
     }
     else
     {
-        BFSystem::Fatal(_("not tree item found"), _("BFBackupTree::GetPathByItem"));
+        BFSystem::Fatal("no tree item found", "BFBackupTree::GetPathByItem");
         return NULL;
     }
 }

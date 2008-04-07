@@ -71,7 +71,7 @@ void BFLogViewDlg::Init ()
         // error while opening
         if ( !(fileLog.IsOpened()) )
         {
-            BFSystem::Error(wxString::Format(_("can not open the log file %s"), arrLogs_[i].c_str()), _T("BFLogViewDlg::Init()"));
+            BFSystem::Error(wxString::Format("can not open the log file %s", arrLogs_[i].c_str()), "BFLogViewDlg::Init()");
             continue;
         }
 

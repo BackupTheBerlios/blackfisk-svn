@@ -203,7 +203,7 @@ BFMessageType BFSystem::GetLastType ()
 
         case MsgUNKNOWN:
         default:
-            str = _("Unknown");
+            str = "Unknown";
             break;
     };
 
