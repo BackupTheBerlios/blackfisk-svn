@@ -73,9 +73,8 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
     pTopSizer->Add(pButtonSizer,    wxSizerFlags(0).Center());
 
     // motion events
-    pHelp_->ConnectMotionEvent(this);
-    pHelp_->ConnectMotionEvent(pNameLabel);
-    pHelp_->ConnectMotionEvent(pNameCtrl_);
+    pHelp_->Connect(pNameLabel);
+    pHelp_->Connect(pNameCtrl_);
 
     // arrange and show
     SetSizerAndFit(pTopSizer);

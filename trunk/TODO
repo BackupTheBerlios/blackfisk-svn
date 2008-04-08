@@ -1,10 +1,5 @@
-- check the focus-handling of help control more detailed!
-
 0.0.1
 ~~~~~
-- language-settings
-- wxCore::strLastMessage_ to read from a MsgBox or something like that
-- help: context-sensitiv (tooltips, optional (context sensitiv!) tip-ctrl in the mainframe)
 - BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 

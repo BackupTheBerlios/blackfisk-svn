@@ -23,12 +23,32 @@
 
 #include "BFHelpCtrl.h"
 
+#include <wx/cshelp.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
+#include "BFSystem.h" // XXX
+/*static*/ wxHelpProvider* BFHelpCtrl::spHelpProvider_ = NULL;
 
-BFHelpCtrl::BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines /*= 3*/)
+/*static*/ void BFHelpCtrl::InitHelpProvider ()
+{
+    if (spHelpProvider_ == NULL)
+    {
+        // default help provider
+        wxHelpProvider* pX = wxHelpProvider::Get();
+        spHelpProvider_ = new wxSimpleHelpProvider;
+        wxHelpProvider::Set(spHelpProvider_);
+    }
+}
+
+BFHelpCtrl::BFHelpCtrl (wxWindow* pParent,
+                        int iMaxHelpLines /*= 3*/)
           : wxPanel(pParent),
             pLastWindow_(NULL),
             bOnEnter_(false)
 {
+    // set help provider
+    InitHelpProvider();
+
     // sub panel
     wxPanel* pSubPanel = new wxPanel(this);
 
@@ -59,7 +79,7 @@ BFHelpCtrl::BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines /*= 3*/)
 }
 
 
-void BFHelpCtrl::ConnectMotionEvent (wxWindow* pWindow)
+void BFHelpCtrl::Connect (wxWindow* pWindow)
 {
     if (pWindow == NULL)
         return;
@@ -81,6 +101,21 @@ void BFHelpCtrl::ConnectMotionEvent (wxWindow* pWindow)
         NULL,
         this
     );
+}
+
+void BFHelpCtrl::Connect (wxWindow* pWindow,
+                          const wxString& strHelpText)
+{
+    pWindow->SetHelpText(strHelpText);
+    Connect(pWindow);
+}
+
+void BFHelpCtrl::Connect (wxWindow* pWindow1,
+                          wxWindow* pWindow2,
+                          const wxString& strHelpText)
+{
+    Connect(pWindow1, strHelpText);
+    Connect(pWindow2, strHelpText);
 }
 
 void BFHelpCtrl::OnEnterWindow (wxMouseEvent& rEvent)

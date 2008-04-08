@@ -27,14 +27,12 @@
 #include <wx/dir.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
-#include <wx/cshelp.h>
 #include <wx/sound.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
 #include "BFBackupProgressDlg.h"
 #include "BFTaskDlg.h"
-//#include "BFRootTask.h"
 #include "BFRootTaskApp.h"
 #include "Progress.h"
 #include "BFSettings.h"
@@ -140,8 +138,6 @@ bool BFApp::OnInit()
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
-
-    // do we need this? XXX wxHelpProvider::Set(new wxSimpleHelpProvider);
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */

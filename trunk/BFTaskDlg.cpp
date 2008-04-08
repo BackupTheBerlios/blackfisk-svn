@@ -105,8 +105,6 @@ wxBookCtrlBase* BFTaskDlg::CreateBook ()
 
 wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
 {
-    wxString strTip;
-
     wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
 
     // type
@@ -119,11 +117,7 @@ wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
                                       0,
                                       NULL,
                                       wxCB_READONLY);
-    strTip = _("This is the type of the backup task.");
-    pTypeStatic->SetHelpText(strTip);
-    pTypeCtrl_->SetHelpText(strTip);
-    pHelpCtrl_->ConnectMotionEvent(pTypeStatic);
-    pHelpCtrl_->ConnectMotionEvent(pTypeCtrl_);
+    pHelpCtrl_->Connect(pTypeStatic, pTypeCtrl_, _("This is the type of the backup task."));
 
     // name
     wxPanel*        pNamePanel      = new wxPanel(pPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -136,21 +130,19 @@ wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
     pNameSubSizer->Add(pNameCtrl_,          wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
     pNameSubSizer->Add(pPlaceholderButton,  wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pNamePanel->SetSizer(pNameSubSizer);
-    strTip = _("The name of the Task. It is the same as the destination.");
-    pNameStatic->SetHelpText(strTip);
-    pNameCtrl_->SetHelpText(strTip);
-    pHelpCtrl_->ConnectMotionEvent(pNameStatic);
-    pHelpCtrl_->ConnectMotionEvent(pNameCtrl_);
+    pHelpCtrl_->Connect(pNameStatic, pNameCtrl_, _("The name of the Task. It is the same as the destination."));
 
     // source
     pSourceCtrl_ = new wxTextCtrl(pPanel, -1);
     wxStaticText* pSourceStatic   = new wxStaticText(pPanel, -1, _("source:"));
     pSourceCtrl_->Disable();
     SetRowSize(pSourceStatic, pSourceCtrl_);
+    pHelpCtrl_->Connect(pSourceCtrl_, pSourceStatic, _("This is the directory or file that should be backuped."));
 
     // destination
     wxStaticText* pDestStatic = new wxStaticText(pPanel, -1, _("destination path:"));
     pDestCtrl_ = new BFDestinationCtrl(pPanel, wxEmptyString, false);
+    pHelpCtrl_->Connect(pDestStatic, pDestCtrl_, _("This is the path where the backup is stored."));
 
     // sizer and arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -178,18 +170,27 @@ wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
     pVerifyCheck_ = new wxCheckBox(pPanel, BF_TASKDLG_CBVERIFY, wxEmptyString);
     wxStaticText* pVerifyStatic   = new wxStaticText(pPanel, -1, _("verify:"));
     SetRowSize(pVerifyStatic, pVerifyCheck_);
+    pHelpCtrl_->Connect(pVerifyStatic, pVerifyCheck_,
+                        _("If checked the backup is verified.\nThe source and the destination "\
+                          "are compared by size, modification time and attributes.\n" \
+                          "Of course it cost some time!"));
 
     // verify content
     pVerifyContentCheck_ = new wxCheckBox(pPanel, -1, wxEmptyString);
     wxStaticText* pVerifyContentStatic = new wxStaticText(pPanel, -1, _("verify content:"));
     SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
+    pHelpCtrl_->Connect(pVerifyContentStatic, pVerifyContentCheck_,
+                        _("If cheched the backup is verified including a byte-by-byte comparison.\n" \
+                          "This will cost a lot of time!"));
 
     // exclude
     wxStaticText* pExcludeStatic = NULL;
     if (pTask_->GetType() != TaskFILECOPY)
     {
-        pExcludeStatic = new wxStaticText(pPanel, -1, _("exclude this directories:\nto delete a entry double-click on it"));
+        pExcludeStatic = new wxStaticText(pPanel, -1, _("Exclude this directories:\nTo delete a entry double-click on it."));
         pExcludeCtrl_ = new BFExcludeCtrl(pPanel, pTask_);
+        pHelpCtrl_->Connect(pExcludeStatic, pExcludeCtrl_,
+                            _("Here you can exclude directories from the backup. You can use wildcard-masks, too."));
     }
 
     // sizer and arrange

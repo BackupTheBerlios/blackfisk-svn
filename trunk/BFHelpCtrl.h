@@ -25,13 +25,25 @@
 #define BFHELPCTRL_H
 
 #include <wx/panel.h>
-#include <wx/stattext.h>
-#include <wx/sizer.h>
 
-/** a control that display help text related to another control
-    that is under the mouse courser
-    BFHelpCtrl handle the mouse-motion event and the displaying
-    of the related help text */
+//
+class wxStaticText;
+class wxHelpProvider;
+
+/** DESCRIPTION:
+    A control that display help text of a wxWindow
+    that is under the mouse courser.
+    BFHelpCtrl handle the mouse-events "EnterWindow" and "LeaveWindow"
+    and set the wxSimpleHelpProvider in the ctor.
+    HOWTO:
+    Set a global wxHelpProvider on startup of the application. The easiest
+    way is to call BFHelpCtrl::InitHelpProvider().
+    Then create a BFHelpCtrl. Use one of the three available
+    Connect()-methodes of to connect the wxWindow to the BFHelpCtrl.
+    Based on which Connect()-methode was called you need to call
+    wxWindow::SetHelpText() explicitly.
+    Then the help text will be displayed on the help-ctrl
+    if the mouse is over the wxWindow. */
 class BFHelpCtrl : public wxPanel
 {
     private:
@@ -42,25 +54,36 @@ class BFHelpCtrl : public wxPanel
         /// mark that a call of OnEnterWindow() is running
         bool            bOnEnter_;
 
+        ///
+        static wxHelpProvider*  spHelpProvider_;
+
     protected:
         /// proteced members
 
     public:
         /// ctor
-        BFHelpCtrl (wxWindow* pParent, int iMaxHelpLines = 3);
+        BFHelpCtrl (wxWindow* pParent,
+                    int iMaxHelpLines = 4);
 
         /// virtual dtor
         virtual ~BFHelpCtrl ();
 
-        /// handle mouse-motion events
-        void OnMotion (wxMouseEvent& rEvent);
+        /** This install a global wxSimpleHelpProvider.
+            Call this before any other call of wxWindow::SetHelpText()! */
+        static void InitHelpProvider ();
+
         ///
         void OnEnterWindow (wxMouseEvent& rEvent);
         ///
         void OnLeaveWindow (wxMouseEvent& rEvent);
 
-        /// conect 'pWindow' to 'OnMotion' on mouse-motion-events
-        void ConnectMotionEvent (wxWindow* pWindow);
+        /// conect 'pWindow' to 'OnEnterWindow()' and 'OnLeaveWindow()'
+        void Connect (wxWindow* pWindow);
+        /** Did the same as Connect(wxWindow*)
+            but set the help text for the wxWindow, too. */
+        void Connect (wxWindow* pWindow, const wxString& strHelpText);
+        /// Please look on Connect (wxWindow*, const wxString&) for more detailes.
+        void Connect (wxWindow* pWindow1, wxWindow* pWindow2, const wxString& strHelpText);
 };
 
 #endif    // BFHELPCTRL_H

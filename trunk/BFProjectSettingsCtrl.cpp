@@ -69,8 +69,6 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHe
 
 void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
 {
-    wxString strTip;
-
     // verbose
     wxString arrVerbose[] = { _("information"), _("warning"), _("error"), _("fatal error") };
     wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("verbose level: "));
@@ -83,15 +81,18 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
                                     4,
                                     arrVerbose,
                                     wxCB_READONLY);
-    strTip = _("verbose level while the running backup process it differs from the application log verbosity level in the global settings");
-    pVerboseLabel->SetHelpText(strTip);
-    pComboVerbose_->SetHelpText(strTip);
+    if (pHelpCtrl != NULL)
+    {
+        pHelpCtrl->Connect(pVerboseLabel, pComboVerbose_,
+                           _("The verbose level while the running backup process. " \
+                             "It differs from the application log verbosity level in the global settings!"));
+    }
 
     // StopLevel
     wxSizer* pStopSizer = CreateStopLevelCtrl(pHelpCtrl);
 
     // backup-log
-    wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("logfile location:"));
+    wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("location of the logfile: "));
     pBackupLogLabel->SetMinSize(wxSize(GetLabelWidth(), pBackupLogLabel->GetSize().GetHeight()));
     pPickerBackupLog_ = new wxDirPickerCtrl (this,
                                              wxID_ANY,
@@ -100,18 +101,10 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
                                              wxDefaultPosition,
                                              wxDefaultSize,
                                              wxDIRP_USE_TEXTCTRL);
-    strTip = _("the directory where the backup-logfile is stored");
-    pBackupLogLabel->SetHelpText(strTip);
-    pPickerBackupLog_->SetHelpText(strTip);
-
-    // connect mouse motion events
     if (pHelpCtrl != NULL)
     {
-        pHelpCtrl->ConnectMotionEvent(this);
-        pHelpCtrl->ConnectMotionEvent(pVerboseLabel);
-        pHelpCtrl->ConnectMotionEvent(pComboVerbose_);
-        pHelpCtrl->ConnectMotionEvent(pBackupLogLabel);
-        pHelpCtrl->ConnectMotionEvent(pPickerBackupLog_);
+        pHelpCtrl->Connect(pBackupLogLabel, pPickerBackupLog_,
+                           _("It is the directory where the backup-logfile for the backup is stored."));
     }
 
     // sizer and arrange
@@ -136,7 +129,11 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
 
 wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl)
 {
-    wxString strTip(_("the behavior while a backup if messages (warnings, errors, fatal errors) are created\n  stop project:\tstop the complete backup process\n  stop task:\tstop the current running task and go on with the next task\n  ask:\t\task the use what should be done\n  log:\t\twrite the message to the logfile an do nothing more"));
+    wxString strTip(_("The message handling while a backup.\n" \
+                      " *stop project*: stop the complete backup process\n" \
+                      " *stop task*: stop the running task and run the next one\n" \
+                      " *ask*: ask the user what should be done\n" \
+                      " *log*: just write the message to the logfile"));
 
     // the lables
     wxStaticText* pLabelWarning = new wxStaticText(this, wxID_ANY, _("...on warnings"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
@@ -146,22 +143,15 @@ wxSizer* BFProjectSettingsCtrl::CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl)
     wxStaticText* pLabelStopTsk = new wxStaticText(this, wxID_ANY, _("stop\ntask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelAsk     = new wxStaticText(this, wxID_ANY, _("ask"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
     wxStaticText* pLabelIgnore  = new wxStaticText(this, wxID_ANY, _("log"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    pLabelWarning->SetHelpText(strTip);
-    pLabelError->SetHelpText(strTip);
-    pLabelFatal->SetHelpText(strTip);
-    pLabelStopPrj->SetHelpText(strTip);
-    pLabelStopTsk->SetHelpText(strTip);
-    pLabelAsk->SetHelpText(strTip);
-    pLabelIgnore->SetHelpText(strTip);
     if (pHelpCtrl != NULL)
     {
-        pHelpCtrl->ConnectMotionEvent(pLabelWarning);
-        pHelpCtrl->ConnectMotionEvent(pLabelError);
-        pHelpCtrl->ConnectMotionEvent(pLabelFatal);
-        pHelpCtrl->ConnectMotionEvent(pLabelStopPrj);
-        pHelpCtrl->ConnectMotionEvent(pLabelStopTsk);
-        pHelpCtrl->ConnectMotionEvent(pLabelAsk);
-        pHelpCtrl->ConnectMotionEvent(pLabelIgnore);
+        pHelpCtrl->Connect(pLabelWarning, strTip);
+        pHelpCtrl->Connect(pLabelError, strTip);
+        pHelpCtrl->Connect(pLabelFatal, strTip);
+        pHelpCtrl->Connect(pLabelStopPrj, strTip);
+        pHelpCtrl->Connect(pLabelStopTsk, strTip);
+        pHelpCtrl->Connect(pLabelAsk, strTip);
+        pHelpCtrl->Connect(pLabelIgnore, strTip);
     }
 
     // size the lables

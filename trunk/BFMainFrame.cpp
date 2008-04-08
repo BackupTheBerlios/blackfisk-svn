@@ -50,6 +50,7 @@
 #include "BFProcessMsgSubject.h"
 #include "BFProcessMsgDlg.h"
 #include "BFIsWorkingCtrl.h"
+#include "BFHelpCtrl.h"
 
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
@@ -91,6 +92,9 @@ END_EVENT_TABLE()
                        wxEmptyString),
                        menuProject_(NULL)
 {
+    // install help provider
+    BFHelpCtrl::InitHelpProvider();
+
     /* the BFMainFrame object set its own reference in BFApp itself
        because the reference (BFApp::spMainFrame_) is needed quite
        early while creation time of the BFMainFrame object */

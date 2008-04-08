@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blackfisk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-07 09:30+0100\n"
+"POT-Creation-Date: 2008-04-08 17:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team:  <blackfisk@web.de>\n"
@@ -52,84 +52,84 @@ msgstr "Fehler:"
 msgid "fatal errors:"
 msgstr "Schwerer Fehler:"
 
-#: BFApp.cpp:138
+#: BFApp.cpp:136
 #, c-format
 msgid "%s started"
 msgstr "%s gestartet."
 
-#: BFApp.cpp:162
+#: BFApp.cpp:158
 #, c-format
 msgid "application verbose level: %s"
 msgstr "Verbose Stufe der Anwendungsmeldungen: %s"
 
-#: BFApp.cpp:170
+#: BFApp.cpp:166
 #, c-format
 msgid "%s closed\n"
 msgstr "%s geschlossen\n"
 
-#: BFProjectSettingsCtrl.cpp:75
+#: BFProjectSettingsCtrl.cpp:73
 msgid "information"
 msgstr "Information"
 
-#: BFProjectSettingsCtrl.cpp:75
+#: BFProjectSettingsCtrl.cpp:73
 msgid "warning"
 msgstr "Warnung"
 
-#: BFProjectSettingsCtrl.cpp:75
+#: BFProjectSettingsCtrl.cpp:73
 msgid "error"
 msgstr "Fehler"
 
-#: BFProjectSettingsCtrl.cpp:75
+#: BFProjectSettingsCtrl.cpp:73
 msgid "fatal error"
 msgstr "Schwerer Fehler"
 
-#: BFProjectSettingsCtrl.cpp:76
+#: BFProjectSettingsCtrl.cpp:74
 msgid "verbose level: "
 msgstr "Verbose Stufe: "
 
-#: BFProjectSettingsCtrl.cpp:86
-msgid "verbose level while the running backup process it differs from the application log verbosity level in the global settings"
-msgstr "Ausführlichkeitsstufe während eines laufenden Backupprozesses. Diese Einstellung unterscheidet sich von der Ausführlichkeitsstufe der Aufzeichnungen in den Gloablen Einstellungen."
+#: BFProjectSettingsCtrl.cpp:87
+msgid "The verbose level while the running backup process. It differs from the application log verbosity level in the global settings!"
+msgstr "Verbose-Stufe während eines laufenden Backupvorgangs. Diese Einstellung unterscheidet sich von der Verbose-Stufe der Aufzeichnungen in den Gloablen Einstellungen!"
 
-#: BFProjectSettingsCtrl.cpp:94
-msgid "logfile location:"
-msgstr "Logdatei Speicherort:"
+#: BFProjectSettingsCtrl.cpp:95
+msgid "location of the logfile: "
+msgstr "Ort der Log-Datei:"
 
-#: BFProjectSettingsCtrl.cpp:99
+#: BFProjectSettingsCtrl.cpp:100
 msgid "Select a folder"
 msgstr "Wähle einen Ordner:"
 
-#: BFProjectSettingsCtrl.cpp:103
-msgid "the directory where the backup-logfile is stored"
+#: BFProjectSettingsCtrl.cpp:107
+msgid "It is the directory where the backup-logfile for the backup is stored."
 msgstr "Das Verzeichnis in dem die Backup-Logdatei gespeichert ist."
 
-#: BFProjectSettingsCtrl.cpp:139
+#: BFProjectSettingsCtrl.cpp:132
 msgid ""
-"the behavior while a backup if messages (warnings, errors, fatal errors) are created\n"
-"  stop project:\tstop the complete backup process\n"
-"  stop task:\tstop the current running task and go on with the next task\n"
-"  ask:\t\task the use what should be done\n"
-"  log:\t\twrite the message to the logfile an do nothing more"
+"The message handling while a backup.\n"
+" *stop project*: stop the complete backup process\n"
+" *stop task*: stop the running task and run the next one\n"
+" *ask*: ask the user what should be done\n"
+" *log*: just write the message to the logfile"
 msgstr ""
-"Verhalten wärend eines Backups, wenn Meldungen (Warnungen, Fehler, schwere Fehler) auftretten\n"
+"Die Behandlung von Meldungen wärend eines Backups.\n"
 "  stoppe Projekt:\tStopt das gesamte Backup.\n"
-"  stoppe Aufgabe:\tStopt die gerade laufende Aufgabe und fährt mit der nächsten Aufgabe fort.\n"
+"  stoppe Aufgabe:\tStopt die laufende Aufgabe und fährt mit der Nächsten fort.\n"
 "  nachfragen:\t\tFragt den Benutzer was geschehen soll.\n"
-"  aufzeichnen:\t\tSchreibe die Meldung in die Log-Datei und tue nichts weiter."
+"  aufzeichnen:\t\tSchreibe die Meldung in die Log-Datei."
 
-#: BFProjectSettingsCtrl.cpp:142
+#: BFProjectSettingsCtrl.cpp:139
 msgid "...on warnings"
 msgstr "...bei Warnungen"
 
-#: BFProjectSettingsCtrl.cpp:143
+#: BFProjectSettingsCtrl.cpp:140
 msgid "...on errors"
 msgstr "bei Fehlern"
 
-#: BFProjectSettingsCtrl.cpp:144
+#: BFProjectSettingsCtrl.cpp:141
 msgid "...on fatal errors"
 msgstr "...bei schweren Fehlern"
 
-#: BFProjectSettingsCtrl.cpp:145
+#: BFProjectSettingsCtrl.cpp:142
 msgid ""
 "stop\n"
 "project"
@@ -137,7 +137,7 @@ msgstr ""
 "stop\n"
 "Projekt"
 
-#: BFProjectSettingsCtrl.cpp:146
+#: BFProjectSettingsCtrl.cpp:143
 msgid ""
 "stop\n"
 "task"
@@ -145,17 +145,17 @@ msgstr ""
 "stop\n"
 "Aufgabe"
 
-#: BFProjectSettingsCtrl.cpp:147
+#: BFProjectSettingsCtrl.cpp:144
 #: BFRootTaskApp.cpp:131
 msgid "ask"
 msgstr "frage"
 
-#: BFProjectSettingsCtrl.cpp:148
+#: BFProjectSettingsCtrl.cpp:145
 #: BFRootTaskApp.cpp:134
 msgid "log"
 msgstr "log"
 
-#: BFProjectSettingsCtrl.cpp:247
+#: BFProjectSettingsCtrl.cpp:237
 msgid "behavior..."
 msgstr "Verhalten..."
 
@@ -400,55 +400,85 @@ msgstr "Generell"
 msgid "Advanced"
 msgstr "Fortgeschritten"
 
-#: BFTaskDlg.cpp:113
+#: BFTaskDlg.cpp:111
 msgid "type:"
 msgstr "Typ:"
 
-#: BFTaskDlg.cpp:122
+#: BFTaskDlg.cpp:120
 msgid "This is the type of the backup task."
 msgstr "Dies zeigt den Typ der Backupaufgabe."
 
-#: BFTaskDlg.cpp:132
+#: BFTaskDlg.cpp:126
 msgid "destination name:"
 msgstr "Zielname:"
 
-#: BFTaskDlg.cpp:139
+#: BFTaskDlg.cpp:133
 msgid "The name of the Task. It is the same as the destination."
 msgstr "Der Name der Aufgabe. Er entspricht dem Ziel."
 
-#: BFTaskDlg.cpp:147
+#: BFTaskDlg.cpp:137
 msgid "source:"
 msgstr "Quelle:"
 
-#: BFTaskDlg.cpp:152
+#: BFTaskDlg.cpp:140
+msgid "This is the directory or file that should be backuped."
+msgstr "Dies ist das Verzeichnis oder die Datei welche gesichert werden soll."
+
+#: BFTaskDlg.cpp:143
 msgid "destination path:"
 msgstr "Zielpfad:"
 
-#: BFTaskDlg.cpp:179
+#: BFTaskDlg.cpp:145
+msgid "This is the path where the backup is stored."
+msgstr "Dies ist der Pfad in dem das Backup gespeichert wird."
+
+#: BFTaskDlg.cpp:171
 msgid "verify:"
 msgstr "überprüfen:"
 
-#: BFTaskDlg.cpp:184
+#: BFTaskDlg.cpp:174
+msgid ""
+"If checked the backup is verified.\n"
+"The source and the destination are compared by size, modification time and attributes.\n"
+"Of course it cost some time!"
+msgstr ""
+"Wenn aktiviert wird das Backup überprüft.\n"
+"Die Quelle und das Ziel wird verglichen durch Größe, Änderungszeitpunkt und Attribute.\n"
+"Natürlich kostet dies einge Zeit!"
+
+#: BFTaskDlg.cpp:180
 msgid "verify content:"
 msgstr "überprüfe Inhalt:"
 
-#: BFTaskDlg.cpp:191
+#: BFTaskDlg.cpp:183
 msgid ""
-"exclude this directories:\n"
-"to delete a entry double-click on it"
+"If cheched the backup is verified including a byte-by-byte comparison.\n"
+"This will cost a lot of time!"
+msgstr ""
+"Wenn aktiviert wird das Backup überprüft, inklusive eines byteweise Vergleichs.\n"
+"Das wird sehr viel Zeit kosten!"
+
+#: BFTaskDlg.cpp:190
+msgid ""
+"Exclude this directories:\n"
+"To delete a entry double-click on it."
 msgstr ""
 "Schließe diese Verzeichnisse aus:\n"
 "Doppelklick auf einen Eintrag, um diesen zu löschen."
 
-#: BFTaskDlg.cpp:220
+#: BFTaskDlg.cpp:193
+msgid "Here you can exclude directories from the backup. You can use wildcard-masks, too."
+msgstr "Here können Sie Verzeichnise von dem Backup ausschließen. Sie kann auch Wildcard-Masken verwenden."
+
+#: BFTaskDlg.cpp:221
 msgid "&Cancel"
 msgstr "&Abbrechen"
 
-#: BFTaskDlg.cpp:325
+#: BFTaskDlg.cpp:326
 msgid "Please insert a task name!"
 msgstr "Bitte Aufgabennamen eintragen!"
 
-#: BFTaskDlg.cpp:331
+#: BFTaskDlg.cpp:332
 msgid "Please insert a destination!"
 msgstr "Bitte Ziel eintragen!"
 
@@ -499,6 +529,112 @@ msgstr ""
 msgid "The source %s doesn't exsits!"
 msgstr "Die Quelle %s existiert nicht!"
 
+#: BFMainFrame.cpp:111
+msgid "Gobal &Settings"
+msgstr "Globale &Einstellungen"
+
+#: BFMainFrame.cpp:112
+msgid "show &log file"
+msgstr "Zeigen Aufzeichnungsdatei (Log-Datei)"
+
+#: BFMainFrame.cpp:114
+msgid "E&xit"
+msgstr "B&eenden"
+
+#: BFMainFrame.cpp:122
+msgid "&Project Settings"
+msgstr "&Projekteinstellungen"
+
+#: BFMainFrame.cpp:123
+msgid "&Run Backup..."
+msgstr "&Starte Backup..."
+
+#: BFMainFrame.cpp:125
+msgid "&New Project"
+msgstr "&Neues Projekt"
+
+#: BFMainFrame.cpp:126
+msgid "&Open Project"
+msgstr "&Öffne Projekt"
+
+#: BFMainFrame.cpp:127
+msgid "&Save Project"
+msgstr "&Speichere Projekt"
+
+#: BFMainFrame.cpp:128
+msgid "Save Project &as ..."
+msgstr "Speichere Projekt als ..."
+
+#: BFMainFrame.cpp:132
+msgid "&Website"
+msgstr "&Website"
+
+#: BFMainFrame.cpp:133
+msgid "Report a &Bug"
+msgstr "&Fehler melden"
+
+#: BFMainFrame.cpp:134
+msgid "Submit a &Feauter Request"
+msgstr "&Erweiterung vorschlagen"
+
+#: BFMainFrame.cpp:135
+msgid "&License"
+msgstr "&Lizenz"
+
+#: BFMainFrame.cpp:136
+msgid "&History"
+msgstr "&Geschichte"
+
+#: BFMainFrame.cpp:138
+msgid "&About"
+msgstr "&Über"
+
+#: BFMainFrame.cpp:143
+msgid "&Project"
+msgstr "&Projekt"
+
+#: BFMainFrame.cpp:144
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: BFMainFrame.cpp:155
+msgid "Bug Report"
+msgstr "Fehler melden"
+
+#: BFMainFrame.cpp:156
+msgid "Feauter Request"
+msgstr "Erweiterung vorschlagen"
+
+#: BFMainFrame.cpp:187
+#: BFMainFrame.cpp:365
+msgid ""
+"The current project is modified!\n"
+"Save it?"
+msgstr ""
+"Das aktuelle Projekt wurde verändert!\n"
+"Speichern?"
+
+#: BFMainFrame.cpp:389
+msgid "Open a project"
+msgstr "Öffne ein Projekt"
+
+#: BFMainFrame.cpp:418
+msgid "Save the project"
+msgstr "Speichere das Projekt"
+
+#: BFMainFrame.cpp:465
+msgid ""
+"The current project is modified!\n"
+"Save it before running the backup?"
+msgstr ""
+"Das aktuelle Projekt wurde verändert!\n"
+"Speichern?"
+
+#: BFMainFrame.cpp:500
+#: BFMainFrame.cpp:510
+msgid "Question"
+msgstr "Frage"
+
 #: BFProjectSettingsDlg.cpp:40
 #: BFBackupTree.cpp:230
 msgid "Project settings"
@@ -515,7 +651,7 @@ msgstr "Name des Backup Projekts"
 #: BFProjectSettingsDlg.cpp:59
 #: BFDestinationDlg.cpp:61
 msgid "&OK"
-msgstr "&"
+msgstr "&OK"
 
 #: BFDestinationDlg.cpp:49
 msgid "create a destination"
@@ -673,111 +809,85 @@ msgstr "unbenannt"
 msgid "placeholder"
 msgstr "Platzhalter"
 
-#: BFMainFrame.cpp:107
-msgid "Gobal &Settings"
-msgstr "Globale &Einstellungen"
+#: BFSettingsDlg.cpp:52
+msgid "Global Settings"
+msgstr "Globale Einstellungen"
 
-#: BFMainFrame.cpp:108
-msgid "show &log file"
-msgstr "Zeigen Aufzeichnungsdatei (Log-Datei)"
+#: BFSettingsDlg.cpp:68
+msgid "View"
+msgstr "Anzeige"
 
-#: BFMainFrame.cpp:110
-msgid "E&xit"
-msgstr "B&eenden"
+#: BFSettingsDlg.cpp:71
+msgid "Logging"
+msgstr "Aufzeichnung"
 
-#: BFMainFrame.cpp:118
-msgid "&Project Settings"
-msgstr "&Projekteinstellungen"
+#: BFSettingsDlg.cpp:74
+msgid "Default Project"
+msgstr "Standard Projekt"
 
-#: BFMainFrame.cpp:119
-msgid "&Run Backup..."
-msgstr "&Starte Backup..."
+#: BFSettingsDlg.cpp:102
+msgid "Language: "
+msgstr "Sprache: "
 
-#: BFMainFrame.cpp:121
-msgid "&New Project"
-msgstr "&Neues Projekt"
+#: BFSettingsDlg.cpp:111
+msgid "The language for the user interface."
+msgstr "Die Sprache der Benutzeroberfläche."
 
-#: BFMainFrame.cpp:122
-msgid "&Open Project"
-msgstr "&Öffne Projekt"
+#: BFSettingsDlg.cpp:114
+msgid "open the last project on startup"
+msgstr "Öffne beim Start das letzte Projekt."
 
-#: BFMainFrame.cpp:123
-msgid "&Save Project"
-msgstr "&Speichere Projekt"
+#: BFSettingsDlg.cpp:115
+msgid "Open the last opened project automaticly on startup."
+msgstr "Öffnet beim nächsten Start das zuletzt geöffnete Projekt."
 
-#: BFMainFrame.cpp:124
-msgid "Save Project &as ..."
-msgstr "Speichere Projekt als ..."
+#: BFSettingsDlg.cpp:139
+msgid "display filled placeholders in the backup tree"
+msgstr "Zeige ausgefüllte Platzhalter im Backupbaum."
 
-#: BFMainFrame.cpp:128
-msgid "&Website"
-msgstr "&Website"
-
-#: BFMainFrame.cpp:129
-msgid "Report a &Bug"
-msgstr "&Fehler melden"
-
-#: BFMainFrame.cpp:130
-msgid "Submit a &Feauter Request"
-msgstr "&Erweiterung vorschlagen"
-
-#: BFMainFrame.cpp:131
-msgid "&License"
-msgstr "&Lizenz"
-
-#: BFMainFrame.cpp:132
-msgid "&History"
-msgstr "&Geschichte"
-
-#: BFMainFrame.cpp:134
-msgid "&About"
-msgstr "&Über"
-
-#: BFMainFrame.cpp:139
-msgid "&Project"
-msgstr "&Projekt"
-
-#: BFMainFrame.cpp:140
-msgid "&Help"
-msgstr "&Hilfe"
-
-#: BFMainFrame.cpp:151
-msgid "Bug Report"
-msgstr "Fehler melden"
-
-#: BFMainFrame.cpp:152
-msgid "Feauter Request"
-msgstr "Erweiterung vorschlagen"
-
-#: BFMainFrame.cpp:183
-#: BFMainFrame.cpp:361
+#: BFSettingsDlg.cpp:141
 msgid ""
-"The current project is modified!\n"
-"Save it?"
+"If checked the placeholders in the backuptree will be filled.\n"
+"e.g. \"<date>\" becomes \"2000-12-24\""
 msgstr ""
-"Das aktuelle Projekt wurde verändert!\n"
-"Speichern?"
+"Wenn aktiviert werden die Platzhalter im Backupbaum ausgefüllt.\n"
+"z.B. \"<date>\" wird zu \"2000-12-24\""
 
-#: BFMainFrame.cpp:385
-msgid "Open a project"
-msgstr "Öffne ein Projekt"
+#: BFSettingsDlg.cpp:144
+msgid "display directory tree with files"
+msgstr "Zeige Verzeichnisbaum mit Dateien."
 
-#: BFMainFrame.cpp:414
-msgid "Save the project"
-msgstr "Speichere das Projekt"
+#: BFSettingsDlg.cpp:145
+msgid "If checked the directory tree is displayed with files in it."
+msgstr "Wenn aktiviert wird der Verzeichnisbaum mit Dateien angezeigt."
 
-#: BFMainFrame.cpp:461
+#: BFSettingsDlg.cpp:168
+msgid "size (in KB) of application logfile: "
+msgstr "Größe (in KB) der Anwendungs Log-Datei: "
+
+#: BFSettingsDlg.cpp:178
+msgid "The maximum size of the log file bf.log. If the maximum size is reached the bf.log will be moved to bf.log.bak and a new and empty bf.log will be created."
+msgstr "Maximale Größe der Log-Datei bf.log. Wenn die Maximalgröße erreicht ist, wird bf.log in bf.log.bak umbenannt und eine neue und leere bf.log erzeugt."
+
+#: BFSettingsDlg.cpp:183
+msgid "verbose level for the application log: "
+msgstr "Verbose Stufe der Aufzeichnungen (Log-Datei): "
+
+#: BFSettingsDlg.cpp:184
+msgid "debug"
+msgstr "debug"
+
+#: BFSettingsDlg.cpp:194
+msgid "How detailed are the informations written to the application-logfile."
+msgstr "Wie detaliert die Informationen sind, welche in die Awendungs Log-Datei geschrieben werden."
+
+#: BFSettingsDlg.cpp:223
 msgid ""
-"The current project is modified!\n"
-"Save it before running the backup?"
+"Default Settings for new projects\n"
+"Attention: This doesn't affect the existing projects!"
 msgstr ""
-"Das aktuelle Projekt wurde verändert!\n"
-"Speichern?"
-
-#: BFMainFrame.cpp:496
-#: BFMainFrame.cpp:506
-msgid "Question"
-msgstr "Frage"
+"Standard Einstellungen für neue Projekte\n"
+"Achtung: Dies beeinflußt existierende Projekte nicht!"
 
 #: BFAboutDlg.cpp:51
 msgid "About "
@@ -905,88 +1015,6 @@ msgstr "verstrichene Zeit:"
 msgid "remaining time: "
 msgstr "Restlaufzeit:"
 
-#: BFSettingsDlg.cpp:51
-msgid "Global Settings"
-msgstr "Globale Einstellungen"
-
-#: BFSettingsDlg.cpp:67
-msgid "View"
-msgstr "Anzeige"
-
-#: BFSettingsDlg.cpp:70
-msgid "Logging"
-msgstr "Aufzeichnung"
-
-#: BFSettingsDlg.cpp:73
-msgid "Default Project"
-msgstr "Standard Projekt"
-
-#: BFSettingsDlg.cpp:96
-msgid "Language: "
-msgstr "Sprache: "
-
-#: BFSettingsDlg.cpp:107
-msgid "open the last project on startup"
-msgstr "Öffne beim Start das letzte Projekt."
-
-#: BFSettingsDlg.cpp:108
-msgid "open the last opened project automaticly on startup"
-msgstr "Öffnet beim nächsten Start der Anwendung das zuletzt geöffnete Projekt."
-
-#: BFSettingsDlg.cpp:126
-msgid "view backup tree with filled placeholders"
-msgstr "Zeige Backupbaum mit ausgefüllteten Platzhaltern."
-
-#: BFSettingsDlg.cpp:127
-msgid "fill the placeholders in the backuptree by default"
-msgstr "Füllt standardmäßig die Platzhalter im Backupbaum aus."
-
-#: BFSettingsDlg.cpp:130
-msgid "view directory tree with files"
-msgstr "Zeige Verzeichnisbaum mit Dateien."
-
-#: BFSettingsDlg.cpp:131
-msgid "show files in the directory tree by default"
-msgstr "Zeigt standardmäßig die Dateien im Verzeichnisbaum."
-
-#: BFSettingsDlg.cpp:144
-msgid "size of application log file (KB): "
-msgstr "Größe der Anwendungs Log-Datei (KB): "
-
-#: BFSettingsDlg.cpp:153
-msgid ""
-"max size of the log file bf.log\n"
-"if bf.log is to big it will be moved to bf.log.bak\n"
-"and a new bf.log will be created"
-msgstr ""
-"Maximale Größe der Log-Datei bf.log\n"
-"Wenn bf.log zu groß ist, wird sie in bf.log.bak\n"
-"umbenannt und eine neue bf.log erzeugt."
-
-#: BFSettingsDlg.cpp:162
-msgid "verbose level for the application log: "
-msgstr "Verbose Stufe der Aufzeichnungen (Log-Datei): "
-
-#: BFSettingsDlg.cpp:163
-msgid "debug"
-msgstr "debug"
-
-#: BFSettingsDlg.cpp:173
-msgid ""
-"how detailed are the informations\n"
-"written to the application log-file"
-msgstr ""
-"Wie detaliert die Informationen sind,\n"
-"welche in die Awendungs Log-Datei geschrieben werden."
-
-#: BFSettingsDlg.cpp:189
-msgid ""
-"Default Settings for new projects\n"
-"Attention: This doesn't affect the existing projects!"
-msgstr ""
-"Standard Einstellungen für neue Projekte\n"
-"Achtung: Dies beeinflußt existierende Projekte nicht!"
-
 #: BFExcludeCtrl.cpp:51
 msgid "Add"
 msgstr "Hinzufügen"
@@ -995,6 +1023,12 @@ msgstr "Hinzufügen"
 msgid "Choose a directory to exclude from the backup"
 msgstr "Wähle ein Verzeichnis, um es vom Backup auszuschließen."
 
+#~ msgid "logfile location:"
+#~ msgstr "Logdatei Speicherort:"
+#~ msgid "view backup tree with filled placeholders"
+#~ msgstr "Zeige Backupbaum mit ausgefüllteten Platzhaltern."
+#~ msgid "show files in the directory tree by default"
+#~ msgstr "Zeigt standardmäßig die Dateien im Verzeichnisbaum."
 #~ msgid "Verbose-Level"
 #~ msgstr "Ausführlichkeitsstufe"
 #~ msgid "Fatal Errors:"
