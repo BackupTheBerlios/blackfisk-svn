@@ -1,11 +1,16 @@
-summer 2005
+*** summer 2005 ***
 first concept
 
-summer 2006
+*** summer 2006 ***
 core implementation (basic file operations, zipping)
 
-october 2007
+*** october 2007 ***
 upload the private SVN to a public SVN server on BerliOS
 
-march 2008
+*** march 2008 ***
 08.03.2008: first snapshot released
+
+*** april 2008 ***
+08.04.2008: second snapshot released
+It could be a first release but some design-stuff (icons,
+logo, etc) is missing.

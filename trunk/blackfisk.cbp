@@ -6,11 +6,11 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;PresentationLayer\Controls\Observers\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;PresentationLayer\Controls\Observers\;doc\;" />
 		<Build>
 			<Target title="Debug Static">
 				<Option output=".\blackfiskDs.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_debs" />
+				<Option object_output=".out\objs_debs" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -33,7 +33,7 @@
 			</Target>
 			<Target title="Debug Dynamic">
 				<Option output=".\blackfiskDd.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_debd" />
+				<Option object_output=".out\objs_debd" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -51,7 +51,7 @@
 			</Target>
 			<Target title="Release Static">
 				<Option output=".\blackfiskRs.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_rels" />
+				<Option object_output=".out\objs_rels" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -69,7 +69,7 @@
 			</Target>
 			<Target title="Release Dynamic">
 				<Option output=".\blackfiskRd.exe" prefix_auto="0" extension_auto="0" />
-				<Option object_output=".objs_reld" />
+				<Option object_output=".out\objs_reld" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
@@ -84,301 +84,322 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Debug Static;" />
+			<Add alias="All" targets="Debug Static;Debug Dynamic;Release Static;Release Dynamic;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="$(#wx)\include" />
 			<Add directory="$(#wx)\contrib\include" />
-			<Add directory="wxSerialize\include\wx" />
+			<Add directory="third-party\wxSerialize\include\wx" />
+			<Add directory="include" />
 		</Compiler>
-		<Unit filename="BFAboutDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		<Unit filename="BUILD">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFAboutDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		<Unit filename="CREDITS">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFApp.cpp">
-			<Option virtualFolder="AppLayer\" />
+		<Unit filename="HISTORY">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFApp.h">
-			<Option virtualFolder="AppLayer\" />
+		<Unit filename="INSTALL">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFBackupInfoCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		<Unit filename="LICENSE">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFBackupInfoCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		<Unit filename="README">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFBackupLog.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
+		<Unit filename="TODO">
+			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="BFBackupLog.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFBackupProgressDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFBackupProgressDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFBackupQuestionDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFBackupQuestionDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFBackupTree.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFBackupTree.h">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFCmdLine.cpp">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFCmdLine.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFCore.cpp">
-			<Option virtualFolder="AppLayer\Core\" />
-		</Unit>
-		<Unit filename="BFCore.h">
-			<Option virtualFolder="AppLayer\Core\" />
-		</Unit>
-		<Unit filename="BFCore_traverser.cpp">
-			<Option virtualFolder="AppLayer\Core\" />
-		</Unit>
-		<Unit filename="BFCore_traverser.h">
-			<Option virtualFolder="AppLayer\Core\" />
-		</Unit>
-		<Unit filename="BFDestinationCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFDestinationCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFDestinationDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFDestinationDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFDirCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFDirCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFExcludeCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFExcludeCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFHelpCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFHelpCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFHyperlinkCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFHyperlinkCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFIconTable.cpp">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="BFIconTable.h">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="BFIsWorkingCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFIsWorkingCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFLog.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFLog.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFLogBase.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFLogBase.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFLogViewDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFLogViewDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFMainFrame.cpp">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="BFMainFrame.h">
-			<Option virtualFolder="PresentationLayer\" />
-		</Unit>
-		<Unit filename="BFMsgObserver.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFMsgObserver.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFPlaceholderButton.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFPlaceholderButton.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFProcessMsgDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFProcessMsgDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFProcessMsgSubject.cpp">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFProcessMsgSubject.h">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFProgressCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFProgressCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFProjectSettings.cpp">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFProjectSettings.h">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFProjectSettingsCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFProjectSettingsCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="BFProjectSettingsDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFProjectSettingsDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFRootTask.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFRootTask.h">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFRootTaskApp.cpp">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFRootTaskApp.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFSettings.cpp">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFSettings.h">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="BFSettingsDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFSettingsDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFSystem.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFSystem.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFSystemBase.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFTask.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFTask.h">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFTaskBase.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFTaskBase.h">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="BFTaskDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFTaskDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="BFTaskListCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFTaskListCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFThread_ProjectRunner.cpp">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFThread_ProjectRunner.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFTimeDurationCtrl.cpp">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFTimeDurationCtrl.h">
-			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
-		</Unit>
-		<Unit filename="BFundef.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="BFwxLog.cpp">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="BFwxLog.h">
-			<Option virtualFolder="AppLayer\InfoSystem\" />
-		</Unit>
-		<Unit filename="ObserverPattern.cpp">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="ObserverPattern.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
-		<Unit filename="Progress.cpp">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="Progress.h">
-			<Option virtualFolder="DataLayer\" />
-		</Unit>
-		<Unit filename="TODO" />
 		<Unit filename="bf.log" />
-		<Unit filename="blackfisk.cpp">
+		<Unit filename="include\BFAboutDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFApp.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
-		<Unit filename="blackfisk.h">
+		<Unit filename="include\BFBackupInfoCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="include\BFBackupLog.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFBackupProgressDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFBackupQuestionDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFBackupTree.h">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="include\BFCmdLine.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
-		<Unit filename="ctrlids.h">
+		<Unit filename="include\BFCore.h">
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="include\BFCore_traverser.h">
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="include\BFDestinationCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFDestinationDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFDirCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFExcludeCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFHelpCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFHyperlinkCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFIconTable.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
-		<Unit filename="jbSerialize.h">
+		<Unit filename="include\BFIsWorkingCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFLog.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFLogBase.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFLogViewDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFMainFrame.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="include\BFMsgObserver.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFPlaceholderButton.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFProcessMsgDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFProcessMsgSubject.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="include\BFProgressCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="include\BFProjectSettings.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="include\BFProjectSettingsCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="include\BFProjectSettingsDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFRootTask.h">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="include\BFRootTaskApp.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="include\BFSettings.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="include\BFSettingsDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFSystem.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFSystemBase.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\BFTask.h">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="include\BFTaskBase.h">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="include\BFTaskDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFTaskListCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="include\BFThread_ProjectRunner.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="include\BFTimeDurationCtrl.h">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="include\BFundef.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="include\BFwxLog.h">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="include\ObserverPattern.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="include\Progress.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="include\blackfisk.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="include\ctrlids.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="include\jbSerialize.h">
 			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
-		<Unit filename="wxSerialize\include\wx\wxSerialize.h">
+		<Unit filename="src\BFAboutDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFApp.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\BFBackupInfoCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="src\BFBackupLog.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\BFBackupProgressDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFBackupQuestionDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFBackupTree.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="src\BFCmdLine.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\BFCore.cpp">
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="src\BFCore_traverser.cpp">
+			<Option virtualFolder="AppLayer\Core\" />
+		</Unit>
+		<Unit filename="src\BFDestinationCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFDestinationDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFDirCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFExcludeCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFHelpCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFHyperlinkCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFIconTable.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="src\BFIsWorkingCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFLog.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\BFLogBase.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\BFLogViewDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFMainFrame.cpp">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
+		<Unit filename="src\BFMsgObserver.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\BFPlaceholderButton.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFProcessMsgDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFProcessMsgSubject.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="src\BFProgressCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="src\BFProjectSettings.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="src\BFProjectSettingsCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
+		<Unit filename="src\BFProjectSettingsDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFRootTask.cpp">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="src\BFRootTaskApp.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\BFSettings.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="src\BFSettingsDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFSystem.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\BFTask.cpp">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="src\BFTaskBase.cpp">
+			<Option virtualFolder="DataLayer\Task\" />
+		</Unit>
+		<Unit filename="src\BFTaskDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFTaskListCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="src\BFThread_ProjectRunner.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\BFTimeDurationCtrl.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="src\BFwxLog.cpp">
+			<Option virtualFolder="AppLayer\InfoSystem\" />
+		</Unit>
+		<Unit filename="src\ObserverPattern.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\Progress.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
+		<Unit filename="src\blackfisk.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="third-party\wxSerialize\include\wx\wxSerialize.h">
 			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
-		<Unit filename="wxSerialize\src\wxSerialize.cpp">
+		<Unit filename="third-party\wxSerialize\src\wxSerialize.cpp">
 			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
 		<Extensions>

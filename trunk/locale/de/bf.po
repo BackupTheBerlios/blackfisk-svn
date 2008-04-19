@@ -123,7 +123,7 @@ msgstr "...bei Warnungen"
 
 #: BFProjectSettingsCtrl.cpp:140
 msgid "...on errors"
-msgstr "bei Fehlern"
+msgstr "...bei Fehlern"
 
 #: BFProjectSettingsCtrl.cpp:141
 msgid "...on fatal errors"
