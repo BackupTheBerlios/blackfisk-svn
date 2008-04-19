@@ -31,10 +31,10 @@ class BFAboutDlg : wxDialog
 {
     private:
         ///
-        wxSizer* CreateThirdPartySizer (const wxChar* strUrl,
-                                        const wxChar* strUrlLabel,
-                                        const wxChar* strAuthor,
-                                        const wxChar* strDesc);
+        wxSizer* CreateThirdPartySizer (const wxString& strUrl,
+                                        const wxString& strUrlLabel,
+                                        const wxString& strAuthor,
+                                        const wxString& strDesc);
 
     protected:
         /// proteced members

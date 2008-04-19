@@ -34,6 +34,7 @@
 #include "BFIconTable.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFApp.h"
+#include "jbSerialize.h"
 
 #define BFABOUTDLG_ID_VIEWLICENSE   1 + wxID_HIGHEST
 #define BFABOUTDLG_ID_OK            2 + wxID_HIGHEST
@@ -69,21 +70,21 @@ BFAboutDlg::BFAboutDlg ()
     font.SetPointSize(font.GetPointSize()+5);
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pName->SetFont(font);
-    wxStaticText* pCopy = new wxStaticText(this, wxID_ANY, _T("Copyright (C) 2005 Christian Buhtz <blackfisk@web.de>"));
-    wxStaticText* pDesc = new wxStaticText(this, wxID_ANY, _T("A backup software that can handle very complex tasks.\nBut it has the goal that it is easy to use\nwithout reading a manual."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    BFHyperlinkCtrl* pWeb = new BFHyperlinkCtrl(this, wxID_ANY, _T("www.blackfisk.org"), _T("http://www.blackfisk.org"));
-    wxStaticText* pLicense = new wxStaticText(this, wxID_ANY, _T("This program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome\nto redistribute it under certain conditions;\nfor details select the menu Help/License\nor click this button"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
-    wxButton* pViewLicense = new wxButton(this, BFABOUTDLG_ID_VIEWLICENSE, _T("view License (GPLv3)"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+    wxStaticText* pCopy = new wxStaticText(this, wxID_ANY, "Copyright (C) 2005 Christian Buhtz <blackfisk@web.de>");
+    wxStaticText* pDesc = new wxStaticText(this, wxID_ANY, _("A backup software that can handle very complex tasks.\nBut it has the goal that it is easy to use\nwithout reading a manual."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    BFHyperlinkCtrl* pWeb = new BFHyperlinkCtrl(this, wxID_ANY, "www.blackfisk.org", "http://www.blackfisk.org");
+    wxStaticText* pLicense = new wxStaticText(this, wxID_ANY, _("This program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome\nto redistribute it under certain conditions;\nfor details select the menu Help/License\nor click this button"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+    wxButton* pViewLicense = new wxButton(this, BFABOUTDLG_ID_VIEWLICENSE, _("view License (GPLv3)"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
     font = pLicense->GetFont();
-    font.SetFaceName(_T("Courier New"));
+    font.SetFaceName("Courier New");
     font.SetPointSize(8);
     pLicense->SetFont(font);
 
-    wxStaticText* pDev = new wxStaticText(this, wxID_ANY, _T("Developers"));
+    wxStaticText* pDev = new wxStaticText(this, wxID_ANY, _("Developers"));
     // Artists
-    wxStaticText* pThird = new wxStaticText(this, wxID_ANY, _T("3rd-Party-Components"));
-    wxStaticText* pTools = new wxStaticText(this, wxID_ANY, _T("used Tools"));
-    wxStaticText* pSupporters = new wxStaticText(this, wxID_ANY, _T("Supporters"));
+    wxStaticText* pThird = new wxStaticText(this, wxID_ANY, _("3rd-Party-Components"));
+    wxStaticText* pTools = new wxStaticText(this, wxID_ANY, _("used Tools"));
+    wxStaticText* pSupporters = new wxStaticText(this, wxID_ANY, _("Supporters"));
     font = pDev->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     font.SetPointSize(font.GetPointSize()+1);
@@ -91,37 +92,48 @@ BFAboutDlg::BFAboutDlg ()
     pThird->SetFont(font);
     pTools->SetFont(font);
     pSupporters->SetFont(font);
-    wxStaticText* pDev1 = new wxStaticText(this, wxID_ANY, _T("Christian Buhtz"));
+    wxStaticText* pDev1 = new wxStaticText(this, wxID_ANY, "Christian Buhtz");
 
-    wxSizer* pThird1 = CreateThirdPartySizer(_T("http://wastebucket.solidsteel.nl/?page_id=5"),
-                                             _T("wxSerialize"),
-                                             _T(" from Jorgen Bodde"),
-                                             _T(" serialize data to files"));
-    wxSizer* pThird2 = CreateThirdPartySizer(_T("http://www.wxwidgets.org"),
-                                             _T("wxWidgets"),
-                                             _T(""),
-                                             _T(" Cross-Platform GUI Library"));
-    wxSizer* pTools1 = CreateThirdPartySizer(_T("http://www.codeblocks.org"),
-                                             _T("Code::Blocks"),
-                                             _T(""),
-                                             _T(" The open source, cross platform C++ IDE."));
-    wxSizer* pTools2 = CreateThirdPartySizer(_T("http://www.mingw.org"),
-                                             _T("MinGW"),
-                                             _T(""),
-                                             _T(" GNU based compiler system for Windows"));
-    wxSizer* pSupporters1 = CreateThirdPartySizer(_T("http://www.berlios.de"),
-                                                  _T("BerliOS"),
-                                                  _T(""),
-                                                  _T(" free service to Open Source developers"));
-    wxSizer* pSupporters2 = CreateThirdPartySizer(_T("http://www.gmane.org"),
-                                                  _T("Gmane"),
-                                                  _T(""),
-                                                  _T(" mail-to-news-Gateway and\n mailing list archive"));
-    wxSizer* pSupporters3 = CreateThirdPartySizer(_T("http://www.inwx.de"),
-                                                  _T("InterNetworX"),
-                                                  _T(""),
-                                                  _T(" hosting the project domain"));
-    wxButton* pOk = new wxButton(this, BFABOUTDLG_ID_OK, _T("OK"));
+    wxSizer* pThird1 = CreateThirdPartySizer("http://www.xs4all.nl/~jorgb/wb/index.html",
+                                             "wxSerialize",
+                                             wxString::Format
+                                             (
+                                                _(" (v%d.%d) from Jorgen Bodde"),
+                                                WXSERIALIZE_MAJOR_VERSION,
+                                                WXSERIALIZE_MINOR_VERSION
+                                             ),
+                                             _(" serialize data to files"));
+    wxSizer* pThird2 = CreateThirdPartySizer("http://www.wxwidgets.org",
+                                             "wxWidgets",
+                                             wxString::Format
+                                             (
+                                                " (v%d.%d.%d)",
+                                                wxMAJOR_VERSION,
+                                                wxMINOR_VERSION,
+                                                wxRELEASE_NUMBER
+                                             ),
+                                             _(" Cross-Platform GUI Library"));
+    wxSizer* pTools1 = CreateThirdPartySizer("http://www.codeblocks.org",
+                                             "Code::Blocks",
+                                             "",
+                                             _(" The open source, cross platform C++ IDE."));
+    wxSizer* pTools2 = CreateThirdPartySizer("http://www.mingw.org",
+                                             "MinGW",
+                                             "",
+                                             _(" GNU based compiler system for Windows"));
+    wxSizer* pSupporters1 = CreateThirdPartySizer("http://www.berlios.de",
+                                                  "BerliOS",
+                                                  "",
+                                                  _(" free service to Open Source developers"));
+    wxSizer* pSupporters2 = CreateThirdPartySizer("http://www.gmane.org",
+                                                  "Gmane",
+                                                  "",
+                                                  _(" mail-to-news-Gateway and\n mailing list archive"));
+    wxSizer* pSupporters3 = CreateThirdPartySizer("http://www.inwx.de",
+                                                  "InterNetworX",
+                                                  "",
+                                                  _(" hosting the project domain"));
+    wxButton* pOk = new wxButton(this, BFABOUTDLG_ID_OK, "OK");
 
     // arrange
     pNameSizer->Add(pLogo, wxSizerFlags(0).Expand().Border());
@@ -158,10 +170,10 @@ BFAboutDlg::BFAboutDlg ()
 {
 }
 
-wxSizer* BFAboutDlg::CreateThirdPartySizer (const wxChar* strUrl,
-                                            const wxChar* strUrlLabel,
-                                            const wxChar* strAuthor,
-                                            const wxChar* strDesc)
+wxSizer* BFAboutDlg::CreateThirdPartySizer (const wxString& strUrl,
+                                            const wxString& strUrlLabel,
+                                            const wxString& strAuthor,
+                                            const wxString& strDesc)
 {
     wxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
     wxSizer* pSubSizer = new wxBoxSizer(wxHORIZONTAL);

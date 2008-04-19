@@ -4,7 +4,6 @@
 - BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - settings: check for new version
-- version-info about third-party components in the AboutDlg
 - sync directories: more detailed settings (delete?)
 - settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)
 - remember window position and size incl splitwindow
