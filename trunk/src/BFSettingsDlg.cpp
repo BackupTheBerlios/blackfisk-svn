@@ -82,13 +82,32 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-    pDlgSizer->Add(pBook,                   wxSizerFlags(0).Expand().Border());
+    pDlgSizer->Add(pBook,                   wxSizerFlags(0).Border(wxRIGHT, 5));
     pDlgSizer->Add(new wxStaticLine(this),  wxSizerFlags(0).Expand().Border().Center());
     pDlgSizer->Add(pButtonSizer,            wxSizerFlags(0).Center());
     SetSizerAndFit(pDlgSizer);
     GetData();
     ShowModal();
 }
+
+void BFSettingsDlg::AddHead (wxSizer* pSizer,
+                             wxWindow* pParent,
+                             const wxString& strHeadline)
+{
+    if (pSizer == NULL)
+        return;
+
+    wxStaticText* pHead = new wxStaticText(pParent, wxID_ANY, strHeadline);
+
+    wxFont font = pHead->GetFont();
+    font.SetPointSize(font.GetPointSize() + 4);
+    font.SetWeight(wxFONTWEIGHT_BOLD);
+    font.SetUnderlined(true);
+    pHead->SetFont(font);
+
+    pSizer->Add(pHead, wxSizerFlags(0).Center().Border(wxBOTTOM, 15));
+}
+
 
 wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
 {
@@ -117,12 +136,16 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     // arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     wxGridBagSizer* pGBSizer = new wxGridBagSizer(5);
+
     pGBSizer->Add(pLabelLanguage,     wxGBPosition(0, 0), wxGBSpan(),     wxALIGN_CENTER_VERTICAL);
     pGBSizer->Add(pComboLanguage_,    wxGBPosition(0, 1), wxGBSpan(),     wxALIGN_CENTER_VERTICAL);
     pGBSizer->Add(pCheckOpenLast_,    wxGBPosition(1, 0), wxGBSpan(1, 2), wxALIGN_CENTER_VERTICAL);
+
+    AddHead(pSizer, pPage, _("General"));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
     pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
-    pPage->SetSizerAndFit(pSizer);
+
+    pPage->SetSizer(pSizer);
 
     return pPage;
 }
@@ -135,37 +158,52 @@ wxWindow* BFSettingsDlg::CreatePage_View (wxTreebook* pBook)
     // help ctrl
     BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
 
-    // display placeholders in backup tree
-    pCheckMacro_ = new wxCheckBox(pPage, wxID_ANY, _("display filled placeholders in the backup tree"));
-    pHelpCtrl->Connect(pCheckMacro_,
-                       _("If checked the placeholders in the backuptree will be filled.\ne.g. \"<date>\" becomes \"2000-12-24\""));
-
-    // display files in dir directory tree
-    pCheckFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display directory tree with files (by default)"));
-    pHelpCtrl->Connect(pCheckFiles_, _("If checked the directory tree is displayed with files in it."));
-
-    // display hidden files and dirs in directory tree
-    pCheckHiddenFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display hidden files and directories in directory tree (by default)"));
-    pHelpCtrl->Connect(pCheckHiddenFiles_, _("If checked hidden files and directories are displayed in the directory tree."));
-
     // switch backup tree and directory tree
-    pCheckSwitchTrees_ = new wxCheckBox(pPage, wxID_ANY, _("switch backup tree and directory tree"));
+    pCheckSwitchTrees_ = new wxCheckBox(pPage, wxID_ANY, _("switch Backup Tree && Directory Tree"));
     pHelpCtrl->Connect(pCheckSwitchTrees_, _("Change the order in the splitted main window " \
-                                             "for the backup tree and the directory tree.\n" \
+                                             "for the Backup Tree and the Directory Tree.\n" \
                                              "If not checked the backup tree is the first control " \
                                              "and the directory tree the second one.\n" \
                                              "You need to restart blackfisk to see an effect."));
 
+    // display placeholders in backup tree
+    pCheckMacro_ = new wxCheckBox(pPage, wxID_ANY, _("display filled placeholders (by default)"));
+    pHelpCtrl->Connect(pCheckMacro_,
+                       _("If checked the placeholders in the backuptree will be filled.\ne.g. \"<date>\" becomes \"2000-12-24\""));
+
+    // display files in dir directory tree
+    pCheckFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display with files (by default)"));
+    pHelpCtrl->Connect(pCheckFiles_, _("If checked the directory tree is displayed with files in it."));
+
+    // display hidden files and dirs in directory tree
+    pCheckHiddenFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display with hidden files && directories (by default)"));
+    pHelpCtrl->Connect(pCheckHiddenFiles_, _("If checked hidden files and directories are displayed in the directory tree."));
+
     // arrange
-    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
-    wxGridBagSizer* pGBSizer = new wxGridBagSizer(5);
-    pGBSizer->Add(pCheckMacro_,         wxGBPosition(0, 0), wxGBSpan(1, 2));
-    pGBSizer->Add(pCheckFiles_,         wxGBPosition(1, 0), wxGBSpan(1, 2));
-    pGBSizer->Add(pCheckHiddenFiles_,   wxGBPosition(2, 0), wxGBSpan(1, 2));
-    pGBSizer->Add(pCheckSwitchTrees_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
+    wxBoxSizer*         pSizer              = new wxBoxSizer(wxVERTICAL);
+    wxGridBagSizer*     pGBSizer            = new wxGridBagSizer(5);
+    wxStaticBoxSizer*   pSBSizer_General    = new wxStaticBoxSizer(wxVERTICAL, pPage, _("General"));
+    wxStaticBoxSizer*   pSBSizer_Backup     = new wxStaticBoxSizer(wxVERTICAL, pPage, _("Backup Tree"));
+    wxStaticBoxSizer*   pSBSizer_Dir        = new wxStaticBoxSizer(wxVERTICAL, pPage, _("Directory Tree"));
+
+    pSBSizer_General->Add(pCheckSwitchTrees_,   wxSizerFlags(0).Border());
+    pSBSizer_Backup ->Add(pCheckMacro_,         wxSizerFlags(0).Border());
+    pSBSizer_Dir    ->Add(pCheckFiles_,         wxSizerFlags(0).Border());
+    pSBSizer_Dir    ->Add(pCheckHiddenFiles_,   wxSizerFlags(0).Border());
+
+    pGBSizer->Add(pSBSizer_General,     wxGBPosition(0, 0), wxGBSpan(1, 2), wxEXPAND);
+    pGBSizer->Add(pSBSizer_Backup,      wxGBPosition(1, 0), wxGBSpan(1, 2), wxEXPAND);
+    pGBSizer->Add(pSBSizer_Dir,         wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND);
+    //pGBSizer->Add(pCheckMacro_,         wxGBPosition(1, 0), wxGBSpan(1, 2));
+    //pGBSizer->Add(pCheckFiles_,         wxGBPosition(2, 0), wxGBSpan(1, 2));
+    //pGBSizer->Add(pCheckHiddenFiles_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
+    //pGBSizer->Add(pCheckSwitchTrees_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
+
+    AddHead(pSizer, pPage, _("View"));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
     pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
-    pPage->SetSizerAndFit(pSizer);
+
+    pPage->SetSizer(pSizer);
 
     return pPage;
 }
@@ -210,13 +248,17 @@ wxWindow* BFSettingsDlg::CreatePage_Log (wxTreebook* pBook)
     // arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     wxGridBagSizer* pGBSizer = new wxGridBagSizer(5);
+
     pGBSizer->Add(pLabelLogSize,       wxGBPosition(0, 0), wxGBSpan(), wxALIGN_CENTER_VERTICAL);
-    pGBSizer->Add(pSpinLogSize_,       wxGBPosition(0, 1), wxGBSpan());
+    pGBSizer->Add(pSpinLogSize_,       wxGBPosition(0, 1), wxGBSpan(), wxRIGHT, 14);
     pGBSizer->Add(pLabelVerboseLog,    wxGBPosition(1, 0), wxGBSpan(), wxALIGN_CENTER_VERTICAL);
     pGBSizer->Add(pComboVerboseLog_,   wxGBPosition(1, 1), wxGBSpan());
+
+    AddHead(pSizer, pPage, _("Logging"));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
     pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
-    pPage->SetSizerAndFit(pSizer);
+
+    pPage->SetSizer(pSizer);
 
     return pPage;
 }
@@ -243,12 +285,16 @@ wxWindow* BFSettingsDlg::CreatePage_Project (wxTreebook* pBook)
     // arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pBSizer = new wxBoxSizer(wxVERTICAL);
+
     pBSizer->Add(pLabelProject,                 wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBSizer->Add(new wxStaticLine(pPage),       wxSizerFlags(0).Expand().Center().Border());
     pBSizer->Add(pPrjCtrl_,                     wxSizerFlags(0).Border(wxRIGHT, 15));
+
+    AddHead(pSizer, pPage, _("Default Project"));
     pSizer->Add(pBSizer,    wxSizerFlags(1).Expand());
     pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
-    pPage->SetSizerAndFit(pSizer);
+
+    pPage->SetSizer(pSizer);
 
     return pPage;
 }

@@ -64,6 +64,8 @@ class BFSettingsDlg : public wxDialog
         void SetData ();
 
         ///
+        void AddHead (wxSizer* pSizer, wxWindow* pParent, const wxString& strHeadline);
+        ///
         wxWindow* CreatePage_General (wxTreebook* pBook);
         ///
         wxWindow* CreatePage_View (wxTreebook* pBook);

@@ -1,6 +1,5 @@
 0.0.1
 ~~~~~
-- redesign the "global settings/view"
 - BFBackupTree::UpdatePlaceholders() instead of Init() (called in SetFillBlackfiskPlaceholders())
 - settings: check for new version
 
