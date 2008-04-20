@@ -37,7 +37,7 @@ class Progress : public Subject
         ///
 		long            actual_;
 		/** if 'bLocked_' is true calls of SetRange(), SetActual()
-            see BFSynchronizeDirTraverser::OnDir() for an example how to use it */
+            see BFSynchroniseDirTraverser::OnDir() for an example how to use it */
 		bool            bLocked_;
 
 		/** */

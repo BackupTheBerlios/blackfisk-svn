@@ -155,7 +155,7 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
         menu.Append(pItem);
 
         // ** backup sync dir **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronize directory"));
+        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronise directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
         menu.Append(pItem);
 
@@ -939,7 +939,7 @@ BFBackupTree::BFTaskDropTarget::~BFTaskDropTarget ()
 }
 
 BEGIN_EVENT_TABLE(BFBackupCtrl, wxPanel)
-    EVT_TOGGLEBUTTON (BFBACKUPCTRL_ID_MACROBUTTON, BFBackupCtrl::OnButton)
+    EVT_CHECKBOX (BFBACKUPCTRL_ID_CHECK_PLACEHOLDERS, BFBackupCtrl::OnCheck_Placeholders)
 END_EVENT_TABLE()
 
 BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
@@ -957,15 +957,15 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
     pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));*/
 
     // init controls
-    pBackupTree_    = new BFBackupTree(this);
-    pMacroButton_   = new wxToggleButton(this, BFBACKUPCTRL_ID_MACROBUTTON, _("fill placeholders"));
-    pMacroButton_->SetToolTip(_("display items in the backup tree with\nplaceholders (e.g. <date>) or fill them (e.g. 2008-12-24)"));
-    pMacroButton_->SetValue(BFSettings::Instance().GetFillBlackfiskPlaceholders());
+    pBackupTree_        = new BFBackupTree(this);
+    pCheckPlaceholders_ = new wxCheckBox(this, BFBACKUPCTRL_ID_CHECK_PLACEHOLDERS, _("fill placeholders"));
+    pCheckPlaceholders_->SetToolTip(_("display items in the backup tree with\nplaceholders (e.g. <date>) or fill them (e.g. 2008-12-24)"));
+    pCheckPlaceholders_->SetValue(BFSettings::Instance().GetFillBlackfiskPlaceholders());
     BackupTree()->SetFillBlackfiskPlaceholders(BFSettings::Instance().GetFillBlackfiskPlaceholders());
 
     // arange
-    pTopSizer->Add(pMacroButton_, wxSizerFlags(0).Center().Border(wxUP | wxDOWN, 5));
-    pTopSizer->Add(pBackupTree_, wxSizerFlags(1).Expand());
+    pTopSizer->Add(pCheckPlaceholders_, wxSizerFlags(0).Center().Border());
+    pTopSizer->Add(pBackupTree_,        wxSizerFlags(1).Expand());
     SetSizer(pTopSizer);
 }
 
@@ -979,7 +979,7 @@ BFBackupTree* BFBackupCtrl::BackupTree ()
     return pBackupTree_;
 }
 
-void BFBackupCtrl::OnButton (wxCommandEvent& rEvent)
+void BFBackupCtrl::OnCheck_Placeholders (wxCommandEvent& rEvent)
 {
-    BackupTree()->SetFillBlackfiskPlaceholders(pMacroButton_->GetValue());
+    BackupTree()->SetFillBlackfiskPlaceholders(pCheckPlaceholders_->GetValue());
 }

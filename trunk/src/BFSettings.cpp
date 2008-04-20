@@ -46,7 +46,12 @@ BFSettings::BFSettings ()
             bWithFiles_(false),
             bOpenLastProject_(false),
             lMaxLogFileSize_(1024),
-            verboseLog_(MsgINFO)
+            verboseLog_(MsgINFO),
+            sizeMainWindow_(wxDefaultSize),
+            pointMainWindow_(wxDefaultPosition),
+            bSwitchMainCtrls_(false),
+            iSashPositionInMainWindow_(-1),
+            bShowHiddenFiles_(false)
 {
 }
 
@@ -138,6 +143,56 @@ wxLanguage BFSettings::GetLanguage ()
     return lang_;
 }
 
+void BFSettings::SetMainWindowSize (const wxSize& size)
+{
+    sizeMainWindow_ = size;
+}
+
+wxSize BFSettings::GetMainWindowSize ()
+{
+    return sizeMainWindow_;
+}
+
+void BFSettings::SetMainWindowPosition (const wxPoint& point)
+{
+    pointMainWindow_ = point;
+}
+
+wxPoint BFSettings::GetMainWindowPosition ()
+{
+    return pointMainWindow_;
+}
+
+void BFSettings::SetSwitchMainCtrls (bool bSwitch)
+{
+    bSwitchMainCtrls_ = bSwitch;
+}
+
+bool BFSettings::GetSwitchMainCtrls ()
+{
+    return bSwitchMainCtrls_;
+}
+
+void BFSettings::SetSashPositionInMainWindow (int pos)
+{
+    iSashPositionInMainWindow_ = pos;
+}
+
+int BFSettings::GetSashPositionInMainWindow ()
+{
+    return iSashPositionInMainWindow_;
+}
+
+void BFSettings::SetShowHiddenFiles (bool bShowHidden)
+{
+    bShowHiddenFiles_ = bShowHidden;
+}
+
+bool BFSettings::GetShowHiddenFiles ()
+{
+    return bShowHiddenFiles_;
+}
+
 bool BFSettings::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
@@ -156,6 +211,11 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << bOpenLastProject_;
         rA << (int)verboseLog_;
         rA << (int)lang_;
+        rA << sizeMainWindow_;
+        rA << pointMainWindow_;
+        rA << bSwitchMainCtrls_;
+        rA << iSashPositionInMainWindow_;
+        rA << bShowHiddenFiles_;
     }
     else
     // ** serialize FROM file **
@@ -168,13 +228,31 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA >> bOpenLastProject_;
         rA >> (int&)verboseLog_;
 
-        if (rA.GetVersion() < BF_SETTINGS_CURRENT_VERSION)
-        {
+        /* check if the current reading settings file is a older version
+           and set default values */
+
+        // language added in version 1010
+        if (rA.GetVersion() < 1010)
             lang_ = wxLANGUAGE_DEFAULT;
+        else
+            rA >> (int&)lang_;
+
+        // options added in version 1020
+        if (rA.GetVersion() < 1020)
+        {
+            sizeMainWindow_             = wxDefaultSize;
+            pointMainWindow_            = wxDefaultPosition;
+            bSwitchMainCtrls_           = false;
+            iSashPositionInMainWindow_  = -1;
+            bShowHiddenFiles_           = false;
         }
         else
         {
-            rA >> (int&)lang_;
+            rA >> sizeMainWindow_;
+            rA >> pointMainWindow_;
+            rA >> bSwitchMainCtrls_;
+            rA >> iSashPositionInMainWindow_;
+            rA >> bShowHiddenFiles_;
         }
     }
 
@@ -182,3 +260,4 @@ bool BFSettings::Serialize (jbSerialize& rA)
 
     return true;
 }
+

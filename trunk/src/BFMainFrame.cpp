@@ -24,7 +24,6 @@
 
 #include <wx/wx.h>
 #include <wx/version.h>
-#include <wx/splitter.h>
 #include <wx/listbox.h>
 #include <wx/filedlg.h>
 #include <wx/imaglist.h>
@@ -145,10 +144,21 @@ END_EVENT_TABLE()
     SetMenuBar( menuBar );
 
     // splitter window
-    wxSplitterWindow* pSplitter = new wxSplitterWindow(this);
-    pBackupCtrl_    = new BFBackupCtrl(pSplitter);
-    pDirCtrl_       = new BFDirCtrl(pSplitter);
-    pSplitter->SplitVertically(pBackupCtrl_, pDirCtrl_);
+    pSplitterCtrl_  = new wxSplitterWindow(this);
+    pBackupCtrl_    = new BFBackupCtrl(pSplitterCtrl_);
+    pDirCtrl_       = new BFDirCtrl(pSplitterCtrl_);
+
+    // switch child ctrls?
+    if (BFSettings::Instance().GetSwitchMainCtrls())
+        pSplitterCtrl_->SplitVertically(pDirCtrl_, pBackupCtrl_);
+    else
+        pSplitterCtrl_->SplitVertically(pBackupCtrl_, pDirCtrl_);
+
+    // sash position
+    if (BFSettings::Instance().GetSashPositionInMainWindow() != -1)
+        pSplitterCtrl_->SetSashPosition(BFSettings::Instance().GetSashPositionInMainWindow());
+
+    pSplitterCtrl_->SetSashGravity(0.5);
 
     // buttons
     wxBoxSizer* pButtonSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -160,15 +170,26 @@ END_EVENT_TABLE()
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
-    pSizer->Add( pSplitter,     wxSizerFlags(6).Expand() );
-    pSizer->Add( pButtonSizer,  wxSizerFlags(0).Center() );
+    pSizer->Add( pSplitterCtrl_,    wxSizerFlags(6).Expand() );
+    pSizer->Add( pButtonSizer,      wxSizerFlags(0).Center() );
     SetSizer(pSizer);
 
+    // background color
     SetBackgroundColour(menuBar->GetBackgroundColour());
-    SetSize(wxSize(650, 600));
-    Center();
+
+    // window size or maximized state
+    if (BFSettings::Instance().GetMainWindowSize() == wxSize(-2, -2))
+        Maximize();
+    else
+        SetSize(BFSettings::Instance().GetMainWindowSize());
+
+    // window position
+    Move(BFSettings::Instance().GetMainWindowPosition());
+
+    //
     Show(TRUE);
 
+    // set the title bar
     RefreshTitle();
 
 #ifdef _DEBUG
@@ -179,6 +200,18 @@ END_EVENT_TABLE()
 void BFMainFrame::OnClose (wxCloseEvent& event)
 {
     int iAnswer = wxYES;
+
+    // remember window position
+    BFSettings::Instance().SetMainWindowPosition(GetPosition());
+
+    // remember window size or maximized state (-2, -2)
+    if (IsMaximized())
+        BFSettings::Instance().SetMainWindowSize(wxSize(-2, -2));
+    else
+        BFSettings::Instance().SetMainWindowSize(GetSize());
+
+    // remember sash position
+    BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
 
     // check for a modified project
     if (BFRootTaskApp::Instance().IsProjectModified())
@@ -449,10 +482,11 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
     Test();
 }
 
+#include <wx/protocol/ftp.h>
 
 void BFMainFrame::Test ()
 {
-/*    wxFTP ftp;
+    wxFTP ftp;
 
     if ( !ftp.Connect(BF_FTP_URL) )
     {
@@ -474,7 +508,7 @@ void BFMainFrame::Test ()
     }
     else
     {
-        size_t size = in->GetSize();//ftp.GetFileSize(BF_FTP_FILE_VER);
+        size_t size = ftp.GetFileSize(BF_FTP_FILE_VER);
         BFSystem::Info(wxString::Format("size %d", size));
 
         if (size == 0)
@@ -484,7 +518,7 @@ void BFMainFrame::Test ()
             size = 10;
         }
 
-        char *data = new char[size];/*
+        char *data = new char[size];
         if ( !in->Read(data, size) )
         {
             BFSystem::Error("Read error");
@@ -510,7 +544,7 @@ void BFMainFrame::Test ()
 
         delete [] data;
         delete in;
-    }*/
+    }
 }
 #endif
 

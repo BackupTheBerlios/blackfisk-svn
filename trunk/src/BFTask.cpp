@@ -228,7 +228,7 @@ void BFTaskData::SetExclude (const wxArrayString& exclude)
             break;
 
         case TaskSYNC:
-            strDesc = _("synchronize directories");
+            strDesc = _("synchronise directories");
             break;
 
         default:
@@ -515,7 +515,7 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
-    return BFCore::Instance().Synchronize
+    return BFCore::Instance().Synchronise
     (
         strSrc.wx_str(),
         strDest.wx_str(),

@@ -135,20 +135,34 @@ wxWindow* BFSettingsDlg::CreatePage_View (wxTreebook* pBook)
     // help ctrl
     BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
 
-    // view placeholders
+    // display placeholders in backup tree
     pCheckMacro_ = new wxCheckBox(pPage, wxID_ANY, _("display filled placeholders in the backup tree"));
     pHelpCtrl->Connect(pCheckMacro_,
                        _("If checked the placeholders in the backuptree will be filled.\ne.g. \"<date>\" becomes \"2000-12-24\""));
 
-    // view files
-    pCheckFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display directory tree with files"));
+    // display files in dir directory tree
+    pCheckFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display directory tree with files (by default)"));
     pHelpCtrl->Connect(pCheckFiles_, _("If checked the directory tree is displayed with files in it."));
+
+    // display hidden files and dirs in directory tree
+    pCheckHiddenFiles_ = new wxCheckBox(pPage, wxID_ANY, _("display hidden files and directories in directory tree (by default)"));
+    pHelpCtrl->Connect(pCheckHiddenFiles_, _("If checked hidden files and directories are displayed in the directory tree."));
+
+    // switch backup tree and directory tree
+    pCheckSwitchTrees_ = new wxCheckBox(pPage, wxID_ANY, _("switch backup tree and directory tree"));
+    pHelpCtrl->Connect(pCheckSwitchTrees_, _("Change the order in the splitted main window " \
+                                             "for the backup tree and the directory tree.\n" \
+                                             "If not checked the backup tree is the first control " \
+                                             "and the directory tree the second one.\n" \
+                                             "You need to restart blackfisk to see an effect."));
 
     // arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     wxGridBagSizer* pGBSizer = new wxGridBagSizer(5);
-    pGBSizer->Add(pCheckMacro_,     wxGBPosition(0, 0), wxGBSpan(1, 2));
-    pGBSizer->Add(pCheckFiles_,     wxGBPosition(1, 0), wxGBSpan(1, 2));
+    pGBSizer->Add(pCheckMacro_,         wxGBPosition(0, 0), wxGBSpan(1, 2));
+    pGBSizer->Add(pCheckFiles_,         wxGBPosition(1, 0), wxGBSpan(1, 2));
+    pGBSizer->Add(pCheckHiddenFiles_,   wxGBPosition(2, 0), wxGBSpan(1, 2));
+    pGBSizer->Add(pCheckSwitchTrees_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
     pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
     pPage->SetSizerAndFit(pSizer);
@@ -281,6 +295,8 @@ void BFSettingsDlg::GetData ()
     pCheckOpenLast_->SetValue(rS.GetOpenLastProject());
     pCheckMacro_->SetValue(rS.GetFillBlackfiskPlaceholders());
     pCheckFiles_->SetValue(rS.GetWithFiles());
+    pCheckHiddenFiles_->SetValue(rS.GetShowHiddenFiles());
+    pCheckSwitchTrees_->SetValue(rS.GetSwitchMainCtrls());
     pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
     pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
 
@@ -323,6 +339,8 @@ void BFSettingsDlg::SetData ()
     rS.SetOpenLastProject(pCheckOpenLast_->GetValue());
     rS.SetFillBlackfiskPlaceholders(pCheckMacro_->GetValue());
     rS.SetWithFiles(pCheckFiles_->GetValue());
+    rS.SetShowHiddenFiles(pCheckHiddenFiles_->GetValue());
+    rS.SetSwitchMainCtrls(pCheckSwitchTrees_->GetValue());
     rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());
     pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());
 

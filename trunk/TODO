@@ -1,13 +1,20 @@
+- wxSerialize can handle wxSize and wxPoint now
+  it is a version not commited to the official wxSerialize repository
+- modified the string and identifiers "serialize" (AE) to "serialise" (BE)
+- remember window size, window position, sash position of the splitter window
+- replaced wxToogleButton in BFDirCtrl and BFBackupCtrl with wxCheckBox
+- add wxCheckBox for "hidden files & directories" in BFDirCtrl
+
 0.0.1
 ~~~~~
+- redesign the "global settings/view"
+- BFBackupTree::UpdatePlaceholders() (called in SetFillBlackfiskPlaceholders())
+- settings: check for new version
+
 - BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 - BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
-- settings: check for new version
 - sync directories: more detailed settings (delete?)
-- settings: show hiddenfiles in dirCtrl (check box in top of the dir ctrl)
-- remember window position and size incl splitwindow
-- swap backupctrl and dirctrl
 - display "show-log" progress after a backup
 - change task-type by context-menu of a tree-node (backup-dir)
 

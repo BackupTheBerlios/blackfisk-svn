@@ -678,8 +678,8 @@ bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bo
     return true;
 }
 
-bool BFCore::Synchronize (const wxChar* pOriginal,
-                          const wxChar* pToSynchronize,
+bool BFCore::Synchronise (const wxChar* pOriginal,
+                          const wxChar* pToSynchronise,
                           bool bVerify,
                           bool bVerifyContent,
                           ProgressWithMessage* pProgress /*= NULL*/)
@@ -689,37 +689,37 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
         return false;
 
     // check parameters
-    if (pOriginal == NULL || pToSynchronize == NULL)
+    if (pOriginal == NULL || pToSynchronise == NULL)
     {
-        BFSystem::Fatal(_("Wrong parameters!"), _T("BFCore::Synchronize"));
+        BFSystem::Fatal(_("Wrong parameters!"), _T("BFCore::Synchronise"));
         return false;
     }
 
     // create destination dir
-    if ( CreatePath(pToSynchronize) == false )
+    if ( CreatePath(pToSynchronise) == false )
         return false;
 
-    CopyDirAttributes(pOriginal, pToSynchronize);
+    CopyDirAttributes(pOriginal, pToSynchronise);
 
     // init copy progress
     if (pProgress != NULL)
     {
         long lCountFile, lCountDir;
 
-        pProgress->SetLabel ( wxString::Format(_("synchronize from %s to %s\ncounting directories and files"), pOriginal, pToSynchronize) );
+        pProgress->SetLabel ( wxString::Format(_("synchronise from %s to %s\ncounting directories and files"), pOriginal, pToSynchronise) );
         pProgress->SetActual( 0 );
         pProgress->SetRange ( GetDirFileCount(pOriginal, &lCountDir, &lCountFile) );
-        pProgress->SetLabel ( wxString::Format(_("synchronize from %s to %s"), pOriginal, pToSynchronize) );
+        pProgress->SetLabel ( wxString::Format(_("synchronise from %s to %s"), pOriginal, pToSynchronise) );
     }
 
     if (bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("synchronize %s with %s (copy-step)"), pToSynchronize, pOriginal));
+        BFSystem::Backup(wxString::Format(_("synchronise %s with %s (copy-step)"), pToSynchronise, pOriginal));
 
-    // synchronize the dir
+    // synchronise the dir
     wxDir dir(pOriginal);
     wxArrayString arrOriginalListing;
-    BFSynchronizeDirTraverser trav(pOriginal,
-                                   pToSynchronize,
+    BFSynchroniseDirTraverser trav(pOriginal,
+                                   pToSynchronise,
                                    arrOriginalListing,
                                    bVerify,
                                    bVerifyContent,
@@ -727,7 +727,7 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     dir.Traverse(trav);
 
     if (bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("synchronize %s with %s (delete-step)"), pToSynchronize, pOriginal));
+        BFSystem::Backup(wxString::Format(_("synchronise %s with %s (delete-step)"), pToSynchronise, pOriginal));
 
     // stop ?
     if ( BFCore::IsStop() )
@@ -737,8 +737,8 @@ bool BFCore::Synchronize (const wxChar* pOriginal,
     if (pProgress != NULL)
         pProgress->SetLabel ( _("check for deletable files and directories") );
     wxArrayString arrToSyncListing;
-    GetDirListing(pToSynchronize, arrToSyncListing, &arrOriginalListing, true);
-    BFApp::PrependString(arrToSyncListing, pToSynchronize);
+    GetDirListing(pToSynchronise, arrToSyncListing, &arrOriginalListing, true);
+    BFApp::PrependString(arrToSyncListing, pToSynchronise);
 
     // ... and sort them in the right order
     arrToSyncListing.Sort(true);

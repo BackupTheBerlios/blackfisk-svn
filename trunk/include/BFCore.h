@@ -116,8 +116,8 @@ class BFCore
                        bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
         /** synchroinze two directories */
-        bool Synchronize (const wxChar* pOriginal,
-                          const wxChar* pToSynchronize,
+        bool Synchronise (const wxChar* pOriginal,
+                          const wxChar* pToSynchronise,
                           bool bVerify,
                           bool bVerifyContent,
                           ProgressWithMessage* pProgress = NULL);

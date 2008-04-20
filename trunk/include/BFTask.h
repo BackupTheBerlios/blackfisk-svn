@@ -35,7 +35,7 @@ typedef wxUint8 BFTaskType;
 #define TaskARCHIVE     1       // comprase backup-source to an archive
 #define TaskDIRCOPY     2       // copy a complete directory
 #define TaskFILECOPY    3       // copy a file
-#define TaskSYNC        4       // synchronize directories
+#define TaskSYNC        4       // synchronise directories
 
 /** define the compression types
     which compression format should be used for TaskARCHIVE */

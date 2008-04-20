@@ -1,16 +1,57 @@
+-------------------------------------------------------------------------------
+                              -- BLACKFISK --
+                            Version 0.0.0 alpha
+-------------------------------------------------------------------------------
+
 DESCRIPTION
 ~~~~~~~~~~~
-description and license
+Blackfisk is an application that does backups. It differs from other
+backup-software in the way how to use it. The goal is to develop a high
+ergonomic, easy to use and selfdescribing backup-software for desktop
+computers.
+ -- Feauters --
+  + copy files and directoies
+  + archive files and directories in a standard archive format (zip, ...)
+  + synchronise directories
+  + easy to use, ergonomic and selfdesribing
+  
+LICENSE
+~~~~~~~
+Blackfisk is licensed under the GNU General Public License Version 3.
+See the file LICENSE for more details.
 
 INSTALLATION
 ~~~~~~~~~~~~
-install > INSTALL
+There is no installation routine. Just extract the package and start
+the binary (on windows: blackfisk.exe).
+Please see the file INSTALL for more detailes.
 
 FILE & DIRECTORY LISTING
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-Please note that some of the files and directories are only in the source-package or SVN!
+ README         - this file
+ INSTALL        - installation instructions
+ LICENSE        - license information
+ HISTORY        - history of blackfisk development
+ CREDITS        - all persons, projects and institutions
+                  related to this project
+ blackfisk.exe  - the windows binary
+ graphic/       - icons and other graphic stuff for blackfisk
+ local/         - language files (*.mo) for blackfisk
+ sound/         - sound files for event-notification
 
-(just in src-distro)
+ -- (extra files and directories in the source package) --
+ include/       - blackfisk header files
+ src/           - blackfisk source files
+ third-party/   - 3rd-party components like wxSerialize
+                  Please see the doc-files in the related directory
+                  for more detailes.
+ local/         - GNU gettext based language files (*.po)
+ BUILD          - informations how to build blackfisk
+ TODO           - This is just a little TODO list for blackfisk.
+                  Please use the bugtracking-system on BerliOS instead
+                  of this file.
+ BF.workspace   - workspace file for the IDE Code::Blocks
+ blackfisk.cbp  - project file for the IDE Code::Blocks
 
 HELP & SUPPORT
 ~~~~~~~~~~~~~~

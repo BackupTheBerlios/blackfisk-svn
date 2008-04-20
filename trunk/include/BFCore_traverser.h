@@ -119,11 +119,11 @@ class BFCopyDirTraverser : public wxDirTraverser
 
 };  // class BFCopyDirTraverser
 
-class BFSynchronizeDirTraverser : public BFDirListingTraverser
+class BFSynchroniseDirTraverser : public BFDirListingTraverser
 {
     private:
-        /// directory to synchronize with the original
-        wxString                strToSynchronize_;
+        /// directory to synchronise with the original
+        wxString                strToSynchronise_;
         ///
         ProgressWithMessage*    pProgress_;
         ///
@@ -133,8 +133,8 @@ class BFSynchronizeDirTraverser : public BFDirListingTraverser
 
     public:
         /// ctor
-        BFSynchronizeDirTraverser (const wxChar* pOriginalDirectory,
-                                   const wxChar* pToSynchronizeDirectory,
+        BFSynchroniseDirTraverser (const wxChar* pOriginalDirectory,
+                                   const wxChar* pToSynchroniseDirectory,
                                    wxArrayString& rList,
                                    bool bVerify,
                                    bool bVerifyContent,
@@ -144,6 +144,6 @@ class BFSynchronizeDirTraverser : public BFDirListingTraverser
         virtual wxDirTraverseResult OnDir(const wxString& dirname);
         ///
         virtual wxDirTraverseResult OnFile(const wxString& filename);
-};  // class BFSynchronizeDirTraverser
+};  // class BFSynchroniseDirTraverser
 
 #endif // BFCORE_TRAVERSER_H

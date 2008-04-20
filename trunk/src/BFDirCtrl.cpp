@@ -31,7 +31,8 @@
 #include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
-  EVT_TOGGLEBUTTON (BFDIRCTRL_ID_FILEBUTTON,    BFDirCtrl::OnButton_DirCtrl)
+  EVT_CHECKBOX  (BFDIRCTRL_ID_CHECK_WITHFILES,  BFDirCtrl::OnCheck_WithFiles)
+  EVT_CHECKBOX  (BFDIRCTRL_ID_CHECK_HIDDEN,     BFDirCtrl::OnCheck_Hidden)
   EVT_MENU    (BFDIRCTRL_ID_ADDDESTINATION,     BFDirCtrl::OnDestination)
   EVT_MENU    (BFDIRCTRL_ID_CREATEDESTINATION,  BFDirCtrl::OnDestination)
   EVT_MENU    (BFDIRCTRL_ID_BACKUP_FILECOPY,    BFDirCtrl::OnBackup)
@@ -44,25 +45,36 @@ END_EVENT_TABLE()
 BFDirCtrl::BFDirCtrl (wxWindow* pParent)
          : wxPanel(pParent, -1)
 {
-    // DirCtrl
+    // create directory control
     pDirCtrl_ = new wxGenericDirCtrl(this);
-    pDirCtrl_->ShowHidden(true);
+
+    // with files?
     if (BFSettings::Instance().GetWithFiles())
         pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() & ~wxDIRCTRL_DIR_ONLY);
     else
         pDirCtrl_->SetWindowStyle(pDirCtrl_->GetWindowStyle() | wxDIRCTRL_DIR_ONLY);
 
-    // button to show files in the DirCtrl
-    pButtonFiles_ = new wxToggleButton(this, BFDIRCTRL_ID_FILEBUTTON, _("files"));
-    pButtonFiles_->SetValue(BFSettings::Instance().GetWithFiles());
+    // with hidden files and directories?
+    pDirCtrl_->ShowHidden(BFSettings::Instance().GetShowHiddenFiles());
+
+    // button to show files in the dir-ctrl
+    pCheckWithFiles_ = new wxCheckBox(this, BFDIRCTRL_ID_CHECK_WITHFILES, _("files"));
+    pCheckWithFiles_ ->SetValue(BFSettings::Instance().GetWithFiles());
+
+    // checkbox to show hidden files/dirs in the dir-ctrl
+    pCheckHidden_ = new wxCheckBox(this, BFDIRCTRL_ID_CHECK_HIDDEN, _("hidden files && directories"));
+    pCheckHidden_->SetValue(BFSettings::Instance().GetShowHiddenFiles());
 
     // sizer
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pSubSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // arrange
-    pTopSizer->Add ( pButtonFiles_, wxSizerFlags(0).Center().Border(wxUP | wxDOWN, 5) );
-    pTopSizer->Add ( pDirCtrl_, wxSizerFlags(1).Expand() );
-    SetSizer(pTopSizer);
+    pSubSizer->Add ( pCheckWithFiles_ );
+    pSubSizer->Add ( pCheckHidden_,     wxSizerFlags(0).Border(wxLEFT, 20 ) );
+    pTopSizer->Add ( pSubSizer,         wxSizerFlags(0).Center().Border() );
+    pTopSizer->Add ( pDirCtrl_,         wxSizerFlags(1).Expand() );
+    SetSizerAndFit(pTopSizer);
 
     // install handlers
     pDirCtrl_->GetTreeCtrl()->Connect
@@ -90,11 +102,11 @@ BFDirCtrl::BFDirCtrl (wxWindow* pParent)
 }
 
 
-void BFDirCtrl::OnButton_DirCtrl (wxCommandEvent& rEvent)
+void BFDirCtrl::OnCheck_WithFiles (wxCommandEvent& rEvent)
 {
     long style = pDirCtrl_->GetWindowStyle();
 
-    if (pButtonFiles_->GetValue())
+    if (pCheckWithFiles_->GetValue())
         style = style & ~wxDIRCTRL_DIR_ONLY;
     else
         style = style | wxDIRCTRL_DIR_ONLY;
@@ -105,6 +117,10 @@ void BFDirCtrl::OnButton_DirCtrl (wxCommandEvent& rEvent)
     pDirCtrl_->ExpandPath(strPath);
 }
 
+void BFDirCtrl::OnCheck_Hidden (wxCommandEvent& rEvent)
+{
+    pDirCtrl_->ShowHidden(pCheckHidden_->GetValue());
+}
 
 void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
 {
@@ -229,5 +245,5 @@ void BFDirCtrl::OnBackup (wxCommandEvent& event)
         default:
             BFSystem::Fatal(_T("no matching menu ID"), _T("BFDirCtrl::OnBackup"));
             break;
-    };
+    }
 }

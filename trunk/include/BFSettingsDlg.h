@@ -46,6 +46,10 @@ class BFSettingsDlg : public wxDialog
         ///
         wxCheckBox*             pCheckFiles_;
         ///
+        wxCheckBox*             pCheckSwitchTrees_;
+        ///
+        wxCheckBox*             pCheckHiddenFiles_;
+        ///
         wxSpinCtrl*             pSpinLogSize_;
         ///
         BFProjectSettingsCtrl*  pPrjCtrl_;

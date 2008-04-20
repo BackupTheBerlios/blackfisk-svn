@@ -30,7 +30,7 @@
 #include <wx/dnd.h>
 #include <wx/panel.h>
 #include <wx/artprov.h>
-#include <wx/tglbtn.h>
+#include <wx/checkbox.h>
 #include "ObserverPattern.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
@@ -221,7 +221,7 @@ class BFBackupCtrl : public wxPanel
         ///
         BFBackupTree*   pBackupTree_;
         ///
-        wxToggleButton* pMacroButton_;
+        wxCheckBox*     pCheckPlaceholders_;
 
     protected:
 
@@ -236,7 +236,7 @@ class BFBackupCtrl : public wxPanel
         BFBackupTree* BackupTree ();
 
         ///
-        void OnButton (wxCommandEvent& rEvent);
+        void OnCheck_Placeholders (wxCommandEvent& rEvent);
 
         DECLARE_EVENT_TABLE();
 };    // class BFBackupCtrl

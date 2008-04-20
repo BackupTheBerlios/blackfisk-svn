@@ -30,6 +30,7 @@ class BFBackupTree;
 class BFDirCtrl;
 
 #include <wx/wx.h>
+#include <wx/splitter.h>
 #include <vector>
 
 ///
@@ -68,6 +69,9 @@ class BFMainFrame : public wxFrame
 
         /// to display the real data-structure on HDD volumes
         BFDirCtrl*          pDirCtrl_;
+
+        /// the ctrl holding 'pBackupCtrl_' and 'pDirCtrl_'
+        wxSplitterWindow*   pSplitterCtrl_;
 
         ///
         wxMenu*             menuProject_;

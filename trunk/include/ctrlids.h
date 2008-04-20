@@ -30,11 +30,11 @@
 #define BFDIRCTRL_ID_BACKUP_DIRCOPY                 BFBACKUPCTRL_ID_COPY_DIR
 #define BFBACKUPCTRL_ID_COPY_FILE                   3 + wxID_HIGHEST
 #define BFDIRCTRL_ID_BACKUP_FILECOPY                BFBACKUPCTRL_ID_COPY_FILE
-#define BFDIRCTRL_ID_FILEBUTTON                     4 + wxID_HIGHEST
+#define BFDIRCTRL_ID_CHECK_WITHFILES                4 + wxID_HIGHEST
 #define BFDIRCTRL_ID_ADDDESTINATION                 5 + wxID_HIGHEST
 #define BFDIRCTRL_ID_CREATEDESTINATION              6 + wxID_HIGHEST
 #define BFBACKUPCTRL_ID_CREATEDESTINATION           7 + wxID_HIGHEST
-#define BFBACKUPCTRL_ID_MACROBUTTON                 8 + wxID_HIGHEST
+#define BFBACKUPCTRL_ID_CHECK_PLACEHOLDERS          8 + wxID_HIGHEST
 #define BFBACKUPCTRL_ID_SYNC_DIR                    9 + wxID_HIGHEST
 #define BFDIRCTRL_ID_BACKUP_SYNCDIR                 BFBACKUPCTRL_ID_SYNC_DIR
 #define BFPLACEHOLDERBUTTON_ID_PRESSED              10 + wxID_HIGHEST
@@ -51,5 +51,6 @@
 #define BF_BACKUPTREE_REBUILD                       20 + wxID_HIGHEST  // custom event
 #define BF_TASKDLG_CBVERIFY                         21 + wxID_HIGHEST
 #define BF_EXCLUDECTRL_BUTTON_ADD                   22 + wxID_HIGHEST
+#define BFDIRCTRL_ID_CHECK_HIDDEN                   23 + wxID_HIGHEST
 
 #endif  // CTRLIDS_H

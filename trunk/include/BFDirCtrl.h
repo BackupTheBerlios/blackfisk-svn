@@ -27,7 +27,7 @@
 #include <wx/panel.h>
 #include <wx/dirctrl.h>
 #include <wx/button.h>
-#include <wx/tglbtn.h>
+#include <wx/checkbox.h>
 
 
 /** it is the complete control to handle the filesystem */
@@ -37,7 +37,9 @@ class BFDirCtrl : public wxPanel
         ///
         wxGenericDirCtrl*   pDirCtrl_;
         ///
-        wxToggleButton*     pButtonFiles_;
+        wxCheckBox*         pCheckWithFiles_;
+        ///
+        wxCheckBox*         pCheckHidden_;
 
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
@@ -56,7 +58,9 @@ class BFDirCtrl : public wxPanel
         virtual ~BFDirCtrl ();
 
         ///
-        void OnButton_DirCtrl (wxCommandEvent& rEvent);
+        void OnCheck_WithFiles (wxCommandEvent& rEvent);
+        ///
+        void OnCheck_Hidden (wxCommandEvent& rEvent);
         ///
         void OnDestination (wxCommandEvent& event);
         ///

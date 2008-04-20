@@ -58,6 +58,16 @@ class BFSettings
         BFMessageType       verboseLog_;
         /** language for the application */
         wxLanguage          lang_;
+        /** last size of the main-window */
+        wxSize              sizeMainWindow_;
+        /** last position of the main-window */
+        wxPoint             pointMainWindow_;
+        /** order of the BFBackupCtrl and the BFDirCtrl in the main-window */
+        bool                bSwitchMainCtrls_;
+        /** position of the sash in the splitter window of the main-window */
+        int                 iSashPositionInMainWindow_;
+        /** show hidden files in the directory tree */
+        bool                bShowHiddenFiles_;
 
         ///
         static BFSettings   sSettings_;
@@ -105,6 +115,26 @@ class BFSettings
         void SetLanguage (wxLanguage lang);
         ///
         wxLanguage GetLanguage ();
+        ///
+        void SetMainWindowSize (const wxSize& size);
+        ///
+        wxSize GetMainWindowSize ();
+        ///
+        void SetMainWindowPosition (const wxPoint& point);
+        ///
+        wxPoint GetMainWindowPosition ();
+        ///
+        void SetSwitchMainCtrls (bool bSwitch);
+        ///
+        bool GetSwitchMainCtrls ();
+        ///
+        void SetSashPositionInMainWindow (int pos);
+        ///
+        int GetSashPositionInMainWindow ();
+        ///
+        void SetShowHiddenFiles (bool bShowHidden);
+        ///
+        bool GetShowHiddenFiles ();
 
         ///
         bool Serialize (jbSerialize& rA);
