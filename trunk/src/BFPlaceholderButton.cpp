@@ -22,9 +22,13 @@
 
 #include "BFPlaceholderButton.h"
 
-#include "ctrlids.h"
+#include "ids.h"
 #include "BFSystem.h"
 #include "BFTaskBase.h"
+
+#define BFPLACEHOLDERBUTTON_ID_PRESSED              1 + BF_PLACEHOLDERBUTTON_ID_HIGHEST
+#define BFPLACEHOLDERBUTTON_ID_PLACEHOLDER_DATE     2 + BF_PLACEHOLDERBUTTON_ID_HIGHEST
+#define BFPLACEHOLDERBUTTON_ID_PLACEHOLDER_TIME     3 + BF_PLACEHOLDERBUTTON_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFPlaceholderButton, wxButton)
     EVT_BUTTON  (BFPLACEHOLDERBUTTON_ID_PRESSED,            BFPlaceholderButton::OnPressed)

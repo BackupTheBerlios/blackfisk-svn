@@ -29,7 +29,6 @@
 #include "BFTaskDlg.h"
 #include "BFMainFrame.h"
 #include "BFPlaceholderButton.h"
-#include "ctrlids.h"
 
 //
 BFDestinationCtrl::BFDestinationCtrl (wxWindow*     pParent,

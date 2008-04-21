@@ -40,7 +40,11 @@
 #include "BFSettings.h"
 #include "BFApp.h"
 #include "BFHelpCtrl.h"
-#include "ctrlids.h"
+#include "ids.h"
+
+#define BFSETTINGSDLG_ID_BUTTONOK           1 + BF_SETTINGSDLG_ID_HIGHEST
+#define BFSETTINGSDLG_ID_BUTTONCANCEL       2 + BF_SETTINGSDLG_ID_HIGHEST
+#define BF_SETTINGSDLG_ID_CHECK_NEWVERSION  3 + BF_SETTINGSDLG_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFSettingsDlg, wxDialog)
   EVT_CLOSE     (                                       BFSettingsDlg::OnClose)
@@ -113,9 +117,17 @@ void BFSettingsDlg::AddHead (wxSizer* pSizer,
 void BFSettingsDlg::On_NewVersion ()
 {
     if (pCheckNewVersion_->GetValue())
+    {
         pSpinDaysNewVersion_->Enable();
+        pLabelDays1_->Enable();
+        pLabelDays2_->Enable();
+    }
     else
+    {
         pSpinDaysNewVersion_->Enable(false);
+        pLabelDays1_->Enable(false);
+        pLabelDays2_->Enable(false);
+    }
 }
 
 void BFSettingsDlg::OnCheck_NewVersion (wxCommandEvent& rEvent)
@@ -151,12 +163,13 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     pHelpCtrl->Connect(pCheckNewVersion_, _("Check if a newer version of blackfisk is available. A connection to the internet is needed for this."));
 
     // days till next new version check
-    wxStaticText* pLabelDays1 = new wxStaticText(pPage, wxID_ANY, _("check all "));
-    wxStaticText* pLabelDays2 = new wxStaticText(pPage, wxID_ANY, _(" Days for new version"));
+    pLabelDays1_ = new wxStaticText(pPage, wxID_ANY, _("check all "));
+    pLabelDays2_ = new wxStaticText(pPage, wxID_ANY, _(" Days for new version"));
     pSpinDaysNewVersion_ = new wxSpinCtrl(pPage);
     pSpinDaysNewVersion_->Fit();
+    pSpinDaysNewVersion_->SetMaxSize(pSpinDaysNewVersion_->GetSize());
     On_NewVersion();
-    pHelpCtrl->Connect(pLabelDays1, pLabelDays2, pSpinDaysNewVersion_,
+    pHelpCtrl->Connect(pLabelDays1_, pLabelDays2_, pSpinDaysNewVersion_,
                        _("The days between two checks for a new blackfisk version."));
 
     // arrange
@@ -167,9 +180,9 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     wxStaticBoxSizer*   pSBSizer_Language   = new wxStaticBoxSizer(wxVERTICAL, pPage, _("Language"));
     wxStaticBoxSizer*   pSBSizer_LastPrj    = new wxStaticBoxSizer(wxVERTICAL, pPage);
 
-    pBSizer_Days->Add(pLabelDays1,          wxSizerFlags(0).Center());
+    pBSizer_Days->Add(pLabelDays1_,          wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pBSizer_Days->Add(pSpinDaysNewVersion_, wxSizerFlags(0));
-    pBSizer_Days->Add(pLabelDays2,          wxSizerFlags(0).Center());
+    pBSizer_Days->Add(pLabelDays2_,          wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
     pSBSizer_Version->Add(pCheckNewVersion_,    wxSizerFlags(0).Border());
     pSBSizer_Version->Add(pBSizer_Days,         wxSizerFlags(0).Border());
     pSBSizer_Language->Add(pComboLanguage_, wxSizerFlags(0).Border());

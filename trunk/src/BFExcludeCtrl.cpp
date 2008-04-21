@@ -30,7 +30,9 @@
 #include <wx/dirdlg.h>
 
 #include "BFTask.h"
-#include "ctrlids.h"
+#include "ids.h"
+
+#define BF_EXCLUDECTRL_BUTTON_ADD       1 + BF_EXCLUDECTRL_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFExcludeCtrl, wxPanel)
     EVT_BUTTON(BF_EXCLUDECTRL_BUTTON_ADD,   BFExcludeCtrl::OnButtonAdd)

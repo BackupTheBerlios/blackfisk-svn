@@ -27,11 +27,9 @@
 #include "BFSystem.h"
 #include "BFCore.h"
 #include "BFProjectSettings.h"
-//#include "BFRootTask.h"
 #include "BFRootTaskApp.h"
 #include "BFBackupProgressDlg.h"
 #include "BFThread_ProjectRunner.h"
-#include "ctrlids.h"
 
 //
 BFMsgObserver::BFMsgObserver ()

@@ -33,32 +33,29 @@ class BFDirCtrl;
 #include <wx/splitter.h>
 #include <vector>
 
-///
-typedef std::vector<wxThread*> BFThreadVector;
+#define BF_ID_MAINFRAME                 1 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_QUIT            2 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_ABOUT           3 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_BACKUP          4 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_OPENPRJ         5 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SAVEPRJ         6 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SAVEPRJAS       7 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_CLOSEPRJ        8 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_NEWPRJ          9 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_PRJSETTINGS     10 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SETTINGS        11 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SHOWLOG         12 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SHOWLICENSE     13 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SHOWHISTORY     14 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_OPENWEBSITE     15 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_SUBMITBUG       16 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_FEAUTERREQUEST  17 + BF_MAINFRAME_ID_HIGHEST
+#ifdef _DEBUG
+    #define BF_ID_MAINFRAME_TEST        18 + BF_MAINFRAME_ID_HIGHEST
+#endif
 
 ///
-enum
-{
-    ID_Quit = 1,
-    ID_About,
-#ifdef _DEBUG
-    ID_Test,
-#endif
-    ID_Backup,
-    ID_OpenProject,
-    ID_SaveProject,
-    ID_SaveProjectAs,
-    ID_CloseProject,
-    ID_NewProject,
-    ID_ProjectSettings,
-    ID_Settings,
-    ID_DisplayLog,
-    ID_ShowLicense,
-    ID_ShowHistory,
-    ID_OpenWebSite,
-    ID_SubmitBug,
-    ID_FeauterRequest
-};
+typedef std::vector<wxThread*> BFThreadVector;
 
 /// main window of the application
 class BFMainFrame : public wxFrame

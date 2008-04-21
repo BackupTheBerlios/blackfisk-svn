@@ -45,7 +45,7 @@
 #include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
-#include "ctrlids.h"
+#include "ids.h"
 #include "BFProcessMsgSubject.h"
 #include "BFProcessMsgDlg.h"
 #include "BFIsWorkingCtrl.h"
@@ -54,27 +54,27 @@
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
-    EVT_MENU    (ID_OpenProject,        BFMainFrame::OnProject)
-    EVT_MENU    (ID_SaveProject,        BFMainFrame::OnProject)
-    EVT_MENU    (ID_SaveProjectAs,      BFMainFrame::OnProject)
-    EVT_MENU    (ID_CloseProject,       BFMainFrame::OnProject)
-    EVT_MENU    (ID_NewProject,         BFMainFrame::OnProject)
-    EVT_MENU    (ID_ProjectSettings,    BFMainFrame::OnProject)
-    EVT_MENU    (ID_Quit,               BFMainFrame::OnQuit)
-    EVT_MENU    (ID_About,              BFMainFrame::OnAbout)
-    EVT_MENU    (ID_DisplayLog,         BFMainFrame::OnDisplayLog)
-    EVT_MENU    (ID_ShowLicense,        BFMainFrame::OnShowLicense)
-    EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
-    EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
-    EVT_BUTTON  (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
-    EVT_MENU    (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
-    EVT_BUTTON  (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
-    EVT_MENU    (ID_FeauterRequest,     BFMainFrame::OnFeauterRequest)
-    EVT_BUTTON  (ID_FeauterRequest,     BFMainFrame::OnFeauterRequest)
-    EVT_MENU    (ID_Backup,             BFMainFrame::OnBackup)
-    EVT_MENU    (ID_Settings,           BFMainFrame::OnSettings)
+    EVT_MENU    (BF_ID_MAINFRAME_OPENPRJ,        BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJ,        BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJAS,      BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_CLOSEPRJ,       BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_NEWPRJ,         BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_PRJSETTINGS,    BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_QUIT,               BFMainFrame::OnQuit)
+    EVT_MENU    (BF_ID_MAINFRAME_ABOUT,              BFMainFrame::OnAbout)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWLOG,         BFMainFrame::OnDisplayLog)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWLICENSE,        BFMainFrame::OnShowLicense)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWHISTORY,        BFMainFrame::OnShowHistory)
+    EVT_MENU    (BF_ID_MAINFRAME_OPENWEBSITE,        BFMainFrame::OnOpenWebSite)
+    EVT_BUTTON  (BF_ID_MAINFRAME_OPENWEBSITE,        BFMainFrame::OnOpenWebSite)
+    EVT_MENU    (BF_ID_MAINFRAME_SUBMITBUG,          BFMainFrame::OnSubmitBug)
+    EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,          BFMainFrame::OnSubmitBug)
+    EVT_MENU    (BF_ID_MAINFRAME_FEAUTERREQUEST,     BFMainFrame::OnFeauterRequest)
+    EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,     BFMainFrame::OnFeauterRequest)
+    EVT_MENU    (BF_ID_MAINFRAME_BACKUP,             BFMainFrame::OnBackup)
+    EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,           BFMainFrame::OnSettings)
 #ifdef _DEBUG
-    EVT_MENU    (ID_Test,               BFMainFrame::OnTest)
+    EVT_MENU    (BF_ID_MAINFRAME_TEST,               BFMainFrame::OnTest)
 #endif
 
     EVT_COMMAND (BF_ID_MAINFRAME, BF_EVENT_THREAD_END, BFMainFrame::OnThreadEnd)
@@ -108,34 +108,34 @@ END_EVENT_TABLE()
 
     // ** menu BLACKFISK **
     wxMenu* menuBlackfisk = new wxMenu;
-    menuBlackfisk->Append( ID_Settings,     _("Gobal &Settings") );
-    menuBlackfisk->Append( ID_DisplayLog,   _("show &log file") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_SETTINGS,     _("Gobal &Settings") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_SHOWLOG,   _("show &log file") );
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( ID_Quit,         _("E&xit") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_QUIT,         _("E&xit") );
 #ifdef _DEBUG
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( ID_Test,         "&Test" );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_TEST,         "&Test" );
 #endif
 
     // ** menu PROJECT **
     menuProject_ = new wxMenu;
-    menuProject_->Append( ID_ProjectSettings,    _("&Project Settings") );
-    menuProject_->Append( ID_Backup,             _("&Run Backup...") );
+    menuProject_->Append( BF_ID_MAINFRAME_PRJSETTINGS,    _("&Project Settings") );
+    menuProject_->Append( BF_ID_MAINFRAME_BACKUP,             _("&Run Backup...") );
     menuProject_->AppendSeparator();
-    menuProject_->Append( ID_NewProject,         _("&New Project") );
-    menuProject_->Append( ID_OpenProject,        _("&Open Project") );
-    menuProject_->Append( ID_SaveProject,        _("&Save Project") );
-    menuProject_->Append( ID_SaveProjectAs,      _("Save Project &as ...") );
+    menuProject_->Append( BF_ID_MAINFRAME_NEWPRJ,         _("&New Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_OPENPRJ,        _("&Open Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJ,        _("&Save Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJAS,      _("Save Project &as ...") );
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append( ID_OpenWebSite,   _("&Website") );
-    menuHelp->Append( ID_SubmitBug,     _("Report a &Bug") );
-    menuHelp->Append( ID_FeauterRequest,_("Submit a &Feauter Request") );
-    menuHelp->Append( ID_ShowLicense,   _("&License") );
-    menuHelp->Append( ID_ShowHistory,   _("&History") );
+    menuHelp->Append( BF_ID_MAINFRAME_OPENWEBSITE,   _("&Website") );
+    menuHelp->Append( BF_ID_MAINFRAME_SUBMITBUG,     _("Report a &Bug") );
+    menuHelp->Append( BF_ID_MAINFRAME_FEAUTERREQUEST,_("Submit a &Feauter Request") );
+    menuHelp->Append( BF_ID_MAINFRAME_SHOWLICENSE,   _("&License") );
+    menuHelp->Append( BF_ID_MAINFRAME_SHOWHISTORY,   _("&History") );
     menuHelp->AppendSeparator();
-    menuHelp->Append( ID_About,         _("&About") );
+    menuHelp->Append( BF_ID_MAINFRAME_ABOUT,         _("&About") );
 
     // menu bar
     wxMenuBar *menuBar = new wxMenuBar;
@@ -163,9 +163,9 @@ END_EVENT_TABLE()
 
     // buttons
     wxBoxSizer* pButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxButton* pButtonBug        = new wxButton(this, ID_SubmitBug,      _("Bug Report"));
-    wxButton* pButtonFeauter    = new wxButton(this, ID_FeauterRequest, _("Feauter Request"));
-    wxButton* pButtonWebsite    = new wxButton(this, ID_OpenWebSite,    _("Website"));
+    wxButton* pButtonBug        = new wxButton(this, BF_ID_MAINFRAME_SUBMITBUG,      _("Bug Report"));
+    wxButton* pButtonFeauter    = new wxButton(this, BF_ID_MAINFRAME_FEAUTERREQUEST, _("Feauter Request"));
+    wxButton* pButtonWebsite    = new wxButton(this, BF_ID_MAINFRAME_OPENWEBSITE,    _("Website"));
     pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
@@ -339,7 +339,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
 
     switch (event.GetId())
     {
-        case ID_OpenProject:
+        case BF_ID_MAINFRAME_OPENPRJ:
             if (AskModification())
                 wxGetApp().CloseCurrentProject(false);
 
@@ -347,7 +347,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
                 wxGetApp().OpenProject(strProject);
             break;
 
-        case ID_SaveProject:
+        case BF_ID_MAINFRAME_SAVEPRJ:
             if (wxGetApp().GetCurrentProjectFilename().Len() == 0)
             {
                 if (AskSaveProject(strProject))
@@ -359,18 +359,18 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
             }
             break;
 
-        case ID_SaveProjectAs:
+        case BF_ID_MAINFRAME_SAVEPRJAS:
             if (AskSaveProject(strProject))
                 wxGetApp().SaveProject(strProject);
             break;
 
-        case ID_CloseProject:
-        case ID_NewProject:
+        case BF_ID_MAINFRAME_CLOSEPRJ:
+        case BF_ID_MAINFRAME_NEWPRJ:
             if (AskModification())
                 wxGetApp().CloseCurrentProject(false);
             break;
 
-        case ID_ProjectSettings:
+        case BF_ID_MAINFRAME_PRJSETTINGS:
             OpenProjectSettings();
             break;
     }

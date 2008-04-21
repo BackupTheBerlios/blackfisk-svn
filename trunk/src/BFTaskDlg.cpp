@@ -37,7 +37,12 @@
 #include "BFPlaceholderButton.h"
 #include "BFHelpCtrl.h"
 #include "BFExcludeCtrl.h"
-#include "ctrlids.h"
+#include "ids.h"
+
+#define BFTASKDLG_ID_BUTTONOK       1 + BF_TASKDLG_ID_HIGHEST
+#define BFTASKDLG_ID_BUTTONCANCEL   2 + BF_TASKDLG_ID_HIGHEST
+#define BFTASKDGL_ID_CBTYPE         3 + BF_TASKDLG_ID_HIGHEST
+#define BF_TASKDLG_CBVERIFY         4 + BF_TASKDLG_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFTaskDlg, wxDialog)
   EVT_CLOSE   (BFTaskDlg::OnClose)

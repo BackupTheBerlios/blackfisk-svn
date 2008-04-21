@@ -33,7 +33,6 @@
 #include "BFMainFrame.h"
 #include "BFBackupInfoCtrl.h"
 #include "BFCore.h"
-#include "ctrlids.h"
 #include "BFTaskListCtrl.h"
 #include "BFTask.h"
 

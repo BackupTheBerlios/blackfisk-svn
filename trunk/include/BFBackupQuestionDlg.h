@@ -24,13 +24,15 @@
 #ifndef BFBACKUPQUESTIONDLG_H
 #define BFBACKUPQUESTIONDLG_H
 
-#include "BFSystem.h"
-#include "BFProjectSettings.h"
 #include <wx/dialog.h>
 
-#define BF_BTNID_STOPTASK   1
-#define BF_BTNID_STOPPRJ    2
-#define BF_BTNID_IGNORE     3
+#include "BFSystem.h"
+#include "BFProjectSettings.h"
+#include "ids.h"
+
+#define BF_BTNID_STOPTASK   1 + BF_BACKUPQUESTIONDLG_ID_HIGHEST
+#define BF_BTNID_STOPPRJ    2 + BF_BACKUPQUESTIONDLG_ID_HIGHEST
+#define BF_BTNID_IGNORE     3 + BF_BACKUPQUESTIONDLG_ID_HIGHEST
 
 /** a message dialog that display messages while a backup
     and aks (stop task, stop prj, ignore) what is to do */

@@ -27,7 +27,6 @@
 #include "BFCore.h"
 #include "BFBackupProgressDlg.h"
 #include "BFMainFrame.h"
-#include "ctrlids.h"
 
 DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
 
@@ -78,7 +77,6 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
         // send pending event
         BFMainFrame::Instance()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
 
-    //delete this;
     return NULL;
 }
 

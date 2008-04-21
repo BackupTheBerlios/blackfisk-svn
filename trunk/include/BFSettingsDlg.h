@@ -30,10 +30,8 @@ class wxSpinCtrl;
 class wxListbook;
 class wxComboBox;
 class wxTreebook;
+class wxStaticText;
 class BFProjectSettingsCtrl;
-
-#define BFSETTINGSDLG_ID_BUTTONOK        1 + wxID_HIGHEST
-#define BFSETTINGSDLG_ID_BUTTONCANCEL    2 + wxID_HIGHEST
 
 ///
 class BFSettingsDlg : public wxDialog
@@ -48,6 +46,10 @@ class BFSettingsDlg : public wxDialog
         wxCheckBox*             pCheckNewVersion_;
         ///
         wxSpinCtrl*             pSpinDaysNewVersion_;
+        ///
+        wxStaticText*           pLabelDays1_;
+        ///
+        wxStaticText*           pLabelDays2_;
 
         // --- VIEW PAGE ---
         ///

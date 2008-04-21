@@ -39,7 +39,7 @@
 #include "BFIconTable.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
-#include "ctrlids.h"
+
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
@@ -150,24 +150,24 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
     if ( bOnDir )
     {
         // ** backup dir copy **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_DIRCOPY, _("copy directory"));
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_DIR, _("copy directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
         menu.Append(pItem);
 
         // ** backup sync dir **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_SYNCDIR, _("synchronise directory"));
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronise directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
         menu.Append(pItem);
 
         // ** backup archive dir **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_ARCHIVEDIR, _("archive/compress directory"));
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_ARCHIVE_DIR, _("archive/compress directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
         menu.Append(pItem);
     }
     else
     {
         // ** backup file copy **
-        pItem = new wxMenuItem(&menu, BFDIRCTRL_ID_BACKUP_FILECOPY, _("copy file"));
+        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
         menu.Append(pItem);
     }

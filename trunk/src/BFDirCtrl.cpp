@@ -28,7 +28,8 @@
 #include "BFMainFrame.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
-#include "ctrlids.h"
+#include "ids.h"
+
 
 BEGIN_EVENT_TABLE(BFDirCtrl, wxPanel)
   EVT_CHECKBOX  (BFDIRCTRL_ID_CHECK_WITHFILES,  BFDirCtrl::OnCheck_WithFiles)

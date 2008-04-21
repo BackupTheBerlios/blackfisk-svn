@@ -34,10 +34,6 @@
 #include <vector>
 #include "BFTask.h"
 
-#define BFTASKDLG_ID_BUTTONOK       1 + wxID_HIGHEST
-#define BFTASKDLG_ID_BUTTONCANCEL   2 + wxID_HIGHEST
-#define BFTASKDGL_ID_CBTYPE         3 + wxID_HIGHEST
-
 class wxBookCtrlBase;
 class wxSizer;
 class BFDestinationCtrl;

@@ -29,6 +29,9 @@
 #include <wx/thread.h>
 
 #include "ObserverPattern.h"
+#include "ids.h"
+
+#define BF_BACKUPPROGRESSDLG_QUESTION       1 + BF_BACKUPPROGRESSDLG_ID_HIGHEST
 
 // forwarde declarations
 class Progress;
