@@ -1454,9 +1454,6 @@ private:
 	// as the header given
 	int LoadChunkHeader(int expheader);
 
-    // reads a single char from the stream, returns '\0' when none can be read
-	wxUint8 LoadChar();
-
     // writes a single char to the stream
 	void WriteChar(wxUint8 value);
 
@@ -1488,7 +1485,10 @@ private:
     // reads a datetime without header
 	wxDateTime LoadDateTime();
 
-    // reads a wxUint8 (wihtout header)
+    // reads a single char from the stream, returns '\0' when none can be read
+	wxUint8 LoadChar();
+
+    // see wxUint8 LoadChar()
     wxUint8 LoadUint8();
 
 	// reads a wxUint16 (without header)
@@ -1514,6 +1514,9 @@ private:
 
     // writes a wxUint8 without header
     void SaveChar(wxUint8 value);
+
+    // see SaveChar(wxUint8)
+    void SaveUint8(wxUint8 value);
 
 	// writes a wxUint16 (without header)
 	void SaveUint16(wxUint16 value);

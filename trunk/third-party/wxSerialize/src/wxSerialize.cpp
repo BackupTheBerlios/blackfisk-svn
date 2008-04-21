@@ -788,16 +788,7 @@ wxDateTime wxSerialize::LoadDateTime()
 
 wxUint8 wxSerialize::LoadUint8()
 {
-	wxUint8 value = 0;
-
-	// reads a 16bits from the stream
-	if(CanLoad())
-	{
-		m_idstr.Read((void *)&value, sizeof(wxUint8));
-		return value;
-	}
-
-	return value;
+    return LoadChar();
 }
 
 wxUint16 wxSerialize::LoadUint16()
@@ -1137,6 +1128,11 @@ bool wxSerialize::WriteUint64(wxUint64 value)
 	}
 
     return IsOk();
+}
+
+void wxSerialize::SaveUint8(wxUint8 value)
+{
+    SaveChar(value);
 }
 
 void wxSerialize::SaveUint16(wxUint16 value)
