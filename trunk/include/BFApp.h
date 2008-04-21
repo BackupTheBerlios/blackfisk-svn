@@ -49,10 +49,6 @@ class BFApp : public wxApp
             just use OBSystem to display messages to the user */
         BFMsgObserver           msgObserver_;
 
-        /** Read the current-version-info from the blackfisk-ftp-server
-            and return it as a wxString.
-            The current-version-info specify the newest release of blackfisk. */
-        const wxString& GetNewestVersion ();
         /** Read a file from a ftp-server and return in as a wxString.
             The parameters are selfdescribing. If 'strFtpUser' and/or
             'strFtpPwd' isn't set it will set with the default-values
@@ -124,6 +120,12 @@ class BFApp : public wxApp
             compare the version-info in there with its own
             version-info. */
         bool IsNewVersionAvailable ();
+        /** On first call it reads the current-version-info from
+            the blackfisk-ftp-server, store it and return it as a wxString.
+            On each next call just the internal stored current-version-info
+            is returned - the ftp-server is not connected again.
+            The current-version-info specify the newest release of blackfisk. */
+        const wxString& GetNewestVersion ();
 
 #ifdef _DEBUG
         void Test ();

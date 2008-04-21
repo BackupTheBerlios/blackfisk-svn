@@ -1,35 +1,21 @@
 //---------------------------------------------------------------------------
-// $RCSfile$
-// $Source$
-// $Revision$
-// $Date$
+// $RCSfile: wxSerialize.h $
+// $Source: include/wx/wxSerialize.h $
+// $Revision: 1.16 $
+// $Date: 7-sep-2007 11:29:08 $
 //---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
 // Copyright:   (c) Jorgen Bodde <jorgb@xs4all.nl>
-// Modified by:
-// License:     GNU General Public License (Version 2 or later)
-//---------------------------------------------------------------------------
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License along
-//  with this program; if not, write to the Free Software Foundation, Inc.,
-//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+// License:     see LICENSE for details
 //---------------------------------------------------------------------------
 
-#ifndef _WXARCHIVE_H_
-#define _WXARCHIVE_H_
+#ifndef _WXSERIALIZE_H_
+#define _WXSERIALIZE_H_
 
 #include <wx/sstream.h>
 #include <wx/buffer.h>
 #include <wx/math.h>
+#include <wx/datetime.h>
 #include <wx/gdicmn.h>  // for wxSize, wxPoint
 
 #define WXSERIALIZE_MAJOR_VERSION 1
@@ -195,8 +181,8 @@
 	be binary incompatibility with older streams:
 
 	\code
-	wxFileOutputStream file("somefile.dat", 1001);	// latest version is 1001 (was 1000)
-	wxSerialize a(file);
+	wxFileOutputStream file("somefile.dat");
+	wxSerialize a(file, 1001);   // latest version is 1001 (was 1000)
 
 	m_ourClass->Serialize(a);
 	\endcode
@@ -298,6 +284,37 @@
 	caution (for example using the version tag or wxSerializeStatus object) in your application to warn the user that
 	the data being written will destroy newer information in the serializing stream. The newer release of your
 	application can still read this stream, but newer data is defaulted again.
+
+    Also another caveat is that when you replace data being read back it will not work, not with EnterObject() /
+    LeaveObject() but also not with a versioned stream. Consider this example:
+
+	\code
+	bool MyDataClass::Serialize(wxSerialize &a)
+	{
+		a.EnterObject();
+		if(a.IsStoring())
+		{
+			// simply write all
+			a << m_name << m_address << m_age;
+			a << m_siblings;
+            //a << m_monthlyPay << m_healthInsurance;
+            // REPLACED NOW with:
+            a << m_surName << m_middleName;
+		}
+		else
+		{
+			a >> m_name >> m_address >> m_age;
+			a >> m_siblings;
+			// WON'T WORK! In older versions the two vars m_monthlypay and m_healthInsurance
+            // were stored here, instead we read back this. If the stream we read back do not
+            // contain these new replaced variables yet, we are hitting an error state.
+            a >> m_surName >> m_middleName;
+		}
+		a.LeaveObject();
+
+		return a.IsOk();
+	}
+	\endcode
 
 	\subsection archive_status wxSerializeStatus Helper Class
 
@@ -846,6 +863,12 @@ public:
 	    return *this;
     };
 
+    /** Convenience operator for serializing. See WriteDateTime() */
+	virtual wxSerialize &operator <<(const wxDateTime &value) {
+        WriteDateTime(value);
+	    return *this;
+    };
+
 	/** Convenience operator for serializing. See WriteIntInt() */
 	virtual wxSerialize &operator <<(const wxSize& value) {
         WriteIntInt(value.GetWidth(), value.GetHeight());
@@ -911,6 +934,12 @@ public:
     /** Convenience operator for serializing. See ReadDouble() */
 	virtual wxSerialize &operator >>(wxFloat64& value) {
         ReadDouble(value);
+		return *this;
+    };
+
+    /** Convenience operator for serializing. See ReadDateTime() */
+	virtual wxSerialize &operator >>(wxDateTime& value) {
+        ReadDateTime(value);
 		return *this;
     };
 
@@ -1095,6 +1124,7 @@ public:
 		return val;
 	};
 
+
 	/** Loads a wxFloat64 from stream. When the next record to be read is not a wxFloat64, an error will occur.
 	    When wxSerialize encountered the end of object boundary (see \ref enter_leave) or the archive is
 		in an error state, the value is not touched.
@@ -1159,6 +1189,20 @@ public:
 			value = defval;
 		return val;
 	};
+
+	/** Loads a wxDateTime from stream. When the next record to be read is not a wxDateTime, an error
+		will occur.  When wxSerialize encountered the end of object boundary (see \ref enter_leave) or the archive is
+		in an error state, the value is not touched.
+
+        Please note that when an error occurs, all subsequent loading from the stream will result in an
+		error. This is to provide a save mechanism out of a read error. So instead of checking every value
+		you read back yourself, they can be default and won't produce erratic behaviour.
+
+		The value returned is true when the read was succesful, false when nothing was read. For the string
+		first the count is stored and then the string itself. When storing an empty string, only a 0 count is
+		stored.
+    */
+	bool ReadDateTime(wxDateTime& value);
 
     /** Reads a record from the stream. The wxMemoryBuffer is a growable buffer class, which will contain the data
 	    being read. The length of the buffer will be the length present so there is no need to define a
@@ -1270,6 +1314,17 @@ public:
     */
     bool WriteArrayString(const wxArrayString& value);
 
+    /** Saves a wxDateTime to stream. It writes a header type first, and after that the value. This means when
+		the wxDateTime is read back when it is not expected, an error occurs and the program can terminate
+		gracefully because no bogus values are read back. True is returned when the value is saved properly, and
+		false when it's not.
+
+        The wxDateTime is saved in a cross platform compatible mode (e.g. the number of ticks). Please be aware that no
+        timezone information or daylight saving information is stored. So if the date read back on a different PC is
+        mis interpreted because the PC is in a different time zone you must find other means of syncing them.
+    */
+    bool WriteDateTime(const wxDateTime& value);
+
 	/** Saves an arbitrary amount of bytes to the stream using wxMemoryBuffer. It writes a header type first, and after
         that the count to be saved and the bytes in the wxMemoryBuffer. This means when the data is read back when
         it is not expected, an error occurs and the program can terminate gracefully because no bogus values are
@@ -1379,6 +1434,7 @@ private:
 		wxSERIALIZE_HDR_RECORD    = 'r',
 		wxSERIALIZE_HDR_INT       = 'i',
 		wxSERIALIZE_HDR_ARRSTRING = 'a',
+		wxSERIALIZE_HDR_DATETIME  = 't',
 		wxSERIALIZE_HDR_ENTER     = '<',
 		wxSERIALIZE_HDR_LEAVE     = '>',
 		wxSERIALIZE_HDR_INTINT    = 'I'
@@ -1426,7 +1482,14 @@ private:
     // reads a string (without header)
 	wxString LoadString();
 
+    // reads an array string without header
 	wxArrayString LoadArrayString();
+
+    // reads a datetime without header
+	wxDateTime LoadDateTime();
+
+    // reads a wxUint8 (wihtout header)
+    wxUint8 LoadUint8();
 
 	// reads a wxUint16 (without header)
 	wxUint16 LoadUint16();

@@ -118,6 +118,16 @@ void BFHelpCtrl::Connect (wxWindow* pWindow1,
     Connect(pWindow2, strHelpText);
 }
 
+void BFHelpCtrl::Connect (wxWindow* pWindow1,
+                          wxWindow* pWindow2,
+                          wxWindow* pWindow3,
+                          const wxString& strHelpText)
+{
+    Connect(pWindow1, strHelpText);
+    Connect(pWindow2, strHelpText);
+    Connect(pWindow3, strHelpText);
+}
+
 void BFHelpCtrl::OnEnterWindow (wxMouseEvent& rEvent)
 {
     bOnEnter_ = true;

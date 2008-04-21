@@ -1,26 +1,12 @@
 //---------------------------------------------------------------------------
-// $RCSfile$
-// $Source$
-// $Revision$
-// $Date$
+// $RCSfile: wxSerialize.cpp $
+// $Source: src/wxSerialize.cpp $
+// $Revision: 1.16 $
+// $Date: 7-sep-2007 11:29:08 $
 //---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
 // Copyright:   (c) Jorgen Bodde
-// License:     GNU General Public License (Version 2 or later)
-//---------------------------------------------------------------------------
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License along
-//  with this program; if not, write to the Free Software Foundation, Inc.,
-//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+// License:     see LICENSE for details
 //---------------------------------------------------------------------------
 
 #undef wxUSE_APPLE_IEEE
@@ -384,6 +370,15 @@ void wxSerialize::SkipData(wxUint8 hdr)
 		LoadInt();
 		break;
 
+    case wxSERIALIZE_HDR_INTINT:
+        int val1, val2;
+        LoadIntInt(val1, val2);
+        break;
+
+    case wxSERIALIZE_HDR_DATETIME:
+        LoadDateTime();
+        break;
+
 	case wxSERIALIZE_HDR_ENTER:
 		break;
 
@@ -565,6 +560,23 @@ bool wxSerialize::ReadArrayString(wxArrayString& value)
 
     return false;
 }
+
+bool wxSerialize::ReadDateTime(wxDateTime& value)
+{
+    if(LoadChunkHeader(wxSERIALIZE_HDR_DATETIME))
+    {
+        wxDateTime tmpvalue = LoadDateTime();
+
+		if(IsOk())
+		{
+            value = tmpvalue;
+			return true;
+		}
+    }
+
+    return false;
+}
+
 
 bool wxSerialize::Read(wxMemoryBuffer &buf)
 {
@@ -751,6 +763,43 @@ wxArrayString wxSerialize::LoadArrayString()
 	return str;
 }
 
+wxDateTime wxSerialize::LoadDateTime()
+{
+	wxDateTime dt;
+
+	if(CanLoad())
+	{
+		// load date
+        wxUint8 day = LoadUint8();
+        wxUint8 month = LoadUint8();
+        wxUint16 year = LoadUint16();
+        // load time
+        wxUint8 hour = LoadUint8();
+        wxUint8 min = LoadUint8();
+        wxUint8 sec = LoadUint8();
+        // load millisecs
+        wxUint8 msec = LoadUint8();
+
+        dt = wxDateTime(day, (wxDateTime::Month)month, year, hour, min, sec, msec);
+	}
+
+	return dt;
+}
+
+wxUint8 wxSerialize::LoadUint8()
+{
+	wxUint8 value = 0;
+
+	// reads a 16bits from the stream
+	if(CanLoad())
+	{
+		m_idstr.Read((void *)&value, sizeof(wxUint8));
+		return value;
+	}
+
+	return value;
+}
+
 wxUint16 wxSerialize::LoadUint16()
 {
 	wxUint16 value = 0;
@@ -886,6 +935,9 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
     }
 }
 
+// Must be at global scope for VC++ 5 (ripped from wxDataInputStream)
+extern "C" wxFloat64 ConvertFromIeeeExtended(const wxInt8 *bytes);
+
 wxFloat64 wxSerialize::LoadDouble()
 {
 	wxFloat64 value = 0;
@@ -897,7 +949,7 @@ wxFloat64 wxSerialize::LoadDouble()
 		wxInt8 buf[10];
 
 		m_idstr.Read((void *)buf, 10);
-		value = wxConvertFromIeeeExtended(buf);
+		value = ConvertFromIeeeExtended(buf);
 #else
 		#pragma warning "wxSerialize::LoadDouble() not using IeeeExtended - will not work!"
 #endif
@@ -944,6 +996,9 @@ bool wxSerialize::WriteBool(bool value)
     return IsOk();
 }
 
+// Must be at global scope for VC++ 5
+extern "C" void ConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
+
 bool wxSerialize::WriteDouble(wxFloat64 value)
 {
     if(CanStore())
@@ -953,7 +1008,7 @@ bool wxSerialize::WriteDouble(wxFloat64 value)
 		wxInt8 buf[10];
 
 #if wxUSE_APPLE_IEEE
-		wxConvertToIeeeExtended(value, buf);
+		ConvertToIeeeExtended(value, buf);
 #else
 	#if !defined(__VMS__) && !defined(__GNUG__)
 		#pragma warning "wxSerialize::WriteDouble() not using IeeeExtended - will not work!"
@@ -988,6 +1043,35 @@ bool wxSerialize::WriteArrayString(const wxArrayString& value)
 		SaveUint32(value.Count());
 		for(size_t i = 0; i < value.Count(); i++)
 			SaveString(value[i]);
+    }
+
+    return IsOk();
+}
+
+bool wxSerialize::WriteDateTime(const wxDateTime& value)
+{
+    if(CanStore())
+    {
+		// write header
+		SaveChar(wxSERIALIZE_HDR_DATETIME);
+
+        // decompose
+		wxUint8 day     = value.GetDay();
+		wxUint8 month   = value.GetMonth();
+		wxUint16 year   = value.GetYear();
+		wxUint8 hour    = value.GetHour();
+		wxUint8 min     = value.GetMinute();
+		wxUint8 sec     = value.GetSecond();
+		wxUint8 msec    = value.GetMillisecond();
+
+		// serialize
+		SaveChar(day);
+		SaveChar(month);
+		SaveUint16(year);
+		SaveChar(hour);
+		SaveChar(min);
+		SaveChar(sec);
+		SaveChar(msec);
     }
 
     return IsOk();

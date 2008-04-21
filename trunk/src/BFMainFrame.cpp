@@ -66,6 +66,7 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (ID_ShowLicense,        BFMainFrame::OnShowLicense)
     EVT_MENU    (ID_ShowHistory,        BFMainFrame::OnShowHistory)
     EVT_MENU    (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
+    EVT_BUTTON  (ID_OpenWebSite,        BFMainFrame::OnOpenWebSite)
     EVT_MENU    (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
     EVT_BUTTON  (ID_SubmitBug,          BFMainFrame::OnSubmitBug)
     EVT_MENU    (ID_FeauterRequest,     BFMainFrame::OnFeauterRequest)
@@ -162,11 +163,14 @@ END_EVENT_TABLE()
 
     // buttons
     wxBoxSizer* pButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxButton* pButtonBug        = new wxButton(this, ID_SubmitBug, _("Bug Report"));
+    wxButton* pButtonBug        = new wxButton(this, ID_SubmitBug,      _("Bug Report"));
     wxButton* pButtonFeauter    = new wxButton(this, ID_FeauterRequest, _("Feauter Request"));
+    wxButton* pButtonWebsite    = new wxButton(this, ID_OpenWebSite,    _("Website"));
     pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
+    pButtonSizer->AddStretchSpacer(1);
+    pButtonSizer->Add( pButtonWebsite,  wxSizerFlags(0).Border(wxALL, 10));
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
@@ -191,6 +195,26 @@ END_EVENT_TABLE()
 
     // set the title bar
     RefreshTitle();
+
+    // check for new version if needed
+    if (BFSettings::Instance().CheckForNewVersion())
+    {
+        if(wxGetApp().IsNewVersionAvailable())
+        {
+            BFSystem::Info
+            (
+                wxString::Format
+                (
+                    "A new version of blackfisk is availabel!\n" \
+                    "New version is %s\n" \
+                    "This version is %s\n" \
+                    "Please visit the website (see in help-menu).",
+                    wxGetApp().GetNewestVersion(),
+                    wxGetApp().GetVersion()
+                )
+            );
+        }
+    }
 
 #ifdef _DEBUG
     //Test();

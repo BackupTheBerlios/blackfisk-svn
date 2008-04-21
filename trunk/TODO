@@ -1,8 +1,10 @@
-0.0.1
-~~~~~
-- BFBackupTree::UpdatePlaceholders() instead of Init() (called in SetFillBlackfiskPlaceholders())
+- wxSerialize: added Jorgen Bodde's wxDateTime handling code
 - settings: check for new version
 
+0.0.1
+~~~~~
+- MainFrame IDs to ctrlids.h
+- BFBackupTree::UpdatePlaceholders() instead of Init() (called in SetFillBlackfiskPlaceholders())
 - BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 - BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)

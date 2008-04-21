@@ -138,8 +138,10 @@ bool BFApp::OnInit()
     // read the configuration file
     ReadSettings();
 
+    // log application start
     BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName().wx_str()));
 
+    // init locals
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
@@ -265,6 +267,8 @@ bool BFApp::IsNewVersionAvailable ()
 const wxString& BFApp::GetNewestVersion ()
 {
     static const wxString s_strNewestVersionString = ReadFileFromFTP (BF_FTP_URL, BF_FTP_DIR, BF_FTP_FILE_VER);
+
+    BFSettings::Instance().SetLastVersionCheck(wxDateTime::Now());
 
     return s_strNewestVersionString;
 }

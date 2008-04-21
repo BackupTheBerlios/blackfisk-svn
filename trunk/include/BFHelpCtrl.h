@@ -84,6 +84,8 @@ class BFHelpCtrl : public wxPanel
         void Connect (wxWindow* pWindow, const wxString& strHelpText);
         /// Please look on Connect (wxWindow*, const wxString&) for more detailes.
         void Connect (wxWindow* pWindow1, wxWindow* pWindow2, const wxString& strHelpText);
+        /// Please look on Connect (wxWindow*, const wxString&) for more detailes.
+        void Connect (wxWindow* pWindow1, wxWindow* pWindow2, wxWindow* pWindow3, const wxString& strHelpText);
 };
 
 #endif    // BFHELPCTRL_H

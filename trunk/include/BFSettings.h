@@ -49,7 +49,7 @@ class BFSettings
         bool                bWithFiles_;
         /** max size of the application logfile in KB
             size does not matter if it is '0' */
-        long                lMaxLogFileSize_;
+        wxUint32            lMaxLogFileSize_;
         /** open the last opened project on start */
         bool                bOpenLastProject_;
         /** last opened projecte */
@@ -68,6 +68,11 @@ class BFSettings
         int                 iSashPositionInMainWindow_;
         /** show hidden files in the directory tree */
         bool                bShowHiddenFiles_;
+        /** time in days till the next check for a new blackfisk version
+            It is 0 if there shouldn't be a check. */
+        wxUint32            lDaysTillNextCheck_;
+        /** last check for a new blackfisk version */
+        wxDateTime          dateLastVersionCheck_;
 
         ///
         static BFSettings   sSettings_;
@@ -96,9 +101,9 @@ class BFSettings
         ///
         void SetWithFiles (bool bWithFiles);
         /// return the maximum size of a log file in kilobyte
-        long GetMaxLogFileSize ();
+        wxUint32 GetMaxLogFileSize ();
         ///
-        void SetMaxLogFileSize (long lSizeInKiloByte);
+        void SetMaxLogFileSize (wxUint32 lSizeInKiloByte);
         ///
         const wxString& GetLastProject ();
         ///
@@ -135,6 +140,16 @@ class BFSettings
         void SetShowHiddenFiles (bool bShowHidden);
         ///
         bool GetShowHiddenFiles ();
+        ///
+        void SetDaysTillNextCheck (wxUint32 lDays);
+        ///
+        wxUint32 GetDaysTillNextCheck ();
+        ///
+        void SetLastVersionCheck (wxDateTime date);
+        ///
+        wxDateTime GetLastVersionCheck ();
+        /** Return true if a new version check could be done. */
+        bool CheckForNewVersion ();
 
         ///
         bool Serialize (jbSerialize& rA);

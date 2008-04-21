@@ -39,8 +39,17 @@ class BFProjectSettingsCtrl;
 class BFSettingsDlg : public wxDialog
 {
     private:
+        // --- GENERALE PAGE ---
         ///
         wxCheckBox*             pCheckOpenLast_;
+        ///
+        wxComboBox*             pComboLanguage_;
+        ///
+        wxCheckBox*             pCheckNewVersion_;
+        ///
+        wxSpinCtrl*             pSpinDaysNewVersion_;
+
+        // --- VIEW PAGE ---
         ///
         wxCheckBox*             pCheckMacro_;
         ///
@@ -49,14 +58,16 @@ class BFSettingsDlg : public wxDialog
         wxCheckBox*             pCheckSwitchTrees_;
         ///
         wxCheckBox*             pCheckHiddenFiles_;
+
+        // --- LOG PAGE ---
         ///
         wxSpinCtrl*             pSpinLogSize_;
         ///
-        BFProjectSettingsCtrl*  pPrjCtrl_;
-        ///
         wxComboBox*             pComboVerboseLog_;
+
+        // --- DEFAULT PROJECT PAGE ---
         ///
-        wxComboBox*             pComboLanguage_;
+        BFProjectSettingsCtrl*  pPrjCtrl_;
 
         /// read data from the settings data
         void GetData ();
@@ -74,6 +85,10 @@ class BFSettingsDlg : public wxDialog
         ///
         wxWindow* CreatePage_Project (wxTreebook* pBook);
 
+        /** enable or disable 'pSpinDaysNewVersion_' related
+            on the state of 'pCheckNewVersion_' */
+        void On_NewVersion ();
+
     public:
         /// constructor
         BFSettingsDlg (wxWindow* pParent);
@@ -87,6 +102,9 @@ class BFSettingsDlg : public wxDialog
         void OnButton_Ok (wxCommandEvent& rEvent);
         ///
         void OnButton_Cancel (wxCommandEvent& rEvent);
+
+        ///
+        void OnCheck_NewVersion (wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };    // class BFSettingsDlg

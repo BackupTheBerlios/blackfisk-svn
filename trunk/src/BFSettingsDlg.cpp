@@ -40,11 +40,13 @@
 #include "BFSettings.h"
 #include "BFApp.h"
 #include "BFHelpCtrl.h"
+#include "ctrlids.h"
 
 BEGIN_EVENT_TABLE(BFSettingsDlg, wxDialog)
-  EVT_CLOSE     (                               BFSettingsDlg::OnClose)
-  EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONOK,     BFSettingsDlg::OnButton_Ok)
-  EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONCANCEL, BFSettingsDlg::OnButton_Cancel)
+  EVT_CLOSE     (                                       BFSettingsDlg::OnClose)
+  EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONOK,             BFSettingsDlg::OnButton_Ok)
+  EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONCANCEL,         BFSettingsDlg::OnButton_Cancel)
+  EVT_CHECKBOX  (BF_SETTINGSDLG_ID_CHECK_NEWVERSION,    BFSettingsDlg::OnCheck_NewVersion)
 END_EVENT_TABLE()
 
 //
@@ -108,6 +110,18 @@ void BFSettingsDlg::AddHead (wxSizer* pSizer,
     pSizer->Add(pHead, wxSizerFlags(0).Center().Border(wxBOTTOM, 15));
 }
 
+void BFSettingsDlg::On_NewVersion ()
+{
+    if (pCheckNewVersion_->GetValue())
+        pSpinDaysNewVersion_->Enable();
+    else
+        pSpinDaysNewVersion_->Enable(false);
+}
+
+void BFSettingsDlg::OnCheck_NewVersion (wxCommandEvent& rEvent)
+{
+    On_NewVersion();
+}
 
 wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
 {
@@ -118,7 +132,6 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
 
     // language
-    wxStaticText* pLabelLanguage = new wxStaticText(pPage, wxID_ANY, _("Language: "));
     pComboLanguage_ = new wxComboBox(pPage,
                                      wxID_ANY,
                                      BFSettings::langNames_[0],
@@ -127,19 +140,44 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
                                      BFSettings::langCount_,
                                      BFSettings::langNames_,
                                      wxCB_READONLY);
-    pHelpCtrl->Connect(pLabelLanguage, pComboLanguage_, _("The language for the user interface."));
+    pHelpCtrl->Connect(pComboLanguage_, _("The language for the user interface."));
 
     // open last project on startup
     pCheckOpenLast_ = new wxCheckBox(pPage, wxID_ANY, _("open the last project on startup"));
     pHelpCtrl->Connect(pCheckOpenLast_, _("Open the last opened project automaticly on startup."));
 
-    // arrange
-    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
-    wxGridBagSizer* pGBSizer = new wxGridBagSizer(5);
+    // check for new version?
+    pCheckNewVersion_ = new wxCheckBox(pPage, BF_SETTINGSDLG_ID_CHECK_NEWVERSION, _("check for updates ..."));
+    pHelpCtrl->Connect(pCheckNewVersion_, _("Check if a newer version of blackfisk is available. A connection to the internet is needed for this."));
 
-    pGBSizer->Add(pLabelLanguage,     wxGBPosition(0, 0), wxGBSpan(),     wxALIGN_CENTER_VERTICAL);
-    pGBSizer->Add(pComboLanguage_,    wxGBPosition(0, 1), wxGBSpan(),     wxALIGN_CENTER_VERTICAL);
-    pGBSizer->Add(pCheckOpenLast_,    wxGBPosition(1, 0), wxGBSpan(1, 2), wxALIGN_CENTER_VERTICAL);
+    // days till next new version check
+    wxStaticText* pLabelDays1 = new wxStaticText(pPage, wxID_ANY, _("check all "));
+    wxStaticText* pLabelDays2 = new wxStaticText(pPage, wxID_ANY, _(" Days for new version"));
+    pSpinDaysNewVersion_ = new wxSpinCtrl(pPage);
+    pSpinDaysNewVersion_->Fit();
+    On_NewVersion();
+    pHelpCtrl->Connect(pLabelDays1, pLabelDays2, pSpinDaysNewVersion_,
+                       _("The days between two checks for a new blackfisk version."));
+
+    // arrange
+    wxBoxSizer*         pSizer              = new wxBoxSizer(wxVERTICAL);
+    wxGridBagSizer*     pGBSizer            = new wxGridBagSizer(5);
+    wxStaticBoxSizer*   pSBSizer_Version    = new wxStaticBoxSizer(wxVERTICAL, pPage, _("Update"));
+    wxBoxSizer*         pBSizer_Days        = new wxBoxSizer(wxHORIZONTAL);
+    wxStaticBoxSizer*   pSBSizer_Language   = new wxStaticBoxSizer(wxVERTICAL, pPage, _("Language"));
+    wxStaticBoxSizer*   pSBSizer_LastPrj    = new wxStaticBoxSizer(wxVERTICAL, pPage);
+
+    pBSizer_Days->Add(pLabelDays1,          wxSizerFlags(0).Center());
+    pBSizer_Days->Add(pSpinDaysNewVersion_, wxSizerFlags(0));
+    pBSizer_Days->Add(pLabelDays2,          wxSizerFlags(0).Center());
+    pSBSizer_Version->Add(pCheckNewVersion_,    wxSizerFlags(0).Border());
+    pSBSizer_Version->Add(pBSizer_Days,         wxSizerFlags(0).Border());
+    pSBSizer_Language->Add(pComboLanguage_, wxSizerFlags(0).Border());
+    pSBSizer_LastPrj->Add(pCheckOpenLast_,  wxSizerFlags(0).Border());
+
+    pGBSizer->Add(pSBSizer_Language,    wxGBPosition(0, 0), wxGBSpan(1, 2), wxEXPAND);
+    pGBSizer->Add(pSBSizer_Version,     wxGBPosition(1, 0), wxGBSpan(1, 2), wxEXPAND);
+    pGBSizer->Add(pSBSizer_LastPrj,     wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND);
 
     AddHead(pSizer, pPage, _("General"));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
@@ -194,10 +232,6 @@ wxWindow* BFSettingsDlg::CreatePage_View (wxTreebook* pBook)
     pGBSizer->Add(pSBSizer_General,     wxGBPosition(0, 0), wxGBSpan(1, 2), wxEXPAND);
     pGBSizer->Add(pSBSizer_Backup,      wxGBPosition(1, 0), wxGBSpan(1, 2), wxEXPAND);
     pGBSizer->Add(pSBSizer_Dir,         wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND);
-    //pGBSizer->Add(pCheckMacro_,         wxGBPosition(1, 0), wxGBSpan(1, 2));
-    //pGBSizer->Add(pCheckFiles_,         wxGBPosition(2, 0), wxGBSpan(1, 2));
-    //pGBSizer->Add(pCheckHiddenFiles_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
-    //pGBSizer->Add(pCheckSwitchTrees_,   wxGBPosition(3, 0), wxGBSpan(1, 2));
 
     AddHead(pSizer, pPage, _("View"));
     pSizer->Add(pGBSizer,   wxSizerFlags(1).Expand());
@@ -345,6 +379,16 @@ void BFSettingsDlg::GetData ()
     pCheckSwitchTrees_->SetValue(rS.GetSwitchMainCtrls());
     pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
     pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
+    if (rS.GetDaysTillNextCheck() == 0)
+    {
+        pCheckNewVersion_->SetValue(false);
+    }
+    else
+    {
+        pCheckNewVersion_->SetValue(true);
+    }
+    pSpinDaysNewVersion_->SetValue(rS.GetDaysTillNextCheck());
+    On_NewVersion();
 
     switch (rS.GetVerboseLevelLog())
     {
@@ -389,6 +433,14 @@ void BFSettingsDlg::SetData ()
     rS.SetSwitchMainCtrls(pCheckSwitchTrees_->GetValue());
     rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());
     pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());
+    if (pCheckNewVersion_->GetValue())
+    {
+        rS.SetDaysTillNextCheck(pSpinDaysNewVersion_->GetValue());
+    }
+    else
+    {
+        rS.SetDaysTillNextCheck(0);
+    }
 
     switch (pComboVerboseLog_->GetSelection())
     {

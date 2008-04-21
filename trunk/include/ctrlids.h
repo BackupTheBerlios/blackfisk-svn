@@ -52,5 +52,6 @@
 #define BF_TASKDLG_CBVERIFY                         21 + wxID_HIGHEST
 #define BF_EXCLUDECTRL_BUTTON_ADD                   22 + wxID_HIGHEST
 #define BFDIRCTRL_ID_CHECK_HIDDEN                   23 + wxID_HIGHEST
+#define BF_SETTINGSDLG_ID_CHECK_NEWVERSION          24 + wxID_HIGHEST
 
 #endif  // CTRLIDS_H

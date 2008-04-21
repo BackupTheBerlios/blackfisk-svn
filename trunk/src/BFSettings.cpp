@@ -51,7 +51,9 @@ BFSettings::BFSettings ()
             pointMainWindow_(wxDefaultPosition),
             bSwitchMainCtrls_(false),
             iSashPositionInMainWindow_(-1),
-            bShowHiddenFiles_(false)
+            bShowHiddenFiles_(false),
+            lDaysTillNextCheck_(0),
+            dateLastVersionCheck_(wxDateTime::Now().SetYear(2000))
 {
 }
 
@@ -87,12 +89,12 @@ void BFSettings::SetWithFiles (bool bWithFiles)
     bWithFiles_ = bWithFiles;
 }
 
-long BFSettings::GetMaxLogFileSize ()
+wxUint32 BFSettings::GetMaxLogFileSize ()
 {
     return lMaxLogFileSize_;
 }
 
-void BFSettings::SetMaxLogFileSize (long lSizeInKiloByte)
+void BFSettings::SetMaxLogFileSize (wxUint32 lSizeInKiloByte)
 {
     if (lSizeInKiloByte < 0)
         lMaxLogFileSize_ = 0;
@@ -193,6 +195,36 @@ bool BFSettings::GetShowHiddenFiles ()
     return bShowHiddenFiles_;
 }
 
+void BFSettings::SetDaysTillNextCheck (wxUint32 lDays)
+{
+    if (lDays >= 0)
+        lDaysTillNextCheck_ = lDays;
+}
+
+wxUint32 BFSettings::GetDaysTillNextCheck ()
+{
+    return lDaysTillNextCheck_;
+}
+
+void BFSettings::SetLastVersionCheck (wxDateTime date)
+{
+    dateLastVersionCheck_ = date;
+}
+
+wxDateTime BFSettings::GetLastVersionCheck ()
+{
+    return dateLastVersionCheck_;
+}
+
+bool BFSettings::CheckForNewVersion ()
+{
+    if ( lDaysTillNextCheck_ == 0
+       || wxDateTime::Now().Subtract(dateLastVersionCheck_).GetDays() < lDaysTillNextCheck_)
+        return false;
+
+    return true;
+}
+
 bool BFSettings::Serialize (jbSerialize& rA)
 {
     if ( !(rA.IsOpen()) )
@@ -206,7 +238,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         defaultPrj_.Serialize(rA);
         rA << bFillBlackfiskPlaceholders_;
         rA << bWithFiles_;
-        rA << (wxUint32&)lMaxLogFileSize_;
+        rA << lMaxLogFileSize_;
         rA << strLastProject_;
         rA << bOpenLastProject_;
         rA << (int)verboseLog_;
@@ -216,6 +248,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << bSwitchMainCtrls_;
         rA << iSashPositionInMainWindow_;
         rA << bShowHiddenFiles_;
+        rA << lDaysTillNextCheck_;
+        rA << dateLastVersionCheck_;
     }
     else
     // ** serialize FROM file **
@@ -245,6 +279,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
             bSwitchMainCtrls_           = false;
             iSashPositionInMainWindow_  = -1;
             bShowHiddenFiles_           = false;
+            lDaysTillNextCheck_         = 0;
+            dateLastVersionCheck_       = wxDateTime::Now().SetYear(2000);
         }
         else
         {
@@ -253,6 +289,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
             rA >> bSwitchMainCtrls_;
             rA >> iSashPositionInMainWindow_;
             rA >> bShowHiddenFiles_;
+            rA >> lDaysTillNextCheck_;
+            rA >> dateLastVersionCheck_;
         }
     }
 
