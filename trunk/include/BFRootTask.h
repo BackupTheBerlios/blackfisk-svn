@@ -141,6 +141,9 @@ class BFRootTask : public Subject
             return -1 if nothing is found */
         long FindLastTaskWithDestination(const wxChar* destination);
 
+        /** find all tasks with placeholders in its string-members */
+        BFTaskVector& FindAllTasksWithPlaceholders (BFTaskVector& rVec);
+
         ///
         void Close ();
 };  // class BFRootTask

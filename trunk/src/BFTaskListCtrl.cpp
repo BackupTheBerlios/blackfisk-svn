@@ -24,6 +24,7 @@
 #include "BFTaskListCtrl.h"
 
 #include <wx/gdicmn.h>
+#include <wx/settings.h>
 
 #include "BFRootTaskApp.h"
 #include "BFTask.h"
@@ -124,7 +125,8 @@ bool BFTaskListCtrl::SetTask_Active (BFoid oid)
     wxFont font = pST->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pST->SetFont(font);
-    pST->SetForegroundColour(*wxBLACK);
+    //pST->SetForegroundColour(*wxBLACK);
+    pST->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
     pST->Refresh();
     pParent_->Layout();
 

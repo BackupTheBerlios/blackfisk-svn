@@ -40,6 +40,9 @@
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
 
+#define BF_BACKUPTREE_PLACEHOLDER_MASK  "*<*>*"
+#define BF_BACKUPTREE_FILLED_DATE_MASK  wxString::Format("*%s*", BFCore::Instance().GetDateString_Old())
+#define BF_BACKUPTREE_FILLED_TIME_MASK  wxString::Format("*%s*", BFCore::Instance().GetTimeString_Old())
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
@@ -106,6 +109,126 @@ void BFBackupTree::Init ()
     SetToolTip(_("files and directories for the backup"));
 
     Thaw();
+}
+
+void BFBackupTree::RefreshPlaceholders ()
+{
+    // only refresh filled placeholders!
+    if ( !(GetFillBlackfiskPlaceholders()) )
+        return;
+
+    VectorTreeItemId vecIdsDate;
+    VectorTreeItemId vecIdsTime;
+    VectorTreeItemId vecIdsAll;
+
+    // find all items with a label matching to the old filled placeholders
+    if ( !(BFCore::Instance().GetDateString_Old().IsEmpty()) )
+        vecIdsDate = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_DATE_MASK);
+
+    if ( !(BFCore::Instance().GetTimeString_Old().IsEmpty()) )
+        vecIdsTime = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_TIME_MASK);
+
+    vecIdsAll.reserve(vecIdsDate.size() + vecIdsTime.size());
+    vecIdsAll.insert( vecIdsAll.end(), vecIdsDate.begin(), vecIdsDate.end() );
+    vecIdsAll.insert( vecIdsAll.end(), vecIdsTime.begin(), vecIdsTime.end() );
+
+    // are there items to refresh?
+    if (vecIdsAll.empty())
+        return;
+
+    wxString strPath;
+    wxString strLabel;
+
+    // iterate on the items
+    for (ItVectorTreeItemId it = vecIdsAll.begin();
+         it != vecIdsAll.end();
+         ++it)
+    {
+        strPath = GetPathByItem(*it);
+
+        while ( strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK)
+             || strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+        {
+            strLabel = GetItemText(*it);
+
+            if ( strLabel.Matches(BF_BACKUPTREE_FILLED_DATE_MASK)
+              || strLabel.Matches(BF_BACKUPTREE_FILLED_TIME_MASK))
+            {
+                strLabel = strPath.AfterLast(wxFILE_SEP_PATH);
+                SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
+            }
+
+            // cut the last diretory from path
+            strPath = strPath.BeforeLast(wxFILE_SEP_PATH);
+        }
+    }
+}
+
+void BFBackupTree::UpdatePlaceholders ()
+{
+    wxString strLabel;
+
+    if (bFillBlackfiskPlaceholders_)
+    // --- "<date>" => "2000-01-01" ---
+    {
+        VectorTreeItemId vecIds;
+
+        // find all items with a placeholder in its label
+        vecIds = FindItems(GetRootItem(), BF_BACKUPTREE_PLACEHOLDER_MASK);
+
+        // iterate on the items
+        for (ItVectorTreeItemId it = vecIds.begin();
+             it != vecIds.end();
+             ++it)
+        {
+            strLabel = GetItemText(*it);
+            SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
+        }
+    }
+    else
+    // --- "2000-01-01" => "<date>" ---
+    {
+        BFTaskVector vecTasks;
+        wxString strPlaceholder;
+
+        // find all tasks with placeholders
+        BFRootTask::Instance().FindAllTasksWithPlaceholders(vecTasks);
+
+        // iterate over all relevant items
+        for (BFTaskVectorIt it = vecTasks.begin();
+             it != vecTasks.end();
+             ++it)
+        {
+            // get the corrosponding tree-item
+            wxTreeItemId id = FindItem (GetRootItem(), (*it)->GetOID());
+
+            // ** name **
+            if ((*it)->GetName().Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+                SetItemText(id, (*it)->GetName());
+
+
+            // ** destination **
+            strPlaceholder = (*it)->GetDestination();
+
+            while (strPlaceholder.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+            {
+                strLabel = strPlaceholder.AfterLast(wxFILE_SEP_PATH);
+
+                if (strLabel.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+                {
+                    // find the tree-item with the path
+                    wxTreeItemId idCurr = FindItemByPath(GetRootItem(), strPlaceholder);
+
+                    // reset the item text
+                    if (idCurr.IsOk())
+                        SetItemText(idCurr, strLabel);
+                }
+
+                // cut the last diretory from path
+                strPlaceholder = strPlaceholder.BeforeLast(wxFILE_SEP_PATH);
+            }
+        }
+    }
 }
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
@@ -476,7 +599,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
 }
 
 
-wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
+wxTreeItemId BFBackupTree::AddDestination (const wxString& strPath)
 {
     wxTreeItemId    idLast, idCurr;
     wxString        strCurr, strCurrFilled, strAdd;
@@ -489,9 +612,11 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
         idCurr          = idLast;
         strCurr         = tkz.GetNextToken();
         strCurrFilled   = strCurr;
+
         if (bFillBlackfiskPlaceholders_)
             BFTask::FillBlackfiskPlaceholders(strCurrFilled);
-        idLast  = FindItem(idCurr, strCurrFilled, false);
+
+        idLast = FindItem(idCurr, strCurrFilled, false);
 
         // does the item exists
         if ( idLast.IsOk() )
@@ -538,7 +663,9 @@ wxTreeItemId BFBackupTree::AddDestination (wxString strPath)
 }
 
 
-wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent, wxString strVol, wxString strAdd)
+wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent,
+                                     const wxString& strVol,
+                                     const wxString& strAdd)
 {
     wxTreeItemId    idReturn;
     bool            bJustAdded = false;
@@ -616,8 +743,45 @@ wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent, wxString strVol, wxS
     return idReturn;
 }
 
+/*
+wxTreeItemId BFBackupTree::AddTaskAfter (wxTreeItemId idItemBefore,
+                                         BFoid oid,
+                                         BFTaskType type,
+                                         const wxString& strName,
+                                         const wxString& strDestination)
+{
+    wxString str(strName);
+    wxString strFull;
 
-wxTreeItemId BFBackupTree::AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination)
+    // create strFull
+    strFull << strDestination;
+
+    if (strFull.Last() != wxFILE_SEP_PATH)
+        strFull << wxFILE_SEP_PATH;
+
+    strFull << strName;
+
+    if (bFillBlackfiskPlaceholders_)
+        BFTask::FillBlackfiskPlaceholders(str);
+
+    // add the destination items and the task item itself
+    wxTreeItemId id = InsertItem
+    (
+        AddDestination(strDestination),
+        idItemBefore,
+        str,
+        BFTask::GetTypeIconId(type),
+        -1,
+        new BFBackupTreeItemData ( oid, strFull.c_str() )
+    );
+
+    return id;
+}*/
+
+wxTreeItemId BFBackupTree::AddTask (BFoid oid,
+                                    BFTaskType type,
+                                    const wxString& strName,
+                                    const wxString& strDestination)
 {
     wxString str(strName);
     wxString strFull;
@@ -773,7 +937,7 @@ BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
 const wxChar* BFBackupTree::GetPathByItem (wxTreeItemId itemId)
 {
     // get the data behind the last selected (by right-click) item
-    BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(lastItemId_));
+    BFBackupTreeItemData* pItemData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
 
     if (pItemData)
     {
@@ -800,17 +964,49 @@ bool BFBackupTree::IsTask (wxTreeItemId itemId)
     return true;
 }
 
-
-wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep /*= true*/)
+bool BFBackupTree::HasPath (wxTreeItemId itemId, const wxString& strPath)
 {
-    if (label == NULL)
-        return wxTreeItemId();
+    BFBackupTreeItemData* pData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
 
-    if (GetItemText(idStart) == label)
+    if (pData)
+        if (strPath == pData->GetPath())
+            return true;
+
+    return false;
+}
+
+bool BFBackupTree::HasOID (wxTreeItemId itemId, BFoid oid)
+{
+    BFBackupTreeItemData* pData = dynamic_cast<BFBackupTreeItemData*>(GetItemData(itemId));
+
+    if (pData)
+        if (pData->GetOID() == oid)
+            return true;
+
+    return false;
+}
+
+wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart,
+                                     const wxString& strLabel,
+                                     bool bGoDeep /*= true*/)
+{
+    VectorTreeItemId vecIds = FindItems(idStart, strLabel, bGoDeep, false);
+
+    if (vecIds.size() > 0)
+        return vecIds[0];
+
+    return wxTreeItemId();
+}
+
+wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, BFoid oid)
+{
+    wxTreeItemId            idCurr, idLast;
+    wxTreeItemIdValue       idCookie;
+    BFBackupTreeItemData*   pData(NULL);
+
+    // check start item
+    if (HasOID(idStart, oid))
         return idStart;
-
-    wxTreeItemId idCurr, idRes;
-    wxTreeItemIdValue idCookie;
 
     if (ItemHasChildren(idStart))
     {
@@ -818,22 +1014,78 @@ wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, const wxChar* label, 
              idCurr.IsOk();
              idCurr = GetNextChild(idStart, idCookie))
         {
-            if (bGoDeep)
-            {
-                idRes = FindItem(idCurr, label, true);
+            idLast = FindItem(idCurr, oid);
 
-                if (idRes.IsOk())
-                    return idRes;
-            }
-            else
-            {
-                if (GetItemText(idCurr) == label)
-                    return idCurr;
-            }
+            if (idLast.IsOk())
+                return idLast;
         }
     }
 
     return wxTreeItemId();
+}
+
+wxTreeItemId BFBackupTree::FindItemByPath (wxTreeItemId idStart, const wxString& strPath)
+{
+    wxTreeItemId            idCurr, idLast;
+    wxTreeItemIdValue       idCookie;
+    wxString                str;
+
+    // check start item
+    if (HasPath(idStart, strPath))
+        return idStart;
+
+    if (ItemHasChildren(idStart))
+    {
+        for (idCurr = GetFirstChild(idStart, idCookie);
+             idCurr.IsOk();
+             idCurr = GetNextChild(idStart, idCookie))
+        {
+            idLast = FindItemByPath(idCurr, strPath);
+
+            if (idLast.IsOk())
+                return idLast;
+        }
+    }
+
+    return wxTreeItemId();
+}
+
+VectorTreeItemId  BFBackupTree::FindItems (wxTreeItemId idStart,
+                                           const wxString& strLabel,
+                                           bool bGoDeep /*= true*/,
+                                           bool bSearchForAll /*= true*/)
+{
+    VectorTreeItemId vecRes, vecDeep;
+    wxTreeItemId idCurr;
+    wxTreeItemIdValue idCookie;
+
+    if (GetItemText(idStart).Matches(strLabel))
+        vecRes.push_back(idStart);
+
+    if (ItemHasChildren(idStart))
+    {
+        for (idCurr = GetFirstChild(idStart, idCookie);
+             idCurr.IsOk();
+             idCurr = GetNextChild(idStart, idCookie))
+        {
+            if ( !bSearchForAll && vecRes.size() == 1 )
+                return vecRes;
+
+            if (bGoDeep)
+            {
+                vecDeep = FindItems(idCurr, strLabel, true);
+                vecRes.reserve ( vecRes.size() + vecDeep.size() );
+                vecRes.insert ( vecRes.end(), vecDeep.begin(), vecDeep.end() );
+            }
+            else
+            {
+                if (GetItemText(idCurr).Matches(strLabel))
+                    vecRes.push_back(idCurr);
+            }
+        }
+    }
+
+    return vecRes;
 }
 
 VectorTreeItemId BFBackupTree::GetTaskItems (wxTreeItemId idParent, bool bGoDeep /*= true*/)
@@ -871,13 +1123,18 @@ VectorTreeItemId BFBackupTree::GetTaskItems (wxTreeItemId idParent, bool bGoDeep
     return vec;
 }
 
+bool BFBackupTree::GetFillBlackfiskPlaceholders ()
+{
+    return bFillBlackfiskPlaceholders_;
+}
+
 void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 {
     if (bFillBlackfiskPlaceholders_ == bValue)
         return;
 
     bFillBlackfiskPlaceholders_ = bValue;
-    Init();
+    UpdatePlaceholders();
 }
 
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxChar* strPath /*= NULL*/)

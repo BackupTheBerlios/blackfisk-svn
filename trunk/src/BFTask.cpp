@@ -30,9 +30,9 @@
 #include "blackfisk.h"
 
 BFTaskData::BFTaskData (BFTaskType type,
-                        const wxChar* strSource,
-                        const wxChar* strDestination,
-                        const wxChar* strName,
+                        const wxString& strSource,
+                        const wxString& strDestination,
+                        const wxString& strName,
                         bool bVerify,
                         bool bVerifyContent,
                         BFArchiveFormat archive,
@@ -85,19 +85,19 @@ BFTaskType BFTaskData::GetType () const
     return type_;
 }
 
-const wxChar* BFTaskData::GetSource () const
+const wxString& BFTaskData::GetSource () const
 {
-    return strSource_.c_str();
+    return strSource_;
 }
 
-const wxChar* BFTaskData::GetDestination () const
+const wxString& BFTaskData::GetDestination () const
 {
-    return strDestination_.c_str();
+    return strDestination_;
 }
 
-const wxChar* BFTaskData::GetName () const
+const wxString& BFTaskData::GetName () const
 {
-    return strName_.c_str();
+    return strName_;
 }
 
 bool BFTaskData::Verify () const
@@ -162,30 +162,21 @@ BFoid BFTaskData::GetOID () const
     return oid_;
 }
 
-void BFTaskData::SetSource (const wxChar* source)
+void BFTaskData::SetSource (const wxString& source)
 {
-    if (source == NULL)
-        return;
-
     strSource_ = source;
 }
 
-void BFTaskData::SetDestination (const wxChar* dest)
+void BFTaskData::SetDestination (const wxString& dest)
 {
-    if (dest == NULL)
-        return;
-
     strDestination_ = dest;
 
     // upper case the drive letter
     strDestination_.SetChar(0, wxString(strDestination_[0]).MakeUpper()[0]);
 }
 
-void BFTaskData::SetName (const wxChar* name)
+void BFTaskData::SetName (const wxString& name)
 {
-    if (name == NULL)
-        return;
-
     strName_ = name;
 }
 
@@ -208,6 +199,19 @@ void BFTaskData::SetExclude (const wxArrayString& exclude)
 {
     arrExclude_ = exclude;
 }
+
+/*static* BFTaskType BFTask::GetTypeByDescription (const wxString& strDesc)
+{
+    for (BFTaskType type = TaskINVALID;
+         type <= TaskHIGHEST;
+         ++type)
+    {
+        if (strDesc == GetTypeDescription(type))
+            return type;
+    }
+
+    return TaskINVALID;
+}*/
 
 /*static*/ wxString BFTask::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
 {
@@ -387,9 +391,9 @@ bool BFTask::Serialize (jbSerialize& rA)
 }
 
 BFTask::BFTask (BFTaskType type,
-                const wxChar* strSource,
-                const wxChar* strDestination,
-                const wxChar* strName,
+                const wxString& strSource,
+                const wxString& strDestination,
+                const wxString& strName,
                 bool bVerify,
                 bool bVerifyContent,
                 BFArchiveFormat archiveFormat,

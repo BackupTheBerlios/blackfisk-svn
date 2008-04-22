@@ -114,12 +114,29 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// return the path of the specified item
         const wxChar* GetPathByItem (wxTreeItemId itemId);
 
-        /** search for an item by its label starting at 'idStart'
-            and return the item-id for the first match.
-            if 'bGoDeep' is false only child-items in the next layer will be searched
-            if 'bGoDeep' is true grand-child-items in all layers will be searched
-            if nothing is found can be checked be wxTreeItemId::IsOk() */
-        wxTreeItemId FindItem (wxTreeItemId idStart, const wxChar* label, bool bGoDeep = true);
+        /** Search for items by label starting at 'idStart'
+            and return the item-ids in a vector.
+            'strLabel' can contain wildcards (*, ?).
+            The parameter 'bGoDeep' indicate if only child-items in the next layer
+            or grand-child-items in all layers will be searched.
+            The paramter 'bSearchForAll' indicate if all matching items should be
+            searched or just the first match. */
+        VectorTreeItemId FindItems (wxTreeItemId idStart,
+                                    const wxString& strLabel,
+                                    bool bGoDeep = true,
+                                    bool bSearchForAll = true);
+
+        /** Did the same as FindItems() but just return the item-id of the first match.
+            If nothing is found it return an invalid wxTreeItemId. Please see
+            'VectorTreeItemId FindItems (wxTreeItemId, const wxString&, bool)' for more detailes. */
+        wxTreeItemId FindItem (wxTreeItemId idStart, const wxString& strLabel, bool bGoDeep = true);
+
+        /** Search the tree-item corrosponding to the specified oid. */
+        wxTreeItemId FindItem (wxTreeItemId idStart, BFoid oid);
+
+        /** Search the tree-item corrosponding to the specified path. */
+        wxTreeItemId FindItemByPath (wxTreeItemId idStart, const wxString& strPath);
+
         /** Search for all items corrosponding to a BFTask and return them in a vector.
             If 'bGoDeep' is false only child-items of 'idParent' will be searched.
             Ff 'bGoDeep' is true all child-items of 'idParent' in all layers will be searched. */
@@ -144,6 +161,12 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         ///
         void Init ();
 
+        /** check all placeholders in the tree-ctrl and
+            fill them with data if needed. */
+        void UpdatePlaceholders ();
+        ///
+        void RefreshPlaceholders ();
+
         ///
         virtual void ValueChanged (Subject* pSender);
 
@@ -153,16 +176,41 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// if the specified item a task it returns 'true'
         bool IsTask (wxTreeItemId itemId);
 
-        /// add tree items relating to the path to the tree
-        wxTreeItemId AddDestination (wxString strPath);
-        /// add a tree item as a volume and return its item id
-        wxTreeItemId AddVolume(wxTreeItemId idParent, wxString strVol, wxString strAdd);
-        /** add a task to the tree, create all needed items for that,
-            but do not check if the specified task realy exists! */
-        wxTreeItemId AddTask (BFoid oid, BFTaskType type, const wxChar* strName, const wxChar* strDestination);
+        /** Check if the specified tree-item corrospont
+            to the specified path. */
+        bool HasPath (wxTreeItemId itemId, const wxString& strPath);
 
+        /** Check if the specified tree-item corrospond
+            to the specified task-oid. */
+        bool HasOID (wxTreeItemId itemId, BFoid oid);
+
+        /// add tree items relating to the path to the tree
+        wxTreeItemId AddDestination (const wxString& strPath);
+
+        /// add a tree item as a volume and return its item id
+        wxTreeItemId AddVolume(wxTreeItemId idParent,
+                               const wxString& strVol,
+                               const wxString& strAdd);
+
+        /** Add a task to the tree, create all needed items for that,
+            but do not check if the specified task realy exists! */
+        wxTreeItemId AddTask (BFoid oid,
+                              BFTaskType type,
+                              const wxString& strName,
+                              const wxString& strDestination);
+
+        /* Add a new Task after 'idItemBefore'. See AddTask()
+           for more detailes.
+        wxTreeItemId AddTaskAfter (wxTreeItemId idItemBefore,
+                                   BFoid oid,
+                                   BFTaskType type,
+                                   const wxString& strName,
+                                   const wxString& strDestination);*/
+
+        ///
+        bool GetFillBlackfiskPlaceholders ();
         /** set 'bFillBlackfiskPlaceholders_' and recreate the tree if needed */
-        void SetFillBlackfiskPlaceholders(bool bValue);
+        void SetFillBlackfiskPlaceholders (bool bValue);
         ///
         void OnItemActivated (wxTreeEvent& rEvent);
         ///
@@ -251,6 +299,9 @@ class BFBackupCtrl : public wxPanel
 
         ///
         void OnCheck_Placeholders (wxCommandEvent& rEvent);
+
+        ///
+
 
         DECLARE_EVENT_TABLE();
 };    // class BFBackupCtrl

@@ -26,7 +26,7 @@
 #include <wx/cshelp.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
-#include "BFSystem.h" // XXX
+
 /*static*/ wxHelpProvider* BFHelpCtrl::spHelpProvider_ = NULL;
 
 /*static*/ void BFHelpCtrl::InitHelpProvider ()

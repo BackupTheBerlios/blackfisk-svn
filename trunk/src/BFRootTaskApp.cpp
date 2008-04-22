@@ -327,21 +327,6 @@ void BFRootTaskApp::InitThat (BFBackupTree* pBackupTree)
         );
     }
 }
-/*
-void BFRootTaskApp::InitThat (wxListBox* pListBox)
-{
-    if (pListBox == NULL)
-        return;
-
-    BFTaskVector vec;
-    pRootTask_->GetAllTasks(vec);
-
-    // init controls
-    for (BFTaskVectorIt itVec = vec.begin();
-         itVec != vec.end();
-         ++itVec)
-        pListBox->Append((*itVec)->GetName(), (*itVec));
-}*/
 
 void BFRootTaskApp::InitThat (BFTaskListCtrl* pTaskList)
 {

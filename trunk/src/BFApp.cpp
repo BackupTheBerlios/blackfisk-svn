@@ -135,20 +135,16 @@ bool BFApp::OnInit()
     if (cmdLine.GetParamCount() > 0)
         strToOpen = cmdLine.GetParam(0);
 
+    // log application start
+    BFSystem::Log(wxString::Format(_("Starting %s ..."), GetFullApplicationName()));
+
     // read the configuration file
     ReadSettings();
-
-    // log application start
-    BFSystem::Log(wxString::Format(_("%s started"), GetFullApplicationName().wx_str()));
 
     // init locals
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
-
-    /* init the main frame
-       'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
-    new BFMainFrame();
 
     // open the last project ?
     if (strToOpen.IsEmpty())
@@ -158,8 +154,12 @@ bool BFApp::OnInit()
     if ( !(strToOpen.IsEmpty()) )
     {
         OpenProject(strToOpen);
-        MainFrame()->RefreshTitle();
+        //MainFrame()->RefreshTitle();
     }
+
+    /* init the main frame
+       'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
+    new BFMainFrame();
 
     //
     BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));
@@ -294,7 +294,7 @@ wxString BFApp::ReadFileFromFTP (const wxString& strFtpServer,
     // connect to server
     if ( !ftp.Connect(strFtpServer) )
     {
-        BFSystem::Error(wxString::Format("Can not connect to the FTP-Server %d!"), strFtpServer);
+        BFSystem::Error(wxString::Format("Can not connect to the FTP-Server %s!"), strFtpServer);
         BFSystem::Log("FTP failed!");
         return wxEmptyString;
     }

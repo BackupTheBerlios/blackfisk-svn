@@ -60,6 +60,11 @@ class BFCore
             works over midnight */
         wxString    strCurrentTime_;
 
+        /// Please see SetCurrentDateTime() for more detailes.
+        wxString    strCurrentDate_Old_;
+        /// Please see SetCurrentDateTime() for more detailes.
+        wxString    strCurrentTime_Old_;
+
 
         /** it log messages recieving from OBSystem;
             there is no need to touch OBLog directly
@@ -155,8 +160,6 @@ class BFCore
                       ProgressWithMessage* pProgress = NULL);
 
 
-        /*
-        bool CreateZipFromListing (const wxChar* pstrZipName, wxArrayString& rListing, ProgressWithMessage* pProgress = NULL);*/
         /** create a zipfile ('pstrZipName') from a directory ('pstrSourceDir')
             files and directories that should not be zipped can be specified in 'pExcludeListing'
             'pExcludeListing' and 'pProgress' can be NULL*/
@@ -166,12 +169,17 @@ class BFCore
                                bool bVerify,
                                ProgressWithMessage* pProgress = NULL);
 
-        /** */
-        const wxChar* GetDateString ();
-        /** */
-        const wxChar* GetTimeString ();
+        ///
+        const wxString& GetDateString ();
+        ///
+        const wxString& GetTimeString ();
+        ///
+        const wxString& GetDateString_Old ();
+        ///
+        const wxString& GetTimeString_Old ();
 
-        // >>> DELETE methodes  <<<
+
+        // --- DELETE methodes ---
     public:
         /** delete a directory
             if bOnlyIfEmpty = false it does not care about if the directory is empty or not

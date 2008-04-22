@@ -304,6 +304,25 @@ long BFRootTask::FindLastTaskWithDestination(const wxChar* destination)
     return rc;
 }
 
+BFTaskVector& BFRootTask::FindAllTasksWithPlaceholders (BFTaskVector& rVec)
+{
+    BFTaskVectorIt itVec;
+
+	for (itVec = vecTasks_.begin();
+		 itVec != vecTasks_.end();
+		 ++itVec)
+    {
+        if ( (*itVec)->GetName().Matches("*<*>*")
+          || (*itVec)->GetSource().Matches("*<*>*")
+          || (*itVec)->GetDestination().Matches("*<*>*") )
+        {
+            rVec.push_back(*itVec);
+        }
+    }
+
+    return rVec;
+}
+
 BFoid BFRootTask::AppendTask (BFTask& rTask)
 {
     if ( !(rTask.IsValid()) )

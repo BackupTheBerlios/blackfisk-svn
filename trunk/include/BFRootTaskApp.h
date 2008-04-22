@@ -133,15 +133,17 @@ class BFRootTaskApp
 
         /** clear 'arrLastLogFiles_' */
         void ClearLastLogFiles ();
+
         /** insert 'strFilename' as the the project
             log file as the first element of 'arrLastLogFiles_' */
         void SetProjectLogFile (wxString& strFilename);
+
         /** add 'strFilename' as a task log file to 'arrLastLogFiles_' */
         void AddTaskLogFile (wxString& strFilename);
+
         ///
         const wxArrayString& GetLastLogFiles ();
 
-        // oid InitThat (wxListBox* pListBox);
         ///
         void InitThat (BFTaskListCtrl* pTaskList);
         ///

@@ -385,8 +385,18 @@ void BFMainFrame::OnSettings (wxCommandEvent& event)
 
 void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
 {
+    //
     DeleteRememberedThreads();
+
+    // un-minimize the main-window
     Iconize(false);
+
+    /* The placeholder-strings (date, time, ...) are created new on
+       start of a backup. So we need to refresh the old displayed
+       strings in the backuptree. */
+    BackupTree()->RefreshPlaceholders();
+
+    // view backup-log
     new BFLogViewDlg(this, BFRootTaskApp::Instance().GetLastLogFiles());
 }
 
@@ -506,69 +516,11 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
     Test();
 }
 
-#include <wx/protocol/ftp.h>
-
 void BFMainFrame::Test ()
 {
-    wxFTP ftp;
-
-    if ( !ftp.Connect(BF_FTP_URL) )
-    {
-        BFSystem::Error("Couldn't connect");
-        return;
-    }
-
-    ftp.ChDir(BF_FTP_DIR);
-    if ( !(ftp.FileExists(BF_FTP_FILE_VER)) )
-    {
-        BFSystem::Error("File doesn't exists!");
-        return;
-    }
-
-    wxInputStream *in = ftp.GetInputStream(BF_FTP_FILE_VER);
-    if ( !in )
-    {
-        BFSystem::Error("Coudln't get file");
-    }
-    else
-    {
-        size_t size = ftp.GetFileSize(BF_FTP_FILE_VER);
-        BFSystem::Info(wxString::Format("size %d", size));
-
-        if (size == 0)
-        {
-            BFSystem::Error("stream size is 0");
-            //return;
-            size = 10;
-        }
-
-        char *data = new char[size];
-        if ( !in->Read(data, size) )
-        {
-            BFSystem::Error("Read error");
-        }
-        else
-        {
-            // file data is in the buffer
-            BFSystem::Info(wxString::Format("size %d\n%s", size, data));
-        }
-
-        wxString strData;
-        char c;
-        while (true)
-        {
-            c = in->GetC();
-            if (in->LastRead() == 1)
-                strData = strData + c;
-            else
-                break;
-        }
-
-        BFSystem::Info(strData);
-
-        delete [] data;
-        delete in;
-    }
+    BFCore::Instance().BackupStarted();
+    BFCore::Instance().BackupEnded();
+    BackupTree()->RefreshPlaceholders();
 }
 #endif
 

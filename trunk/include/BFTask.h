@@ -36,6 +36,7 @@ typedef wxUint8 BFTaskType;
 #define TaskDIRCOPY     2       // copy a complete directory
 #define TaskFILECOPY    3       // copy a file
 #define TaskSYNC        4       // synchronise directories
+#define TaskHIGHEST     TaskSYNC    // ! just to know the end of the taks types !
 
 /** define the compression types
     which compression format should be used for TaskARCHIVE */
@@ -83,9 +84,9 @@ class BFTaskData
     public:
         ///
         BFTaskData (BFTaskType type,
-                    const wxChar* strSource,
-                    const wxChar* strDestination,
-                    const wxChar* strName,
+                    const wxString& strSource,
+                    const wxString& strDestination,
+                    const wxString& strName,
                     bool bVerify,
                     bool bVerifyContent,
                     BFArchiveFormat archive,
@@ -112,11 +113,11 @@ class BFTaskData
         ///
         BFTaskType GetType () const;
         ///
-        const wxChar* GetSource () const;
+        const wxString& GetSource () const;
         ///
-        const wxChar* GetDestination () const;
+        const wxString& GetDestination () const;
         ///
-        const wxChar* GetName () const;
+        const wxString& GetName () const;
         ///
         bool Verify () const;
         ///
@@ -129,11 +130,11 @@ class BFTaskData
         ///
         void SetTaskType (BFTaskType type);
         ///
-        void SetSource (const wxChar* source);
+        void SetSource (const wxString& source);
         ///
-        void SetDestination (const wxChar* dest);
+        void SetDestination (const wxString& dest);
         ///
-        void SetName (const wxChar* name);
+        void SetName (const wxString& name);
         ///
         void SetVerify (bool verify);
         ///
@@ -165,9 +166,9 @@ class BFTask : public BFTaskData
     public:
         /// constructor
         BFTask (BFTaskType type,
-                const wxChar* strSource,
-                const wxChar* strDestination,
-                const wxChar* strName,
+                const wxString& strSource,
+                const wxString& strDestination,
+                const wxString& strName,
                 bool bVerify,
                 bool bVerifyContent,
                 BFArchiveFormat archive,
@@ -194,6 +195,9 @@ class BFTask : public BFTaskData
         wxString GetTypeDescription ();
         ///
         static wxString GetTypeDescription (BFTaskType type, BFArchiveFormat format = CompressNOTUSED);
+        /*
+        static BFTaskType GetTypeByDescription (const wxString& strDesc);*/
+
         /// return the iconId of the task
         int GetTypeIconId ();
         ///

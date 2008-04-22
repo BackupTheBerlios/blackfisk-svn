@@ -66,6 +66,10 @@ BFCore::BFCore ()
 
 void BFCore::SetCurrentDateTime ()
 {
+    // remember the current set strings
+    strCurrentDate_Old_ = strCurrentDate_;
+    strCurrentTime_Old_ = strCurrentTime_;
+
     // remember current date in a string
     strCurrentDate_ = wxDateTime::Now().FormatISODate();
 
@@ -936,16 +940,24 @@ bool BFCore::SetWriteProtected (const wxChar* pFilename, bool bWriteProtected)
 }
 
 
-const wxChar* BFCore::GetDateString ()
+const wxString& BFCore::GetDateString ()
 {
-    /* look at the member declaration for informations */
-    return strCurrentDate_.c_str();
+    return strCurrentDate_;
 }
 
-const wxChar* BFCore::GetTimeString ()
+const wxString& BFCore::GetTimeString ()
 {
-    /* look at the member declaration for informations */
-    return strCurrentTime_.c_str();
+    return strCurrentTime_;
+}
+
+const wxString& BFCore::GetDateString_Old ()
+{
+    return strCurrentDate_Old_;
+}
+
+const wxString& BFCore::GetTimeString_Old ()
+{
+    return strCurrentTime_Old_;
 }
 
 bool BFCore::CopyDirAttributes (const wxChar* pSourceDir, const wxChar* pDestinationDir)

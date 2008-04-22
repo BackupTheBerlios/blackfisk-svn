@@ -35,6 +35,7 @@
 #include "BFCore.h"
 #include "BFTaskListCtrl.h"
 #include "BFTask.h"
+#include "BFBackupTree.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
   EVT_CLOSE   (                         BFBackupProgressDlg::OnClose)
@@ -63,9 +64,13 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
 void BFBackupProgressDlg::OnClose(wxCloseEvent& rEvent)
 {
     if (BFCore::Instance().IsWhileBackup())
+    {
         rEvent.Veto();
+    }
     else
+    {
         Destroy();
+    }
 }
 
 void BFBackupProgressDlg::Init ()
@@ -100,12 +105,6 @@ void BFBackupProgressDlg::Init ()
     pTopSizer       ->Add(pButtonSizer,         wxSizerFlags(0).Center());
 
     SetSizerAndFit(pTopSizer);
-/*
-    wxSize sizeMin = GetSize();
-    sizeMin.SetWidth(sizeMin.GetWidth() + 50);
-    sizeMin.SetHeight(sizeMin.GetHeight() + 50);
-    SetMinSize(sizeMin);
-*/
 }
 
 

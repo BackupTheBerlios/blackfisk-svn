@@ -272,7 +272,12 @@ void BFTaskDlg::OnCombo_TypeSelect (wxCommandEvent& rEvent)
 
     pTask_->GetAvailableTypes(vecTaskTypes);
     BFTaskType tt = vecTaskTypes[pTypeCtrl_->GetSelection()];
-    pTask_->SetTaskType(tt);
+
+    if (tt != pTask_->GetType())
+    {
+        pTask_->SetTaskType(tt);
+        BFRootTask::Instance().SetModified();
+    }
 
     InitTypeCtrl();
 }
@@ -343,6 +348,9 @@ bool BFTaskDlg::IsPlausible ()
 
 void BFTaskDlg::SetData ()
 {
+    // type
+    // is set by OnCombo_TypeSelect()
+
     // name
     if (pNameCtrl_->IsModified())
     {
