@@ -1,9 +1,9 @@
 
 ##################################################
-# $RCSfile$
-# $Source$
-# $Revision$
-# $Date$
+# $RCSfile: CMakeLists.txt $
+# $Source: src/CMakeLists.txt $
+# $Revision: 1.13 $
+# $Date: 31-jul-2007 11:48:37 $
 #
 # Author: Jorgen Bodde
 # Licence: wxWindows licence

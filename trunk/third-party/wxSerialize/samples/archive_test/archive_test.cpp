@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------
-// $RCSfile$
-// $Source$
-// $Revision$
-// $Date$
+// $RCSfile: archive_test.cpp $
+// $Source: samples/archive_test/archive_test.cpp $
+// $Revision: 1.13 $
+// $Date: 31-jul-2007 11:48:37 $
 //---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
 // Copyright:   (c) Jorgen Bodde

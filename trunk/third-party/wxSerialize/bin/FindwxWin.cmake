@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
-## $RCSfile$
-## $Source$
-## $Revision$
-## $Date$
+## $RCSfile: FindwxWin.cmake $
+## $Source: bin/FindwxWin.cmake $
+## $Revision: 1.2 $
+## $Date: 21-jan-2006 16:10:21 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde

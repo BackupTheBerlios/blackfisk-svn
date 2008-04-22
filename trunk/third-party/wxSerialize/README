@@ -13,6 +13,11 @@ Welcome to wxSerialize - This class provides serialization for wxWidgets with th
 
 CHANGELOG:
 ----------
+v1.2:
+    - Documentation is fixed, and elaborated on EnterObject / LeaveObject
+    - IntInt serialization (wxPoint, wSize) is added (contribution from Christian Buhtz)
+    - DateTime serialization is added (contribution from Christian Buhtz)
+
 v1.1: 
     - Name change from wxArchive to wxSerialize, because wxArchive is already a known class
     - GPLv3 license added thanks to Christian Buhtz
@@ -40,10 +45,9 @@ uncomment #define USE_STRINGSTREAM.
 
 INFO:
 -----
-    Check the site for more information: http://wastebucket.solidsteel.nl
+    Check the site for more information: http://www.xs4all.nl/~jorgb/wb
     
     Online documentation: http://www.xs4all.nl/~jorgb/components/archive/help/
-    
     
 HOW TO BUILD
 ------------

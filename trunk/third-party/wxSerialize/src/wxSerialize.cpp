@@ -5,6 +5,7 @@
 // $Date: 7-sep-2007 11:29:08 $
 //---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
+//              Christian Buhtz
 // Copyright:   (c) Jorgen Bodde
 // License:     see LICENSE for details
 //---------------------------------------------------------------------------
@@ -779,7 +780,7 @@ wxDateTime wxSerialize::LoadDateTime()
         wxUint8 sec = LoadUint8();
         // load millisecs
         wxUint8 msec = LoadUint8();
-
+        
         dt = wxDateTime(day, (wxDateTime::Month)month, year, hour, min, sec, msec);
 	}
 
@@ -910,7 +911,7 @@ bool wxSerialize::WriteIntInt(int value1, int value2)
 bool wxSerialize::Write(const wxMemoryBuffer &buffer)
 {
 	wxUint32 size = 0;
-
+    
     if(CanStore())
 	{
 		// save header to the stream
@@ -919,7 +920,7 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
         // save the record count
         size = buffer.GetDataLen();
         SaveUint32(size);
-
+        
         // write data if there is any
         if(size > 0)
             m_odstr.Write(buffer.GetData(), size);
@@ -1046,15 +1047,15 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		// write header
 		SaveChar(wxSERIALIZE_HDR_DATETIME);
 
-        // decompose
-		wxUint8 day     = value.GetDay();
-		wxUint8 month   = value.GetMonth();
-		wxUint16 year   = value.GetYear();
-		wxUint8 hour    = value.GetHour();
-		wxUint8 min     = value.GetMinute();
-		wxUint8 sec     = value.GetSecond();
+        // decompose		
+		wxUint8 day = value.GetDay();
+		wxUint8 month = value.GetMonth();
+		wxUint16 year =  value.GetYear();
+		wxUint8 hour = value.GetHour();
+		wxUint8 min = value.GetMinute();
+		wxUint8 sec = value.GetSecond();
 		wxUint8 msec    = value.GetMillisecond();
-
+		
 		// serialize
 		SaveChar(day);
 		SaveChar(month);
