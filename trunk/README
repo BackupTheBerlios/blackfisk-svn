@@ -1,4 +1,6 @@
 -------------------------------------------------------------------------------
+                             ==== README ====
+
                               -- BLACKFISK --
                             Version 0.0.0 alpha
 -------------------------------------------------------------------------------
@@ -34,6 +36,7 @@ FILE & DIRECTORY LISTING
  HISTORY        - history of blackfisk development
  CREDITS        - all persons, projects and institutions
                   related to this project
+ CHANGELOG      - differences between the blackfisk versions
  blackfisk.exe  - the windows (32bit) binary
  graphic/       - icons and other graphic stuff for blackfisk
  local/         - language files (*.mo) for blackfisk
@@ -70,3 +73,14 @@ The last possibility is to send e-mail to blackfisk@web.de.
 
 DEVELOPMENT
 ~~~~~~~~~~~
+Everyone is welcome to the project team! There is no need to be a software
+developer because there are a lot of other usefull things that can be done!
+The project need users they improve blackfisk with submiting feauter requests,
+reporting bugs and telling everything that is usefull to blackfisk.
+There is also a need for graphic designers, translating peopel and a lot more.
+Please see the project website <http://www.blackfisk.org> for more detailes
+and feel free to contact the project.
+
+Please see the file BUILD to see how to build blackfisk.
+Please see the project website <http://www.blackfisk.org> for detailes about
+bug reports, feauter request, SVN access, source packages and things like that.

@@ -62,6 +62,8 @@ class BFSettings
         wxSize              sizeMainWindow_;
         /** last position of the main-window */
         wxPoint             pointMainWindow_;
+        /** last maximized state of the main-window */
+        bool                bMainWindowMaximized_;
         /** order of the BFBackupCtrl and the BFDirCtrl in the main-window */
         bool                bSwitchMainCtrls_;
         /** position of the sash in the splitter window of the main-window */
@@ -128,6 +130,10 @@ class BFSettings
         void SetMainWindowPosition (const wxPoint& point);
         ///
         wxPoint GetMainWindowPosition ();
+        ///
+        void SetMainWindowMaximized (bool bMax);
+        ///
+        bool GetMainWindowMaximized ();
         ///
         void SetSwitchMainCtrls (bool bSwitch);
         ///

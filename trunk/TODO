@@ -1,16 +1,7 @@
-- BFTaskListCtrl: active task has colour wxSYS_COLOUR_HIGHLIGHT
-- BFTaskDlg BUGFIX: task-type wasn't saved
-- BFApp: modified OnInit() to increase start-speed
-  the main-window is no initionlized after(!) autuo-loading a project
-- BFBackupTree: UpdatePlaceholders() & RefreshPlaceholders()
-  Puh! It was more complex than I thought! :)
-- wxSerialize: unreleased fix for wxDateTime handling
+- BFSettings & BFMainFrame: handle maximized state correct now
 
 0.0.1
 ~~~~~
-- main-window: remember size/pos before maximize
-  if maximized on restart set the size/pos before maximizing
-
 - BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
 - BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)

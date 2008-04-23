@@ -48,6 +48,7 @@ BFSettings::BFSettings ()
             lMaxLogFileSize_(1024),
             verboseLog_(MsgINFO),
             sizeMainWindow_(wxDefaultSize),
+            bMainWindowMaximized_(false),
             pointMainWindow_(wxDefaultPosition),
             bSwitchMainCtrls_(false),
             iSashPositionInMainWindow_(-1),
@@ -155,6 +156,16 @@ wxSize BFSettings::GetMainWindowSize ()
     return sizeMainWindow_;
 }
 
+void BFSettings::SetMainWindowMaximized (bool bMax)
+{
+    bMainWindowMaximized_ = bMax;
+}
+
+bool BFSettings::GetMainWindowMaximized ()
+{
+    return bMainWindowMaximized_;
+}
+
 void BFSettings::SetMainWindowPosition (const wxPoint& point)
 {
     pointMainWindow_ = point;
@@ -244,6 +255,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << (int)verboseLog_;
         rA << (int)lang_;
         rA << sizeMainWindow_;
+        rA << bMainWindowMaximized_;
         rA << pointMainWindow_;
         rA << bSwitchMainCtrls_;
         rA << iSashPositionInMainWindow_;
@@ -275,6 +287,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         if (rA.GetVersion() < 1020)
         {
             sizeMainWindow_             = wxDefaultSize;
+            bMainWindowMaximized_       = false;
             pointMainWindow_            = wxDefaultPosition;
             bSwitchMainCtrls_           = false;
             iSashPositionInMainWindow_  = -1;
@@ -285,6 +298,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         else
         {
             rA >> sizeMainWindow_;
+            rA >> bMainWindowMaximized_;
             rA >> pointMainWindow_;
             rA >> bSwitchMainCtrls_;
             rA >> iSashPositionInMainWindow_;

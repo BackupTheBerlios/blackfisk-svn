@@ -181,14 +181,15 @@ END_EVENT_TABLE()
     // background color
     SetBackgroundColour(menuBar->GetBackgroundColour());
 
-    // window size or maximized state
-    if (BFSettings::Instance().GetMainWindowSize() == wxSize(-2, -2))
-        Maximize();
-    else
-        SetSize(BFSettings::Instance().GetMainWindowSize());
-
     // window position
     Move(BFSettings::Instance().GetMainWindowPosition());
+
+    // window size or maximized state
+    SetSize(BFSettings::Instance().GetMainWindowSize());
+
+    // maximized state
+    if (BFSettings::Instance().GetMainWindowMaximized())
+        Maximize();
 
     //
     Show(TRUE);
@@ -225,17 +226,25 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
 {
     int iAnswer = wxYES;
 
-    // remember window position
-    BFSettings::Instance().SetMainWindowPosition(GetPosition());
-
-    // remember window size or maximized state (-2, -2)
     if (IsMaximized())
-        BFSettings::Instance().SetMainWindowSize(wxSize(-2, -2));
+    {
+        // remember window maximized state
+        BFSettings::Instance().SetMainWindowMaximized(true);
+    }
     else
+    {
+        // remember window position
+        BFSettings::Instance().SetMainWindowPosition(GetPosition());
+
+        // remember window size
         BFSettings::Instance().SetMainWindowSize(GetSize());
 
-    // remember sash position
-    BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
+        // remember window maximized state
+        BFSettings::Instance().SetMainWindowMaximized(false);
+
+        // remember sash position
+        BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
+    }
 
     // check for a modified project
     if (BFRootTaskApp::Instance().IsProjectModified())

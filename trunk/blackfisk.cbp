@@ -95,6 +95,9 @@
 		<Unit filename="BUILD">
 			<Option virtualFolder="doc\" />
 		</Unit>
+		<Unit filename="CHANGELOG">
+			<Option virtualFolder="doc\" />
+		</Unit>
 		<Unit filename="CREDITS">
 			<Option virtualFolder="doc\" />
 		</Unit>
