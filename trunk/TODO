@@ -1,9 +1,5 @@
-- BFSettings & BFMainFrame: handle maximized state correct now
-
 0.0.1
 ~~~~~
-- BUG: catch focus in BFDestinationCtrl (bug: next ctrl without focus)
-- BUG: freez on not enoghe space
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - sync directories: more detailed settings (delete?)
 - display "show-log" progress after a backup
@@ -18,6 +14,7 @@
 - new advanced-option: ask-on-message (true/false) while autorun (non-gui)
 - remember last concret backup files and delete them automaticly (by count, by timespan, by size)
 - auto-update: run tasks different times (e.g. TaskA each day, TaskB just each week)
+- BUG: freez on not enough space
 - check for enough free space on destination drive
 - make date and time format customizable
 

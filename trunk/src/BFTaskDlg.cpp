@@ -147,7 +147,7 @@ wxWindow* BFTaskDlg::CreateBookPageA (wxWindow* pParent)
     // destination
     wxStaticText* pDestStatic = new wxStaticText(pPanel, -1, _("destination path:"));
     pDestCtrl_ = new BFDestinationCtrl(pPanel, wxEmptyString, false);
-    pHelpCtrl_->Connect(pDestStatic, pDestCtrl_, _("This is the path where the backup is stored."));
+    pDestCtrl_->ConnectHelpText(pHelpCtrl_, _("This is the path where the backup is stored."));
 
     // sizer and arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);

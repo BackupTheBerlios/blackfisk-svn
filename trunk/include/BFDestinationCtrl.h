@@ -24,14 +24,18 @@
 #define BFDESTINATIONCTRL_H
 
 #include <wx/wx.h>
-#include <wx/panel.h>
-#include <wx/filepicker.h>
+#include <wx/sizer.h>
 
+class wxDirPickerCtrl;
+class wxStaticText;
+class BFHelpCtrl;
 
 /// a control to edit destinations
-class BFDestinationCtrl : public wxPanel
+class BFDestinationCtrl : public wxBoxSizer
 {
     private:
+        ///
+        wxStaticText*           pLabel_;
         ///
         wxDirPickerCtrl*        pPickerCtrl_;
 
@@ -46,12 +50,12 @@ class BFDestinationCtrl : public wxPanel
         virtual ~BFDestinationCtrl ();
 
         ///
-        wxStaticText* CreateLabel(wxWindow* pParent);
-
-        ///
         wxString GetPath ();
         ///
         void SetPath (const wxString& strPath);
+
+        ///
+        void ConnectHelpText (BFHelpCtrl* pHelpCtrl, const wxString& strHelp);
 };    // class BFDestinationCtrl
 
 #endif    // BFDESTINATIONCTRL_H
