@@ -406,11 +406,11 @@ void BFRootTaskApp::ModifyDestination (const wxString& strOldDestination,
         pRootTask_->SetModified();
 }
 
-bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
+bool BFRootTaskApp::PreBackupCheck ()
 {
-    // caption
+    /* caption
     if (pMsg)
-        pMsg->SetCaption(_("please wait..."));
+        pMsg->SetCaption(_("please wait..."));*/
 
     // get the tasks
     wxString str;
@@ -426,10 +426,11 @@ bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
         str = (*it)->GetDestination();
         str = str.BeforeFirst(wxFILE_SEP_PATH);
 
+        /*
         if (pMsg)
             pMsg->SetMsg(wxString::Format(_("current checking Task is %s\ncheck volume: %s"),
                                           (*it)->GetName(),
-                                          str));
+                                          str));*/
 
         if ( wxDir::Exists( str ) == false )
         {
@@ -440,10 +441,11 @@ bool BFRootTaskApp::PreBackupCheck (BFProcessMsgSubject* pMsg)
         // * check source *
         str = (*it)->GetSource();
 
+        /*
         if (pMsg)
             pMsg->SetMsg(wxString::Format(_("current checking Task is %s\nvolume OK\ncheck source: %s"),
                                           (*it)->GetName(),
-                                          str));
+                                          str));*/
 
         if ((*it)->GetType() == TaskFILECOPY)
         {

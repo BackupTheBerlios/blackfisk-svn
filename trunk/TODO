@@ -1,9 +1,9 @@
 0.0.1
 ~~~~~
-- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
-- sync directories: more detailed settings (delete?)
 - display "show-log" progress after a backup
+- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - change task-type by context-menu of a tree-node (backup-dir)
+- sync directories: more detailed settings (delete?)
 
 0.0.2
 ~~~~~

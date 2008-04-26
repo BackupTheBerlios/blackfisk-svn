@@ -527,9 +527,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    BFCore::Instance().BackupStarted();
-    BFCore::Instance().BackupEnded();
-    BackupTree()->RefreshPlaceholders();
+    BFSystem::Info(wxGetCwd());
 }
 #endif
 
@@ -564,12 +562,8 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 
     if (iAnswer != wxCANCEL)
     {
-        // pre-step to check sources and destination-volumes
-        //BFProcessMsgSubject msgSubject;
-        //BFProcessMsgDlg     dlgProcess(this, &msgSubject, 3, 40);
-
         // start the backup if everything is fine
-        if ( BFRootTaskApp::Instance().PreBackupCheck(NULL) )
+        if ( BFRootTaskApp::Instance().PreBackupCheck() )
             new BFBackupProgressDlg(this);
     }
 }

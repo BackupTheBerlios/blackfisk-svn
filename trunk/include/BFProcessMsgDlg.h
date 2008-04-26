@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ***/
+ ***
 
 
 #ifndef BFPROCESSMSGDLG_H
@@ -32,7 +32,7 @@ class BFProcessMsgSubject;
 
 /** just a little window that display messages while any process (check, load, etc)
     the window observs BFProcessMsgSubject for new messages
-    the window need to be destroyed explicite (e.g. instance on the stack) */
+    the window need to be destroyed explicite (e.g. instance on the stack) *
 class BFProcessMsgDlg : public Observer, public wxDialog
 {
     private:
@@ -54,3 +54,4 @@ class BFProcessMsgDlg : public Observer, public wxDialog
 };
 
 #endif    // BFPROCESSMSGDLG_H
+*/

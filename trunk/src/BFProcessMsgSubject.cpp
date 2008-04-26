@@ -18,14 +18,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ***/
+ ***
 
 
 #include "BFProcessMsgSubject.h"
 
 //
-BFProcessMsgSubject::BFProcessMsgSubject (const wxString& strCaption /*= wxEmptyString*/,
-                                          const wxString& strMsg /*= wxEmptyString*/)
+BFProcessMsgSubject::BFProcessMsgSubject (const wxString& strCaption /*= wxEmptyString*,
+                                          const wxString& strMsg /*= wxEmptyString*)
                    : strCaption_(strCaption),
                      strMsg_(strMsg)
 
@@ -34,7 +34,7 @@ BFProcessMsgSubject::BFProcessMsgSubject (const wxString& strCaption /*= wxEmpty
 
 
 //
-/*virtual*/ BFProcessMsgSubject::~BFProcessMsgSubject ()
+/*virtual* BFProcessMsgSubject::~BFProcessMsgSubject ()
 {
 }
 
@@ -60,3 +60,4 @@ wxString BFProcessMsgSubject::GetMsg ()
     return strMsg_;
 }
 
+*/

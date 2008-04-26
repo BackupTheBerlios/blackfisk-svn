@@ -96,8 +96,6 @@ void BFLogViewDlg::Init ()
             (*pCtrl) << strLine << _T("\n");
         }
 
-
-
         // add as a tab
         pBook->AddPage(pCtrl, arrLogs_[i]);
     }

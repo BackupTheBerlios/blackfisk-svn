@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ***/
+ ***
 
 
 #include "BFProcessMsgDlg.h"
@@ -62,11 +62,11 @@ BFProcessMsgDlg::BFProcessMsgDlg (wxWindow* pParent,
 
 
 //
-/*virtual*/ BFProcessMsgDlg::~BFProcessMsgDlg ()
+/*virtual* BFProcessMsgDlg::~BFProcessMsgDlg ()
 {
 }
 
-/*virtual*/ void BFProcessMsgDlg::ValueChanged (Subject* pSender)
+/*virtual* void BFProcessMsgDlg::ValueChanged (Subject* pSender)
 {
     BFProcessMsgSubject* pMsgSubject = dynamic_cast<BFProcessMsgSubject*>(pSender);
 
@@ -78,4 +78,4 @@ BFProcessMsgDlg::BFProcessMsgDlg (wxWindow* pParent,
 
     Layout();
 }
-
+*/

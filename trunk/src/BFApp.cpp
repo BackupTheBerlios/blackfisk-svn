@@ -121,7 +121,6 @@ BFApp::BFApp ()
 
 /*virtual*/ BFApp::~BFApp ()
 {
-    int i = 0;
 }
 
 bool BFApp::OnInit()

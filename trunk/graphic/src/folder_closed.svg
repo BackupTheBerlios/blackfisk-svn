@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256"
+   height="256"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="folder_closed.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="D:\Garage\projekte\blackfisk\trunk\graphic\folder_closed.png"
+   inkscape:export-xdpi="5.6300001"
+   inkscape:export-ydpi="5.6300001">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.984375"
+     inkscape:cx="112.7979"
+     inkscape:cy="128"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1024"
+     inkscape:window-height="721"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:4.98370361000000010;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;"
+       id="rect4681"
+       width="207.68336"
+       height="183.07265"
+       x="4.1583176"
+       y="18.463676"
+       rx="6.1694865"
+       ry="8.1090355" />
+    <path
+       transform="matrix(1,0,-2.0516821e-2,0.9997895,0,0)"
+       style="fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5.23355103;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 207.90625 24.90625 C 143.47917 24.90625 79.052083 24.90625 14.625 24.90625 C 11.600488 25.288339 9.6108622 28.229699 9.154795 31.054877 C 8.5411631 34.835639 9.0484266 38.674298 8.8734959 42.481303 C 8.7638915 92.883339 8.6709503 143.2854 8.59375 193.6875 C 8.8217831 196.57824 9.882048 199.78427 12.538525 201.30051 C 14.896139 202.46633 17.57487 201.70837 20.084402 201.90669 C 55.849046 201.95837 91.613847 201.94322 127.37844 201.88612 C 141.95602 201.84763 156.53364 201.71443 171.1112 201.74002 C 184.12622 201.80585 197.14123 201.87167 210.15625 201.9375 C 213.24829 201.59188 215.27807 198.57069 215.75592 195.70331 C 216.39752 192.00507 215.89319 188.24545 216.0625 184.5187 C 216.0625 133.99163 216.0625 83.464565 216.0625 32.9375 C 215.84293 29.935658 214.52384 26.752854 211.75 25.28125 C 210.53169 24.796361 209.19078 24.875444 207.90625 24.90625 z "
+       id="rect4683" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Ebene2" />
+</svg>

@@ -30,7 +30,8 @@
 #include <wx/stattext.h>
 #include <vector>
 
-///
+/** A animated control that is just for the eyes and
+    should suggest the user that something is going on. */
 class BFIsWorkingCtrl : public wxPanel
 {
     private:
