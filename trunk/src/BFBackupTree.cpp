@@ -266,9 +266,6 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
 {
     wxMenuItem      *pItem          = NULL;
 
-    // ** backup menu **
-    //menu.AppendSubMenu(pMenu_backup, _("backup"));
-
     // check if it is a dir
     if ( bOnDir )
     {
@@ -279,12 +276,12 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
 
         // ** backup sync dir **
         pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronise directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
         menu.Append(pItem);
 
         // ** backup archive dir **
         pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_ARCHIVE_DIR, _("archive/compress directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
         menu.Append(pItem);
     }
     else

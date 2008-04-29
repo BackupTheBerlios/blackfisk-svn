@@ -117,6 +117,10 @@
 			<Option virtualFolder="doc\" />
 		</Unit>
 		<Unit filename="bf.log" />
+		<Unit filename="blackfisk.rc">
+			<Option compilerVar="WINDRES" />
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
 		<Unit filename="include\BFAboutDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>

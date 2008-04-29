@@ -1,7 +1,7 @@
 0.0.1
 ~~~~~
-- display "show-log" progress after a backup
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
+- BUG: black for transparency in PNGs
 - change task-type by context-menu of a tree-node (backup-dir)
 - sync directories: more detailed settings (delete?)
 
