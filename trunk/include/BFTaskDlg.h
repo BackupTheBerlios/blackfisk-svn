@@ -61,6 +61,8 @@ class BFTaskDlg : public wxDialog
         wxCheckBox*         pVerifyCheck_;
         /// verify inclusive content
         wxCheckBox*         pVerifyContentCheck_;
+        /// delete files in destination directory if they don't exisit in source directory
+        wxCheckBox*         pRealSyncCheck_;
         ///
         BFExcludeCtrl*      pExcludeCtrl_;
 

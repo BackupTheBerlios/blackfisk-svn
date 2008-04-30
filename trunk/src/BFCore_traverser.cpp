@@ -27,8 +27,8 @@
 
 BFDirListingTraverser::BFDirListingTraverser (wxArrayString&    rList,
                                               wxString          strStartDir /*= wxEmptyString*/,
-                                              wxArrayString*    pExcludeList /*=NULL*/,
-                                              bool              bOnlyDirectories /*=false*/)
+                                              wxArrayString*    pExcludeList /*= NULL*/,
+                                              bool              bOnlyDirectories /*= false*/)
                      : rList_(rList),
                        pExcludeList_(pExcludeList),
                        strStartDir_(strStartDir),
@@ -65,15 +65,17 @@ wxDirTraverseResult BFDirListingTraverser::HandleDirAndFile(const wxString& name
         strCur = name;
 
     // check for exclusion
-    if ( pExcludeList_ != NULL )
+    if ( pExcludeList_ )
     {
+        //XXXwxMessageBox(wxString::Format("HandleDirAndFile()\nname:%s\tstrCur:%s\n\npjExcludeList:\n%s", name, strCur, wxJoin(*pExcludeList_, '\n')));
+
         if ( pExcludeList_->Index(strCur) != wxNOT_FOUND )
-            return resultNegative;
+            return wxDIR_CONTINUE;
 
         // handle placeholders
         for (int i = 0; i < pExcludeList_->Count(); ++i)
             if ( strCur.Matches((*pExcludeList_)[i]) )
-                return resultNegative;
+                return wxDIR_CONTINUE;
     }
 
     // add the dir to the listing
@@ -87,14 +89,14 @@ const wxArrayString& BFDirListingTraverser::ListingArray ()
     return rList_;
 }
 
-BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxChar* pOriginalDirectory,
-                                                      const wxChar* pToSynchroniseDirectory,
+BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOriginalDirectory,
+                                                      const wxString& strToSynchroniseDirectory,
                                                       wxArrayString& rList,
                                                       bool bVerify,
                                                       bool bVerifyContent,
                                                       ProgressWithMessage* pProgress /*= NULL*/)
-                          : BFDirListingTraverser(rList, pOriginalDirectory),
-                            strToSynchronise_(pToSynchroniseDirectory),
+                          : BFDirListingTraverser(rList, strOriginalDirectory),
+                            strToSynchronise_(strToSynchroniseDirectory),
                             bVerify_(bVerify),
                             bVerifyContent_(bVerifyContent),
                             pProgress_(pProgress)
@@ -223,10 +225,10 @@ BFCountDirTraverser::BFCountDirTraverser ()
 }
 
 
-BFCopyDirTraverser::BFCopyDirTraverser (const wxChar* pDestinationDirectory,
+BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
                                         MapStringPair* pRememberToVerify /*=NULL*/,
                                         ProgressWithMessage* pProgress /*= NULL*/)
-                  : strDestination_(pDestinationDirectory),
+                  : strDestination_(strDestinationDirectory),
                     pRememberToVerify_(pRememberToVerify),
                     pProgress_(pProgress)
 {

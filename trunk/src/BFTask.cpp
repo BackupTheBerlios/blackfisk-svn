@@ -36,7 +36,8 @@ BFTaskData::BFTaskData (BFTaskType type,
                         bool bVerify,
                         bool bVerifyContent,
                         BFArchiveFormat archive,
-                        wxArrayString& arrExclude)
+                        wxArrayString& arrExclude,
+                        bool bRealSync)
           : type_(type),
             strSource_(strSource),
             strDestination_(strDestination),
@@ -44,7 +45,8 @@ BFTaskData::BFTaskData (BFTaskType type,
             bVerify_(bVerify),
             bVerifyContent_(bVerifyContent),
             archiveFormat_(archive),
-            arrExclude_(arrExclude)
+            arrExclude_(arrExclude),
+            bRealSync_(bRealSync)
 {
     oid_ = BFRootTask::Instance().CreateOID();
 }
@@ -52,7 +54,10 @@ BFTaskData::BFTaskData (BFTaskType type,
 BFTaskData::BFTaskData ()
           : type_(TaskINVALID),
             oid_(BFInvalidOID),
-            archiveFormat_(CompressNOTUSED)
+            archiveFormat_(CompressNOTUSED),
+            bRealSync_(true),
+            bVerify_(true),
+            bVerifyContent_(false)
 {
 }
 
@@ -118,6 +123,11 @@ BFArchiveFormat BFTaskData::GetArchiveFormat () const
 const wxArrayString& BFTaskData::GetExclude () const
 {
     return arrExclude_;
+}
+
+bool BFTaskData::GetRealSync () const
+{
+    return bRealSync_;
 }
 
 bool BFTaskData::SetOID (BFoid oid)
@@ -198,6 +208,11 @@ void BFTaskData::SetArchiveFormat (BFArchiveFormat archiveFormat)
 void BFTaskData::SetExclude (const wxArrayString& exclude)
 {
     arrExclude_ = exclude;
+}
+
+void BFTaskData::SetRealSync (bool bRealSync)
+{
+    bRealSync_ = bRealSync;
 }
 
 /*static* BFTaskType BFTask::GetTypeByDescription (const wxString& strDesc)
@@ -325,6 +340,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         rA << VerifyContent();
         rA << GetArchiveFormat();
         rA << GetExclude();
+        rA << GetRealSync();
     }
     else
     // ** serialize FROM file **
@@ -332,7 +348,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         BFTaskType      type;
         BFArchiveFormat archiveFormat;
         wxString        strSource, strDestination, strName;
-        bool            bVerify, bVerifyContent;
+        bool            bVerify, bVerifyContent, bRealSync;
         wxArrayString   arrExclude;
         BFoid           oid;
 
@@ -343,7 +359,8 @@ bool BFTask::Serialize (jbSerialize& rA)
         rA >> strName;
         rA >> bVerify;
 
-        if (rA.GetVersion() < BF_PROJECT_CURRENT_VERSION)
+        // implemented at version 1010
+        if (rA.GetVersion() < 1010)
         {
             bVerifyContent = false;
             BFRootTask::Instance().SetModified(true);
@@ -356,6 +373,16 @@ bool BFTask::Serialize (jbSerialize& rA)
         rA >> archiveFormat;
         rA >> arrExclude;
 
+        // impelemented at version 1020
+        if (rA.GetVersion() < 1020)
+        {
+            bRealSync = true;
+        }
+        else
+        {
+            rA >> bRealSync;
+        }
+
         SetTaskType(type);
         SetSource(strSource);
         SetDestination(strDestination);
@@ -364,6 +391,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         SetVerifyContent(bVerifyContent);
         SetArchiveFormat(archiveFormat);
         SetExclude(arrExclude);
+        SetRealSync(bRealSync);
 
         if ( !(SetOID(oid)) )
         {
@@ -397,8 +425,9 @@ BFTask::BFTask (BFTaskType type,
                 bool bVerify,
                 bool bVerifyContent,
                 BFArchiveFormat archiveFormat,
-                wxArrayString& arrExclude)
-      : BFTaskData(type, strSource, strDestination, strName, bVerify, bVerifyContent, archiveFormat, arrExclude),
+                wxArrayString& arrExclude,
+                bool bRealSync)
+      : BFTaskData(type, strSource, strDestination, strName, bVerify, bVerifyContent, archiveFormat, arrExclude, bRealSync),
         bStopTask_(false)
 {
 }
@@ -525,6 +554,7 @@ bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
         strDest.wx_str(),
         Verify(),
         VerifyContent(),
+        GetRealSync(),
         &rProgress
     );
 }

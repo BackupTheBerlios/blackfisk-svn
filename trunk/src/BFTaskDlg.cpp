@@ -67,7 +67,8 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
            pDestCtrl_(NULL),
            pVerifyCheck_(NULL),
            pVerifyContentCheck_(NULL),
-           pExcludeCtrl_(NULL)
+           pExcludeCtrl_(NULL),
+           pRealSyncCheck_(NULL)
 {
     // help ctrl
     pHelpCtrl_ = new BFHelpCtrl(this);
@@ -172,21 +173,30 @@ wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
     wxPanel* pPanel = new wxPanel(pParent, wxID_ANY);
 
     // verify
-    pVerifyCheck_ = new wxCheckBox(pPanel, BF_TASKDLG_CBVERIFY, wxEmptyString);
-    wxStaticText* pVerifyStatic   = new wxStaticText(pPanel, -1, _("verify:"));
-    SetRowSize(pVerifyStatic, pVerifyCheck_);
-    pHelpCtrl_->Connect(pVerifyStatic, pVerifyCheck_,
+    pVerifyCheck_ = new wxCheckBox(pPanel, BF_TASKDLG_CBVERIFY, _("verify the backup"));
+    //wxStaticText* pVerifyStatic   = new wxStaticText(pPanel, -1, _("verify:"));
+    //SetRowSize(pVerifyStatic, pVerifyCheck_);
+    pHelpCtrl_->Connect(pVerifyCheck_,
                         _("If checked the backup is verified.\nThe source and the destination "\
                           "are compared by size, modification time and attributes.\n" \
                           "Of course it cost some time!"));
 
     // verify content
-    pVerifyContentCheck_ = new wxCheckBox(pPanel, -1, wxEmptyString);
-    wxStaticText* pVerifyContentStatic = new wxStaticText(pPanel, -1, _("verify content:"));
-    SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
-    pHelpCtrl_->Connect(pVerifyContentStatic, pVerifyContentCheck_,
+    pVerifyContentCheck_ = new wxCheckBox(pPanel, -1, _("verify content"));
+    //wxStaticText* pVerifyContentStatic = new wxStaticText(pPanel, -1, _("verify content"));
+    //SetRowSize(pVerifyContentStatic, pVerifyContentCheck_);
+    pHelpCtrl_->Connect(pVerifyContentCheck_,
                         _("If cheched the backup is verified including a byte-by-byte comparison.\n" \
                           "This will cost a lot of time!"));
+
+    // real sync
+    if (pTask_->GetType() == TaskSYNC)
+    {
+        pRealSyncCheck_ = new wxCheckBox(pPanel, -1, _("Delete files in the destination directory\nif they don't exist in the source directory."));
+        pHelpCtrl_->Connect(pRealSyncCheck_,
+                            _("If file X is deleted in the source directory while " \
+                              "synchronisation the same file in the destination directory will be deleted, too."));
+    }
 
     // exclude
     wxStaticText* pExcludeStatic = NULL;
@@ -201,14 +211,21 @@ wxWindow* BFTaskDlg::CreateBookPageB (wxWindow* pParent)
     // sizer and arrange
     wxBoxSizer*     pSizer      = new wxBoxSizer(wxVERTICAL);
     wxGridBagSizer* pBodySizer  = new wxGridBagSizer(5);
-    pBodySizer->Add(pVerifyStatic,          wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-    pBodySizer->Add(pVerifyCheck_,          wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-    pBodySizer->Add(pVerifyContentStatic,   wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-    pBodySizer->Add(pVerifyContentCheck_,   wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    //pBodySizer->Add(pVerifyStatic,          wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pVerifyCheck_,          wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    //pBodySizer->Add(pVerifyContentStatic,   wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    pBodySizer->Add(pVerifyContentCheck_,   wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+    int iCurrentRow = 1;
+    if (pRealSyncCheck_)
+    {
+        pBodySizer->Add(pRealSyncCheck_,    wxGBPosition(iCurrentRow + 1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+        iCurrentRow++;
+    }
     if (pExcludeCtrl_)
     {
-        pBodySizer->Add(pExcludeStatic,         wxGBPosition(2, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
-        pBodySizer->Add(pExcludeCtrl_,          wxGBPosition(3, 0), wxGBSpan(2, 2), wxALIGN_CENTER | wxEXPAND);
+        pBodySizer->Add(pExcludeStatic,         wxGBPosition(iCurrentRow + 1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL);
+        pBodySizer->Add(pExcludeCtrl_,          wxGBPosition(iCurrentRow + 2, 0), wxGBSpan(2, 2), wxALIGN_CENTER | wxEXPAND);
+        iCurrentRow = iCurrentRow + 2;
     }
     pSizer->Add(pBodySizer, wxSizerFlags(0).Border());
 
@@ -322,6 +339,8 @@ void BFTaskDlg::GetData ()
     pDestCtrl_      ->SetPath(pTask_->GetDestination());
     pVerifyCheck_   ->SetValue(pTask_->Verify());
     pVerifyContentCheck_->SetValue(pTask_->VerifyContent());
+    if (pRealSyncCheck_)
+        pRealSyncCheck_->SetValue(pTask_->GetRealSync());
     if (pExcludeCtrl_)
         pExcludeCtrl_   ->GetData(pTask_->GetExclude());
 
@@ -385,6 +404,13 @@ void BFTaskDlg::SetData ()
     if (pVerifyContentCheck_->GetValue() != pTask_->VerifyContent())
     {
         pTask_->SetVerifyContent(pVerifyContentCheck_->GetValue());
+        BFRootTask::Instance().SetModified();
+    }
+
+    // real sync
+    if (pRealSyncCheck_)
+    {
+        pTask_->SetRealSync(pRealSyncCheck_->GetValue());
         BFRootTask::Instance().SetModified();
     }
 

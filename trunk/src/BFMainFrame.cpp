@@ -527,7 +527,22 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
-    BFSystem::Info(wxGetCwd());
+    wxString strSource("C:\\MyOrg");
+    wxString strDestination("E:\\MyOrg_sync");
+    wxArrayString arrA, arrB;
+
+    BFCore::Instance().GetDirListing(strSource, arrA);
+
+    for (int i = 0; i < arrA.GetCount(); i++)
+        arrA[i] = arrA[i].Mid(strSource.Len());
+
+    //BFApp::PrependString(arrA, strDestination);
+
+    BFSystem::Info(wxString::Format("strSource:%s\tstrDestination:%s\n\narrA:\n%s\n\narrB:\n%s", strSource, strDestination, wxJoin(arrA, '\n'), wxJoin(arrB, '\n')));
+
+    BFCore::Instance().GetDirListing(strDestination, arrB, &arrA, true);
+
+    BFSystem::Info(wxString::Format("strSource:%s\tstrDestination:%s\n\narrA:\n%s\n\narrB:\n%s", strSource, strDestination, wxJoin(arrA, '\n'), wxJoin(arrB, '\n')));
 }
 #endif
 

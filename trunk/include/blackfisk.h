@@ -43,7 +43,7 @@
 
 #define BF_SETTINGS                 "blackfisk.cfg"
 #define BF_SETTINGS_CURRENT_VERSION 1020
-#define BF_PROJECT_CURRENT_VERSION  1010
+#define BF_PROJECT_CURRENT_VERSION  1020
 
 #define BF_LOGFILE_NAME             "bf.log"
 #define BF_LOGFILE_BAKSUFFIX        ".bak"

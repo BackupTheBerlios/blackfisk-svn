@@ -873,7 +873,8 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
                         true,   // verify files by default
                         false,  // don't verify file content by default
                         aformat,
-                        arrString);
+                        arrString,
+                        true);
 
     if ( pTask->IsValid() )
     {

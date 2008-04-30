@@ -109,52 +109,56 @@ class BFCore
         static bool IsStop ();
 
         /** move a file */
-        bool MoveFile (const wxChar* pSource, const wxChar* pDestination, bool bOverwrite = BF_DEFAULT_OVERWRITE);
+        bool MoveFile (const wxString &strSource, const wxString& Destination, bool bOverwrite = BF_DEFAULT_OVERWRITE);
         /** copy a file
             'pSource' can have placeholders
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
-        bool CopyFile (const wxChar* pSource,
-                       const wxChar* pDestination,
+        bool CopyFile (const wxString& Source,
+                       const wxString& Destination,
                        bool bOverwrite = BF_DEFAULT_OVERWRITE,
                        bool bVerify = false,
                        bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
         /** synchroinze two directories */
-        bool Synchronise (const wxChar* pOriginal,
-                          const wxChar* pToSynchronise,
+        bool Synchronise (const wxString& strOriginal,
+                          const wxString& strToSynchronise,
                           bool bVerify,
                           bool bVerifyContent,
+                          bool bRealSync = true,
                           ProgressWithMessage* pProgress = NULL);
 
         /// to patch for wxWidgets
-        bool IsWriteProtected (const wxChar* pFilename);
+        bool IsWriteProtected (const wxString& strFilename);
         /// to patch for wxWidgets
-        bool SetWriteProtected (const wxChar* pFilename, bool bWriteProtected);
+        bool SetWriteProtected (const wxString& strFilename, bool bWriteProtected);
 
         /// return number of files and directories in a directory and its subdirectories (return -1 on error)
-        long GetDirFileCount(const wxChar* pDir, long* pDirCount = NULL, long* pFileCount = NULL);
+        long GetDirFileCount(const wxString& Dir, long* pDirCount = NULL, long* pFileCount = NULL);
 
         /** get all files and subdirectories in 'dir' and store them to 'arr'
             it is possible to store them as relative pathes
             files and directories that should not be in the listing can be specified in 'pExcludeListing' */
-        wxArrayString& GetDirListing (const wxChar* dir, wxArrayString& arr, wxArrayString* pExcludeListing = NULL, bool bRelativ = false);
+        wxArrayString& GetDirListing (const wxString& strDir,
+                                      wxArrayString& arr,
+                                      wxArrayString* pExcludeListing = NULL,
+                                      bool bRelativ = false);
 
         /** read the attributes (like file-attributes) from a dir ('pSourceDir') and
             copy them to another dir ('pDestinationDir') */
-        bool CopyDirAttributes (const wxChar* pSourceDir, const wxChar* pDestinationDir);
+        bool CopyDirAttributes (const wxString& strSourceDir, const wxString& strDestinationDir);
 
         /** create a directory
             there should be just one new directory to create
             look at CreatePath() to create more than one new directories */
-        bool CreateDir (const wxChar* pNewDir);
+        bool CreateDir (const wxString& strNewDir);
         /** create a path
             there could be more than one new directories in the path */
-        bool CreatePath (const wxChar* pPath);
+        bool CreatePath (const wxString& strPath);
 
         /** copy a directory */
-        bool CopyDir (const wxChar* pSourceDir,
-                      const wxChar* pDestinationDir,
+        bool CopyDir (const wxString& strSourceDir,
+                      const wxString& strDestinationDir,
                       bool bVerify,
                       bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT,
                       ProgressWithMessage* pProgress = NULL);
@@ -163,8 +167,8 @@ class BFCore
         /** create a zipfile ('pstrZipName') from a directory ('pstrSourceDir')
             files and directories that should not be zipped can be specified in 'pExcludeListing'
             'pExcludeListing' and 'pProgress' can be NULL*/
-        bool CreateZipFromDir (const wxChar* pstrZipName,
-                               const wxChar* pstrSourceDir,
+        bool CreateZipFromDir (const wxString& strZipName,
+                               const wxString& strSourceDir,
                                wxArrayString* pExcludeListing,
                                bool bVerify,
                                ProgressWithMessage* pProgress = NULL);
@@ -191,7 +195,7 @@ class BFCore
                         bool bIgnoreWriteprotection = false);
 
         /** delete a file */
-        bool DeleteFile (const wxChar* pFile,
+        bool DeleteFile (const wxString& strFile,
                          bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
 
         /** delete files and directories specified by the array */
@@ -225,10 +229,10 @@ class BFCore
         bool VerifyFiles (MapStringPair& rMap, ProgressWithMessage* pProgress = NULL, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
         /** compare the zip entries by checksum (CRC) with the original files */
-        bool VerifyZip (const wxChar* pZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
+        bool VerifyZip (const wxString& strZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress = NULL);
 
         /** create a CRC checksum of a file */
-        wxUint32 GetFileCrc (const wxChar* pFilename);
+        wxUint32 GetFileCrc (const wxString& strFilename);
 
     private:
         /// compare the file-attributes of two files

@@ -108,7 +108,7 @@ class BFCopyDirTraverser : public wxDirTraverser
 
     public:
         /// default ctor
-        BFCopyDirTraverser (const wxChar* pDestinationDirectory,
+        BFCopyDirTraverser (const wxString& strDestinationDirectory,
                             MapStringPair* pRememberToVerify = NULL,
                             ProgressWithMessage* pProgress = NULL);
 
@@ -133,8 +133,8 @@ class BFSynchroniseDirTraverser : public BFDirListingTraverser
 
     public:
         /// ctor
-        BFSynchroniseDirTraverser (const wxChar* pOriginalDirectory,
-                                   const wxChar* pToSynchroniseDirectory,
+        BFSynchroniseDirTraverser (const wxString& strOriginalDirectory,
+                                   const wxString& strToSynchroniseDirectory,
                                    wxArrayString& rList,
                                    bool bVerify,
                                    bool bVerifyContent,

@@ -76,6 +76,9 @@ class BFTaskData
         BFArchiveFormat             archiveFormat_;
         /// files and sub-dirs to exclude from the backup
         wxArrayString               arrExclude_;
+        /** For synchronisation tasks. Delete files in
+            destination directory if they don't exisit in source directory. */
+        bool                        bRealSync_;
 
     protected:
         ///
@@ -90,7 +93,8 @@ class BFTaskData
                     bool bVerify,
                     bool bVerifyContent,
                     BFArchiveFormat archive,
-                    wxArrayString& arrExclude);
+                    wxArrayString& arrExclude,
+                    bool bRealSync);
 
         ///
         BFTaskData ();
@@ -126,6 +130,8 @@ class BFTaskData
         BFArchiveFormat GetArchiveFormat () const;
         ///
         const wxArrayString& GetExclude () const;
+        ///
+        bool GetRealSync () const;
 
         ///
         void SetTaskType (BFTaskType type);
@@ -143,6 +149,8 @@ class BFTaskData
         void SetArchiveFormat (BFArchiveFormat archive);
         ///
         void SetExclude (const wxArrayString& exclude);
+        ///
+        void SetRealSync (bool bRealSync);
 
 };  // class BFTaskData
 
@@ -172,7 +180,8 @@ class BFTask : public BFTaskData
                 bool bVerify,
                 bool bVerifyContent,
                 BFArchiveFormat archive,
-                wxArrayString& arrExclude);
+                wxArrayString& arrExclude,
+                bool bRealSync);
 
         /// create a dummy task with an invalid oid
         BFTask ();

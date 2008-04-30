@@ -384,7 +384,8 @@ BFoid BFRootTask::AppendTask (BFTaskType type,
                         bVerify,
                         bVerifyContent,
                         archive,
-                        arrExclude
+                        arrExclude,
+                        true
                     );
 
     BFoid rc = AppendTask(*pTask);

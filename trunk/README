@@ -14,7 +14,7 @@ computers.
  -- Feauters --
   + copy files and directoies
   + archive files and directories in a standard archive format (zip, ...)
-  + synchronise directories
+  + synchronise (unidirectional) directories
   + easy to use, ergonomic and selfdesribing
 
 LICENSE
