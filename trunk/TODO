@@ -1,9 +1,11 @@
+- change task-type by context-menu of a tree-node (backup-dir)
+
 0.0.1
 ~~~~~
+- (bug): create dest-dir under a dir-task => moving an existing task to this dir => OK
+         moving an existing task as sub to a dir-task => don't work!
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - BUG: black for transparency in PNGs
-- change task-type by context-menu of a tree-node (backup-dir)
-- sync directories: more detailed settings (delete?)
 
 0.0.2
 ~~~~~

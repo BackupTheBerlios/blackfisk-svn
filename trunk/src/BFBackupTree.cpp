@@ -45,22 +45,25 @@
 #define BF_BACKUPTREE_FILLED_TIME_MASK  wxString::Format("*%s*", BFCore::Instance().GetTimeString_Old())
 
 BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
-    EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                          BFBackupTree::OnItemActivated)
-    EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                          BFBackupTree::OnItemMenu)
-    EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,    BFBackupTree::OnAddDestination)
-    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSETTINGS,   BFBackupTree::OnProjectSettings)
-    EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION, BFBackupTree::OnCreateDestination)
-    EVT_MENU                    (BFBACKUPCTRL_ID_TASKSETTINGS,      BFBackupTree::OnTaskSettings)
-    EVT_MENU                    (BFBACKUPCTRL_ID_DELETETASK,        BFBackupTree::OnDeleteTask)
-    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,          BFBackupTree::OnCreateBackup)
-    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,         BFBackupTree::OnCreateBackup)
-    EVT_MENU                    (BFBACKUPCTRL_ID_SYNC_DIR,          BFBackupTree::OnCreateBackup)
-    EVT_MENU                    (BFBACKUPCTRL_ID_ARCHIVE_DIR,       BFBackupTree::OnCreateBackup)
-    EVT_MENU                    (BFBACKUPCTRL_ID_MODIFYDDESTINATION,BFBackupTree::OnModifyDestination)
-    EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                          BFBackupTree::OnBeginLabelEdit)
-    EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                          BFBackupTree::OnEndLabelEdit)
-    EVT_MENU                    (BF_BACKUPTREE_REBUILD,             BFBackupTree::OnRebuild)
-    EVT_TREE_BEGIN_DRAG         (wxID_ANY,                          BFBackupTree::OnBeginDrag)
+    EVT_TREE_ITEM_ACTIVATED     (wxID_ANY,                              BFBackupTree::OnItemActivated)
+    EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                              BFBackupTree::OnItemMenu)
+    EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,        BFBackupTree::OnAddDestination)
+    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSETTINGS,       BFBackupTree::OnProjectSettings)
+    EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION,     BFBackupTree::OnCreateDestination)
+    EVT_MENU                    (BFBACKUPCTRL_ID_TASKSETTINGS,          BFBackupTree::OnTaskSettings)
+    EVT_MENU                    (BFBACKUPCTRL_ID_DELETETASK,            BFBackupTree::OnDeleteTask)
+    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_DIR,              BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_COPY_FILE,             BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_SYNC_DIR,              BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_ARCHIVE_DIR,           BFBackupTree::OnCreateBackup)
+    EVT_MENU                    (BFBACKUPCTRL_ID_MODIFYDDESTINATION,    BFBackupTree::OnModifyDestination)
+    EVT_TREE_BEGIN_LABEL_EDIT   (wxID_ANY,                              BFBackupTree::OnBeginLabelEdit)
+    EVT_TREE_END_LABEL_EDIT     (wxID_ANY,                              BFBackupTree::OnEndLabelEdit)
+    EVT_MENU                    (BF_BACKUPTREE_REBUILD,                 BFBackupTree::OnRebuild)
+    EVT_TREE_BEGIN_DRAG         (wxID_ANY,                              BFBackupTree::OnBeginDrag)
+    EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR,    BFBackupTree::OnModifyTaskType)
+    EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR,    BFBackupTree::OnModifyTaskType)
+    EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR, BFBackupTree::OnModifyTaskType)
 END_EVENT_TABLE()
 
 
@@ -111,8 +114,41 @@ void BFBackupTree::Init ()
     Thaw();
 }
 
+void BFBackupTree::UpdateItems (VectorTreeItemId &vec)
+{
+    Freeze();
+
+    for (ItVectorTreeItemId it = vec.begin();
+         it != vec.end();
+         ++it)
+    {
+        UpdateItem(*it);
+    }
+
+    Thaw();
+}
+
+void BFBackupTree::UpdateItem (wxTreeItemId id)
+{
+    BFTask* pTask = GetTaskByItem(id);
+
+    if (pTask)
+    {
+        wxString str(pTask->GetName());
+
+        if (bFillBlackfiskPlaceholders_)
+            BFTask::FillBlackfiskPlaceholders(str);
+
+        SetItemText(id, str);
+
+        SetItemImage(id, pTask->GetTypeIconId());
+    }
+}
+
 void BFBackupTree::RefreshPlaceholders ()
 {
+    Freeze ();
+
     // only refresh filled placeholders!
     if ( !(GetFillBlackfiskPlaceholders()) )
         return;
@@ -162,10 +198,14 @@ void BFBackupTree::RefreshPlaceholders ()
             strPath = strPath.BeforeLast(wxFILE_SEP_PATH);
         }
     }
+
+    Thaw();
 }
 
 void BFBackupTree::UpdatePlaceholders ()
 {
+    Freeze();
+
     wxString strLabel;
 
     if (bFillBlackfiskPlaceholders_)
@@ -229,6 +269,8 @@ void BFBackupTree::UpdatePlaceholders ()
             }
         }
     }
+
+    Thaw();
 }
 
 void BFBackupTree::SetDropedFilename (wxString strDropedFilename)
@@ -262,25 +304,41 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
 }
 
 
-/*static*/ wxMenu& BFBackupTree::GenerateBackupMenu (wxMenu& menu, bool bOnDir)
+/*static*/ wxMenu& BFBackupTree::GenerateBackupMenu (wxMenu& menu, bool bOnDir, bool bBackup /*= true*/)
 {
-    wxMenuItem      *pItem          = NULL;
+    wxMenuItem *pItem = NULL;
+    int id;
 
     // check if it is a dir
     if ( bOnDir )
     {
         // ** backup dir copy **
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_DIR, _("copy directory"));
+        if (bBackup)
+            id = BFBACKUPCTRL_ID_COPY_DIR;
+        else
+            id = BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR;
+
+        pItem = new wxMenuItem(&menu, id, _("copy directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
         menu.Append(pItem);
 
         // ** backup sync dir **
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_SYNC_DIR, _("synchronise directory"));
+        if (bBackup)
+            id = BFBACKUPCTRL_ID_SYNC_DIR;
+        else
+            id = BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR;
+
+        pItem = new wxMenuItem(&menu, id, _("synchronise directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
         menu.Append(pItem);
 
         // ** backup archive dir **
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_ARCHIVE_DIR, _("archive/compress directory"));
+        if (bBackup)
+            id = BFBACKUPCTRL_ID_ARCHIVE_DIR;
+        else
+            id = BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR;
+
+        pItem = new wxMenuItem(&menu, id, _("archive/compress directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
         menu.Append(pItem);
     }
@@ -295,14 +353,20 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
     return menu;
 }
 
-
 void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 {
     wxPoint         point   (rEvent.GetPoint());
-    wxMenu          menu, menu_backup;
+    wxMenu          menu, menu_backup, menu_type;
+    wxString        strLabel_ModifyTaskType(_("modify all sub-tasks to ..."));
+    wxString        strLabel_DeleteTask(_("delete task"));
+    wxString        strLabel_CreateDest(_("create destination directory"));
+    wxString        strLabel_Backup(_("backup"));
 
     // remember the selected item
     lastItemId_ = rEvent.GetItem();
+
+    // check if there are task-items as childs
+    vecLastChildTasks_ = GetTaskItems(lastItemId_);
 
     if ( IsTask(lastItemId_) )
     {
@@ -313,10 +377,17 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 
         // ** create destination directory **
         if (pTask->GetType() == TaskDIRCOPY)
-            menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
+            menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, strLabel_CreateDest);
 
         // ** delete task **
-        menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
+        menu.Append(BFBACKUPCTRL_ID_DELETETASK, strLabel_DeleteTask);
+
+        // ** modify types **
+        if ( vecLastChildTasks_.size() > 0)
+        {
+            BFBackupTree::GenerateBackupMenu(menu_type, true, false);
+            menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+        }
 
         // separator
         menu.AppendSeparator();
@@ -327,7 +398,7 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
         else
             BFBackupTree::GenerateBackupMenu(menu_backup, true);
 
-        menu.AppendSubMenu(&menu_backup, _("backup"));
+        menu.AppendSubMenu(&menu_backup, strLabel_Backup);
 
         // separator
         menu.AppendSeparator();
@@ -338,24 +409,40 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
     else
     {
         // for non-existing (while backup created) directories
-        menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, _("create destination directory"));
+        menu.Append(BFBACKUPCTRL_ID_CREATEDESTINATION, strLabel_CreateDest);
 
         // right click on root item
         if (GetRootItem() == lastItemId_)
         {
             // for real existing directories
             menu.Append(BFBACKUPCTRL_ID_ADDDESTINATION, _("add destination directory"));
-            menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
+            menu.Append(BFBACKUPCTRL_ID_DELETETASK, strLabel_DeleteTask);
+
+            // ** modify types **
+            if ( vecLastChildTasks_.size() > 0)
+            {
+                BFBackupTree::GenerateBackupMenu(menu_type, true, false);
+                menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+            }
+
             menu.AppendSeparator();
             menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS, _("Project settings"));
         }
         else
         {
             menu.Append(BFBACKUPCTRL_ID_MODIFYDDESTINATION, _("modify destination"));
-            menu.Append(BFBACKUPCTRL_ID_DELETETASK, _("delete task"));
+            menu.Append(BFBACKUPCTRL_ID_DELETETASK, strLabel_DeleteTask);
+
+            // ** modify types **
+            if ( vecLastChildTasks_.size() > 0)
+            {
+                BFBackupTree::GenerateBackupMenu(menu_type, true, false);
+                menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+            }
+
             menu.AppendSeparator();
             BFBackupTree::GenerateBackupMenu(menu_backup, true);
-            menu.AppendSubMenu(&menu_backup, _("backup"));
+            menu.AppendSubMenu(&menu_backup, strLabel_Backup);
         }
     }
 
@@ -807,6 +894,84 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
     return id;
 }
 
+void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
+{
+    long iCount;
+    wxString strQuestion;
+    wxArrayString arrTasks;
+
+    // the type
+    BFTaskType type;
+    switch (rEvent.GetId())
+    {
+        case BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR:
+            type = TaskDIRCOPY;
+            break;
+
+        case BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR:
+            type = TaskSYNC;
+            break;
+
+        case BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR:
+            type = TaskARCHIVE;
+            break;
+
+        default:
+            BFSystem::Error((_T("unknown ID")), _T("BFBackupTree::OnModifyTaskType()"));
+            return;
+            break;
+    };  // switch
+
+    // exclude file tasks
+    for (ItVectorTreeItemId it = vecLastChildTasks_.begin();
+         it != vecLastChildTasks_.end();
+         ++it)
+    {
+        BFTask* pTask = GetTaskByItem(*it);
+
+        if (pTask)
+        {
+            if (pTask->GetType() == TaskFILECOPY
+             || pTask->GetType() == type)
+            {
+                vecLastChildTasks_.erase(it);
+                --it;
+                ++iCount;
+            }
+            else
+            {
+                arrTasks.Add(wxString::Format("\t\t%s", pTask->GetName()));
+            }
+        }
+    }
+
+    // check if there are any tasks
+    if (vecLastChildTasks_.empty())
+        return;
+
+    // build the question
+    strQuestion = wxString::Format(_("The type of the following tasks will be changed to \"%s\".\n\n%s\n\nChange the type?"),
+                                   BFTask::GetTypeDescription(type),
+                                   wxJoin(arrTasks, '\n'));
+
+    // ask the user
+    if ( BFMainFrame::Instance()->QuestionYesNo(strQuestion) == false )
+        return;
+
+    // modify the type
+    for (ItVectorTreeItemId it = vecLastChildTasks_.begin();
+         it != vecLastChildTasks_.end();
+         ++it)
+    {
+        BFTask* pTask = GetTaskByItem(*it);
+
+        if (pTask)
+            pTask->SetTaskType(type);
+    }
+
+    BFRootTask::Instance().SetModified(true);
+    UpdateItems(vecLastChildTasks_);
+}
 
 void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 {

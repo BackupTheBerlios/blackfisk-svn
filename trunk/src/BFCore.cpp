@@ -689,8 +689,6 @@ bool BFCore::Synchronise (const wxString& strOriginal,
                                    pProgress);
     dir.Traverse(trav);
 
-    //XXXwxMessageBox(wxString::Format("%s\n%s\n%s", strOriginal, strToSynchronise, wxJoin(arrOriginalListing, '\n')));
-
     // stop ?
     if ( BFCore::IsStop() )
         return false;
@@ -708,11 +706,7 @@ bool BFCore::Synchronise (const wxString& strOriginal,
 
         GetDirListing(strToSynchronise, arrToSyncListing, &arrOriginalListing, true);
 
-        /*XXXwxMessageBox(wxString::Format("%s\n%s\n%s", strToSynchronise,
-                                                    wxJoin(arrToSyncListing, '\n'),
-                                                    wxJoin(arrOriginalListing, '\n')));*/
         BFApp::PrependString(arrToSyncListing, strToSynchronise);
-        //XXXwxMessageBox(wxJoin(arrToSyncListing, '\n'));
 
         // ... and sort them in the right order
         arrToSyncListing.Sort(true);

@@ -48,6 +48,9 @@
 #define BFBACKUPCTRL_ID_MODIFYDDESTINATION      10 + BF_BACKUPCTRL_ID_HIGHEST
 #define BF_BACKUPTREE_REBUILD                   11 + BF_BACKUPCTRL_ID_HIGHEST
 #define BFBACKUPCTRL_ID_CHECK_PLACEHOLDERS      12 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR      13 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR      14 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR   15 + BF_BACKUPCTRL_ID_HIGHEST
 
 typedef std::pair<wxString, wxTreeItemId>   PairVolItemId;
 typedef std::vector<PairVolItemId>          VecPairVolItemId;
@@ -71,6 +74,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /** the last (by right-click) selected item;
             is normaly set by OnItemMenu() */
         wxTreeItemId        lastItemId_;
+
+        /** the last found child tasks for 'lastItemId_'
+            is normaly set by OnItemMenu() */
+        VectorTreeItemId    vecLastChildTasks_;
 
         /** the oid of the currently draging BFTask
             set in OnBeginDrag() and used in OnDropTask() */
@@ -145,10 +152,18 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// open the TaskDialog for the Task specified by 'id'
         void ShowTaskSettings (wxTreeItemId id);
 
-    protected:
-        /// proteced members
+        /** check all placeholders in the tree-ctrl and
+            fill them with data if needed. */
+        void UpdatePlaceholders ();
+        /** Call UpdateItem() for each item. */
+        void UpdateItems (VectorTreeItemId &vec);
+        /** Update label text and icon of the specified task-item. */
+        void UpdateItem (wxTreeItemId id);
 
     public:
+        /** refill filled placeholders */
+        void RefreshPlaceholders ();
+
         /// constructor
         BFBackupTree (wxWindow* pParent);
 
@@ -156,16 +171,10 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         virtual ~BFBackupTree ();
 
         ///
-        static wxMenu& GenerateBackupMenu (wxMenu& menu, bool bOnDir);
+        static wxMenu& GenerateBackupMenu (wxMenu& menu, bool bOnDir, bool bBackup = true);
 
         ///
         void Init ();
-
-        /** check all placeholders in the tree-ctrl and
-            fill them with data if needed. */
-        void UpdatePlaceholders ();
-        ///
-        void RefreshPlaceholders ();
 
         ///
         virtual void ValueChanged (Subject* pSender);
@@ -244,6 +253,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
         ///
         void OnBeginDrag (wxTreeEvent& event);
+        ///
+        void OnModifyTaskType (wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };    // class BFBackupTree
