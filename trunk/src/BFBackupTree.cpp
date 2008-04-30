@@ -460,18 +460,37 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
     // is an item selected?
     if ( itemId.IsOk() )
     {
-        // get the imageId of the selected item
-        int iImageId(GetItemImage(itemId));
+        bool bSelect = false;
 
-        // identify the item
-        if (iImageId == BFIconTable::folder
-         || iImageId == BFIconTable::folder_open
-         || iImageId == BFIconTable::folder_virtual
-         || iImageId == BFIconTable::folder_virtual_open
-         || iImageId == BFIconTable::volume_harddisk
-         || iImageId == BFIconTable::volume_cdrom
-         || iImageId == BFIconTable::volume_floppy
-         || iImageId == BFIconTable::volume_removable)
+        // get the task behind the item
+        BFTask* pTask = GetTaskByItem(itemId);
+
+        if (pTask)
+        {
+            if ( pTask->GetType() == TaskDIRCOPY )
+                bSelect = true;
+        }
+
+        if (!bSelect)
+        {
+            // get the imageId of the selected item
+            int iImageId(GetItemImage(itemId));
+
+            // identify the item
+            if (iImageId == BFIconTable::folder
+             || iImageId == BFIconTable::folder_open
+             || iImageId == BFIconTable::folder_virtual
+             || iImageId == BFIconTable::folder_virtual_open
+             || iImageId == BFIconTable::volume_harddisk
+             || iImageId == BFIconTable::volume_cdrom
+             || iImageId == BFIconTable::volume_floppy
+             || iImageId == BFIconTable::volume_removable)
+            {
+                bSelect = true;
+            }
+        }
+
+        if (bSelect)
         {
             // select it if it is not
             if (GetSelection() != itemId)
@@ -507,8 +526,8 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     if ( itemId.IsOk() )
         pItemData = (BFBackupTreeItemData*)GetItemData(itemId);
 
-    if ( pItemData
-      && pItemData->GetOID() == BFInvalidOID)
+    if ( pItemData )
+      // && pItemData->GetOID() == BFInvalidOID)
         strCurrentDestination_ = pItemData->GetPath();
 
     // show the menu
@@ -537,9 +556,16 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
         pItemData = (BFBackupTreeItemData*)GetItemData(itemId);
 
     // set the new destination
-    if ( pItemData && pItemData->GetOID() == BFInvalidOID)
+    if ( pItemData )
     {
+        wxString strOldPath = pTask->GetDestination() + wxFILE_SEP_PATH + pTask->GetName();
+        wxString strNewPath = pItemData->GetPath() + wxFILE_SEP_PATH + pTask->GetName();
+
         pTask->SetDestination(pItemData->GetPath());
+
+        if ( HasChildren(pTask) )
+            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
+
         BFRootTask::Instance().SetModified();
         BFRootTask::Instance().broadcastObservers();
     }
@@ -755,7 +781,7 @@ wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent,
     bool            bJustAdded = false;
 
     // find the right position for the volume item
-    if (HasChildren(GetRootItem()) == true)
+    if (ItemHasChildren(GetRootItem()) == true)
     {
         wxTreeItemId        idPrev;
         wxTreeItemIdValue   idCookie;
@@ -827,41 +853,6 @@ wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent,
     return idReturn;
 }
 
-/*
-wxTreeItemId BFBackupTree::AddTaskAfter (wxTreeItemId idItemBefore,
-                                         BFoid oid,
-                                         BFTaskType type,
-                                         const wxString& strName,
-                                         const wxString& strDestination)
-{
-    wxString str(strName);
-    wxString strFull;
-
-    // create strFull
-    strFull << strDestination;
-
-    if (strFull.Last() != wxFILE_SEP_PATH)
-        strFull << wxFILE_SEP_PATH;
-
-    strFull << strName;
-
-    if (bFillBlackfiskPlaceholders_)
-        BFTask::FillBlackfiskPlaceholders(str);
-
-    // add the destination items and the task item itself
-    wxTreeItemId id = InsertItem
-    (
-        AddDestination(strDestination),
-        idItemBefore,
-        str,
-        BFTask::GetTypeIconId(type),
-        -1,
-        new BFBackupTreeItemData ( oid, strFull.c_str() )
-    );
-
-    return id;
-}*/
-
 wxTreeItemId BFBackupTree::AddTask (BFoid oid,
                                     BFTaskType type,
                                     const wxString& strName,
@@ -888,7 +879,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
         str,
         BFTask::GetTypeIconId(type),
         -1,
-        new BFBackupTreeItemData ( oid, strFull.c_str() )
+        new BFBackupTreeItemData ( oid, strFull )
     );
 
     return id;
@@ -1149,6 +1140,20 @@ bool BFBackupTree::HasOID (wxTreeItemId itemId, BFoid oid)
     return false;
 }
 
+bool BFBackupTree::HasChildren (BFTask* pTask)
+{
+    if (pTask)
+    {
+        wxTreeItemId id = FindItem(GetRootItem(), pTask->GetOID());
+
+        if (id.IsOk())
+            if ( ItemHasChildren(id) )
+                return true;
+    }
+
+    return false;
+}
+
 wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart,
                                      const wxString& strLabel,
                                      bool bGoDeep /*= true*/)
@@ -1300,7 +1305,7 @@ void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
     UpdatePlaceholders();
 }
 
-BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxChar* strPath /*= NULL*/)
+BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxString& strPath /*= wxEmptyString*/)
                 : oid_(oid),
                   strPath_(strPath)
 {
@@ -1315,9 +1320,9 @@ BFoid BFBackupTreeItemData::GetOID ()
     return oid_;
 }
 
-const wxChar* BFBackupTreeItemData::GetPath ()
+const wxString& BFBackupTreeItemData::GetPath ()
 {
-    return strPath_.c_str();
+    return strPath_;
 }
 
 
@@ -1367,14 +1372,6 @@ BFBackupCtrl::BFBackupCtrl (wxWindow* pParent)
 {
     // init sizer
     wxBoxSizer* pTopSizer = new wxBoxSizer(wxVERTICAL);
-
-    /* toolbar
-    wxToolBar* pTool = new wxToolBar(this, -1);
-    pTool->AddTool(-1, _T("label 1"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
-    pTool->AddSeparator();
-    pTool->AddTool(-1, _T("label 2"), wxBitmap(_T("graphic\\dir.bmp"), wxBITMAP_TYPE_BMP));
-    pTool->Realize();
-    pTool->SetMinSize(wxSize(pTool->GetSize().GetWidth()*8, 26));*/
 
     // init controls
     pBackupTree_        = new BFBackupTree(this);

@@ -32,11 +32,13 @@
 #include "BFApp.h"
 #include "BFMainFrame.h"
 #include "BFRootTask.h"
+#include "BFRootTaskApp.h"
 #include "BFIconTable.h"
 #include "BFDestinationCtrl.h"
 #include "BFPlaceholderButton.h"
 #include "BFHelpCtrl.h"
 #include "BFExcludeCtrl.h"
+#include "BFBackupTree.h"
 #include "ids.h"
 
 #define BFTASKDLG_ID_BUTTONOK       1 + BF_TASKDLG_ID_HIGHEST
@@ -367,15 +369,25 @@ bool BFTaskDlg::IsPlausible ()
 
 void BFTaskDlg::SetData ()
 {
+    wxString strOldPath;
+    wxString strNewPath;
+
     // type
     // is set by OnCombo_TypeSelect()
 
     // name
     if (pNameCtrl_->IsModified())
     {
+        strOldPath = pTask_->GetDestination() + wxFILE_SEP_PATH + pTask_->GetName();
+        strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
+
         pTask_->SetName(pNameCtrl_->GetValue());
         BFRootTask::Instance().SetModified();
         pNameCtrl_->DiscardEdits();
+
+        // does the tree-item related to this task has children (maybe other tasks) ?
+        if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
+            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
     }
 
     // source
@@ -389,7 +401,15 @@ void BFTaskDlg::SetData ()
     // destination
     if (pDestCtrl_->GetPath() != pTask_->GetDestination())
     {
+        strOldPath = pTask_->GetDestination() + wxFILE_SEP_PATH + pTask_->GetName();
+        strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
+
         pTask_->SetDestination(pDestCtrl_->GetPath());
+
+        // does the tree-item related to this task has children (maybe other tasks) ?
+        if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
+            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
+
         BFRootTask::Instance().SetModified();
     }
 

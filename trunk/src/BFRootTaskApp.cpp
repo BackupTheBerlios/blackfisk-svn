@@ -394,6 +394,7 @@ void BFRootTaskApp::ModifyDestination (const wxString& strOldDestination,
         {
             // replace old with new destination
             strCurrDest.Replace(strOldDestination, strNewDestination);
+
             // set destination to the task
             (*it)->SetDestination(strCurrDest);
             // remember to mark the project as modified

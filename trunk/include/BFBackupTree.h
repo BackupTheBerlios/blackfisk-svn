@@ -193,6 +193,9 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             to the specified task-oid. */
         bool HasOID (wxTreeItemId itemId, BFoid oid);
 
+        /** Return true if the related tree item has children. */
+        bool HasChildren (BFTask* pTask);
+
         /// add tree items relating to the path to the tree
         wxTreeItemId AddDestination (const wxString& strPath);
 
@@ -207,14 +210,6 @@ class BFBackupTree : public wxTreeCtrl, public Observer
                               BFTaskType type,
                               const wxString& strName,
                               const wxString& strDestination);
-
-        /* Add a new Task after 'idItemBefore'. See AddTask()
-           for more detailes.
-        wxTreeItemId AddTaskAfter (wxTreeItemId idItemBefore,
-                                   BFoid oid,
-                                   BFTaskType type,
-                                   const wxString& strName,
-                                   const wxString& strDestination);*/
 
         ///
         bool GetFillBlackfiskPlaceholders ();
@@ -257,7 +252,7 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         void OnModifyTaskType (wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
-};    // class BFBackupTree
+};
 
 
 ///
@@ -274,7 +269,7 @@ class BFBackupTreeItemData : public wxTreeItemData
 
     public:
         ///
-        BFBackupTreeItemData (BFoid oid, const wxChar* strPath = NULL);
+        BFBackupTreeItemData (BFoid oid, const wxString& strPath = wxEmptyString);
         ///
         virtual ~BFBackupTreeItemData ();
 
@@ -282,9 +277,9 @@ class BFBackupTreeItemData : public wxTreeItemData
             attation: do not confound with wxTreeItemData:GetId() which returns the tree-item-control */
         BFoid GetOID ();
         /// return the path of the item stored in 'strPath_'
-        const wxChar* GetPath();
+        const wxString& GetPath();
 
-};  // class BFBackupTreeItem
+};
 
 
 /// contains the BFBackupTreeCtrl, toolbar, etc on the left side of the splitter
@@ -315,6 +310,6 @@ class BFBackupCtrl : public wxPanel
 
 
         DECLARE_EVENT_TABLE();
-};    // class BFBackupCtrl
+};
 
 #endif    // BFBACKUPTREE_H
