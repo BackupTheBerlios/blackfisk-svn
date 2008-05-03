@@ -191,6 +191,9 @@ END_EVENT_TABLE()
     if (BFSettings::Instance().GetMainWindowMaximized())
         Maximize();
 
+    // sash position
+    pSplitterCtrl_->SetSashPosition(BFSettings::Instance().GetSashPositionInMainWindow());
+
     //
     Show(TRUE);
 
@@ -241,10 +244,10 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
 
         // remember window maximized state
         BFSettings::Instance().SetMainWindowMaximized(false);
-
-        // remember sash position
-        BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
     }
+
+    // remember sash position
+    BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
 
     // check for a modified project
     if (BFRootTaskApp::Instance().IsProjectModified())

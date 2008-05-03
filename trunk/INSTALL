@@ -4,3 +4,40 @@
                               -- BLACKFISK --
                             Version 0.0.0 alpha
 -------------------------------------------------------------------------------
+
+There is no need for a install routine. Just unpack all files to a directory
+and start the binary (blackfisk.exe on windows).
+On first start Blackfisk will create a configuration file "blackfisk.cfg" and
+a log file "bf.log".
+That is all!
+
+Please feel free to contact me if you need more informations!
+
+FILE & DIRECTORY LISTING
+~~~~~~~~~~~~~~~~~~~~~~~~
+Please see the file INSTALL for a detailed listing.
+ README         - this file
+ INSTALL        - installation instructions
+ LICENSE        - license information
+ HISTORY        - history of blackfisk development
+ CREDITS        - all persons, projects and institutions
+                  related to this project
+ CHANGELOG      - differences between the blackfisk versions
+ blackfisk.exe  - the windows (32bit) binary
+ graphic/       - icons and other graphic stuff for blackfisk
+ local/         - language files (*.mo) for blackfisk
+ sound/         - sound files for event-notification
+
+ -- (extra files and directories in the source package) --
+ include/       - blackfisk header files
+ src/           - blackfisk source files
+ third-party/   - 3rd-party components like wxSerialize
+                  Please see the doc-files in the related directory
+                  for more detailes.
+ local/         - GNU gettext based language files (*.po)
+ BUILD          - informations how to build blackfisk
+ TODO           - This is just a little TODO list for blackfisk.
+                  Please use the bugtracking-system on BerliOS instead
+                  of this file.
+ BF.workspace   - workspace file for the IDE Code::Blocks
+ blackfisk.cbp  - project file for the IDE Code::Blocks

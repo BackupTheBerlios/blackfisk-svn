@@ -67,7 +67,11 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 
 /*static*/ wxString BFApp::GetVersion ()
 {
-    return wxString::Format("%d.%d.%d", BF_VERSION_MAJOR, BF_VERSION_MINOR, BF_VERSION_RELEASE);
+    return wxString::Format("%d.%d.%d %s",
+                            BF_VERSION_MAJOR,
+                            BF_VERSION_MINOR,
+                            BF_VERSION_RELEASE,
+                            BF_VERSION_EXTENSION);
 }
 
 /*static*/ wxArrayString& BFApp::PrependString (wxArrayString& rStrings,

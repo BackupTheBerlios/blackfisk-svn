@@ -16,7 +16,10 @@
    inkscape:version="0.46"
    version="1.0"
    sodipodi:docname="task_dc.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="D:\Garage\projekte\blackfisk\trunk\graphic\task_dc.png"
+   inkscape:export-xdpi="5.625"
+   inkscape:export-ydpi="5.625">
   <defs
      id="defs4">
     <linearGradient
@@ -55,15 +58,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.984375"
-     inkscape:cx="97.120444"
+     inkscape:cx="91.092092"
      inkscape:cy="111.80236"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1024"
      inkscape:window-height="721"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4" />
+     inkscape:window-x="0"
+     inkscape:window-y="20" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -79,17 +82,12 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       style="opacity:1;fill:#79acff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 0,116.4375 L 0,256 L 163.625,256 L 0,116.4375 z"
+       id="rect3175" />
     <rect
-       style="opacity:0.5;fill:url(#linearGradient3179);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.19607843"
-       id="rect3213"
-       width="200"
-       height="200"
-       x="28"
-       y="28"
-       rx="5.1789999"
-       ry="6.3298621" />
-    <rect
-       style="opacity:1;fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.82367742;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3266"
        width="160.34512"
        height="128.92384"
@@ -98,14 +96,14 @@
        rx="9.8480949"
        ry="14.250789" />
     <rect
-       style="opacity:1;fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.79320693;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#e9db43;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:4.77439499;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3268"
-       width="160.38103"
-       height="124.62376"
-       x="65.948868"
-       y="70.92865"
-       rx="9.8503008"
-       ry="13.775471"
-       transform="matrix(1,0,-0.1361401,0.9906896,0,0)" />
+       width="160.61438"
+       height="112.40968"
+       x="68.840019"
+       y="83.701836"
+       rx="9.8646336"
+       ry="12.425369"
+       transform="matrix(1,0,-0.1511523,0.9885105,0,0)" />
   </g>
 </svg>

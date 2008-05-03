@@ -28,6 +28,10 @@
 					<Add library="oleaut32" />
 					<Add library="uuid" />
 					<Add library="winmm" />
+					<Add library="libwxjpegd.a" />
+					<Add library="libwxtiffd.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="wsock32" />
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
 			</Target>
@@ -64,6 +68,10 @@
 					<Add library="oleaut32" />
 					<Add library="uuid" />
 					<Add library="winmm" />
+					<Add library="libwxjpeg.a" />
+					<Add library="libwxtiff.a" />
+					<Add library="libwxpng.a" />
+					<Add library="wsock32" />
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
 			</Target>

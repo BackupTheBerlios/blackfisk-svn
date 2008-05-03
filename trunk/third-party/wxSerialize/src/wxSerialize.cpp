@@ -771,7 +771,7 @@ wxDateTime wxSerialize::LoadDateTime()
 	if(CanLoad())
 	{
 		// load date
-        wxUint8 day = LoadUint8();
+        wxUint16 day = LoadUint16();
         wxUint8 month = LoadUint8();
         wxUint16 year = LoadUint16();
         // load time
@@ -928,7 +928,7 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
 }
 
 // Must be at global scope for VC++ 5 (ripped from wxDataInputStream)
-extern "C" wxFloat64 ConvertFromIeeeExtended(const wxInt8 *bytes);
+extern "C" wxFloat64 wxConvertFromIeeeExtended(const wxInt8 *bytes);
 
 wxFloat64 wxSerialize::LoadDouble()
 {
@@ -941,7 +941,7 @@ wxFloat64 wxSerialize::LoadDouble()
 		wxInt8 buf[10];
 
 		m_idstr.Read((void *)buf, 10);
-		value = ConvertFromIeeeExtended(buf);
+		value = wxConvertFromIeeeExtended(buf);
 #else
 		#pragma warning "wxSerialize::LoadDouble() not using IeeeExtended - will not work!"
 #endif
@@ -989,7 +989,7 @@ bool wxSerialize::WriteBool(bool value)
 }
 
 // Must be at global scope for VC++ 5
-extern "C" void ConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
+extern "C" void wxConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
 
 bool wxSerialize::WriteDouble(wxFloat64 value)
 {
@@ -1000,7 +1000,7 @@ bool wxSerialize::WriteDouble(wxFloat64 value)
 		wxInt8 buf[10];
 
 #if wxUSE_APPLE_IEEE
-		ConvertToIeeeExtended(value, buf);
+		wxConvertToIeeeExtended(value, buf);
 #else
 	#if !defined(__VMS__) && !defined(__GNUG__)
 		#pragma warning "wxSerialize::WriteDouble() not using IeeeExtended - will not work!"
@@ -1048,7 +1048,7 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		SaveChar(wxSERIALIZE_HDR_DATETIME);
 
         // decompose
-		wxUint8 day = value.GetDay();
+		wxUint16 day = value.GetDay();
 		wxUint8 month = value.GetMonth();
 		wxUint16 year =  value.GetYear();
 		wxUint16 hour = value.GetHour();
@@ -1057,7 +1057,7 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		wxUint16 msec = value.GetMillisecond();
 
 		// serialize
-		SaveChar(day);
+		SaveUint16(day);
 		SaveChar(month);
 		SaveUint16(year);
 		SaveUint16(hour);

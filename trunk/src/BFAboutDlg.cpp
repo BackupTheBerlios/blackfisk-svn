@@ -58,14 +58,16 @@ BFAboutDlg::BFAboutDlg ()
 
     // sizers
     wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* pNameSizer      = new wxBoxSizer(wxVERTICAL);
     wxGridSizer* pMiddleSizer   = new wxGridSizer(2);
     wxBoxSizer* pMLeftSizer     = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pMRightSizer    = new wxBoxSizer(wxVERTICAL);
 
-    //
-    wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo128.png")), wxBITMAP_TYPE_PNG));
-    wxStaticText* pName = new wxStaticText(this, wxID_ANY, BFApp::GetFullApplicationName());
+
+    wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo_text.png")), wxBITMAP_TYPE_PNG));
+    //pLogo->Connect(wxEVT_PAINT, wxPaintEventHandler(wxStaticBitmap::DoPaintManually));
+
+    wxStaticText* pName = new wxStaticText(this, wxID_ANY, wxString::Format("Version: %s", BFApp::GetVersion()));
     font = pName->GetFont();
     font.SetPointSize(font.GetPointSize()+5);
     font.SetWeight(wxFONTWEIGHT_BOLD);
@@ -136,9 +138,9 @@ BFAboutDlg::BFAboutDlg ()
     wxButton* pOk = new wxButton(this, BFABOUTDLG_ID_OK, "OK");
 
     // arrange
-    pNameSizer->Add(pLogo, wxSizerFlags(0).Expand().Border());
+    pNameSizer->Add(pLogo, wxSizerFlags(0).Expand());
     pNameSizer->Add(pName, wxSizerFlags(0).Center());
-    pTopSizer->Add(pNameSizer, wxSizerFlags(0).Center());
+    pTopSizer->Add(pNameSizer, wxSizerFlags(0).Center().Border(wxBOTTOM, 10));
     pTopSizer->Add(pCopy, wxSizerFlags(0).Center());
     pTopSizer->Add(pDesc, wxSizerFlags(0).Center().Border());
     pTopSizer->Add(pWeb, wxSizerFlags(0).Center());

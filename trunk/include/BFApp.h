@@ -83,7 +83,7 @@ class BFApp : public wxApp
 
         ///
         static wxString GetFullApplicationName ();
-        /// return major, minor and release number as string
+        /// return major, minor, release number and extensions as string
         static wxString GetVersion ();
 
         /** prepend a string on each element of a string array
