@@ -25,6 +25,7 @@ Please see the file INSTALL for a detailed listing.
  CHANGELOG      - differences between the blackfisk versions
  blackfisk.exe  - the windows (32bit) binary
  graphic/       - icons and other graphic stuff for blackfisk
+ graphic/src    - SVG source files for graphic stuff
  local/         - language files (*.mo) for blackfisk
  sound/         - sound files for event-notification
 

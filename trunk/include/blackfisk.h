@@ -27,7 +27,7 @@
 #define BF_VERSION_MAJOR            0
 #define BF_VERSION_MINOR            0
 #define BF_VERSION_RELEASE          0
-#define BF_VERSION_EXTENSION        "alpha"
+#define BF_VERSION_EXTENSION        "alpha snapshot 2008-05-04 (rev101)"
 #define BF_AUTHOR                   "Christian Buhtz"
 //__VERSION__ (gcc version)
 
