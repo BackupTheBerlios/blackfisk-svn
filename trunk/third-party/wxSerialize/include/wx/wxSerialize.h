@@ -20,7 +20,7 @@
 #include <wx/gdicmn.h>  // for wxSize, wxPoint
 
 #define WXSERIALIZE_MAJOR_VERSION 1
-#define WXSERIALIZE_MINOR_VERSION 1
+#define WXSERIALIZE_MINOR_VERSION 2
 
 /** \author Jorgen Bodde
     \mainpage

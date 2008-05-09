@@ -771,13 +771,13 @@ wxDateTime wxSerialize::LoadDateTime()
 	if(CanLoad())
 	{
 		// load date
-        wxUint16 day = LoadUint16();
+        wxUint8 day = LoadUint8();
         wxUint8 month = LoadUint8();
         wxUint16 year = LoadUint16();
         // load time
-        wxUint16 hour = LoadUint16();
-        wxUint16 min = LoadUint16();
-        wxUint16 sec = LoadUint16();
+        wxUint8 hour = LoadUint8();
+        wxUint8 min = LoadUint8();
+        wxUint8 sec = LoadUint8();
         // load millisecs
         wxUint16 msec = LoadUint16();
 
@@ -1048,21 +1048,21 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		SaveChar(wxSERIALIZE_HDR_DATETIME);
 
         // decompose
-		wxUint16 day = value.GetDay();
+		wxUint8 day = value.GetDay();
 		wxUint8 month = value.GetMonth();
 		wxUint16 year =  value.GetYear();
-		wxUint16 hour = value.GetHour();
-		wxUint16 min = value.GetMinute();
-		wxUint16 sec = value.GetSecond();
-		wxUint16 msec = value.GetMillisecond();
+		wxUint8 hour = value.GetHour();
+		wxUint8 min = value.GetMinute();
+		wxUint8 sec = value.GetSecond();
+		wxUint16 msec    = value.GetMillisecond();
 
 		// serialize
-		SaveUint16(day);
+		SaveChar(day);
 		SaveChar(month);
 		SaveUint16(year);
-		SaveUint16(hour);
-		SaveUint16(min);
-		SaveUint16(sec);
+		SaveChar(hour);
+		SaveChar(min);
+		SaveChar(sec);
 		SaveUint16(msec);
     }
 
