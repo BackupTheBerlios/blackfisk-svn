@@ -31,9 +31,11 @@
 #include <wx/panel.h>
 #include <wx/artprov.h>
 #include <wx/checkbox.h>
+
 #include "ObserverPattern.h"
 #include "BFMainFrame.h"
 #include "BFTask.h"
+#include "BFIconTable.h"
 #include "ids.h"
 
 #define BFBACKUPCTRL_ID_ADDDESTINATION          1 + BF_BACKUPCTRL_ID_HIGHEST
@@ -210,6 +212,9 @@ class BFBackupTree : public wxTreeCtrl, public Observer
                               BFTaskType type,
                               const wxString& strName,
                               const wxString& strDestination);
+
+        /// return the iconId of the task
+        static BFIconTable::BFFilesystemIconId GetTypeIconId (BFTaskType type);
 
         ///
         bool GetFillBlackfiskPlaceholders ();

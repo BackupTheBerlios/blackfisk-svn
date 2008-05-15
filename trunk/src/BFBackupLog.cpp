@@ -28,11 +28,11 @@
 #include <wx/file.h>
 
 BFTaskLog::BFTaskLog (BFTask& rTask)
-         : rTask_(rTask),
-           bNormalEnd_(false),
-           lCountWarnings_(0),
+         : lCountWarnings_(0),
            lCountErrors_(0),
-           lCountFatal_(0)
+           lCountFatal_(0),
+           bNormalEnd_(false),
+           rTask_(rTask)
 {
 }
 
@@ -151,7 +151,7 @@ bool BFTaskLog::Write ()
     strLine << _("\nlogged messages:") << "\n";
     file.Write(strLine);
 
-    for (int i = 0; i < arrLog_.GetCount(); ++i)
+    for (size_t i = 0; i < arrLog_.GetCount(); ++i)
         file.Write(arrLog_[i]);
 
     return true;
@@ -333,7 +333,7 @@ bool BFBackupLog::Write ()
     strLine << _("Number of Tasks:\t") << vecTaskLogs_.size() << "\n";
     file.Write(strLine);
 
-    for (int i = 0; i < vecTaskLogs_.size(); ++i)
+    for (size_t i = 0; i < vecTaskLogs_.size(); ++i)
     {
         strLine.Clear();
         strLine << '\n' << vecTaskLogs_[i]->GetSummary();

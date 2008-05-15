@@ -30,13 +30,10 @@
 
 #include "blackfisk.h"
 #include "BFApp.h"
-#include "BFMainFrame.h"
-#include "BFTask.h"
 #include "BFTaskBase.h"
 #include "BFRootTask.h"
 #include "BFRootTaskApp.h"
 #include "BFTaskDlg.h"
-#include "BFIconTable.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
 
@@ -75,10 +72,10 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
               Observer(&(BFRootTask::Instance())),
-              bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders()),
-              oidCurrentDrag_(BFInvalidOID)
+              oidCurrentDrag_(BFInvalidOID),
+              bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders())
 {
-    SetImageList ( BFIconTable::Instance() );
+    SetImageList ( BFIconTable::Instance()->GetFilesystemImageList() );
 
     SetDropTarget   ( new BFBackupDropTarget(this) );
 
@@ -141,7 +138,7 @@ void BFBackupTree::UpdateItem (wxTreeItemId id)
 
         SetItemText(id, str);
 
-        SetItemImage(id, pTask->GetTypeIconId());
+        SetItemImage(id, GetTypeIconId(pTask->GetType()));
     }
 }
 
@@ -611,7 +608,7 @@ void BFBackupTree::OnBeginDrag (wxTreeEvent& event)
 
     // start dragging
     dragSource.SetData(my_data);
-    wxDragResult result = dragSource.DoDragDrop( TRUE );
+    dragSource.DoDragDrop( TRUE );
 }
 
 
@@ -877,7 +874,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
     (
         AddDestination(strDestination),
         str,
-        BFTask::GetTypeIconId(type),
+        GetTypeIconId(type),
         -1,
         new BFBackupTreeItemData ( oid, strFull )
     );
@@ -1170,7 +1167,6 @@ wxTreeItemId BFBackupTree::FindItem (wxTreeItemId idStart, BFoid oid)
 {
     wxTreeItemId            idCurr, idLast;
     wxTreeItemIdValue       idCookie;
-    BFBackupTreeItemData*   pData(NULL);
 
     // check start item
     if (HasOID(idStart, oid))
@@ -1399,4 +1395,27 @@ BFBackupTree* BFBackupCtrl::BackupTree ()
 void BFBackupCtrl::OnCheck_Placeholders (wxCommandEvent& rEvent)
 {
     BackupTree()->SetFillBlackfiskPlaceholders(pCheckPlaceholders_->GetValue());
+}
+
+
+/*static*/ BFIconTable::BFFilesystemIconId BFBackupTree::GetTypeIconId (BFTaskType type)
+{
+    switch (type)
+    {
+        case TaskARCHIVE:
+            return BFIconTable::task_zip;
+
+        case TaskDIRCOPY:
+            return BFIconTable::task_dircopy;
+
+        case TaskFILECOPY:
+            return BFIconTable::task_filecopy;
+
+        case TaskSYNC:
+            return BFIconTable::task_sync;
+
+        default:
+            BFSystem::Fatal("no matching TaskType", "BFTask::GetTypeIconId");
+            return BFIconTable::_filesystem_unused_;
+    };
 }

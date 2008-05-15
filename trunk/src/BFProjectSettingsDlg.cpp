@@ -21,11 +21,15 @@
  ***/
 
 #include "BFProjectSettingsDlg.h"
+
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+
 #include "BFProjectSettingsCtrl.h"
 #include "BFRootTask.h"
 #include "BFHelpCtrl.h"
+#include "BFBitmapButton.h"
+#include "BFIconTable.h"
 
 
 BEGIN_EVENT_TABLE(BFProjectSettingsDlg, wxDialog)
@@ -56,8 +60,14 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
     pNameCtrl_->SetHelpText(strTip);
 
     // button
-    wxButton* pButtonOk     = new wxButton(this, BFPRJSETDLG_ID_BUTTONOK, _("&OK"));
-    wxButton* pButtonCancel = new wxButton(this, BFPRJSETDLG_ID_BUTTONCANCEL, _("&Cancel"));
+    BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
+                                                       BFPRJSETDLG_ID_BUTTONOK,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       "OK");
+    BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
+                                                       BFPRJSETDLG_ID_BUTTONCANCEL,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       _("Cancel"));
 
     // sizer
     wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);

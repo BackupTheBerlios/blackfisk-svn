@@ -22,7 +22,6 @@
 
 #include "BFTaskDlg.h"
 
-#include <wx/statbmp.h>
 #include <wx/panel.h>
 #include <wx/notebook.h>
 #include <wx/gbsizer.h>
@@ -39,6 +38,7 @@
 #include "BFHelpCtrl.h"
 #include "BFExcludeCtrl.h"
 #include "BFBackupTree.h"
+#include "BFBitmapButton.h"
 #include "ids.h"
 
 #define BFTASKDLG_ID_BUTTONOK       1 + BF_TASKDLG_ID_HIGHEST
@@ -69,8 +69,8 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
            pDestCtrl_(NULL),
            pVerifyCheck_(NULL),
            pVerifyContentCheck_(NULL),
-           pExcludeCtrl_(NULL),
-           pRealSyncCheck_(NULL)
+           pRealSyncCheck_(NULL),
+           pExcludeCtrl_(NULL)
 {
     // help ctrl
     pHelpCtrl_ = new BFHelpCtrl(this);
@@ -240,9 +240,19 @@ wxSizer* BFTaskDlg::CreateButtons ()
 {
     wxBoxSizer* pSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONOK,     "&OK"),       wxSizerFlags(0));
+    pSizer->Add(new BFBitmapButton(this,
+                                   BFTASKDLG_ID_BUTTONOK,
+                                   BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                   "OK"),
+                wxSizerFlags(0));
+
     pSizer->AddSpacer(20);
-    pSizer->Add(new wxButton(this, BFTASKDLG_ID_BUTTONCANCEL, _("&Cancel")),   wxSizerFlags(0));
+
+    pSizer->Add(new BFBitmapButton(this,
+                                   BFTASKDLG_ID_BUTTONCANCEL,
+                                   BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                   _("Cancel")),
+                wxSizerFlags(0));
 
     return pSizer;
 }
@@ -327,7 +337,7 @@ void BFTaskDlg::InitTypeCtrl ()
     {
         BFTaskType type = (*it);
         pTypeCtrl_->Append(BFTask::GetTypeDescription(type),
-                           BFIconTable::Instance()->GetBitmap(BFTask::GetTypeIconId(type)));
+                           BFIconTable::Instance()->GetBitmap(BFBackupTree::GetTypeIconId(type)));
     }
 
     pTypeCtrl_->Select(0);

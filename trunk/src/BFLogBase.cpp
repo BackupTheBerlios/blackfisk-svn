@@ -26,9 +26,9 @@
 
 BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0*/ )
      : Observer(&(BFSystem::Instance())),
-       fileLog_(strLogFileName, wxFile::write_append),
+       lMaxSize_(lMaxSizeInBytes),
        strLogFileName_(strLogFileName),
-       lMaxSize_(lMaxSizeInBytes)
+       fileLog_(strLogFileName, wxFile::write_append)
 {
     CareSize();
 }

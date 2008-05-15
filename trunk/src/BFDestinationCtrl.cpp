@@ -37,8 +37,8 @@ BFDestinationCtrl::BFDestinationCtrl (wxWindow*     pParent,
                                       const wxChar* strPath /*= wxEmptyString*/,
                                       bool          bWithLabel /*= true*/)
                  : wxBoxSizer(wxHORIZONTAL),
-                   pPickerCtrl_(NULL),
-                   pLabel_(NULL)
+                   pLabel_(NULL),
+                   pPickerCtrl_(NULL)
 {
     // label
     if (bWithLabel)

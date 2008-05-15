@@ -67,13 +67,11 @@ wxDirTraverseResult BFDirListingTraverser::HandleDirAndFile(const wxString& name
     // check for exclusion
     if ( pExcludeList_ )
     {
-        //XXXwxMessageBox(wxString::Format("HandleDirAndFile()\nname:%s\tstrCur:%s\n\npjExcludeList:\n%s", name, strCur, wxJoin(*pExcludeList_, '\n')));
-
         if ( pExcludeList_->Index(strCur) != wxNOT_FOUND )
             return wxDIR_CONTINUE;
 
         // handle placeholders
-        for (int i = 0; i < pExcludeList_->Count(); ++i)
+        for (size_t i = 0; i < pExcludeList_->Count(); ++i)
             if ( strCur.Matches((*pExcludeList_)[i]) )
                 return wxDIR_CONTINUE;
     }
@@ -97,9 +95,9 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
                                                       ProgressWithMessage* pProgress /*= NULL*/)
                           : BFDirListingTraverser(rList, strOriginalDirectory),
                             strToSynchronise_(strToSynchroniseDirectory),
+                            pProgress_(pProgress),
                             bVerify_(bVerify),
-                            bVerifyContent_(bVerifyContent),
-                            pProgress_(pProgress)
+                            bVerifyContent_(bVerifyContent)
 {
 }
 
@@ -204,7 +202,8 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
 }
 
 BFCountDirTraverser::BFCountDirTraverser ()
-                    : lFileCount_(0), lDirCount_(0)
+                    : lDirCount_(0),
+                      lFileCount_(0)
 {
 }
 
@@ -229,8 +228,8 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
                                         MapStringPair* pRememberToVerify /*=NULL*/,
                                         ProgressWithMessage* pProgress /*= NULL*/)
                   : strDestination_(strDestinationDirectory),
-                    pRememberToVerify_(pRememberToVerify),
-                    pProgress_(pProgress)
+                    pProgress_(pProgress),
+                    pRememberToVerify_(pRememberToVerify)
 {
 }
 

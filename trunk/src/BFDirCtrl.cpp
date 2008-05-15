@@ -133,7 +133,7 @@ void BFDirCtrl::OnBeginDrag (wxTreeEvent& event)
     my_data.AddFile(pDirCtrl_->GetPath());
     dragSource.SetData(my_data);
 
-    wxDragResult result = dragSource.DoDragDrop( TRUE );
+    dragSource.DoDragDrop( TRUE );
 }
 
 

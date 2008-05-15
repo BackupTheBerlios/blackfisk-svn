@@ -46,9 +46,9 @@
 //
 BFRootTaskApp::BFRootTaskApp (BFRootTask* pRootTask)
              : pRootTask_(pRootTask),
+               pRunningTask_(NULL),
                bStopProject_(false),
                bStopTask_(false),
-               pRunningTask_(NULL),
                pBackupLog_(NULL),
                pProgressTotal_(NULL),
                pProgressTask_(NULL)

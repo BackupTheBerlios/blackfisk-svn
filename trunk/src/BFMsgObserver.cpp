@@ -22,14 +22,13 @@
 
 #include "BFMsgObserver.h"
 
-#include <wx/msgdlg.h>
-
 #include "BFSystem.h"
 #include "BFCore.h"
 #include "BFProjectSettings.h"
 #include "BFRootTaskApp.h"
 #include "BFBackupProgressDlg.h"
 #include "BFThread_ProjectRunner.h"
+#include "BFMessageDlg.h"
 
 //
 BFMsgObserver::BFMsgObserver ()
@@ -140,8 +139,37 @@ BFMsgObserver::BFMsgObserver ()
     else
     // ** DEFAULT **
     {
-        ::wxMessageBox(strMsg,
-                       BFSystem::GetTypeString(pSys->GetLastType()),
-                       wxOK | BFSystem::GetMsgStyle(pSys->GetLastType()));
+        BFMessageDlg dlg(GetMsgStyle(pSys->GetLastType()),
+                         strMsg,
+                         BFSystem::GetTypeString(pSys->GetLastType()) );
     }
+}
+
+/*static*/ BFMessageDlg_Type BFMsgObserver::GetMsgStyle (BFMessageType type)
+{
+    switch (type)
+    {
+        case MsgINFO:
+            return BF_MSGDLG_INFO;
+
+        case MsgWARNING:
+            return BF_MSGDLG_WARNING;
+
+        case MsgERROR:
+            return BF_MSGDLG_ERROR;
+
+        case MsgFATAL:
+            return BF_MSGDLG_FATAL;
+
+        case MsgLOG:
+            return BF_MSGDLG_INFO;
+
+        case MsgDEBUG:
+            return BF_MSGDLG_INFO;
+
+        default:
+            return BF_MSGDLG_FATAL;
+    };
+
+    return BF_MSGDLG_FATAL;
 }

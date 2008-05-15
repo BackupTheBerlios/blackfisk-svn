@@ -33,13 +33,13 @@
 BFBackupInfoCtrl::BFBackupInfoCtrl (wxWindow* pParent)
                 : wxPanel(pParent),
                   Observer(&(BFSystem::Instance())),
-                  lCountWarnings_(0),
-                  lCountErrors_(0),
-                  lCountFatal_(0),
                   pLogCtrl_(NULL),
                   pWarningsCounter_(NULL),
                   pErrorsCounter_(NULL),
-                  pFatalErrorsCounter_(NULL)
+                  pFatalErrorsCounter_(NULL),
+                  lCountWarnings_(0),
+                  lCountErrors_(0),
+                  lCountFatal_(0)
 
 {
     Init();

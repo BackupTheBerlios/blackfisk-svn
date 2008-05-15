@@ -23,7 +23,6 @@
 #include "BFSettingsDlg.h"
 
 #include <wx/listbook.h>
-#include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
@@ -40,6 +39,8 @@
 #include "BFSettings.h"
 #include "BFApp.h"
 #include "BFHelpCtrl.h"
+#include "BFBitmapButton.h"
+#include "BFIconTable.h"
 #include "ids.h"
 
 #define BFSETTINGSDLG_ID_BUTTONOK           1 + BF_SETTINGSDLG_ID_HIGHEST
@@ -80,8 +81,14 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pBook->AddPage(CreatePage_Project(pBook),   _("Default Project"));
 
     // buttons
-    wxButton* pButtonOk     = new wxButton(this, BFSETTINGSDLG_ID_BUTTONOK, "&OK");
-    wxButton* pButtonCancel = new wxButton(this, BFSETTINGSDLG_ID_BUTTONCANCEL, _("&Cancel"));
+    BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
+                                                       BFSETTINGSDLG_ID_BUTTONOK,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       "OK");
+    BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
+                                                       BFSETTINGSDLG_ID_BUTTONCANCEL,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       _("Cancel"));
 
     // sizer and arrange
     wxBoxSizer* pDlgSizer       = new wxBoxSizer(wxVERTICAL);

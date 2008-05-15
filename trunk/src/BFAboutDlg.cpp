@@ -31,7 +31,6 @@
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
-#include "BFIconTable.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFApp.h"
 #include "jbSerialize.h"

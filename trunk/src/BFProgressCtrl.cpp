@@ -100,7 +100,7 @@ void BFProgressCtrlBase::SetTextA (const wxChar* text)
     Layout();
 }
 
-/*static*/ wxString& BFProgressCtrlBase::ShortenPath(wxString& strPath, int len)
+/*static*/ wxString& BFProgressCtrlBase::ShortenPath(wxString& strPath, size_t len)
 {
     // check parameters
     if ( len > strPath.Len() || !(strPath.Contains(wxFILE_SEP_PATH)) )

@@ -30,7 +30,6 @@
 					<Add library="winmm" />
 					<Add library="libwxjpegd.a" />
 					<Add library="libwxtiffd.a" />
-					<Add library="libwxpngd.a" />
 					<Add library="wsock32" />
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
@@ -46,6 +45,11 @@
 					<Add option="-D_DEBUG" />
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DWXUSINGDLL" />
+					<Add option="-DWIN32" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-D_UNICODE" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-DNOPCH" />
 				</Compiler>
 				<Linker>
 					<Add library="libwxzlibd.a" />
@@ -70,7 +74,6 @@
 					<Add library="winmm" />
 					<Add library="libwxjpeg.a" />
 					<Add library="libwxtiff.a" />
-					<Add library="libwxpng.a" />
 					<Add library="wsock32" />
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
@@ -95,6 +98,7 @@
 			<Add alias="All" targets="Debug Static;Debug Dynamic;Release Static;Release Dynamic;" />
 		</VirtualTargets>
 		<Compiler>
+			<Add option="-Wall" />
 			<Add directory="$(#wx)\include" />
 			<Add directory="$(#wx)\contrib\include" />
 			<Add directory="third-party\wxSerialize\include\wx" />
@@ -150,6 +154,9 @@
 		<Unit filename="include\BFBackupTree.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
+		<Unit filename="include\BFBitmapButton.h">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="include\BFCmdLine.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -195,14 +202,14 @@
 		<Unit filename="include\BFMainFrame.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="include\BFMessageDlg.h">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="include\BFMsgObserver.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="include\BFPlaceholderButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="include\BFProcessMsgDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="include\BFProcessMsgSubject.h">
 			<Option virtualFolder="DataLayer\" />
@@ -297,6 +304,9 @@
 		<Unit filename="src\BFBackupTree.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
+		<Unit filename="src\BFBitmapButton.cpp">
+			<Option virtualFolder="PresentationLayer\Controls\" />
+		</Unit>
 		<Unit filename="src\BFCmdLine.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -342,14 +352,14 @@
 		<Unit filename="src\BFMainFrame.cpp">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
+		<Unit filename="src\BFMessageDlg.cpp">
+			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
 		<Unit filename="src\BFMsgObserver.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="src\BFPlaceholderButton.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="src\BFProcessMsgDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="src\BFProcessMsgSubject.cpp">
 			<Option virtualFolder="DataLayer\" />

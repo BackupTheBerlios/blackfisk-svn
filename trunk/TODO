@@ -1,5 +1,14 @@
+- removed BFProcessMsgDlg
+- added BFMessageDlg
+- added BFBitmapButton
+- fixed some compiler warnings
+- some more icons
+- modified BFIconTable and how to handle it
+
 0.0.1
 ~~~~~
+- BFBackupQuestionDlg -> BFMessageDlg
+- hanlding IDs with BFMasterID ?
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - BUG: black for transparency in PNGs (wxStaticBitmap)
 

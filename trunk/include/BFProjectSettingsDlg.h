@@ -29,8 +29,8 @@
 
 class BFHelpCtrl;
 
-#define BFPRJSETDLG_ID_BUTTONOK        1 + wxID_HIGHEST
-#define BFPRJSETDLG_ID_BUTTONCANCEL    2 + wxID_HIGHEST
+#define BFPRJSETDLG_ID_BUTTONOK        100 + wxID_HIGHEST
+#define BFPRJSETDLG_ID_BUTTONCANCEL    200 + wxID_HIGHEST
 
 class BFProjectSettingsCtrl;
 

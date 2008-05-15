@@ -47,10 +47,10 @@
 #include "BFThread_ProjectRunner.h"
 #include "ids.h"
 #include "BFProcessMsgSubject.h"
-#include "BFProcessMsgDlg.h"
 #include "BFIsWorkingCtrl.h"
 #include "BFHelpCtrl.h"
-
+#include "BFMessageDlg.h"
+#include "BFBitmapButton.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -166,6 +166,7 @@ END_EVENT_TABLE()
     wxButton* pButtonBug        = new wxButton(this, BF_ID_MAINFRAME_SUBMITBUG,      _("Bug Report"));
     wxButton* pButtonFeauter    = new wxButton(this, BF_ID_MAINFRAME_FEAUTERREQUEST, _("Feauter Request"));
     wxButton* pButtonWebsite    = new wxButton(this, BF_ID_MAINFRAME_OPENWEBSITE,    _("Website"));
+
     pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
@@ -174,6 +175,7 @@ END_EVENT_TABLE()
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
+    //XXXpSizer->Add( new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo_text.png")), wxBITMAP_TYPE_PNG)) );
     pSizer->Add( pSplitterCtrl_,    wxSizerFlags(6).Expand() );
     pSizer->Add( pButtonSizer,      wxSizerFlags(0).Center() );
     SetSizer(pSizer);
@@ -227,7 +229,7 @@ END_EVENT_TABLE()
 
 void BFMainFrame::OnClose (wxCloseEvent& event)
 {
-    int iAnswer = wxYES;
+    int iAnswer = wxID_YES;
 
     if (IsMaximized())
     {
@@ -256,11 +258,11 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
 
         // cancel/abort
-        if (iAnswer == wxCANCEL)
+        if (iAnswer == wxID_CANCEL)
             event.Veto();
 
         // save
-        if (iAnswer == wxYES)
+        if (iAnswer == wxID_YES)
         {
             wxString strProject;
 
@@ -269,7 +271,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
                 if (AskSaveProject(strProject))
                     wxGetApp().SaveProject(strProject);
                 else
-                    iAnswer = wxCANCEL;
+                    iAnswer = wxID_CANCEL;
             }
             else
             {
@@ -278,7 +280,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         }
     }
 
-    if (iAnswer != wxCANCEL)
+    if (iAnswer != wxID_CANCEL)
         Destroy();
 }
 
@@ -444,11 +446,11 @@ bool BFMainFrame::AskModification ()
         int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
 
         // cancel/abort
-        if (iAnswer == wxCANCEL)
+        if (iAnswer == wxID_CANCEL)
             return false;
 
         // save
-        if (iAnswer == wxYES)
+        if (iAnswer == wxID_YES)
             if (wxGetApp().SaveCurrentProject() == false)
                 return false;
     }
@@ -530,12 +532,40 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::Test ()
 {
+    //wxGetApp().Test();
+    BFMessageDlg* pDlg = new BFMessageDlg(BF_MSGDLG_INFO, "message with very long string and a lot fo nummbers 13 33 293 ZZZaskdskwwwwwwwkaskskskskskwZZZ XXXjendndkeijaldskjfnkcnkXXX WWWlaöskdjoweirjknadmcnskdrjeoiasjkdnvkcmnWWW AAAaksejroijsAAA");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_WARNING, "message");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_ERROR, "message with very long string and a lot fo nummbers 13 33 293 ZZZaskdskwwwwwwwkaskskskskskwZZZ XXXjendndkeijaldskjfnkcnkXXX WWWlaöskdjoweirjknadmcnskdrjeoiasjkdnvkcmnWWW AAAaksejroijsAAA");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_FATAL, "message");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_QUESTION_YESNO, "message");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_QUESTION_YESNOCANCEL, "message");
+    pDlg->ShowModal();
+    delete pDlg;
+
+    pDlg = new BFMessageDlg(BF_MSGDLG_BACKUP_QUESTION, "message");
+    pDlg->ShowModal();
+    delete pDlg;
 }
 #endif
 
 void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 {
-    int iAnswer = wxYES;
+    int iAnswer = wxID_YES;
 
     // check for a modified project
     if (BFRootTaskApp::Instance().IsProjectModified())
@@ -544,7 +574,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it before running the backup?"));
 
         // save
-        if (iAnswer == wxYES)
+        if (iAnswer == wxID_YES)
         {
             wxString strProject;
 
@@ -553,7 +583,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
                 if (AskSaveProject(strProject))
                     wxGetApp().SaveProject(strProject);
                 else
-                    iAnswer = wxCANCEL;
+                    iAnswer = wxID_CANCEL;
             }
             else
             {
@@ -562,7 +592,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
         }
     }
 
-    if (iAnswer != wxCANCEL)
+    if (iAnswer != wxID_CANCEL)
     {
         // start the backup if everything is fine
         if ( BFRootTaskApp::Instance().PreBackupCheck() )
@@ -572,9 +602,9 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 
 bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
 {
-    int rc = wxMessageBox(strQuestion, _("Question"), wxYES_NO | wxICON_QUESTION);
+    BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNO, strQuestion, _("Question"));
 
-    if (rc == wxYES)
+    if (dlg.ShowModal() == BF_MSGDLG_ID_YES)
         return true;
 
     return false;
@@ -582,10 +612,60 @@ bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
 
 int BFMainFrame::QuestionYesNoCancel (const wxChar* strQuestion)
 {
-    return ::wxMessageBox(strQuestion, _("Question"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
+    BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, strQuestion, _("Question"));
+
+    return dlg.ShowModal();
 }
 
 void BFMainFrame::OpenProjectSettings ()
 {
     new BFProjectSettingsDlg(this);
+}
+
+wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
+{
+    wxWindowDC dc(this);
+    wxSize sizeMsg = dc.GetTextExtent(str);
+
+    if (sizeMsg.GetWidth() <= iWidthInPixel)
+        return str;
+
+    int iWidthCurrent = 0;
+    wxString strNew;
+    wxArrayString strFin;
+    while (str.Length() > 0)
+    {
+        // get n characters from the new string
+        strNew = strNew + str.Left(1);
+
+        // remove n characters from the old string
+        str = str.Right(str.Length()-1);
+
+        // calculate width of new string
+        iWidthCurrent = dc.GetTextExtent(strNew).GetWidth();
+
+        // check width
+        if (iWidthCurrent > iWidthInPixel)
+        {
+            // get n-1 characters back from the new string to the old one
+            str = strNew.Right(1) + str;
+
+            // remove n-1 characters from the new string
+            strNew = strNew.Left(strNew.Length()-1);
+
+            // remember line
+            strFin.Add(strNew);
+
+            // new line
+            strNew.Clear();
+        }
+    }
+
+    // remember last line
+    strFin.Add(strNew);
+
+    //
+    str = wxJoin(strFin, '\n');
+
+    return str;
 }

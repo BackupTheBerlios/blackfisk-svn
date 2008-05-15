@@ -40,9 +40,9 @@ END_EVENT_TABLE()
 //
 BFExcludeCtrl::BFExcludeCtrl (wxWindow* pParent, BFTask* pTask)
              : wxPanel(pParent, wxID_ANY),
-               pTask_(pTask),
                pPath_(NULL),
-               pListPaths_(NULL)
+               pListPaths_(NULL),
+               pTask_(pTask)
 {
     // path
     pPath_ = new wxTextCtrl(this, wxID_ANY);

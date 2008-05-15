@@ -151,7 +151,7 @@ bool BFTaskListCtrl::SetTask_Succeeded (BFoid oid)
 
 bool BFTaskListCtrl::SetTask_Warning (BFoid oid)
 {
-    SetTask_Errror(oid);
+    return SetTask_Errror(oid);
 }
 
 bool BFTaskListCtrl::SetTask_Errror (BFoid oid)

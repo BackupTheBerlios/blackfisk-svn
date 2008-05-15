@@ -27,11 +27,20 @@
 #include <wx/imaglist.h>
 
 ///
-class BFIconTable : public wxImageList
+class BFIconTable
 {
     private:
         ///
         static BFIconTable* psIconTable_;
+
+        /// filesystem icons for BFBackupTree
+        wxImageList     imgFilesystem_;
+
+        /// button icons
+        wxImageList     imgButtons_;
+
+        /// message type icons
+        wxImageList     imgMessage_;
 
         ///
         BFIconTable ();
@@ -45,7 +54,7 @@ class BFIconTable : public wxImageList
         static BFIconTable* Instance ();
 
         ///
-        enum BFIconId
+        enum BFFilesystemIconId
         {
             logo,
             volume_harddisk,
@@ -59,8 +68,50 @@ class BFIconTable : public wxImageList
             task_dircopy,
             task_filecopy,
             task_zip,
-            task_sync
+            task_sync,
+            _filesystem_unused_ // to check for invalid values
         };
-};    // class BFIconTable
+
+        ///
+        enum BFButtonIconId
+        {
+            yes,
+            no,
+            ok,
+            cancel,
+            stop_prj,
+            stop_task,
+            ignore,
+            _button_unused_ // to check for invalid values
+        };
+
+        ///
+        enum BFMessageIconId
+        {
+            question,
+            info,
+            warning,
+            error,
+            fatal,
+            _message_unused_ // to check for invalid values
+        };
+
+        ///
+        wxImageList* GetFilesystemImageList ();
+
+        ///
+        wxBitmap GetBitmap (BFButtonIconId id) const;
+        ///
+        wxBitmap GetBitmap (BFMessageIconId id) const;
+        ///
+        wxBitmap GetBitmap (BFFilesystemIconId id) const;
+        ///
+        wxIcon GetIcon (BFButtonIconId id) const;
+        ///
+        wxIcon GetIcon (BFMessageIconId id) const;
+        ///
+        wxIcon GetIcon (BFFilesystemIconId id) const;
+
+};
 
 #endif    // BFICONTABLE_H

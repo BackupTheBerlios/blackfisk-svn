@@ -164,6 +164,11 @@ class BFMainFrame : public wxFrame
         ///
         void RefreshTitle ();
 
+        /** Wrap a string depending on the current device context
+            to the width in pixel specified by 'iWidthInPixel'.
+            It will insert new-line characters in the string. */
+        wxString& Wrap (wxString& str, int iWidthInPixel);
+
     DECLARE_EVENT_TABLE();
 };    // class BFMainFrame
 

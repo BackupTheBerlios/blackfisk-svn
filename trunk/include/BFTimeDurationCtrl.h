@@ -34,7 +34,7 @@
 class Progress;
 
 ///
-class BFTimeDurationCtrl : public wxGridBagSizer, public Observer
+class BFTimeDurationCtrl : public Observer, public wxGridBagSizer
 {
     private:
         ///

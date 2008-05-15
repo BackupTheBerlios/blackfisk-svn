@@ -204,13 +204,7 @@ class BFTask : public BFTaskData
         wxString GetTypeDescription ();
         ///
         static wxString GetTypeDescription (BFTaskType type, BFArchiveFormat format = CompressNOTUSED);
-        /*
-        static BFTaskType GetTypeByDescription (const wxString& strDesc);*/
 
-        /// return the iconId of the task
-        int GetTypeIconId ();
-        ///
-        static int GetTypeIconId (BFTaskType type);
         ///
         wxString GetArchiveExtension();
         ///

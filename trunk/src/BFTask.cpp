@@ -25,7 +25,6 @@
 #include "BFCore.h"
 #include "BFRootTask.h"
 #include "BFundef.h"
-#include "BFIconTable.h"
 #include "BFSystem.h"
 #include "blackfisk.h"
 
@@ -52,12 +51,12 @@ BFTaskData::BFTaskData (BFTaskType type,
 }
 
 BFTaskData::BFTaskData ()
-          : type_(TaskINVALID),
-            oid_(BFInvalidOID),
-            archiveFormat_(CompressNOTUSED),
-            bRealSync_(true),
+          : oid_(BFInvalidOID),
+            type_(TaskINVALID),
             bVerify_(true),
-            bVerifyContent_(false)
+            bVerifyContent_(false),
+            archiveFormat_(CompressNOTUSED),
+            bRealSync_(true)
 {
 }
 
@@ -215,19 +214,6 @@ void BFTaskData::SetRealSync (bool bRealSync)
     bRealSync_ = bRealSync;
 }
 
-/*static* BFTaskType BFTask::GetTypeByDescription (const wxString& strDesc)
-{
-    for (BFTaskType type = TaskINVALID;
-         type <= TaskHIGHEST;
-         ++type)
-    {
-        if (strDesc == GetTypeDescription(type))
-            return type;
-    }
-
-    return TaskINVALID;
-}*/
-
 /*static*/ wxString BFTask::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
 {
     wxString strDesc;
@@ -261,41 +247,6 @@ void BFTaskData::SetRealSync (bool bRealSync)
 wxString BFTask::GetTypeDescription ()
 {
     return GetTypeDescription(GetType(), GetArchiveFormat());
-}
-
-int BFTask::GetTypeIconId ()
-{
-    return GetTypeIconId(GetType());
-}
-
-/*static*/ int BFTask::GetTypeIconId (BFTaskType type)
-{
-    int iconId = -1;
-
-    switch (type)
-    {
-        case TaskARCHIVE:
-            iconId = BFIconTable::task_zip;
-            break;
-
-        case TaskDIRCOPY:
-            iconId = BFIconTable::task_dircopy;
-            break;
-
-        case TaskFILECOPY:
-            iconId = BFIconTable::task_filecopy;
-            break;
-
-        case TaskSYNC:
-            iconId = BFIconTable::task_sync;
-            break;
-
-        default:
-            BFSystem::Fatal("no matching TaskType", "BFTask::GetTypeIconId");
-            break;
-    };
-
-    return iconId;
 }
 
 void BFTaskData::GetAvailableTypes (BFTypeVector& rVecType)

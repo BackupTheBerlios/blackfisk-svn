@@ -25,6 +25,7 @@
 #include "BFDestinationCtrl.h"
 #include "BFSystem.h"
 #include "BFIconTable.h"
+#include "BFBitmapButton.h"
 #include "BFMainFrame.h"
 #include "BFBackupTree.h"
 #include "BFRootTaskApp.h"
@@ -58,8 +59,14 @@ BFDestinationDlg::BFDestinationDlg (wxWindow* pParent,
     pDestCtrl_ = new BFDestinationCtrl(this, strPath);
 
     // buttons
-    wxButton* pButtonOk     = new wxButton(this, BFDESTINATIONDLG_ID_BUTTONOK, _("&OK"));
-    wxButton* pButtonCancel = new wxButton(this, BFDESTINATIONDLG_ID_BUTTONCANCEL, _("&Cancel"));
+    BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
+                                                       BFDESTINATIONDLG_ID_BUTTONOK,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       "OK");
+    BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
+                                                       BFDESTINATIONDLG_ID_BUTTONCANCEL,
+                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       _("Cancel"));
 
     // sizer
     wxBoxSizer* pSizer          = new wxBoxSizer(wxVERTICAL);

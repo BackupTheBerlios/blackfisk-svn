@@ -24,13 +24,16 @@
 #define BFMSGOBSERVER_H
 
 #include "ObserverPattern.h"
+#include "BFMessageDlg.h"
+#include "BFSystemBase.h"
 
 /** this class handle messages that should be displayed
     in a message box or the user should be asked about it */
 class BFMsgObserver : public Observer
 {
     private:
-        /// private members
+        ///
+        static BFMessageDlg_Type GetMsgStyle (BFMessageType type);
 
     protected:
         /// proteced members

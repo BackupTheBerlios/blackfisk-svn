@@ -95,8 +95,6 @@ class BFSystem : public Subject
         static wxString GetVerboseString (BF_VerboseLevel verboseLevel);
         ///
         static wxString GetTypeString (BFMessageType type);
-        ///
-        static long GetMsgStyle (BFMessageType type);
         /** return true if a message of type 'msgType' should be
             handled depending on the verbose level 'lvlVerbose' */
         static bool HandleThisMessage (BFMessageType msgType, BF_VerboseLevel lvlVerbose);

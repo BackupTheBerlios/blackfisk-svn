@@ -34,7 +34,7 @@
     if (spHelpProvider_ == NULL)
     {
         // default help provider
-        wxHelpProvider* pX = wxHelpProvider::Get();
+        // XXX wxHelpProvider* pX = wxHelpProvider::Get();
         spHelpProvider_ = new wxSimpleHelpProvider;
         wxHelpProvider::Set(spHelpProvider_);
     }

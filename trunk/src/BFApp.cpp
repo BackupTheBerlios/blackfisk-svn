@@ -79,7 +79,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 {
     if (strToPrepend)
     {
-        for (int i = 0; i < rStrings.GetCount(); ++i)
+        for (size_t i = 0; i < rStrings.GetCount(); ++i)
             rStrings[i].Prepend(strToPrepend);
     }
 
@@ -93,12 +93,12 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     if (rStrings.GetCount() == 0)
         return str;
 
-    int iCur = 0;
+    size_t iCur = 0;
     wxChar cCur = _T('\0');
 
     while (true)
     {
-        for (int i = 0; i < rStrings.GetCount(); ++i)
+        for (size_t i = 0; i < rStrings.GetCount(); ++i)
         {
             // check string length
             if (rStrings[i].Len() < (iCur+1))
@@ -174,6 +174,8 @@ bool BFApp::OnInit()
 {
     SaveSettings();
     BFSystem::Log(wxString::Format(_("%s closed\n"), BF_PRGNAME).c_str());
+
+    return 1;
 }
 
 /*static*/ bool BFApp::ReadSettings ()
@@ -184,8 +186,6 @@ bool BFApp::OnInit()
     wxFileInputStream   in(BF_SETTINGS);
     jbSerialize         archive(in, BF_SETTINGS_CURRENT_VERSION);
 
-    size_t v = archive.GetVersion();
-
     return BFSettings::Instance().Serialize(archive);
 }
 
@@ -193,8 +193,6 @@ bool BFApp::OnInit()
 {
     wxFileOutputStream  out(BF_SETTINGS);
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
-
-    size_t v = archive.GetVersion();
 
     return BFSettings::Instance().Serialize(archive);
 }
@@ -247,11 +245,17 @@ bool BFApp::CloseCurrentProject (bool bCheckForModifications /*= true*/)
             return false;
 
     BFRootTaskApp::Instance().Close();
+
+    return true;
 }
 
 #ifdef _DEBUG
 void BFApp::Test ()
 {
+    BFSystem::Info("Info");
+    BFSystem::Warning("Warning");
+    BFSystem::Error("Error");
+    BFSystem::Fatal("Fatal");
 }
 #endif
 

@@ -167,7 +167,7 @@ bool BFRootTask::DeleteTask (BFoid oid, bool bBroadcast /*= true*/)
     return false;
 }
 
-bool BFRootTask::DeleteTasks (BFTaskVector& vecTasks)
+void BFRootTask::DeleteTasks (BFTaskVector& vecTasks)
 {
     BFTaskVectorIt it;
 

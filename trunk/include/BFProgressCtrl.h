@@ -75,7 +75,7 @@ class BFProgressCtrlBase : public wxPanel, Observer
 
 		/** shorten 'strPath' to the length of 'len' width
             removing some folders with '...' */
-        static wxString& ShortenPath(wxString& strPath, int len);
+        static wxString& ShortenPath(wxString& strPath, size_t len);
 };  // class BFProgressCtrlBase
 
 

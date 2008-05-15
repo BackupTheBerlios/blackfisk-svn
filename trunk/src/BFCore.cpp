@@ -61,7 +61,6 @@ BFCore::BFCore ()
 
 /*virtual*/ BFCore::~BFCore ()
 {
-    int i = 0;
 }
 
 void BFCore::SetCurrentDateTime ()
@@ -230,7 +229,7 @@ bool BFCore::CreateZipFromDir (const wxString& strZipName,
         return false;
 
     // iterate on files and dirs
-    for (int i = 0; i < fileArray.GetCount(); ++i)
+    for (size_t i = 0; i < fileArray.GetCount(); ++i)
     {
         // stop ?
         if ( BFCore::IsStop() )
@@ -465,7 +464,7 @@ bool BFCore::CopyFile (const wxString& strSource,
     }
     else
     {   // more then one files to copy because of placeholders
-        for (int i = 0; i < arrSource.Count(); ++i)
+        for (size_t i = 0; i < arrSource.Count(); ++i)
         {
             // stop ?
             if ( BFCore::IsStop() )
@@ -477,7 +476,7 @@ bool BFCore::CopyFile (const wxString& strSource,
 
         // verify the files
         if (bVerify && rc)
-            for (int i = 0; i < arrSource.Count(); ++i)
+            for (size_t i = 0; i < arrSource.Count(); ++i)
             {
                 // stop ?
                 if ( BFCore::IsStop() )
@@ -600,7 +599,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
         BFSystem::Backup(wxString::Format(_("delete %s"), strDir));
 
     // delete subs
-    for (int i = 0;
+    for (size_t i = 0;
          i < arrToDelete.GetCount();
          ++i)
     {
@@ -632,7 +631,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
 
 bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
 {
-    for (int i = 0; i < arrDelete.GetCount(); ++i)
+    for (size_t i = 0; i < arrDelete.GetCount(); ++i)
     {
         // stop ?
         if ( BFCore::IsStop() )
@@ -912,9 +911,9 @@ bool BFCore::CopyDirAttributes (const wxString& strSourceDir, const wxString& st
 bool BFCore::VerifyFileContents (wxFile& f1, wxFile& f2)
 {
     const int       ciSize = 4096;
-    size_t          iRead = 0;
-    wxChar            buf1[ciSize];
-    wxChar            buf2[ciSize];
+    int             iRead = 0;
+    wxChar          buf1[ciSize];
+    wxChar          buf2[ciSize];
 
     // jump to beginning of the files
     f1.Seek(0);
@@ -945,7 +944,7 @@ bool BFCore::VerifyFiles(MapStringPair& rMap,
                          ProgressWithMessage* pProgress /*= NULL*/,
                          bool bVerifyContent /*=BF_VERIFY_CONTENT_DEFAULT*/)
 {
-    for (int i = 0; i < rMap.size(); ++i)
+    for (size_t i = 0; i < rMap.size(); ++i)
     {
         if (BFCore::IsStop())
             return true;

@@ -22,15 +22,3 @@
 
 #include "BFTaskBase.h"
 #include "BFCore.h"
-/*
-BFTaskBase::BFTaskBase ()
-{
-}
-
-
-/*virtual* BFTaskBase::~BFTaskBase ()
-{
-}
-
-
-*/

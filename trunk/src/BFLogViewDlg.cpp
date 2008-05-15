@@ -62,7 +62,7 @@ void BFLogViewDlg::Init ()
     pBookSizer->Add(pBook);
 
     // the log files
-    for (int i = 0; i < arrLogs_.GetCount(); ++i)
+    for (size_t i = 0; i < arrLogs_.GetCount(); ++i)
     {
         // the log file
         wxTextFile fileLog;

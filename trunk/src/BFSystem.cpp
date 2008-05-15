@@ -210,38 +210,6 @@ BFMessageType BFSystem::GetLastType ()
     return str;
 }
 
-
-/*static*/ long BFSystem::GetMsgStyle (BFMessageType type)
-{
-    switch (type)
-    {
-        case MsgINFO:
-            return wxICON_INFORMATION;
-
-        case MsgERROR:
-            return wxICON_ERROR;
-            break;
-
-        case MsgFATAL:
-            return wxICON_EXCLAMATION;
-            break;
-
-        case MsgLOG:
-            return wxICON_INFORMATION;
-            break;
-
-        case MsgDEBUG:
-            return wxICON_INFORMATION;
-            break;
-
-        default:
-            return wxICON_STOP;
-            break;
-    };
-
-    return wxICON_STOP;
-}
-
 const wxDateTime& BFSystem::GetLastTimestamp ()
 {
     return lastTimestamp_;
