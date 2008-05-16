@@ -27,7 +27,8 @@
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
 
-//
+#include "BFSystem.h"
+
 BFBitmapButton::BFBitmapButton (wxWindow* pParent,
                                 wxWindowID id,
                                 const wxBitmap& rBitmap,
@@ -48,11 +49,14 @@ BFBitmapButton::BFBitmapButton (wxWindow* pParent,
 {
     // string size
     wxWindowDC* pWindowDC = new wxWindowDC(this);
-    wxSize sizeText = pWindowDC->GetTextExtent(wxString::Format("%sWW", strLabel));
+    wxSize sizeText = pWindowDC->GetTextExtent(strLabel);
 
     // load bitmap
-    wxBitmap bmp(rBitmap.GetWidth() + sizeText.GetWidth(),
-                 rBitmap.GetHeight() + sizeText.GetHeight());
+    sizeText.SetWidth(sizeText.GetWidth() + rBitmap.GetWidth());
+    if (sizeText.GetHeight() < rBitmap.GetHeight())
+        sizeText.SetHeight(rBitmap.GetHeight());
+
+    wxBitmap bmp(sizeText.GetWidth(), sizeText.GetHeight());
 
     wxMemoryDC dc;
     dc.SelectObject(bmp);
@@ -69,6 +73,8 @@ BFBitmapButton::BFBitmapButton (wxWindow* pParent,
                  wxALIGN_CENTRE);
 
     SetBitmapLabel(bmp);
+
+    SetMaxSize(wxSize(bmp.GetWidth(), bmp.GetHeight()));
 }
 
 

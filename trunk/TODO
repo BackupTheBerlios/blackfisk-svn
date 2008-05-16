@@ -1,10 +1,3 @@
-- removed BFProcessMsgDlg
-- added BFMessageDlg
-- added BFBitmapButton
-- fixed some compiler warnings
-- some more icons
-- modified BFIconTable and how to handle it
-
 0.0.1
 ~~~~~
 - BFBackupQuestionDlg -> BFMessageDlg

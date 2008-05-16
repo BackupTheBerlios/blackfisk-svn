@@ -624,6 +624,9 @@ void BFMainFrame::OpenProjectSettings ()
 
 wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 {
+    // XXX
+    BFSystem::Log(str);
+
     wxWindowDC dc(this);
     wxSize sizeMsg = dc.GetTextExtent(str);
 
@@ -632,7 +635,7 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 
     int iWidthCurrent = 0;
     wxString strNew;
-    wxArrayString strFin;
+    wxString strFin;
     while (str.Length() > 0)
     {
         // get n characters from the new string
@@ -640,6 +643,19 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 
         // remove n characters from the old string
         str = str.Right(str.Length()-1);
+
+        // new line character inside?
+        if (strNew.EndsWith("\n"))
+        {
+            // rememeber line
+            strFin = strFin + strNew;
+
+            // new line
+            strNew.Clear();
+
+            // go on
+            continue;
+        }
 
         // calculate width of new string
         iWidthCurrent = dc.GetTextExtent(strNew).GetWidth();
@@ -654,7 +670,7 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
             strNew = strNew.Left(strNew.Length()-1);
 
             // remember line
-            strFin.Add(strNew);
+            strFin = strFin + strNew + '\n';
 
             // new line
             strNew.Clear();
@@ -662,10 +678,9 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
     }
 
     // remember last line
-    strFin.Add(strNew);
+    strFin = strFin + strNew;
 
-    //
-    str = wxJoin(strFin, '\n');
+    str = strFin;
 
     return str;
 }

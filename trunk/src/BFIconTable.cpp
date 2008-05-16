@@ -94,32 +94,32 @@ wxImageList* BFIconTable::GetFilesystemImageList ()
     return &imgFilesystem_;
 }
 
-wxBitmap BFIconTable::GetBitmap (BFButtonIconId id) const
+/*static*/ wxBitmap BFIconTable::GetBitmap (BFButtonIconId id)
 {
-    return imgButtons_.GetBitmap(id);
+    return Instance()->imgButtons_.GetBitmap(id);
 }
 
-wxBitmap BFIconTable::GetBitmap (BFMessageIconId id) const
+/*static*/ wxBitmap BFIconTable::GetBitmap (BFMessageIconId id)
 {
-    return imgMessage_.GetBitmap(id);
+    return Instance()->imgMessage_.GetBitmap(id);
 }
 
-wxBitmap BFIconTable::GetBitmap (BFFilesystemIconId id) const
+/*static*/ wxBitmap BFIconTable::GetBitmap (BFFilesystemIconId id)
 {
-    return imgFilesystem_.GetBitmap(id);
+    return Instance()->imgFilesystem_.GetBitmap(id);
 }
 
-wxIcon BFIconTable::GetIcon (BFButtonIconId id) const
+/*static*/ wxIcon BFIconTable::GetIcon (BFButtonIconId id)
 {
-    return imgButtons_.GetIcon(id);
+    return Instance()->imgButtons_.GetIcon(id);
 }
 
-wxIcon BFIconTable::GetIcon (BFMessageIconId id) const
+/*static*/ wxIcon BFIconTable::GetIcon (BFMessageIconId id)
 {
-    return imgMessage_.GetIcon(id);
+    return Instance()->imgMessage_.GetIcon(id);
 }
 
-wxIcon BFIconTable::GetIcon (BFFilesystemIconId id) const
+/*static*/ wxIcon BFIconTable::GetIcon (BFFilesystemIconId id)
 {
-    return imgFilesystem_.GetIcon(id);
+    return Instance()->imgFilesystem_.GetIcon(id);
 }

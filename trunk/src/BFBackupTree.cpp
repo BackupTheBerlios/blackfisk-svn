@@ -147,52 +147,52 @@ void BFBackupTree::RefreshPlaceholders ()
     Freeze ();
 
     // only refresh filled placeholders!
-    if ( !(GetFillBlackfiskPlaceholders()) )
-        return;
-
-    VectorTreeItemId vecIdsDate;
-    VectorTreeItemId vecIdsTime;
-    VectorTreeItemId vecIdsAll;
-
-    // find all items with a label matching to the old filled placeholders
-    if ( !(BFCore::Instance().GetDateString_Old().IsEmpty()) )
-        vecIdsDate = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_DATE_MASK);
-
-    if ( !(BFCore::Instance().GetTimeString_Old().IsEmpty()) )
-        vecIdsTime = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_TIME_MASK);
-
-    vecIdsAll.reserve(vecIdsDate.size() + vecIdsTime.size());
-    vecIdsAll.insert( vecIdsAll.end(), vecIdsDate.begin(), vecIdsDate.end() );
-    vecIdsAll.insert( vecIdsAll.end(), vecIdsTime.begin(), vecIdsTime.end() );
-
-    // are there items to refresh?
-    if (vecIdsAll.empty())
-        return;
-
-    wxString strPath;
-    wxString strLabel;
-
-    // iterate on the items
-    for (ItVectorTreeItemId it = vecIdsAll.begin();
-         it != vecIdsAll.end();
-         ++it)
+    if ( GetFillBlackfiskPlaceholders() )
     {
-        strPath = GetPathByItem(*it);
+        VectorTreeItemId vecIdsDate;
+        VectorTreeItemId vecIdsTime;
+        VectorTreeItemId vecIdsAll;
 
-        while ( strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK)
-             || strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+        // find all items with a label matching to the old filled placeholders
+        if ( !(BFCore::Instance().GetDateString_Old().IsEmpty()) )
+            vecIdsDate = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_DATE_MASK);
+
+        if ( !(BFCore::Instance().GetTimeString_Old().IsEmpty()) )
+            vecIdsTime = FindItems (GetRootItem(), BF_BACKUPTREE_FILLED_TIME_MASK);
+
+        vecIdsAll.reserve(vecIdsDate.size() + vecIdsTime.size());
+        vecIdsAll.insert( vecIdsAll.end(), vecIdsDate.begin(), vecIdsDate.end() );
+        vecIdsAll.insert( vecIdsAll.end(), vecIdsTime.begin(), vecIdsTime.end() );
+
+        // are there items to refresh?
+        if ( !(vecIdsAll.empty()) )
         {
-            strLabel = GetItemText(*it);
+            wxString strPath;
+            wxString strLabel;
 
-            if ( strLabel.Matches(BF_BACKUPTREE_FILLED_DATE_MASK)
-              || strLabel.Matches(BF_BACKUPTREE_FILLED_TIME_MASK))
+            // iterate on the items
+            for (ItVectorTreeItemId it = vecIdsAll.begin();
+                 it != vecIdsAll.end();
+                 ++it)
             {
-                strLabel = strPath.AfterLast(wxFILE_SEP_PATH);
-                SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
-            }
+                strPath = GetPathByItem(*it);
 
-            // cut the last diretory from path
-            strPath = strPath.BeforeLast(wxFILE_SEP_PATH);
+                while ( strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK)
+                     || strPath.Matches(BF_BACKUPTREE_PLACEHOLDER_MASK))
+                {
+                    strLabel = GetItemText(*it);
+
+                    if ( strLabel.Matches(BF_BACKUPTREE_FILLED_DATE_MASK)
+                      || strLabel.Matches(BF_BACKUPTREE_FILLED_TIME_MASK))
+                    {
+                        strLabel = strPath.AfterLast(wxFILE_SEP_PATH);
+                        SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
+                    }
+
+                    // cut the last diretory from path
+                    strPath = strPath.BeforeLast(wxFILE_SEP_PATH);
+                }
+            }
         }
     }
 

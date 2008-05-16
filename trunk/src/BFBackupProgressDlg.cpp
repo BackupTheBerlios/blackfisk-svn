@@ -36,6 +36,9 @@
 #include "BFTaskListCtrl.h"
 #include "BFTask.h"
 #include "BFBackupTree.h"
+#include "BFBitmapButton.h"
+#include "BFIconTable.h"
+#include "BFMessageDlg.h"
 
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
   EVT_CLOSE   (                         BFBackupProgressDlg::OnClose)
@@ -64,13 +67,9 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
 void BFBackupProgressDlg::OnClose(wxCloseEvent& rEvent)
 {
     if (BFCore::Instance().IsWhileBackup())
-    {
         rEvent.Veto();
-    }
     else
-    {
         Destroy();
-    }
 }
 
 void BFBackupProgressDlg::Init ()
@@ -92,8 +91,16 @@ void BFBackupProgressDlg::Init ()
     BFBackupInfoCtrl* pInfoCtrl = new BFBackupInfoCtrl(this);
 
     // * buttons *
-    pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPTASK, _("stop task")),   wxSizerFlags(0).Expand().Border());
-    pButtonSizer->Add (new wxButton(this, BF_BTNID_STOPPRJ, _("stop project")), wxSizerFlags(0).Expand().Border());
+    pButtonSizer->Add (new BFBitmapButton(this,
+                                          BF_BTNID_STOPTASK,
+                                          BFIconTable::GetBitmap(BFIconTable::stop_task),
+                                          _("stop task")),
+                      wxSizerFlags(0).Expand().Border());
+    pButtonSizer->Add (new BFBitmapButton(this,
+                                          BF_BTNID_STOPPRJ,
+                                          BFIconTable::GetBitmap(BFIconTable::stop_prj),
+                                          _("stop project")),
+                       wxSizerFlags(0).Expand().Border());
 
     // arrange
     pSizerB         ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Expand().Border(wxBOTTOM, 5));
@@ -159,7 +166,29 @@ wxCondition* BFBackupProgressDlg::GetCondition ()
 void BFBackupProgressDlg::OnQuestion (wxCommandEvent& rEvent)
 {
     // ask questioin
-    BF_StopLevel answer = BFBackupQuestionDlg::Ask(rEvent.GetString(), (BFMessageType)rEvent.GetExtraLong());
+    //BF_StopLevel answer = BFBackupQuestionDlg::Ask(rEvent.GetString(), (BFMessageType)rEvent.GetExtraLong());
+
+    BFMessageDlg dlg(BF_MSGDLG_BACKUP_QUESTION,
+                     rEvent.GetString() + _("\n\nHow is to be continued?"),
+                     wxEmptyString,
+                     BFMessageDlg::GetDlgType((BFMessageType)rEvent.GetExtraLong()));
+
+    BF_StopLevel answer = BFDO_ASK;
+
+    switch(dlg.ShowModal())
+    {
+        case BF_MSGDLG_ID_STOPPRJ:
+            answer = BFDO_STOPPRJ;
+            break;
+
+        case BF_MSGDLG_ID_STOPTSK:
+            answer = BFDO_STOPTSK;
+            break;
+
+        case BF_MSGDLG_ID_IGNORE:
+            answer = BFDO_IGNORE;
+            break;
+    };
 
     // set answer
     BFThread_ProjectRunner::CurrentlyRunning()->SetUsersStopAnswer(answer);

@@ -49,7 +49,8 @@ END_EVENT_TABLE()
 //
 BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
                             const wxString& strMsg,
-                            const wxString& strTitle /*= wxEmptyString*/)
+                            const wxString& strTitle /*= wxEmptyString*/,
+                            BFMessageDlg_Type type_icon /*= BF_MSGDLG_NOTUSED*/)
             : wxDialog(NULL, wxID_ANY, strTitle)
 {
     // sizer
@@ -61,7 +62,10 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     SetTitle(GetMessageTypeString(type));
 
     // icon
-    wxStaticBitmap* pSBitmap = new wxStaticBitmap(this, wxID_ANY, GetMessageTypeBitmap(type));
+    if (type_icon == BF_MSGDLG_NOTUSED)
+        type_icon = type;
+
+    wxStaticBitmap* pSBitmap = new wxStaticBitmap(this, wxID_ANY, GetMessageTypeBitmap(type_icon));
 
     // check message width
     wxString strMyMsg = strMsg;
@@ -180,13 +184,6 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
 
 /*static*/ const wxBitmap BFMessageDlg::GetMessageTypeBitmap (BFMessageDlg_Type type)
 {
-    /*static wxBitmap bmpQuestion = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "question64.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpInfo     = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "info64.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpWarning  = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "warning64.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpError    = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "error64.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpFatal    = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "fatal64.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpDefault  = wxBitmap();*/
-
     switch (type)
     {
         case BF_MSGDLG_QUESTION_YESNO:
@@ -213,15 +210,6 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
 
 const wxBitmap BFMessageDlg::GetButtonBitmap (wxWindowID id)
 {
-    /*static wxBitmap bmpOk       = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "yes16.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpCancel   = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "no16.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpYes      = bmpOk;
-    static wxBitmap bmpNo       = bmpCancel;
-    static wxBitmap bmpStopPrj  = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "stop_prj16.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpStopTsk  = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "stop_task16.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpIgnore   = wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "ignore16.png"), wxBITMAP_TYPE_PNG);
-    static wxBitmap bmpDefault  = wxBitmap();*/
-
     switch (id)
     {
         case BF_MSGDLG_ID_OK:
@@ -250,76 +238,30 @@ const wxBitmap BFMessageDlg::GetButtonBitmap (wxWindowID id)
     }
 }
 
-/*
-wxBitmap BFMessageDlg::CreateButtonBitmap (wxWindowID id)
-{
-    wxString strFilename;
-    wxString strLabel;
-
-    switch (id)
-    {
-        case BF_MSGDLG_ID_OK:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "yes16.png");
-            strLabel = _("OK");
-            break;
-
-        case BF_MSGDLG_ID_YES:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "yes16.png");
-            strLabel = _(" Yes");
-            break;
-
-        case BF_MSGDLG_ID_CANCEL:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "no16.png");
-            strLabel = _(" Cancel");
-            break;
-
-        case BF_MSGDLG_ID_NO:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "no16.png");
-            strLabel = _(" No");
-            break;
-
-        case BF_MSGDLG_ID_STOPPRJ:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "stop_prj16.png");
-            strLabel = _(" Stop Project");
-            break;
-
-        case BF_MSGDLG_ID_STOPTSK:
-            strFilename = wxString::Format("%s%s", BF_GRAPHICDIR, "stop_task16.png");
-            strLabel = _(" Stop Task");
-            break;
-
-        default:
-            strLabel = _(" (unknown ID)");
-            break;
-    }
-
-    // string size
-    wxWindowDC* pWindowDC = new wxWindowDC(this);
-    wxSize sizeText = pWindowDC->GetTextExtent(wxString::Format("%s", strLabel));
-
-    // load bitmap
-    wxBitmap bmp2(strFilename, wxBITMAP_TYPE_PNG);
-    wxBitmap bmp(bmp2.GetWidth() + sizeText.GetWidth(), bmp2.GetHeight() + sizeText.GetHeight());
-
-    wxMemoryDC dc;
-    dc.SelectObject(bmp);
-    dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_MENU), wxBRUSHSTYLE_SOLID));
-    dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-    dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-    dc.Clear();
-    dc.DrawLabel(strLabel,
-                 bmp2,
-                 wxRect(0,
-                        0,
-                        bmp.GetWidth(),
-                        bmp.GetHeight()),
-                 wxALIGN_CENTRE);
-
-    return bmp;
-}*/
-
-
 void BFMessageDlg::OnButton (wxCommandEvent& rEvent)
 {
     EndModal(rEvent.GetId());
+}
+
+/*static*/ BFMessageDlg_Type BFMessageDlg::GetDlgType (BFMessageType type)
+{
+    switch(type)
+    {
+        case MsgINFO:
+        case MsgBACKUP:
+        case MsgLOG:
+        case MsgDEBUG:
+            return BF_MSGDLG_INFO;
+
+        case MsgWARNING:
+            return BF_MSGDLG_WARNING;
+
+        case MsgERROR:
+            return BF_MSGDLG_ERROR;
+
+        default:
+        case MsgFATAL:
+        case MsgUNKNOWN:
+            return BF_MSGDLG_FATAL;
+    };
 }

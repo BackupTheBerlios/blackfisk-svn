@@ -100,17 +100,17 @@ class BFIconTable
         wxImageList* GetFilesystemImageList ();
 
         ///
-        wxBitmap GetBitmap (BFButtonIconId id) const;
+        static wxBitmap GetBitmap (BFButtonIconId id);
         ///
-        wxBitmap GetBitmap (BFMessageIconId id) const;
+        static wxBitmap GetBitmap (BFMessageIconId id);
         ///
-        wxBitmap GetBitmap (BFFilesystemIconId id) const;
+        static wxBitmap GetBitmap (BFFilesystemIconId id);
         ///
-        wxIcon GetIcon (BFButtonIconId id) const;
+        static wxIcon GetIcon (BFButtonIconId id);
         ///
-        wxIcon GetIcon (BFMessageIconId id) const;
+        static wxIcon GetIcon (BFMessageIconId id);
         ///
-        wxIcon GetIcon (BFFilesystemIconId id) const;
+        static wxIcon GetIcon (BFFilesystemIconId id);
 
 };
 

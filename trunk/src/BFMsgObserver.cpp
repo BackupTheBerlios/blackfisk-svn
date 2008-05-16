@@ -101,8 +101,8 @@ BFMsgObserver::BFMsgObserver ()
                - the main-thread pause the backup-worker-thread
                - aks the user and store the answer somewhere
                - resume the backup-worker-thread
+               - get the stored answer
             */
-            //stop = BFBackupQuestionDlg::Ask(strMsg, pSys->GetLastType());
             // create an event
             wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, BF_BACKUPPROGRESSDLG_QUESTION);
             // message type

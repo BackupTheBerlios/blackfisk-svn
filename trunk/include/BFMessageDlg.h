@@ -33,6 +33,7 @@ typedef short BFMessageDlg_Type;
 #define BF_MSGDLG_ERROR                 5
 #define BF_MSGDLG_FATAL                 6
 #define BF_MSGDLG_BACKUP_QUESTION       7
+#define BF_MSGDLG_NOTUSED               8
 
 #define BF_MSGDLG_ID_OK         wxID_OK
 #define BF_MSGDLG_ID_YES        wxID_YES
@@ -43,6 +44,8 @@ typedef short BFMessageDlg_Type;
 #define BF_MSGDLG_ID_IGNORE     3 + wxID_HIGHEST
 
 #include <wx/dialog.h>
+
+#include "BFSystemBase.h"
 
 /** replacement for wxMessageDialog
     Return values for ShowModal() can be
@@ -79,16 +82,28 @@ class BFMessageDlg : public wxDialog
         void Wrap (wxString& strMyMsg);
 
     public:
-        /// ctor
+        /**
+         The parameter 'type' specify the concret type of the message dialog.
+         It has effect which buttons and icons are used.
+         The parameter 'strMsg' is the message to display.
+         The parameter 'strTitle' can be used to set a title. If 'strTitle' is
+         empty a default string corrosponding to 'type' will be used.
+         The parameter 'type_icon' specify the type of icon to use. This parameter
+         can be used to set a icon different from the first parameter 'type'.
+         */
         BFMessageDlg (BFMessageDlg_Type type,
                       const wxString& strMsg,
-                      const wxString& strTitle = wxEmptyString);
+                      const wxString& strTitle = wxEmptyString,
+                      BFMessageDlg_Type type_icon = BF_MSGDLG_NOTUSED);
 
         /// virtual dtor
         virtual ~BFMessageDlg ();
 
         ///
         void OnButton (wxCommandEvent& rEvent);
+
+        ///
+        static BFMessageDlg_Type GetDlgType (BFMessageType type);
 
     DECLARE_EVENT_TABLE()
 };

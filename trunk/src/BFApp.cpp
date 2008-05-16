@@ -37,7 +37,6 @@
 #include "BFRootTaskApp.h"
 #include "Progress.h"
 #include "BFSettings.h"
-#include "BFBackupQuestionDlg.h"
 #include "BFCmdLine.h"
 
 IMPLEMENT_APP(BFApp);
