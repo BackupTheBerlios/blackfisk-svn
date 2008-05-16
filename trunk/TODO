@@ -1,6 +1,5 @@
 0.0.1
 ~~~~~
-- BFBackupQuestionDlg -> BFMessageDlg
 - hanlding IDs with BFMasterID ?
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 - BUG: black for transparency in PNGs (wxStaticBitmap)

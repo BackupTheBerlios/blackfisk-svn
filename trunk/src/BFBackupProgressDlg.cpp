@@ -28,7 +28,6 @@
 #include "Progress.h"
 #include "BFRootTaskApp.h"
 #include "BFLogViewDlg.h"
-#include "BFBackupQuestionDlg.h"
 #include "BFThread_ProjectRunner.h"
 #include "BFMainFrame.h"
 #include "BFBackupInfoCtrl.h"
@@ -40,11 +39,14 @@
 #include "BFIconTable.h"
 #include "BFMessageDlg.h"
 
+#define BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK  1 + wxID_HIGHEST
+#define BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ   2 + wxID_HIGHEST
+
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
-  EVT_CLOSE   (                         BFBackupProgressDlg::OnClose)
-  EVT_BUTTON  (BF_BTNID_STOPTASK,       BFBackupProgressDlg::OnStopTask)
-  EVT_BUTTON  (BF_BTNID_STOPPRJ,        BFBackupProgressDlg::OnStopProject)
-  EVT_MENU    (BF_BACKUPPROGRESSDLG_QUESTION, BFBackupProgressDlg::OnQuestion)
+  EVT_CLOSE   (                                         BFBackupProgressDlg::OnClose)
+  EVT_BUTTON  (BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK,  BFBackupProgressDlg::OnStopTask)
+  EVT_BUTTON  (BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,   BFBackupProgressDlg::OnStopProject)
+  EVT_MENU    (BF_BACKUPPROGRESSDLG_QUESTION,           BFBackupProgressDlg::OnQuestion)
 END_EVENT_TABLE()
 
 /*static*/ BFBackupProgressDlg* BFBackupProgressDlg::sp_backup_progress_dlg_ = NULL;
@@ -92,12 +94,12 @@ void BFBackupProgressDlg::Init ()
 
     // * buttons *
     pButtonSizer->Add (new BFBitmapButton(this,
-                                          BF_BTNID_STOPTASK,
+                                          BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK,
                                           BFIconTable::GetBitmap(BFIconTable::stop_task),
                                           _("stop task")),
                       wxSizerFlags(0).Expand().Border());
     pButtonSizer->Add (new BFBitmapButton(this,
-                                          BF_BTNID_STOPPRJ,
+                                          BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,
                                           BFIconTable::GetBitmap(BFIconTable::stop_prj),
                                           _("stop project")),
                        wxSizerFlags(0).Expand().Border());
@@ -166,8 +168,6 @@ wxCondition* BFBackupProgressDlg::GetCondition ()
 void BFBackupProgressDlg::OnQuestion (wxCommandEvent& rEvent)
 {
     // ask questioin
-    //BF_StopLevel answer = BFBackupQuestionDlg::Ask(rEvent.GetString(), (BFMessageType)rEvent.GetExtraLong());
-
     BFMessageDlg dlg(BF_MSGDLG_BACKUP_QUESTION,
                      rEvent.GetString() + _("\n\nHow is to be continued?"),
                      wxEmptyString,

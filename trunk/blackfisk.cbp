@@ -148,9 +148,6 @@
 		<Unit filename="include\BFBackupProgressDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
-		<Unit filename="include\BFBackupQuestionDlg.h">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
 		<Unit filename="include\BFBackupTree.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
@@ -296,9 +293,6 @@
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="src\BFBackupProgressDlg.cpp">
-			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="src\BFBackupQuestionDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="src\BFBackupTree.cpp">
