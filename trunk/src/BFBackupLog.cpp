@@ -54,8 +54,8 @@ void BFTaskLog::Finished (bool bNormalEnd /*= true*/)
 
 void BFTaskLog::Message (BFMessageType type,
                          const wxDateTime& timestamp,
-                         const wxChar* strMessage,
-                         const wxChar* strLocation)
+                         const wxString& strMessage,
+                         const wxString& strLocation)
 {
     wxString str;
 

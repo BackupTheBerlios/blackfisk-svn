@@ -56,7 +56,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 
 /*static*/ wxString BFApp::GetFullApplicationName ()
 {
-    return wxString::Format(_T("%s %d.%d.%d %s"),
+    return wxString::Format("%s %d.%d.%d %s",
                                BF_PRGNAME,
                                BF_VERSION_MAJOR,
                                BF_VERSION_MINOR,
@@ -74,13 +74,10 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 }
 
 /*static*/ wxArrayString& BFApp::PrependString (wxArrayString& rStrings,
-                                                const wxChar* strToPrepend)
+                                                const wxString& strToPrepend)
 {
-    if (strToPrepend)
-    {
-        for (size_t i = 0; i < rStrings.GetCount(); ++i)
-            rStrings[i].Prepend(strToPrepend);
-    }
+    for (size_t i = 0; i < rStrings.GetCount(); ++i)
+        rStrings[i].Prepend(strToPrepend);
 
     return rStrings;
 }
@@ -206,25 +203,25 @@ wxString BFApp::GetCurrentProjectName ()
     return wxString(BFRootTaskApp::Instance().GetProjectName());
 }
 
-bool BFApp::OpenProject (const wxChar* filename)
+bool BFApp::OpenProject (const wxString& strFilename)
 {
-    bool rc = BFRootTaskApp::Instance().ReadFromFile(filename);
+    bool rc = BFRootTaskApp::Instance().ReadFromFile(strFilename);
 
     if (rc)
     {
-        BFSettings::Instance().SetLastProject(filename);
+        BFSettings::Instance().SetLastProject(strFilename);
         SaveSettings();
     }
 
     return rc;
 }
 
-bool BFApp::SaveProject (const wxChar* filename)
+bool BFApp::SaveProject (const wxString& strFilename)
 {
-    bool rc = BFRootTaskApp::Instance().StoreToFile(filename);
+    bool rc = BFRootTaskApp::Instance().StoreToFile(strFilename);
 
     if (rc)
-        BFSettings::Instance().SetLastProject(filename);
+        BFSettings::Instance().SetLastProject(strFilename);
 
     return rc;
 }
@@ -260,7 +257,7 @@ void BFApp::Test ()
 
 void BFApp::Sound_BackupFinished ()
 {
-    wxSound(_T("sound\\finish.wav")).Play();
+    wxSound("sound\\finish.wav").Play();
 }
 
 

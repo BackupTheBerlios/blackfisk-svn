@@ -33,8 +33,8 @@ class BFLog : public BFLogBase
         /// log a message
         void Do(BFMessageType type,
                 const wxDateTime& timestamp,
-                const wxChar* strMessage,
-                const wxChar* strLocation);
+                const wxString& strMessage,
+                const wxString& strLocation);
 
     public:
         ///

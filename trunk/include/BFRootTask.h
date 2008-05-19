@@ -82,9 +82,9 @@ class BFRootTask : public Subject
         long GetTaskCount ();
 
         ///
-        void SetName (const wxChar* strName);
+        void SetName (const wxString& strName);
         ///
-        const wxChar* GetName ();
+        const wxString& GetName ();
         ///
         BFProjectSettings& GetSettings ();
 
@@ -92,9 +92,9 @@ class BFRootTask : public Subject
             if an error occures it returns OBInvalidOID
             this methode does not broadcast the observers! */
         BFoid AppendTask (BFTaskType type,
-                          const wxChar* strSource,
-                          const wxChar* strDestination,
-                          const wxChar* strName,
+                          const wxString& strSource,
+                          const wxString& strDestination,
+                          const wxString& strName,
                           bool bVerify,
                           bool bVerifyContent,
                           wxArrayString* pArrExclude = NULL,
@@ -139,7 +139,7 @@ class BFRootTask : public Subject
         /** return the position in the task-vector of the last BFTask
             with the destination
             return -1 if nothing is found */
-        long FindLastTaskWithDestination(const wxChar* destination);
+        long FindLastTaskWithDestination(const wxString& strDestination);
 
         /** find all tasks with placeholders in its string-members */
         BFTaskVector& FindAllTasksWithPlaceholders (BFTaskVector& rVec);

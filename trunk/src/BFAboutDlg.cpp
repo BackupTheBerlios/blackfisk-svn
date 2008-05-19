@@ -63,8 +63,7 @@ BFAboutDlg::BFAboutDlg ()
     wxBoxSizer* pMRightSizer    = new wxBoxSizer(wxVERTICAL);
 
 
-    wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo_text.png")), wxBITMAP_TYPE_PNG));
-    //pLogo->Connect(wxEVT_PAINT, wxPaintEventHandler(wxStaticBitmap::DoPaintManually));
+    wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "logo_text.png"), wxBITMAP_TYPE_PNG));
 
     wxStaticText* pName = new wxStaticText(this, wxID_ANY, wxString::Format("Version: %s", BFApp::GetVersion()));
     font = pName->GetFont();
@@ -122,6 +121,10 @@ BFAboutDlg::BFAboutDlg ()
                                              "MinGW",
                                              "",
                                              _(" GNU based compiler system for Windows"));
+    wxSizer* pTools3 = CreateThirdPartySizer("http://www.inkscape.org",
+                                             "Inkscape",
+                                             "",
+                                             _(" open source vector graphics editor"));
     wxSizer* pSupporters1 = CreateThirdPartySizer("http://www.berlios.de",
                                                   "BerliOS",
                                                   "",
@@ -153,6 +156,7 @@ BFAboutDlg::BFAboutDlg ()
     pMLeftSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pMLeftSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools3, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters, wxSizerFlags(0).Center());
     pMRightSizer->Add(pSupporters1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters2, wxSizerFlags(0).Border(wxBOTTOM, 3));

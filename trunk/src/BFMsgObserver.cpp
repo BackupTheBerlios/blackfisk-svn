@@ -62,7 +62,7 @@ BFMsgObserver::BFMsgObserver ()
     if (pSys->GetLastLocation().Len() == 0)
         strMsg = pSys->GetLastMessage();
     else
-        strMsg = pSys->GetLastMessage() + _T("\nLocation: ") + pSys->GetLastLocation();
+        strMsg = pSys->GetLastMessage() + "\nLocation: " + pSys->GetLastLocation();
 
     // contact the user
     if ( BFCore::Instance().IsWhileBackup() )

@@ -71,7 +71,7 @@ class BFProgressCtrlBase : public wxPanel, Observer
 		virtual void ValueChanged (Subject* pSender);
 
 		///
-		void SetTextA (const wxChar* text);
+		void SetTextA (const wxString& strText);
 
 		/** shorten 'strPath' to the length of 'len' width
             removing some folders with '...' */

@@ -64,7 +64,7 @@ void BFBackupInfoCtrl::Init ()
 
     pLogCtrl_->SetEditable(false);
     font = pLogCtrl_->GetFont();
-    font.SetFaceName(_T("Courier New"));
+    font.SetFaceName("Courier New");
     font.SetFamily(wxFONTFAMILY_MODERN);
     font.SetPointSize(8);
     pLogCtrl_->SetFont(font);
@@ -81,9 +81,9 @@ void BFBackupInfoCtrl::Init ()
     pStatWarning->SetFont(font);
     pStatError->SetFont(font);
     pStatFatalError->SetFont(font);
-    pWarningsCounter_ = new wxStaticText(this, wxID_ANY, _T("000"));
-    pErrorsCounter_ = new wxStaticText(this, wxID_ANY, _T("000"));
-    pFatalErrorsCounter_ = new wxStaticText(this, wxID_ANY, _T("000"));
+    pWarningsCounter_ = new wxStaticText(this, wxID_ANY, "000");
+    pErrorsCounter_ = new wxStaticText(this, wxID_ANY, "000");
+    pFatalErrorsCounter_ = new wxStaticText(this, wxID_ANY, "000");
 
     // time duration
     BFTimeDurationCtrl* pTimeDurationCtrl = new BFTimeDurationCtrl(this, BFRootTaskApp::Instance().GetProgressTotal());
@@ -112,9 +112,9 @@ void BFBackupInfoCtrl::Init ()
 
 void BFBackupInfoCtrl::RefreshCounterCtrls()
 {
-    pWarningsCounter_->SetLabel(wxString::Format(_T("%d"), lCountWarnings_));
-    pErrorsCounter_->SetLabel(wxString::Format(_T("%d"), lCountErrors_));
-    pFatalErrorsCounter_->SetLabel(wxString::Format(_T("%d"), lCountFatal_));
+    pWarningsCounter_->SetLabel(wxString::Format("%d", lCountWarnings_));
+    pErrorsCounter_->SetLabel(wxString::Format("%d", lCountErrors_));
+    pFatalErrorsCounter_->SetLabel(wxString::Format("%d", lCountFatal_));
 }
 
 /*virtual*/ void BFBackupInfoCtrl::ValueChanged (Subject* pSender)

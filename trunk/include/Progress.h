@@ -109,9 +109,9 @@ class ProgressWithMessage : public Progress
         /// set 'strMessage_'
         void SetMessage (const wxString& strMessage);
         ///
-        const wxChar* GetMessage ();
+        const wxString& GetMessage ();
         ///
-        const wxChar* GetLabel ();
+        const wxString& GetLabel ();
 };  // class ProgressWithMessage
 
 

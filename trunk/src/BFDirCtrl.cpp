@@ -185,13 +185,13 @@ void BFDirCtrl::OnDestination (wxCommandEvent& event)
     {
         if (event.GetId() == BFDIRCTRL_ID_ADDDESTINATION)
         {
-            BFSystem::Fatal(_T("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination."), _T("BFDirCtrl::OnDestination"));
+            BFSystem::Fatal("It is not possible to add a file as a destination!\nYou can just add a directory as a backup destination.", "BFDirCtrl::OnDestination");
             return;
         }
 
         if (event.GetId() == BFDIRCTRL_ID_CREATEDESTINATION)
         {
-            BFSystem::Fatal(_T("It is not possible to create a destination here!\nIt is just a file."), _T("BFDirCtrl::OnDestination"));
+            BFSystem::Fatal("It is not possible to create a destination here!\nIt is just a file.", "BFDirCtrl::OnDestination");
             return;
         }
 
@@ -202,7 +202,7 @@ void BFDirCtrl::OnDestination (wxCommandEvent& event)
 
     if (pBackupTree == NULL)
     {
-        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), _T("BFDirCtrl::OnDestination"));
+        BFSystem::Fatal(_("no backup tree available (pBackupTree == NULL)"), "BFDirCtrl::OnDestination");
         return;
     }
 
@@ -221,7 +221,7 @@ void BFDirCtrl::OnDestination (wxCommandEvent& event)
             break;
 
         default:
-            BFSystem::Fatal(_T("unknown event"), _T("BFDirCtrl::OnDestination"));
+            BFSystem::Fatal("unknown event", "BFDirCtrl::OnDestination");
             break;
     }
 }
@@ -244,7 +244,7 @@ void BFDirCtrl::OnBackup (wxCommandEvent& event)
             break;
 
         default:
-            BFSystem::Fatal(_T("no matching menu ID"), _T("BFDirCtrl::OnBackup"));
+            BFSystem::Fatal("no matching menu ID", "BFDirCtrl::OnBackup");
             break;
     }
 }

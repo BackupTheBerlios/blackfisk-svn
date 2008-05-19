@@ -74,9 +74,9 @@ void BFCore::SetCurrentDateTime ()
 
     // remember current time in a string
     strCurrentTime_ = wxDateTime::Now().FormatISOTime();
-    strCurrentTime_.Replace(_T(":"), _T("h"), false);
-    strCurrentTime_.Replace(_T(":"), _T("m"), false);
-    strCurrentTime_ << _T("s");
+    strCurrentTime_.Replace(":", "h", false);
+    strCurrentTime_.Replace(":", "m", false);
+    strCurrentTime_ << "s";
 }
 
 void BFCore::BackupStarted ()
@@ -242,7 +242,7 @@ bool BFCore::CreateZipFromDir (const wxString& strZipName,
         {   // create zip-entry for a file
 
             pEntry = new wxZipEntry(fileName.GetFullPath().Mid(lLen), fileName.GetModificationTime());
-            pIn = new wxFFileInputStream(fileName.GetFullPath(), _T("rb"));
+            pIn = new wxFFileInputStream(fileName.GetFullPath(), "rb");
             // set file attributes for this entry
             SetZipEntryFileAttributes(fileName, pEntry);
             zip.PutNextEntry(pEntry);
@@ -262,7 +262,7 @@ bool BFCore::CreateZipFromDir (const wxString& strZipName,
             }
             else
             {
-                BFSystem::Fatal(wxString::Format(_("no file AND no dir: %s"), fileArray[i].c_str()), _T("BFCore::CreateZipFromDir()"));
+                BFSystem::Fatal(wxString::Format(_("no file AND no dir: %s"), fileArray[i].c_str()), "BFCore::CreateZipFromDir()");
 
                 if (pProgress != NULL)
                     pProgress->DoEnd();
@@ -344,7 +344,7 @@ bool BFCore::VerifyZip (const wxString& strZipFileName, wxArrayString& arrFiles,
                                                  strZipFileName,
                                                  entry->GetName(),
                                                  arrFiles[i]),
-                                _T("BFCore::VerifyZip()"));
+                                "BFCore::VerifyZip()");
 
                 return false;
             }
@@ -372,7 +372,7 @@ wxUint32 BFCore::GetFileCrc (const wxString& strFilename)
     wxFile file(strFilename);
     if ( !(file.IsOpened()) )
     {
-        BFSystem::Error(wxString::Format(_("could not open file %s in BFCore::GetFileCrc"), strFilename), _T("BFCore::GetFileCrc()"));
+        BFSystem::Error(wxString::Format(_("could not open file %s in BFCore::GetFileCrc"), strFilename), "BFCore::GetFileCrc()");
         return 0;
     }
 
@@ -441,7 +441,7 @@ bool BFCore::CopyFile (const wxString& strSource,
             BFSystem::Error(wxString::Format(_("can not copy %s\nto %s"),
                                               strSource,
                                               strDestination),
-                            _T("BFCore::CopyFile"));
+                            "BFCore::CopyFile");
             return false;
         }
     }
@@ -508,7 +508,7 @@ bool BFCore::DeleteFile (const wxString& strFile, bool bIgnoreWriteProtection /*
         }
         else
         {
-            BFSystem::Error(wxString::Format(_("file %s is write-protected"), strFile), _T("BFCore::DeleteFile()"));
+            BFSystem::Error(wxString::Format(_("file %s is write-protected"), strFile), "BFCore::DeleteFile()");
             return false;
         }
     }
@@ -524,7 +524,7 @@ wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString&
     // check parameters
     if (!(wxDir::Exists(strDir)) )
     {
-        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::GetSubDirectories()"));
+        BFSystem::Fatal(_("wrong parameters"), "BFCore::GetSubDirectories()");
         return arr;
     }
 
@@ -539,7 +539,7 @@ wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString&
     // check if open
     if ( !(dir.IsOpened()) )
     {
-        BFSystem::Error(wxString::Format(_("directory %s is not open"), strUsedDir), _T("BFCore::GetSubDirectories()"));
+        BFSystem::Error(wxString::Format(_("directory %s is not open"), strUsedDir), "BFCore::GetSubDirectories()");
         return arr;
     }
 
@@ -565,7 +565,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
     // check parameters
     if (!(wxDir::Exists(strDir)) )
     {
-        BFSystem::Fatal(_("wrong parameters"), _T("BFCore::DeleteDir()"));
+        BFSystem::Fatal(_("wrong parameters"), "BFCore::DeleteDir()");
         return false;
     }
 
@@ -575,7 +575,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
     // check if open
     if ( !(dir.IsOpened()) )
     {
-        BFSystem::Error(wxString::Format(_("directory %s is not open"), strDir), _T("BFCore::DeleteDir()"));
+        BFSystem::Error(wxString::Format(_("directory %s is not open"), strDir), "BFCore::DeleteDir()");
         return false;
     }
 
@@ -584,7 +584,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
     {
         if (dir.HasFiles() || dir.HasSubDirs())
         {
-            BFSystem::Error(wxString::Format(_("directory %s is not empty"), strDir), _T("BFCore::DeleteDir()"));
+            BFSystem::Error(wxString::Format(_("directory %s is not empty"), strDir), "BFCore::DeleteDir()");
             return false;
         }
     }
@@ -621,7 +621,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
         // delete
         if ( !(wxRmdir(arrToDelete[i])) )
         {
-            BFSystem::Error(wxString::Format(_T("couldn't delete directory %s\nmaybe it is write-protected or not-empty"), arrToDelete[i]), _T("BFCore::DeleteDir()"));
+            BFSystem::Error(wxString::Format(_("couldn't delete directory %s\nmaybe it is write-protected or not-empty"), arrToDelete[i]), "BFCore::DeleteDir()");
             return false;
         }
     }
@@ -727,7 +727,7 @@ long BFCore::GetDirFileCount(const wxString& strDir,
 {
     if ( !(wxDir::Exists(strDir)) )
     {
-        BFSystem::Error(wxString::Format(_("Can not count the files in %s.\nDirectory doesn't exists!"), strDir), _T("BFCore::GetDirFileCount()"));
+        BFSystem::Error(wxString::Format(_("Can not count the files in %s.\nDirectory doesn't exists!"), strDir), "BFCore::GetDirFileCount()");
         return -1;
     }
 
@@ -997,7 +997,7 @@ bool BFCore::VerifyFile (const wxString& strFile1,
         BFSystem::Error(wxString::Format(_("file objects (%s\nand %s) not open"),
                                          strFile1,
                                          strFile2),
-                        _T("BFCore::VerifyFile() - wxFileName"));
+                        "BFCore::VerifyFile() - wxFileName");
         return false;
     }
 
@@ -1041,7 +1041,7 @@ bool BFCore::VerifyFile (const wxString& strFile1,
             BFSystem::Error(wxString::Format(_("file objects (%s\nand %s) not open"),
                                              strFile1,
                                              strFile2),
-                            _T("BFCore::VerifyFile() - wxFile"));
+                            "BFCore::VerifyFile() - wxFile");
             return false;
         }
 

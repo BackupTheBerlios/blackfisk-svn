@@ -109,7 +109,7 @@ class BFSettings
         ///
         const wxString& GetLastProject ();
         ///
-        void SetLastProject (const wxChar* strFilename);
+        void SetLastProject (const wxString& strFilename);
         ///
         void SetOpenLastProject (bool bOpen);
         ///

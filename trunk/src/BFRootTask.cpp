@@ -263,18 +263,15 @@ long BFRootTask::GetTaskCount ()
     return vecTasks_.size();
 }
 
-void BFRootTask::SetName (const wxChar* strName)
+void BFRootTask::SetName (const wxString& strName)
 {
-    if (strName == NULL)
-        return;
-
     strName_ = strName;
 
     SetModified();
 }
 
 
-const wxChar* BFRootTask::GetName ()
+const wxString& BFRootTask::GetName ()
 {
     return strName_;
 }
@@ -285,19 +282,14 @@ BFProjectSettings& BFRootTask::GetSettings ()
     return projectSettings_;
 }
 
-long BFRootTask::FindLastTaskWithDestination(const wxChar* destination)
+long BFRootTask::FindLastTaskWithDestination(const wxString& strDestination)
 {
-    if (destination == NULL)
-        return -1;
-
     long rc = -1;
-    wxString strDest(destination);
-
 	for (BFTaskVector::size_type i = 0;
 		 i != vecTasks_.size();
 		 ++i)
     {
-        if (strDest == vecTasks_[i]->GetDestination())
+        if (strDestination == vecTasks_[i]->GetDestination())
             rc = i;
     }
 
@@ -354,19 +346,16 @@ BFoid BFRootTask::AppendTask (BFTask& rTask)
 }
 
 BFoid BFRootTask::AppendTask (BFTaskType type,
-                             const wxChar* strSource,
-                             const wxChar* strDestination,
-                             const wxChar* strName,
+                             const wxString& strSource,
+                             const wxString& strDestination,
+                             const wxString& strName,
                              bool bVerify,
                              bool bVerifyContent,
                              wxArrayString* pArrExclude /*= NULL*/,
                              BFArchiveFormat archive /*= CompressNOTUSED*/)
 {
     // check parameters
-    if ( strSource == NULL
-      || strDestination == NULL
-      || strName == NULL
-      || (type == TaskARCHIVE && archive == CompressNOTUSED))
+    if ( (type == TaskARCHIVE && archive == CompressNOTUSED))
         return BFInvalidOID;
 
     // check exclude vector

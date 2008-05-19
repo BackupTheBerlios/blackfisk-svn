@@ -33,9 +33,9 @@
 #include "BFHelpCtrl.h"
 
 //
-BFDestinationCtrl::BFDestinationCtrl (wxWindow*     pParent,
-                                      const wxChar* strPath /*= wxEmptyString*/,
-                                      bool          bWithLabel /*= true*/)
+BFDestinationCtrl::BFDestinationCtrl (wxWindow*         pParent,
+                                      const wxString&   strPath /*= wxEmptyString*/,
+                                      bool              bWithLabel /*= true*/)
                  : wxBoxSizer(wxHORIZONTAL),
                    pLabel_(NULL),
                    pPickerCtrl_(NULL)

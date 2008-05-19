@@ -98,7 +98,7 @@ ProgressWithMessage* BFRootTaskApp::GetProgressTask ()
     return pProgressTask_;
 }
 
-const wxChar* BFRootTaskApp::GetProjectName()
+const wxString& BFRootTaskApp::GetProjectName()
 {
     return pRootTask_->GetName();
 }

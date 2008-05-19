@@ -28,7 +28,7 @@
 BFLog::BFLog ()
      : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize()*1024)
 {
-    fileLog_.Write(_T("\n"));
+    fileLog_.Write("\n");
 }
 
 /*virtual*/ BFLog::~BFLog ()
@@ -37,30 +37,26 @@ BFLog::BFLog ()
 
 void BFLog::Do(BFMessageType type,
                const wxDateTime& timestamp,
-               const wxChar* strMessage,
-               const wxChar* strLocation)
+               const wxString& strMessage,
+               const wxString& strLocation)
 {
-    // check arguments
-    if (strMessage == NULL)
-        return;
-
     // result string written to the file
     wxString strLog;
 
     // create timestamp
-    strLog << timestamp.Format(_T("%Y-%m-%d %H:%M:%S"));
+    strLog << timestamp.Format("%Y-%m-%d %H:%M:%S");
 
     // message type identifier
     if (type != MsgLOG)
-        strLog << _T(" ") << wxString(BFSystem::GetTypeString(type)).MakeUpper() << _T(" ");
+        strLog << " " << wxString(BFSystem::GetTypeString(type)).MakeUpper() << " ";
 
-    strLog << _T(": ");
+    strLog << ": ";
 
     // log message
-    if (wxStrlen(strLocation) == 0)
-        strLog << strMessage << _T('\n');
+    if (strLocation.IsEmpty())
+        strLog << strMessage << '\n';
     else
-        strLog << strMessage << _T(" in ") << strLocation << _T('\n');
+        strLog << strMessage << " in " << strLocation << '\n';
 
     // write to the file
     fileLog_.Write(strLog);

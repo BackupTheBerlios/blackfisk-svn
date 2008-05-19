@@ -287,7 +287,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
 void BFMainFrame::RefreshTitle ()
 {
     // application name and version
-    wxTopLevelWindow::SetTitle( wxString::Format(_T("%s (%s) - %s"),
+    wxTopLevelWindow::SetTitle( wxString::Format("%s (%s) - %s",
                                                  wxGetApp().GetCurrentProjectName().c_str(),
                                                  wxGetApp().GetCurrentProjectFilename().c_str(),
                                                  BFApp::GetFullApplicationName()) );
@@ -321,14 +321,14 @@ void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
 void BFMainFrame::OnShowLicense (wxCommandEvent& event)
 {
     wxArrayString arr;
-    arr.Add(_T("LICENSE"));
+    arr.Add("LICENSE");
     new BFLogViewDlg(this, arr);
 }
 
 void BFMainFrame::OnShowHistory (wxCommandEvent& event)
 {
     wxArrayString arr;
-    arr.Add(_T("HISTORY"));
+    arr.Add("HISTORY");
     new BFLogViewDlg(this, arr);
 }
 
@@ -600,7 +600,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 }
 
-bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
+bool BFMainFrame::QuestionYesNo (const wxString& strQuestion)
 {
     BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNO, strQuestion, _("Question"));
 
@@ -610,7 +610,7 @@ bool BFMainFrame::QuestionYesNo (const wxChar* strQuestion)
     return false;
 }
 
-int BFMainFrame::QuestionYesNoCancel (const wxChar* strQuestion)
+int BFMainFrame::QuestionYesNoCancel (const wxString& strQuestion)
 {
     BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, strQuestion, _("Question"));
 

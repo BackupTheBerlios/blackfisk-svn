@@ -88,7 +88,7 @@ class BFApp : public wxApp
 
         /** prepend a string on each element of a string array
             and return the reference of the array */
-        static wxArrayString& PrependString (wxArrayString& rStrings, const wxChar* strToPrepend);
+        static wxArrayString& PrependString (wxArrayString& rStrings, const wxString& strToPrepend);
         /** search for community on all strings and return the community
             example:
             string1 = "ABCDEFG" and string2 = "ABCwdFG
@@ -100,9 +100,9 @@ class BFApp : public wxApp
         ///
         wxString GetCurrentProjectName ();
         ///
-        bool OpenProject (const wxChar* filename);
+        bool OpenProject (const wxString& strFilename);
         ///
-        bool SaveProject (const wxChar* filename);
+        bool SaveProject (const wxString& strFilename);
         /// read the global settings from the settings file
         static bool ReadSettings ();
         /// save the global settings to the settings file

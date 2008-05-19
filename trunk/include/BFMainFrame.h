@@ -154,9 +154,9 @@ class BFMainFrame : public wxFrame
         ProgressWithMessage* StartProgress ();*/
 
         /// displays a modal message-box, ask a YES-NO-question and return the answer as bool
-        bool QuestionYesNo (const wxChar* strQuestion);
+        bool QuestionYesNo (const wxString& strQuestion);
         /// displays a modal message-box, ask a YES-NO-CANCEL-question and return the answer as button ID
-        int QuestionYesNoCancel (const wxChar* strQuestion);
+        int QuestionYesNoCancel (const wxString& strQuestion);
 
         ///
         void OpenProjectSettings ();

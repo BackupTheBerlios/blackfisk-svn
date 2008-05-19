@@ -26,8 +26,8 @@
 #include <wx/wx.h>
 #include <vector>
 
-#define BFTASK_PLACEHOLDER_DATE   _T("<date>")
-#define BFTASK_PLACEHOLDER_TIME   _T("<time>")
+#define BFTASK_PLACEHOLDER_DATE   "<date>"
+#define BFTASK_PLACEHOLDER_TIME   "<time>"
 
 ///
 typedef wxUint32 BFoid;

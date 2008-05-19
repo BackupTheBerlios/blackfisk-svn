@@ -109,11 +109,8 @@ const wxString& BFSettings::GetLastProject ()
     return strLastProject_;
 }
 
-void BFSettings::SetLastProject (const wxChar* strFilename)
+void BFSettings::SetLastProject (const wxString& strFilename)
 {
-    if (strFilename == NULL)
-        return;
-
     strLastProject_ = strFilename;
 }
 

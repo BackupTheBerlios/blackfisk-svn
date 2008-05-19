@@ -187,13 +187,13 @@ bool ProgressWithMessage::IncrementActualWithMessage (const wxString& strMessage
 }
 
 
-const wxChar* ProgressWithMessage::GetMessage ()
+const wxString& ProgressWithMessage::GetMessage ()
 {
     return strMessage_;
 }
 
 
-const wxChar* ProgressWithMessage::GetLabel ()
+const wxString& ProgressWithMessage::GetLabel ()
 {
     return strLabel_;
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="BF workspace">
-		<Project filename="blackfisk.cbp" />
-		<Project filename="..\..\wxCron\trunk\wxCron.cbp" active="1" />
-		<Project filename="C:\wxWidgets\samples\controls\controls.cbp" />
+		<Project filename="blackfisk.cbp" active="1" />
+		<Project filename="..\..\wxCron\trunk\wxCron.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

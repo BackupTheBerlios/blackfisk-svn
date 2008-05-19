@@ -97,11 +97,8 @@ const wxString& BFProjectSettings::GetBackupLogLocation ()
     return strBackupLogLocation_;
 }
 
-void BFProjectSettings::SetBackupLogLocation (const wxChar* strFile)
+void BFProjectSettings::SetBackupLogLocation (const wxString& strFile)
 {
-    if (strFile == NULL)
-        return;
-
     strBackupLogLocation_ = strFile;
 }
 

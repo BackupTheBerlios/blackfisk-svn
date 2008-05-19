@@ -83,7 +83,7 @@ void BFLogViewDlg::Init ()
                                            wxDefaultSize,
                                            wxTE_MULTILINE | wxTE_READONLY);
         wxFont font(pCtrl->GetFont());
-        font.SetFaceName(_T("Courier New"));
+        font.SetFaceName("Courier New");
         font.SetFamily(wxFONTFAMILY_MODERN);
         font.SetPointSize(8);
         pCtrl->SetFont(font);
@@ -93,7 +93,7 @@ void BFLogViewDlg::Init ()
              !fileLog.Eof();
              strLine = fileLog.GetNextLine())
         {
-            (*pCtrl) << strLine << _T("\n");
+            (*pCtrl) << strLine << "\n";
         }
 
         // add as a tab

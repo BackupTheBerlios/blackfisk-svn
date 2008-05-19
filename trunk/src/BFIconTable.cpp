@@ -56,19 +56,19 @@ void BFIconTable::Init ()
 {
     // filesystem icons
     imgFilesystem_.RemoveAll();
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo16.png")), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "logo16.png"), wxBITMAP_TYPE_PNG));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_HARDDISK));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_FLOPPY));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_CDROM));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_REMOVABLE));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_closed.png")), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_open.png")), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_closed.png")), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("folder_virtual_open.png")), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_dc.png")),   wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_fc.png")),   wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_ar.png")),  wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("task_sy.png")),  wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_closed.png"), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_open.png"), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_virtual_closed.png"), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_virtual_open.png"), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_dc.png"),   wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_fc.png"),   wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_ar.png"),  wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_sy.png"),  wxBITMAP_TYPE_PNG));
 
     // button icons
     imgButtons_.RemoveAll();

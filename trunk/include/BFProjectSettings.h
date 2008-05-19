@@ -78,7 +78,7 @@ class BFProjectSettings
         ///
         const wxString& GetBackupLogLocation ();
         ///
-        void SetBackupLogLocation (const wxChar* strFile);
+        void SetBackupLogLocation (const wxString& strFile);
 
         ///
         bool Serialize (jbSerialize& rA);

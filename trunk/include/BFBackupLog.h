@@ -69,8 +69,8 @@ class BFTaskLog
         ///
         void Message (BFMessageType type,
                       const wxDateTime& timestamp,
-                      const wxChar* strMessage,
-                      const wxChar* strLocation);
+                      const wxString& strMessage,
+                      const wxString& strLocation);
         ///
         bool Write ();
 

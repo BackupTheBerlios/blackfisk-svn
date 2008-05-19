@@ -44,7 +44,9 @@ class BFDestinationCtrl : public wxBoxSizer
 
     public:
         /// constructor
-        BFDestinationCtrl (wxWindow* pParent, const wxChar* strPath = wxEmptyString, bool bWithLabel = true);
+        BFDestinationCtrl (wxWindow* pParent,
+                           const wxString& strPath = wxEmptyString,
+                           bool bWithLabel = true);
 
         /// virtual destructor
         virtual ~BFDestinationCtrl ();

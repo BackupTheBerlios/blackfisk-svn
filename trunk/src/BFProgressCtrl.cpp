@@ -81,7 +81,7 @@
     if (pP == NULL || pTextB_ == NULL)
         return;
 
-    wxString strLabel = wxString::Format(_T("%d %%"), pP->GetProgress());
+    wxString strLabel = wxString::Format("%d %%", pP->GetProgress());
 
     if (strLabel != pTextB_->GetLabel())
     {
@@ -91,13 +91,13 @@
 }
 
 
-void BFProgressCtrlBase::SetTextA (const wxChar* text)
+void BFProgressCtrlBase::SetTextA (const wxString& strText)
 {
-    if (text == NULL || pTextA_ == NULL)
-        return;
-
-    pTextA_->SetLabel(text);
-    Layout();
+    if (pTextA_)
+    {
+        pTextA_->SetLabel(strText);
+        Layout();
+    }
 }
 
 /*static*/ wxString& BFProgressCtrlBase::ShortenPath(wxString& strPath, size_t len)
@@ -114,8 +114,8 @@ void BFProgressCtrlBase::SetTextA (const wxChar* text)
     wxString strLeft    = strPath.Left(strPath.Len()/2);
     wxString strRight   = strPath.Right(strPath.Len()-strLeft.Len());
 
-    strLeft.Replace(strLeft.Right(iCutLeft), _T(".."));
-    strRight.Replace(strRight.Left(iCutRight), _T("."));
+    strLeft.Replace(strLeft.Right(iCutLeft), "..");
+    strRight.Replace(strRight.Left(iCutRight), ".");
 
     strPath = strLeft + strRight;
 
@@ -181,7 +181,7 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
     wxBoxSizer*         pSubSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // controls
-    pTextA_ = new wxStaticText(this, -1, wxEmptyString);//, _T("<label>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    pTextA_ = new wxStaticText(this, -1, wxEmptyString);
     wxFont font = pTextA_->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pTextA_->SetFont(font);
@@ -231,7 +231,7 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
         return;
 
     // set the progress in %
-    pTextC_->SetLabel ( wxString::Format(_T("%d %%"), pPM->GetProgress()) );
+    pTextC_->SetLabel ( wxString::Format("%d %%", pPM->GetProgress()) );
 
     // check the width of the message
     wxString strMsg = pPM->GetMessage();
@@ -257,9 +257,6 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
         widthText = dc.GetTextExtent(strMsg).GetWidth();
     }
 
-    pTextB_->SetLabel ( wxString::Format(_T("%s\n%s"), pPM->GetLabel(), strMsg) );
-
-    // relayout
-    //Layout();
+    pTextB_->SetLabel ( wxString::Format("%s\n%s", pPM->GetLabel(), strMsg) );
 }
 

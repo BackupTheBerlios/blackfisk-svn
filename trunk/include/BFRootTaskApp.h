@@ -87,7 +87,7 @@ class BFRootTaskApp
         long GetTaskCount ();
 
         ///
-        const wxChar* GetProjectName();
+        const wxString& GetProjectName();
         ///
         const wxString& GetCurrentFilename ();
         ///

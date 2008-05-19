@@ -603,7 +603,7 @@ void BFBackupTree::OnBeginDrag (wxTreeEvent& event)
         oidCurrentDrag_ = pTask->GetOID();
 
         // just set dummy data
-        my_data.AddFile(_T("<oid>"));
+        my_data.AddFile("<oid>");
     }
 
     // start dragging
@@ -621,7 +621,7 @@ void BFBackupTree::OnProjectSettings (wxCommandEvent& rEvent)
 void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
 {
     // create dir dialog
-    wxDirDialog dlg(this, _T("choose a destination directory"));
+    wxDirDialog dlg(this, _("Choose a destination directory"));
 
     // let the user choose a dir
     if (dlg.ShowModal() != wxID_OK)
@@ -828,7 +828,7 @@ wxTreeItemId BFBackupTree::AddVolume(wxTreeItemId idParent,
     switch(vol.GetKind())
     {
         case wxFS_VOL_FLOPPY:
-            if ( strVol.StartsWith(_T("A:")) || strVol.StartsWith(_T("B:")) )
+            if ( strVol.StartsWith("A:") || strVol.StartsWith("B:") )
                 SetItemImage(idReturn, BFIconTable::volume_floppy, wxTreeItemIcon_Normal);
             else
                 SetItemImage(idReturn, BFIconTable::volume_removable, wxTreeItemIcon_Normal);
@@ -905,7 +905,7 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
             break;
 
         default:
-            BFSystem::Error((_T("unknown ID")), _T("BFBackupTree::OnModifyTaskType()"));
+            BFSystem::Error("unknown ID", "BFBackupTree::OnModifyTaskType()");
             return;
             break;
     };  // switch
@@ -1013,7 +1013,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
             break;
 
         default:
-            BFSystem::Error((_T("copy ERROR")), _T("BFBackupTree::OnBackupCopy()"));
+            BFSystem::Error("copy ERROR", "BFBackupTree::OnBackupCopy()");
             return;
             break;
     };  // switch
@@ -1337,7 +1337,7 @@ bool BFBackupTree::BFBackupDropTarget::OnDropFiles(wxCoord x, wxCoord y, const w
     if (pBackupTree_ == NULL)
         return false;
 
-    if (filenames[0] == _T("<oid>"))
+    if (filenames[0] == "<oid>")
         return pBackupTree_->OnDropTask(x, y);
     else
         return pBackupTree_->OnDropFiles(x, y, filenames);
