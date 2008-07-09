@@ -1,4 +1,4 @@
-0.0.1
+ 0.0.1
 ~~~~~
 - hanlding IDs with BFMasterID ?
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
