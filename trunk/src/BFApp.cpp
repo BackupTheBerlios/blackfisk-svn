@@ -38,6 +38,7 @@
 #include "Progress.h"
 #include "BFSettings.h"
 #include "BFCmdLine.h"
+#include "BFwxLog.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -125,6 +126,9 @@ BFApp::BFApp ()
 
 bool BFApp::OnInit()
 {
+    // log target
+    wxLog::SetActiveTarget(new BFwxLog);
+
     wxString strToOpen;
 
     // parse command line

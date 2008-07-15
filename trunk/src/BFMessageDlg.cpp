@@ -69,7 +69,8 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
 
     // check message width
     wxString strMyMsg = strMsg;
-    BFMainFrame::Instance()->Wrap(strMyMsg, wxGetDisplaySize().GetWidth() / 10 * 5);
+    if (BFMainFrame::Instance() != NULL)
+        BFMainFrame::Instance()->Wrap(strMyMsg, wxGetDisplaySize().GetWidth() / 10 * 5);
 
     // message
     wxStaticText* pSText = new wxStaticText(this,
@@ -108,6 +109,7 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     pSizerV->Add(pSizerHb, wxSizerFlags(0).Center().Border());
     SetSizerAndFit(pSizerV);
     Center();
+    ShowModal();
 }
 
 //

@@ -49,7 +49,7 @@ BFBitmapButton::BFBitmapButton (wxWindow* pParent,
 {
     // string size
     wxWindowDC* pWindowDC = new wxWindowDC(this);
-    wxSize sizeText = pWindowDC->GetTextExtent(strLabel);
+    wxSize sizeText = pWindowDC->GetTextExtent(strLabel + ' ');
 
     // load bitmap
     sizeText.SetWidth(sizeText.GetWidth() + rBitmap.GetWidth());

@@ -31,10 +31,6 @@ class BFwxLog : public wxLog
     private:
         /// private members
 
-    protected:
-        ///
-        virtual void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp);
-
     public:
         /// constructor
         BFwxLog ();
@@ -42,6 +38,9 @@ class BFwxLog : public wxLog
         /// virtual destructor
         virtual ~BFwxLog ();
 
+        //        virtual void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp);
+        ///
+        virtual void DoLogString (const wxString& msg, time_t timestamp);
 };    // class BFwxLog
 
 #endif    // BFWXLOG_H

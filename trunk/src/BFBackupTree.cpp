@@ -46,6 +46,10 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_TREE_ITEM_RIGHT_CLICK   (wxID_ANY,                              BFBackupTree::OnItemMenu)
     EVT_MENU                    (BFBACKUPCTRL_ID_ADDDESTINATION,        BFBackupTree::OnAddDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSETTINGS,       BFBackupTree::OnProjectSettings)
+    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTPLANNER,        BFBackupTree::OnProjectPlanner)
+    EVT_MENU                    (BFBACKUPCTRL_ID_RUNBACKUP,             BFBackupTree::OnBackupRun)
+    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSAVE,           BFBackupTree::OnProjectSave)
+    EVT_MENU                    (BFBACKUPCTRL_ID_PROJECTSAVEAS,         BFBackupTree::OnProjectSaveAs)
     EVT_MENU                    (BFBACKUPCTRL_ID_CREATEDESTINATION,     BFBackupTree::OnCreateDestination)
     EVT_MENU                    (BFBACKUPCTRL_ID_TASKSETTINGS,          BFBackupTree::OnTaskSettings)
     EVT_MENU                    (BFBACKUPCTRL_ID_DELETETASK,            BFBackupTree::OnDeleteTask)
@@ -423,7 +427,13 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
             }
 
             menu.AppendSeparator();
-            menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS, _("Project settings"));
+            menu.Append(BFBACKUPCTRL_ID_RUNBACKUP,          _("Run Backup...") );
+            menu.AppendSeparator();
+            menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS,    _("Project Settings") );
+            menu.Append(BFBACKUPCTRL_ID_PROJECTPLANNER,     _("Project Planner") );
+            menu.AppendSeparator();
+            menu.Append(BFBACKUPCTRL_ID_PROJECTSAVE,        _("&Save Project") );
+            menu.Append(BFBACKUPCTRL_ID_PROJECTSAVEAS,      _("Save Project &as ...") );
         }
         else
         {
@@ -617,6 +627,28 @@ void BFBackupTree::OnProjectSettings (wxCommandEvent& rEvent)
     BFMainFrame::Instance()->OpenProjectSettings();
 }
 
+
+void BFBackupTree::OnProjectPlanner (wxCommandEvent& rEvent)
+{
+    BFMainFrame::Instance()->OpenProjectPlanner();
+}
+
+void BFBackupTree::OnBackupRun (wxCommandEvent& rEvent)
+{
+    BFMainFrame::Instance()->OnBackup(rEvent);
+}
+
+void BFBackupTree::OnProjectSave (wxCommandEvent& rEvent)
+{
+    rEvent.SetId(BF_ID_MAINFRAME_SAVEPRJ);
+    BFMainFrame::Instance()->OnProject(rEvent);
+}
+
+void BFBackupTree::OnProjectSaveAs (wxCommandEvent& rEvent)
+{
+    rEvent.SetId(BF_ID_MAINFRAME_SAVEPRJAS);
+    BFMainFrame::Instance()->OnProject(rEvent);
+}
 
 void BFBackupTree::OnAddDestination (wxCommandEvent& rEvent)
 {

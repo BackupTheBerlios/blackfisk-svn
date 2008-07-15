@@ -72,9 +72,16 @@ class BFSettings
         bool                bShowHiddenFiles_;
         /** time in days till the next check for a new blackfisk version
             It is 0 if there shouldn't be a check. */
-        wxUint32            lDaysTillNextCheck_;
+        wxInt32             lDaysTillNextCheck_;
         /** last check for a new blackfisk version */
         wxDateTime          dateLastVersionCheck_;
+
+        /** The Type of the scheduler.
+            0 means no scheduler is used by blackfisk.
+            1 means the in-build wxCron is used */
+        wxInt32             lScheduler_;
+        ///
+        wxString            strCrontab_;
 
         ///
         static BFSettings   sSettings_;
@@ -147,15 +154,23 @@ class BFSettings
         ///
         bool GetShowHiddenFiles ();
         ///
-        void SetDaysTillNextCheck (wxUint32 lDays);
+        void SetDaysTillNextCheck (wxInt32 lDays);
         ///
-        wxUint32 GetDaysTillNextCheck ();
+        wxInt32 GetDaysTillNextCheck ();
         ///
         void SetLastVersionCheck (wxDateTime date);
         ///
         wxDateTime GetLastVersionCheck ();
         /** Return true if a new version check could be done. */
         bool CheckForNewVersion ();
+        ///
+        wxInt32 GetScheduler ();
+        ///
+        void SetScheduler (wxInt32 lScheduler);
+        ///
+        const wxString& GetCrontab ();
+        ///
+        void SetCrontab (const wxString& strCrontab);
 
         ///
         bool Serialize (jbSerialize& rA);

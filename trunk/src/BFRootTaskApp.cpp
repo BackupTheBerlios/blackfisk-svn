@@ -24,6 +24,7 @@
 #include "BFRootTaskApp.h"
 
 #include <wx/wfstream.h>
+#include <wx/textfile.h>
 
 #include "BFTask.h"
 #include "BFRootTask.h"
@@ -37,7 +38,6 @@
 #include "BFBackupTree.h"
 #include "blackfisk.h"
 #include "BFIconTable.h"
-#include "BFProcessMsgSubject.h"
 #include "BFTaskListCtrl.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
@@ -156,7 +156,7 @@ bool BFRootTaskApp::Run_Start ()
     /* deactivate the default wxLog target
        and set a new one that handle messages
        with BFSystem */
-    wxLog::SetActiveTarget(new BFwxLog);
+    //XXX wxLog::SetActiveTarget(new BFwxLog);
 
     // init
     bStopProject_   = false;
@@ -226,7 +226,7 @@ bool BFRootTaskApp::Run_Finished ()
     pProgressTotal_ = NULL;
 
     // reset the default wxLog target
-    delete wxLog::SetActiveTarget(NULL);
+    // XXX delete wxLog::SetActiveTarget(NULL);
 
     wxGetApp().Sound_BackupFinished();
 
@@ -409,10 +409,6 @@ void BFRootTaskApp::ModifyDestination (const wxString& strOldDestination,
 
 bool BFRootTaskApp::PreBackupCheck ()
 {
-    /* caption
-    if (pMsg)
-        pMsg->SetCaption(_("please wait..."));*/
-
     // get the tasks
     wxString str;
     BFTaskVector vec;
@@ -427,12 +423,6 @@ bool BFRootTaskApp::PreBackupCheck ()
         str = (*it)->GetDestination();
         str = str.BeforeFirst(wxFILE_SEP_PATH);
 
-        /*
-        if (pMsg)
-            pMsg->SetMsg(wxString::Format(_("current checking Task is %s\ncheck volume: %s"),
-                                          (*it)->GetName(),
-                                          str));*/
-
         if ( wxDir::Exists( str ) == false )
         {
             BFSystem::Error(wxString::Format(_("The destination %s doesn't exsits!"), str));
@@ -441,12 +431,6 @@ bool BFRootTaskApp::PreBackupCheck ()
 
         // * check source *
         str = (*it)->GetSource();
-
-        /*
-        if (pMsg)
-            pMsg->SetMsg(wxString::Format(_("current checking Task is %s\nvolume OK\ncheck source: %s"),
-                                          (*it)->GetName(),
-                                          str));*/
 
         if ((*it)->GetType() == TaskFILECOPY)
         {
@@ -469,4 +453,66 @@ bool BFRootTaskApp::PreBackupCheck ()
     }
 
     return true;
+}
+
+wxString BFRootTaskApp::GetCrontabline ()
+{
+    // the crontab-file
+    wxTextFile file(BF_CRONTAB);
+
+    // open it
+    if ( file.Open() == false )
+        return wxEmptyString;
+
+    // iterate over the lines
+    for (wxString strLine = file.GetFirstLine();
+         !(file.Eof());
+         strLine = file.GetNextLine())
+    {
+        if ( strLine.StartsWith("#") )
+            continue;
+
+        if ( strLine.Find(strCurrentFilename_) != wxNOT_FOUND )
+            return strLine;
+    }
+
+    return wxEmptyString;
+}
+
+/*static*/ wxArrayString& BFRootTaskApp::ParseCrontabline (const wxString& strLine, wxArrayString& arr)
+{
+    wxString        str(strLine);
+    wxString        strCurrent;
+    size_t          idx;
+
+    arr.Clear();
+
+    // extract the first five parameters
+    while ( !(str.IsEmpty()) && arr.GetCount() < 5 )
+    {
+        // find white spaces at the beginning
+        idx = 0;
+        while (str[idx] == ' ' || idx == str.Length())
+            ++idx;
+
+        // erase white spaces at the beginning
+        str = str.Mid(idx);
+
+        //
+        strCurrent = str.BeforeFirst(' ');
+        str = str.Mid(strCurrent.Length());
+
+        //
+        arr.Add(strCurrent);
+    }
+
+    // remember the unparsed rest
+    if ( !(str.IsEmpty()) )
+        arr.Add(str);
+
+    // enough parameters
+    if (arr.GetCount() < 6)
+        arr.Clear();
+
+    return arr;
 }

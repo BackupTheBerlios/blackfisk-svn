@@ -46,35 +46,37 @@
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
 #include "ids.h"
-#include "BFProcessMsgSubject.h"
 #include "BFIsWorkingCtrl.h"
 #include "BFHelpCtrl.h"
 #include "BFMessageDlg.h"
 #include "BFBitmapButton.h"
+#include "BFProjectPlannerDlg.h"
+
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
-    EVT_MENU    (BF_ID_MAINFRAME_OPENPRJ,        BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJ,        BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJAS,      BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_CLOSEPRJ,       BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_NEWPRJ,         BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_PRJSETTINGS,    BFMainFrame::OnProject)
-    EVT_MENU    (BF_ID_MAINFRAME_QUIT,               BFMainFrame::OnQuit)
-    EVT_MENU    (BF_ID_MAINFRAME_ABOUT,              BFMainFrame::OnAbout)
-    EVT_MENU    (BF_ID_MAINFRAME_SHOWLOG,         BFMainFrame::OnDisplayLog)
-    EVT_MENU    (BF_ID_MAINFRAME_SHOWLICENSE,        BFMainFrame::OnShowLicense)
-    EVT_MENU    (BF_ID_MAINFRAME_SHOWHISTORY,        BFMainFrame::OnShowHistory)
-    EVT_MENU    (BF_ID_MAINFRAME_OPENWEBSITE,        BFMainFrame::OnOpenWebSite)
-    EVT_BUTTON  (BF_ID_MAINFRAME_OPENWEBSITE,        BFMainFrame::OnOpenWebSite)
-    EVT_MENU    (BF_ID_MAINFRAME_SUBMITBUG,          BFMainFrame::OnSubmitBug)
-    EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,          BFMainFrame::OnSubmitBug)
-    EVT_MENU    (BF_ID_MAINFRAME_FEAUTERREQUEST,     BFMainFrame::OnFeauterRequest)
-    EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,     BFMainFrame::OnFeauterRequest)
-    EVT_MENU    (BF_ID_MAINFRAME_BACKUP,             BFMainFrame::OnBackup)
-    EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,           BFMainFrame::OnSettings)
+    EVT_MENU    (BF_ID_MAINFRAME_OPENPRJ,        	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJ,        	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_SAVEPRJAS,      	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_CLOSEPRJ,       	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_NEWPRJ,         	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_PRJSETTINGS,    	BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_PRJPLANNER,        BFMainFrame::OnProject)
+    EVT_MENU    (BF_ID_MAINFRAME_QUIT,              BFMainFrame::OnQuit)
+    EVT_MENU    (BF_ID_MAINFRAME_ABOUT,             BFMainFrame::OnAbout)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWLOG,           BFMainFrame::OnDisplayLog)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWLICENSE,       BFMainFrame::OnShowLicense)
+    EVT_MENU    (BF_ID_MAINFRAME_SHOWHISTORY,       BFMainFrame::OnShowHistory)
+    EVT_MENU    (BF_ID_MAINFRAME_OPENWEBSITE,       BFMainFrame::OnOpenWebSite)
+    EVT_BUTTON  (BF_ID_MAINFRAME_OPENWEBSITE,       BFMainFrame::OnOpenWebSite)
+    EVT_MENU    (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
+    EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
+    EVT_MENU    (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
+    EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
+    EVT_MENU    (BF_ID_MAINFRAME_BACKUP,            BFMainFrame::OnBackup)
+    EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,          BFMainFrame::OnSettings)
 #ifdef _DEBUG
-    EVT_MENU    (BF_ID_MAINFRAME_TEST,               BFMainFrame::OnTest)
+    EVT_MENU    (BF_ID_MAINFRAME_TEST,              BFMainFrame::OnTest)
 #endif
 
     EVT_COMMAND (BF_ID_MAINFRAME, BF_EVENT_THREAD_END, BFMainFrame::OnThreadEnd)
@@ -108,24 +110,26 @@ END_EVENT_TABLE()
 
     // ** menu BLACKFISK **
     wxMenu* menuBlackfisk = new wxMenu;
-    menuBlackfisk->Append( BF_ID_MAINFRAME_SETTINGS,     _("Gobal &Settings") );
-    menuBlackfisk->Append( BF_ID_MAINFRAME_SHOWLOG,   _("show &log file") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_SETTINGS,    _("Gobal &Settings") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_SHOWLOG,     _("show &log file") );
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( BF_ID_MAINFRAME_QUIT,         _("E&xit") );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_QUIT,        _("E&xit") );
 #ifdef _DEBUG
     menuBlackfisk->AppendSeparator();
-    menuBlackfisk->Append( BF_ID_MAINFRAME_TEST,         "&Test" );
+    menuBlackfisk->Append( BF_ID_MAINFRAME_TEST,        "&Test" );
 #endif
 
     // ** menu PROJECT **
     menuProject_ = new wxMenu;
-    menuProject_->Append( BF_ID_MAINFRAME_PRJSETTINGS,    _("&Project Settings") );
-    menuProject_->Append( BF_ID_MAINFRAME_BACKUP,             _("&Run Backup...") );
+    menuProject_->Append( BF_ID_MAINFRAME_BACKUP,       _("&Run Backup...") );
     menuProject_->AppendSeparator();
-    menuProject_->Append( BF_ID_MAINFRAME_NEWPRJ,         _("&New Project") );
-    menuProject_->Append( BF_ID_MAINFRAME_OPENPRJ,        _("&Open Project") );
-    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJ,        _("&Save Project") );
-    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJAS,      _("Save Project &as ...") );
+    menuProject_->Append( BF_ID_MAINFRAME_PRJSETTINGS,  _("Project Se&ttings") );
+    menuProject_->Append( BF_ID_MAINFRAME_PRJPLANNER,   _("Project P&lanner") );
+    menuProject_->AppendSeparator();
+    menuProject_->Append( BF_ID_MAINFRAME_NEWPRJ,       _("&New Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_OPENPRJ,      _("&Open Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJ,      _("&Save Project") );
+    menuProject_->Append( BF_ID_MAINFRAME_SAVEPRJAS,    _("Save Project &as ...") );
 
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
@@ -387,6 +391,10 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
         case BF_ID_MAINFRAME_PRJSETTINGS:
             OpenProjectSettings();
             break;
+
+        case BF_ID_MAINFRAME_PRJPLANNER:
+            OpenProjectPlanner();
+            break;
     }
 
     RefreshTitle();
@@ -529,37 +537,13 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
     Test();
 }
-
+#include <wx/textfile.h>
+#include "BFwxLog.h"
 void BFMainFrame::Test ()
 {
-    //wxGetApp().Test();
-    BFMessageDlg* pDlg = new BFMessageDlg(BF_MSGDLG_INFO, "message with very long string and a lot fo nummbers 13 33 293 ZZZaskdskwwwwwwwkaskskskskskwZZZ XXXjendndkeijaldskjfnkcnkXXX WWWlaöskdjoweirjknadmcnskdrjeoiasjkdnvkcmnWWW AAAaksejroijsAAA");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_WARNING, "message");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_ERROR, "message with very long string and a lot fo nummbers 13 33 293 ZZZaskdskwwwwwwwkaskskskskskwZZZ XXXjendndkeijaldskjfnkcnkXXX WWWlaöskdjoweirjknadmcnskdrjeoiasjkdnvkcmnWWW AAAaksejroijsAAA");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_FATAL, "message");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_QUESTION_YESNO, "message");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_QUESTION_YESNOCANCEL, "message");
-    pDlg->ShowModal();
-    delete pDlg;
-
-    pDlg = new BFMessageDlg(BF_MSGDLG_BACKUP_QUESTION, "message");
-    pDlg->ShowModal();
-    delete pDlg;
+    wxArrayString arr;
+    BFSystem::Info(wxJoin(BFRootTaskApp::ParseCrontabline(BFRootTaskApp::Instance().GetCrontabline(), arr), '\n'));
+    return;
 }
 #endif
 
@@ -622,11 +606,14 @@ void BFMainFrame::OpenProjectSettings ()
     new BFProjectSettingsDlg(this);
 }
 
+void BFMainFrame::OpenProjectPlanner ()
+{
+    new BFProjectPlannerDlg(this);
+}
+
+
 wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 {
-    // XXX
-    BFSystem::Log(str);
-
     wxWindowDC dc(this);
     wxSize sizeMsg = dc.GetTextExtent(str);
 

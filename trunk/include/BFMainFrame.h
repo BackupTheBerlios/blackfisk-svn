@@ -50,8 +50,9 @@ class BFDirCtrl;
 #define BF_ID_MAINFRAME_OPENWEBSITE     15 + BF_MAINFRAME_ID_HIGHEST
 #define BF_ID_MAINFRAME_SUBMITBUG       16 + BF_MAINFRAME_ID_HIGHEST
 #define BF_ID_MAINFRAME_FEAUTERREQUEST  17 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_PRJPLANNER      18 + BF_MAINFRAME_ID_HIGHEST
 #ifdef _DEBUG
-    #define BF_ID_MAINFRAME_TEST        18 + BF_MAINFRAME_ID_HIGHEST
+    #define BF_ID_MAINFRAME_TEST        19 + BF_MAINFRAME_ID_HIGHEST
 #endif
 
 ///
@@ -160,6 +161,8 @@ class BFMainFrame : public wxFrame
 
         ///
         void OpenProjectSettings ();
+        ///
+        void OpenProjectPlanner ();
 
         ///
         void RefreshTitle ();

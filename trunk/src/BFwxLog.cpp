@@ -35,8 +35,23 @@ BFwxLog::BFwxLog ()
 {
 }
 
+/*virtual*/ void BFwxLog::DoLogString (const wxString& msg,
+                                       time_t timestamp)
+{
+    if (msg.StartsWith(_("Fatal error: ")))
+        BFSystem::Fatal(msg);
+    else if (msg.StartsWith(_("Error: ")))
+        BFSystem::Error(msg);
+    else if (msg.StartsWith(_("Warning: ")))
+        BFSystem::Warning(msg);
+    else if (msg.StartsWith("Trace: ") || msg.StartsWith("Debug: "))
+        BFSystem::Debug(msg);
+    else
+        BFSystem::Info(msg);
 
-/*virtual*/ void BFwxLog::DoLog(wxLogLevel level,
+}
+
+/*virtual* void BFwxLog::DoLog(wxLogLevel level,
                                 const wxChar *msg,
                                 time_t timestamp)
 {
@@ -64,4 +79,4 @@ BFwxLog::BFwxLog ()
             BFSystem::Debug(msg);
             break;
     };
-}
+}*/

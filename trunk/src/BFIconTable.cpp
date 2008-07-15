@@ -43,8 +43,7 @@ BFIconTable::BFIconTable ()
              imgButtons_(16, 16),
              imgMessage_(64, 64)
 {
-    wxInitAllImageHandlers();
-    //wxImage::AddHandler(new wxPNGHandler());
+    wxImage::AddHandler(new wxPNGHandler());
     Init();
 }
 

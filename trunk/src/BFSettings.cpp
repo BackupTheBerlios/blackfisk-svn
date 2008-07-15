@@ -55,7 +55,9 @@ BFSettings::BFSettings ()
             iSashPositionInMainWindow_(-1),
             bShowHiddenFiles_(false),
             lDaysTillNextCheck_(0),
-            dateLastVersionCheck_(wxDateTime::Now().SetYear(2000))
+            dateLastVersionCheck_(wxDateTime::Now().SetYear(2000)),
+            lScheduler_(1),
+            strCrontab_(BF_CRONTAB)
 {
 }
 
@@ -204,13 +206,13 @@ bool BFSettings::GetShowHiddenFiles ()
     return bShowHiddenFiles_;
 }
 
-void BFSettings::SetDaysTillNextCheck (wxUint32 lDays)
+void BFSettings::SetDaysTillNextCheck (wxInt32 lDays)
 {
     if (lDays >= 0)
         lDaysTillNextCheck_ = lDays;
 }
 
-wxUint32 BFSettings::GetDaysTillNextCheck ()
+wxInt32 BFSettings::GetDaysTillNextCheck ()
 {
     return lDaysTillNextCheck_;
 }
@@ -233,6 +235,30 @@ bool BFSettings::CheckForNewVersion ()
 
     return true;
 }
+
+wxInt32 BFSettings::GetScheduler ()
+{
+    return lScheduler_;
+}
+
+
+void BFSettings::SetScheduler (wxInt32 lScheduler)
+{
+    if (lScheduler >= 0 || lScheduler <= 1)
+        lScheduler_ = lScheduler;
+}
+
+
+const wxString& BFSettings::GetCrontab ()
+{
+    return strCrontab_;
+}
+
+void BFSettings::SetCrontab (const wxString& strCrontab)
+{
+    strCrontab_ = strCrontab;
+}
+
 
 bool BFSettings::Serialize (jbSerialize& rA)
 {
@@ -260,6 +286,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << bShowHiddenFiles_;
         rA << lDaysTillNextCheck_;
         rA << dateLastVersionCheck_;
+        rA << lScheduler_;
+        rA << strCrontab_;
     }
     else
     // ** serialize FROM file **
@@ -304,10 +332,21 @@ bool BFSettings::Serialize (jbSerialize& rA)
             rA >> lDaysTillNextCheck_;
             rA >> dateLastVersionCheck_;
         }
+
+        // options added in version 1030
+        if (rA.GetVersion() < 1030)
+        {
+            lScheduler_ = 1;
+            strCrontab_ = BF_CRONTAB;
+        }
+        else
+        {
+            rA >> lScheduler_;
+            rA >> strCrontab_;
+        }
     }
 
     rA.LeaveObject();
 
     return true;
 }
-

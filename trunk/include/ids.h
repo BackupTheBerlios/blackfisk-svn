@@ -34,5 +34,7 @@
 #define BF_EXCLUDECTRL_ID_HIGHEST                   3000 + wxID_HIGHEST
 #define BF_SETTINGSDLG_ID_HIGHEST                   3500 + wxID_HIGHEST
 #define BF_BACKUPQUESTIONDLG_ID_HIGHEST             4000 + wxID_HIGHEST
+#define BF_PROJECTPLANNER_ID_HIGHEST                4500 + wxID_HIGHEST
+#define BF_CRONCTRL_ID_HIGHEST                      5000 + wxID_HIGHEST
 
 #endif  // IDS_H

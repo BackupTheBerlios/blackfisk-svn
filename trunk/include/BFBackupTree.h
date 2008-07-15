@@ -53,6 +53,10 @@
 #define BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR      13 + BF_BACKUPCTRL_ID_HIGHEST
 #define BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR      14 + BF_BACKUPCTRL_ID_HIGHEST
 #define BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR   15 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_PROJECTPLANNER          16 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_RUNBACKUP               17 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_PROJECTSAVE             18 + BF_BACKUPCTRL_ID_HIGHEST
+#define BFBACKUPCTRL_ID_PROJECTSAVEAS           19 + BF_BACKUPCTRL_ID_HIGHEST
 
 typedef std::pair<wxString, wxTreeItemId>   PairVolItemId;
 typedef std::vector<PairVolItemId>          VecPairVolItemId;
@@ -226,6 +230,14 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         void OnItemMenu (wxTreeEvent& rEvent);
         ///
         void OnProjectSettings (wxCommandEvent& rEvent);
+        ///
+        void OnProjectPlanner (wxCommandEvent& rEvent);
+        ///
+        void OnBackupRun (wxCommandEvent& rEvent);
+        ///
+        void OnProjectSave (wxCommandEvent& rEvent);
+        ///
+        void OnProjectSaveAs (wxCommandEvent& rEvent);
         ///
         void OnAddDestination (wxCommandEvent& rEvent);
         ///

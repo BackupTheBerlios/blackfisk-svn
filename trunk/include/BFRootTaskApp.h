@@ -52,11 +52,11 @@ class BFRootTaskApp
         /// ctor
         BFRootTaskApp (BFRootTask* pRootTask);
 
-        /** array of log files from the last backup process
-            start with the project log */
+        /** Array of log files from the last backup process
+            start with the project log. */
         wxArrayString       arrLastLogFiles_;
-        /** the complete filename of the current open project
-            if nothing is open it is empty */
+        /** The complete filename of the current open project
+            if nothing is open it is empty. */
         wxString            strCurrentFilename_;
         /// current running task
         BFTask*             pRunningTask_;
@@ -162,6 +162,18 @@ class BFRootTaskApp
 
         /// check if all sources and backup-volumeas are there
         bool PreBackupCheck ();
+
+        /** Searches for the crontab-line related to the currently open
+            project and return the first match for it. */
+        wxString GetCrontabline ();
+
+        /** Separate each part of a crontab-line and store it as an
+            element of 'arr'. The string-array will cleared at the beginning
+            of this methode!
+            It means that the strings for minute, hour, day-of-month, month,
+            day-of-week and the command are extracted.
+            If there are not enough (<5) parameters in the line, 'arr' is empty. */
+        static wxArrayString& ParseCrontabline (const wxString& strLine, wxArrayString& arr);
 };
 
 #endif    // BFROOTTASKAPP_H
