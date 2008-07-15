@@ -1,4 +1,9 @@
- 0.0.1
+- add publictimestamp.org to credits
+- add 7zip to credits
+- add IcoFX to credits
+- check for a second instance of blackfisk
+
+0.0.1
 ~~~~~
 - hanlding IDs with BFMasterID ?
 - BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
@@ -34,3 +39,6 @@
 
 + look on "abakt" for more ideas
 + beautyize the dialogs
++ TaskPlaner: schtasks
++ TaskScheduler: <http://msdn.microsoft.com/en-us/library/aa446861(VS.85).aspx>
++ installer: <http://nsis.sourceforge.net/Main_Page>
