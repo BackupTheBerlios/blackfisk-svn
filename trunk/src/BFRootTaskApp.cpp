@@ -39,6 +39,7 @@
 #include "blackfisk.h"
 #include "BFIconTable.h"
 #include "BFTaskListCtrl.h"
+#include "BFSettings.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
 
@@ -458,7 +459,7 @@ bool BFRootTaskApp::PreBackupCheck ()
 wxString BFRootTaskApp::GetCrontabline ()
 {
     // the crontab-file
-    wxTextFile file(BF_CRONTAB);
+    wxTextFile file(BFSettings::Instance().GetCrontab());
 
     // open it
     if ( file.Open() == false )
@@ -513,6 +514,13 @@ wxString BFRootTaskApp::GetCrontabline ()
     // enough parameters
     if (arr.GetCount() < 6)
         arr.Clear();
+
+    // default?
+    if (arr.IsEmpty())
+        ParseCrontabline(wxString::Format(BF_CRONTABLINE_DEFAULT,
+                                          wxTheApp->argv[0],
+                                          BFRootTaskApp::Instance().GetCurrentFilename()),
+                         arr);
 
     return arr;
 }

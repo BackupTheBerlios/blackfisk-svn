@@ -27,6 +27,8 @@
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
 #include "BFRootTaskApp.h"
+#include "BFCore.h"
+#include "BFSettings.h"
 #include "ids.h"
 
 #define BFPROJECTPLANNERDLG_ID_BUTTONOK          1 + BF_PROJECTPLANNER_ID_HIGHEST
@@ -42,13 +44,33 @@ END_EVENT_TABLE()
 BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
                    : wxDialog (pParent,
                                wxID_ANY,
-                               "TEST")
+                               "TEST"),
+                     pCronCtrl_(NULL)
 {
     // title
     SetTitle(wxString::Format("Project Planner for %s", BFRootTaskApp::Instance().GetProjectName()));
 
-    // cron ctrl
-    pCronCtrl_ = new BFCronCtrl(this);
+    // get crontabline
+    wxArrayString arr;
+    BFRootTaskApp::ParseCrontabline(BFRootTaskApp::Instance().GetCrontabline(), arr);
+
+    wxStaticText* pStatic = NULL;
+
+    // check crontabline
+    if ( BFCronCtrl::IsCrontablineUsable(arr) )
+    {
+        // cron ctrl
+        pCronCtrl_ = new BFCronCtrl(this, arr);
+    }
+    else
+    {
+        wxString str = _("Error: The given crontab line is not editable for the project planer.\n" \
+                         "Maybe the crontab line was edited directly or by another application.\n" \
+                         "\nThis is the line:\n");
+        str = str + wxJoin(arr, ' ');
+
+        pStatic = new wxStaticText(this, wxID_ANY, str);
+    }
 
     // buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
@@ -65,7 +87,10 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-    pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
+    if (pCronCtrl_)
+        pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
+    else
+        pDlgSizer->Add(pStatic,          wxSizerFlags(0).DoubleBorder());
     pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center());
     SetSizerAndFit(pDlgSizer);
     ShowModal();
@@ -84,6 +109,15 @@ void BFProjectPlannerDlg::OnClose (wxCloseEvent& event)
 
 void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
+    if (pCronCtrl_)
+    {
+        wxString strOld = BFRootTaskApp::Instance().GetCrontabline();
+        wxString strNew = pCronCtrl_->GetCrontabline();
+
+        if (strOld != strNew)
+            BFCore::Instance().ReplaceLineInFile(BFSettings::Instance().GetCrontab(), strOld, strNew);
+    }
+
     Close();
 }
 

@@ -27,6 +27,8 @@
 #include <wx/zipstrm.h>
 #include <wx/tokenzr.h>
 #include <wx/ptr_scpd.h>
+#include <wx/textfile.h>
+#include <wx/file.h>
 
 #include <../src/zlib/zlib.h>
 
@@ -105,6 +107,38 @@ bool BFCore::IsWhileBackup ()
 
     return false;
 }
+
+
+bool BFCore::ReplaceLineInFile (const wxString& strFilename,
+                                const wxString& strOld,
+                                const wxString& strNew)
+{
+    wxTextFile file(strFilename);
+    bool rc = false;
+
+    // open the old file
+    if ( file.Open(strFilename) == false )
+        return rc;
+
+    // iterate on old file
+    for (wxString str = file.GetFirstLine();
+         !(file.Eof());
+         str = file.GetNextLine())
+    {
+        if (str == strOld)
+        {
+            file.RemoveLine(file.GetCurrentLine());
+            file.InsertLine(strNew, file.GetCurrentLine());
+            rc = true;
+        }
+    }
+
+    file.Write();
+    file.Close();
+
+    return rc;
+}
+
 
 wxArrayString& BFCore::GetDirListing (const wxString& strDir,
                                       wxArrayString& arr,

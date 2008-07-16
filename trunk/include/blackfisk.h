@@ -53,4 +53,6 @@
 
 #define BF_CRONTAB                  "wxCron/crontab"
 
+#define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s %s"
+
 #endif // BLACKFISK_H

@@ -108,6 +108,14 @@ class BFCore
             should be stoped because of an error it returns true */
         static bool IsStop ();
 
+        /** Open a file specified by 'strFilename', search for a line specified by 'strOld'
+            and replace it with a line specified by 'strNew'.
+            It return 'true' if a replace was done and 'false' if no replace was done
+            or an error occured. */
+        bool ReplaceLineInFile (const wxString& strFilename,
+                                const wxString& strOld,
+                                const wxString& strNew);
+
         /** move a file */
         bool MoveFile (const wxString &strSource, const wxString& Destination, bool bOverwrite = BF_DEFAULT_OVERWRITE);
         /** copy a file

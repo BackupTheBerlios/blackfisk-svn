@@ -179,7 +179,6 @@ END_EVENT_TABLE()
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
-    //XXXpSizer->Add( new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format(_T("%s%s"), BF_GRAPHICDIR, _T("logo_text.png")), wxBITMAP_TYPE_PNG)) );
     pSizer->Add( pSplitterCtrl_,    wxSizerFlags(6).Expand() );
     pSizer->Add( pButtonSizer,      wxSizerFlags(0).Center() );
     SetSizer(pSizer);
@@ -541,9 +540,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 #include "BFwxLog.h"
 void BFMainFrame::Test ()
 {
-    wxArrayString arr;
-    BFSystem::Info(wxJoin(BFRootTaskApp::ParseCrontabline(BFRootTaskApp::Instance().GetCrontabline(), arr), '\n'));
-    return;
+    BFCore::Instance().ReplaceLineInFile("wxCron\\crontab", "# XXX", "# zzz ICKE WAR HIER www");
 }
 #endif
 

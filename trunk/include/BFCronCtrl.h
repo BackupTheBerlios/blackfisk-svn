@@ -33,10 +33,12 @@ class BFCronCtrl : public wxPanel
 {
     private:
         ///
+        wxArrayString       arrCrontabline_;
+        ///
         wxComboBox*         pComboType_;
         ///
         wxComboBox*         pComboIntervall_;
-        ///
+        /*
         wxComboBox*         pComboFixed_;
         ///
         wxRadioButton*      pRadioIntervall_;
@@ -44,21 +46,32 @@ class BFCronCtrl : public wxPanel
         wxRadioButton*      pRadioFixed_;
 
         ///
-        void CheckRadios ();
+        void CheckRadios ();*/
         ///
         void FillCombos ();
 
+        ///
+        void GetData();
+        ///
+        void SetData ();
+
     public:
         /// ctor
-        BFCronCtrl (wxWindow* pParent);
+        BFCronCtrl (wxWindow* pParent,
+                    const wxArrayString& arrCrontabline);
 
         /// virtual dtor
         virtual ~BFCronCtrl ();
 
         ///
-        void OnRadioButton (wxCommandEvent& rEvent);
+        bool static IsCrontablineUsable (const wxArrayString& arr);
+
+        //        void OnRadioButton (wxCommandEvent& rEvent);
         ///
         void OnCombo (wxCommandEvent& rEvent);
+
+        ///
+        wxString GetCrontabline ();
 
     DECLARE_EVENT_TABLE()
 };
