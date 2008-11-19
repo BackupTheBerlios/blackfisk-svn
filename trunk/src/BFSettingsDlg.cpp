@@ -80,6 +80,9 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     // *** PROJECT-page ***
     pBook->AddPage(CreatePage_Project(pBook),   _("Default Project"));
 
+    // *** SCHEDULER-page ***
+    pBook->AddPage(CreatePage_Scheduler(pBook), _("Scheduler"));
+
     // buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
                                                        BFSETTINGSDLG_ID_BUTTONOK,
@@ -354,6 +357,43 @@ wxWindow* BFSettingsDlg::CreatePage_Project (wxTreebook* pBook)
 }
 
 
+wxWindow* BFSettingsDlg::CreatePage_Scheduler (wxTreebook* pBook)
+{
+    // page panel
+    wxPanel* pPage = new wxPanel(pBook);
+
+    // help ctrl
+    BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
+
+    // radio box
+    wxString choices[] = { "no scheduler",
+                           "in-built wxCron (default)",
+                           "another (extern) wxCron" };
+
+    pRadioScheduler_ = new wxRadioBox (pPage,
+                                       wxID_ANY,
+                                       "Select a scheduler",
+                                       wxDefaultPosition,
+                                       wxDefaultSize,
+                                       3,
+                                       choices,
+                                       1,
+                                       wxRA_SPECIFY_COLS);
+    // arrange
+    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pBSizer = new wxBoxSizer(wxVERTICAL);
+
+    pBSizer->Add(pRadioScheduler_);
+
+    AddHead(pSizer, pPage, _("Scheduler"));
+    pSizer->Add(pBSizer,    wxSizerFlags(1).Expand());
+    pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
+
+    pPage->SetSizer(pSizer);
+
+    return pPage;
+}
+
 //
 /*virtual*/ BFSettingsDlg::~BFSettingsDlg ()
 {
@@ -439,6 +479,8 @@ void BFSettingsDlg::GetData ()
             pComboVerboseLog_->SetSelection(1);
             break;
     };
+
+    pRadioScheduler_->SetSelection(rS.GetScheduler());
 }
 
 void BFSettingsDlg::SetData ()
@@ -489,5 +531,7 @@ void BFSettingsDlg::SetData ()
             rS.SetVerboseLevelLog(MsgINFO);
             break;
     };
+
+    rS.SetScheduler(pRadioScheduler_->GetSelection());
 }
 

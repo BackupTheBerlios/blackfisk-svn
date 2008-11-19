@@ -112,6 +112,10 @@ BFAboutDlg::BFAboutDlg ()
                                                 wxRELEASE_NUMBER
                                              ),
                                              _(" Cross-Platform GUI Library"));
+    wxSizer* pThird3 = CreateThirdPartySizer("http://wxcron.berlios.de",
+                                             "wxCron",
+                                             "",
+                                             _(" The in-build scheduler."));
     wxSizer* pTools1 = CreateThirdPartySizer("http://www.codeblocks.org",
                                              "Code::Blocks",
                                              "",
@@ -124,6 +128,16 @@ BFAboutDlg::BFAboutDlg ()
                                              "Inkscape",
                                              "",
                                              _(" open source vector graphics editor"));
+    wxSizer* pTools4 = CreateThirdPartySizer("http://icofx.ro",
+                                             "IcoFX",
+                                             "",
+                                             _(" icon editor"));
+    wxSizer* pTools5 = CreateThirdPartySizer("http://www.7-zip.org",
+                                             "7-Zip",
+                                             "",
+                                             _(" a file archiver with a high compression ratio"));
+
+
     wxSizer* pSupporters1 = CreateThirdPartySizer("http://www.berlios.de",
                                                   "BerliOS",
                                                   "",
@@ -136,6 +150,11 @@ BFAboutDlg::BFAboutDlg ()
                                                   "InterNetworX",
                                                   "",
                                                   _(" hosting the project domain"));
+    wxSizer* pSupporters4 = CreateThirdPartySizer("http://publictimestamp.org",
+                                                  "Jan Kechel (Publictimestamp.org)",
+                                                  "",
+                                                  _(" The maintainer of publictimestamp.org."));
+
     wxButton* pOk = new wxButton(this, BFABOUTDLG_ID_OK, "OK");
 
     // arrange
@@ -152,14 +171,18 @@ BFAboutDlg::BFAboutDlg ()
     pMLeftSizer->Add(pThird, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pMLeftSizer->Add(pThird1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pThird2, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pThird3, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pMLeftSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMLeftSizer->Add(pTools3, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools4, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools5, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters, wxSizerFlags(0).Center());
     pMRightSizer->Add(pSupporters1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters2, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pSupporters3, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pSupporters4, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMiddleSizer->Add(pMLeftSizer, wxSizerFlags(0).Expand());
     pMiddleSizer->Add(pMRightSizer, wxSizerFlags(0).Expand());
     pTopSizer->Add(pMiddleSizer, wxSizerFlags(0).Expand().Center().Border(wxLEFT | wxRIGHT, 20));

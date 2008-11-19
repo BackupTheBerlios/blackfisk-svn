@@ -31,6 +31,7 @@ class wxListbook;
 class wxComboBox;
 class wxTreebook;
 class wxStaticText;
+class wxRadioBox;
 class BFProjectSettingsCtrl;
 
 ///
@@ -71,6 +72,10 @@ class BFSettingsDlg : public wxDialog
         ///
         BFProjectSettingsCtrl*  pPrjCtrl_;
 
+        // --- SCHEDULER PAGE ---
+        ///
+        wxRadioBox*             pRadioScheduler_;
+
         /// read data from the settings data
         void GetData ();
         /// write data from the dialog to the settings data object
@@ -86,6 +91,8 @@ class BFSettingsDlg : public wxDialog
         wxWindow* CreatePage_Log (wxTreebook* pBook);
         ///
         wxWindow* CreatePage_Project (wxTreebook* pBook);
+        ///
+        wxWindow* CreatePage_Scheduler (wxTreebook* pBook);
 
         /** enable or disable 'pSpinDaysNewVersion_' related
             on the state of 'pCheckNewVersion_' */

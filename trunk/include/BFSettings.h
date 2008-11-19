@@ -78,7 +78,8 @@ class BFSettings
 
         /** The Type of the scheduler.
             0 means no scheduler is used by blackfisk.
-            1 means the in-build wxCron is used */
+            1 means the in-build wxCron is used
+            2 means a extern wxCron is used */
         wxInt32             lScheduler_;
         ///
         wxString            strCrontab_;
