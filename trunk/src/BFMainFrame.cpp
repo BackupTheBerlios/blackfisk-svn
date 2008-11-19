@@ -125,6 +125,8 @@ END_EVENT_TABLE()
     menuProject_->AppendSeparator();
     menuProject_->Append( BF_ID_MAINFRAME_PRJSETTINGS,  _("Project Se&ttings") );
     menuProject_->Append( BF_ID_MAINFRAME_PRJPLANNER,   _("Project P&lanner") );
+    if ( BFSettings::Instance().GetScheduler() == 0 )
+        menuProject_->Enable(BF_ID_MAINFRAME_PRJPLANNER, false);
     menuProject_->AppendSeparator();
     menuProject_->Append( BF_ID_MAINFRAME_NEWPRJ,       _("&New Project") );
     menuProject_->Append( BF_ID_MAINFRAME_OPENPRJ,      _("&Open Project") );
@@ -296,6 +298,10 @@ void BFMainFrame::RefreshTitle ()
                                                  BFApp::GetFullApplicationName()) );
 }
 
+void BFMainFrame::EnableMenuProjectPlanner (bool bEnable)
+{
+    menuProject_->Enable(BF_ID_MAINFRAME_PRJPLANNER, bEnable);
+}
 
 BFBackupCtrl* BFMainFrame::BackupCtrl ()
 {

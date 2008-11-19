@@ -32,6 +32,7 @@ class wxComboBox;
 class wxTreebook;
 class wxStaticText;
 class wxRadioBox;
+class wxTextCtrl;
 class BFProjectSettingsCtrl;
 
 ///
@@ -75,6 +76,8 @@ class BFSettingsDlg : public wxDialog
         // --- SCHEDULER PAGE ---
         ///
         wxRadioBox*             pRadioScheduler_;
+        ///
+        wxTextCtrl*             pTextCrontab_;
 
         /// read data from the settings data
         void GetData ();
@@ -114,6 +117,11 @@ class BFSettingsDlg : public wxDialog
 
         ///
         void OnCheck_NewVersion (wxCommandEvent& rEvent);
+
+        ///
+        void OnRadio_Scheduler (wxCommandEvent& rEvent);
+        ///
+        void SetTextCrontab ();
 
     DECLARE_EVENT_TABLE();
 };    // class BFSettingsDlg

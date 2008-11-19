@@ -431,6 +431,8 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
             menu.AppendSeparator();
             menu.Append(BFBACKUPCTRL_ID_PROJECTSETTINGS,    _("Project Settings") );
             menu.Append(BFBACKUPCTRL_ID_PROJECTPLANNER,     _("Project Planner") );
+            if ( BFSettings::Instance().GetScheduler() == 0 )
+                menu.Enable(BFBACKUPCTRL_ID_PROJECTPLANNER, false);
             menu.AppendSeparator();
             menu.Append(BFBACKUPCTRL_ID_PROJECTSAVE,        _("&Save Project") );
             menu.Append(BFBACKUPCTRL_ID_PROJECTSAVEAS,      _("Save Project &as ...") );

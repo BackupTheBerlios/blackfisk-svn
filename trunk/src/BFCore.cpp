@@ -120,16 +120,25 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
     if ( file.Open(strFilename) == false )
         return rc;
 
-    // iterate on old file
-    for (wxString str = file.GetFirstLine();
-         !(file.Eof());
-         str = file.GetNextLine())
+    if ( strOld.IsEmpty() )
     {
-        if (str == strOld)
+        // add the new line
+        file.AddLine('\n');
+        file.AddLine(strNew);
+    }
+    else
+    {
+        // iterate on old file
+        for (wxString str = file.GetFirstLine();
+             !(file.Eof());
+             str = file.GetNextLine())
         {
-            file.RemoveLine(file.GetCurrentLine());
-            file.InsertLine(strNew, file.GetCurrentLine());
-            rc = true;
+            if (str == strOld)
+            {
+                file.RemoveLine(file.GetCurrentLine());
+                file.InsertLine(strNew, file.GetCurrentLine());
+                rc = true;
+            }
         }
     }
 

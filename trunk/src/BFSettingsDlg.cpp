@@ -41,17 +41,21 @@
 #include "BFHelpCtrl.h"
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
+#include "BFMainFrame.h"
+#include "blackfisk.h"
 #include "ids.h"
 
 #define BFSETTINGSDLG_ID_BUTTONOK           1 + BF_SETTINGSDLG_ID_HIGHEST
 #define BFSETTINGSDLG_ID_BUTTONCANCEL       2 + BF_SETTINGSDLG_ID_HIGHEST
 #define BF_SETTINGSDLG_ID_CHECK_NEWVERSION  3 + BF_SETTINGSDLG_ID_HIGHEST
+#define BFSETTINGSDLG_ID_RADIO_SCHEDULER    4 + BF_SETTINGSDLG_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFSettingsDlg, wxDialog)
   EVT_CLOSE     (                                       BFSettingsDlg::OnClose)
   EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONOK,             BFSettingsDlg::OnButton_Ok)
   EVT_BUTTON    (BFSETTINGSDLG_ID_BUTTONCANCEL,         BFSettingsDlg::OnButton_Cancel)
   EVT_CHECKBOX  (BF_SETTINGSDLG_ID_CHECK_NEWVERSION,    BFSettingsDlg::OnCheck_NewVersion)
+  EVT_RADIOBOX  (BFSETTINGSDLG_ID_RADIO_SCHEDULER,      BFSettingsDlg::OnRadio_Scheduler)
 END_EVENT_TABLE()
 
 //
@@ -367,11 +371,11 @@ wxWindow* BFSettingsDlg::CreatePage_Scheduler (wxTreebook* pBook)
 
     // radio box
     wxString choices[] = { "no scheduler",
-                           "in-built wxCron (default)",
-                           "another (extern) wxCron" };
+                           "wxCron (in-build; default)",
+                           "wxCron (extern)" };
 
     pRadioScheduler_ = new wxRadioBox (pPage,
-                                       wxID_ANY,
+                                       BFSETTINGSDLG_ID_RADIO_SCHEDULER,
                                        "Select a scheduler",
                                        wxDefaultPosition,
                                        wxDefaultSize,
@@ -379,11 +383,24 @@ wxWindow* BFSettingsDlg::CreatePage_Scheduler (wxTreebook* pBook)
                                        choices,
                                        1,
                                        wxRA_SPECIFY_COLS);
+
+    wxStaticText* pLabelCrontab = new wxStaticText (pPage, wxID_ANY, _("Location of the crontab-file :"));
+
+    pTextCrontab_ = new wxTextCtrl (pPage,
+                                    wxID_ANY,
+                                    "value",
+                                    wxDefaultPosition,
+                                    wxDefaultSize,
+                                    wxTE_READONLY);
+    pTextCrontab_->Enable(false);
+
     // arrange
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pBSizer = new wxBoxSizer(wxVERTICAL);
 
-    pBSizer->Add(pRadioScheduler_);
+    pBSizer->Add(pRadioScheduler_,      wxSizerFlags(0).Center().Border(wxBOTTOM, 5));
+    pBSizer->Add(pLabelCrontab);
+    pBSizer->Add(pTextCrontab_,         wxSizerFlags(0).Expand());
 
     AddHead(pSizer, pPage, _("Scheduler"));
     pSizer->Add(pBSizer,    wxSizerFlags(1).Expand());
@@ -392,6 +409,44 @@ wxWindow* BFSettingsDlg::CreatePage_Scheduler (wxTreebook* pBook)
     pPage->SetSizer(pSizer);
 
     return pPage;
+}
+
+void BFSettingsDlg::OnRadio_Scheduler (wxCommandEvent& rEvent)
+{
+    SetTextCrontab();
+}
+
+void BFSettingsDlg::SetTextCrontab ()
+{
+    switch ( pRadioScheduler_->GetSelection() )
+    {
+        case 0:
+            pTextCrontab_->SetValue("");
+            break;
+
+        case 1:
+            pTextCrontab_->SetValue(BF_CRONTAB);
+            break;
+
+        case 2:
+            wxFileDialog dlg (this,
+                              _("Please select the crontab-file."),
+                              "C:\\Programme\\wxCron",
+                              "crontab",
+                              "crontab",
+                              wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
+
+            if ( dlg.ShowModal() == wxID_OK )
+            {
+                pTextCrontab_->SetValue(dlg.GetPath ());
+            }
+            else
+            {
+                pRadioScheduler_->SetSelection(1);
+                SetTextCrontab();
+            }
+            break;
+    }
 }
 
 //
@@ -481,6 +536,7 @@ void BFSettingsDlg::GetData ()
     };
 
     pRadioScheduler_->SetSelection(rS.GetScheduler());
+    pTextCrontab_->SetValue(rS.GetCrontab());
 }
 
 void BFSettingsDlg::SetData ()
@@ -533,5 +589,10 @@ void BFSettingsDlg::SetData ()
     };
 
     rS.SetScheduler(pRadioScheduler_->GetSelection());
+    rS.SetCrontab(pTextCrontab_->GetValue());
+    if ( rS.GetScheduler() == 0 )
+        BFMainFrame::Instance()->EnableMenuProjectPlanner(false);
+    else
+        BFMainFrame::Instance()->EnableMenuProjectPlanner(true);
 }
 

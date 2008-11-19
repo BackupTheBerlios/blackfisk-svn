@@ -97,6 +97,9 @@ class BFMainFrame : public wxFrame
         static BFMainFrame* Instance();
 
         ///
+        void EnableMenuProjectPlanner (bool bEnable);
+
+        ///
         BFBackupCtrl* BackupCtrl ();
         ///
         BFBackupTree* BackupTree ();
