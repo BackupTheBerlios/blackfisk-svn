@@ -39,19 +39,19 @@
 #define BF_FTP_DIR                  "/pub/blackfisk"
 #define BF_FTP_FILE_VER             "current_version"
 
-#define BF_GRAPHICDIR               "graphic/"
+//#define BF_GRAPHICDIR               "graphic/"
 
-#define BF_SETTINGS                 "blackfisk.cfg"
+//#define BF_SETTINGS                 "blackfisk.cfg"
 #define BF_SETTINGS_CURRENT_VERSION 1030
 #define BF_PROJECT_CURRENT_VERSION  1020
 
-#define BF_LOGFILE_NAME             "bf.log"
-#define BF_LOGFILE_BAKSUFFIX        ".bak"
+//#define BF_LOGFILE_NAME             "bf.log"
+//#define BF_LOGFILE_BAKSUFFIX        ".bak"
 
 #define BF_PROJECT_EXTENSION        ".bfp"
 #define BF_PROJECT_EXTENSION_STRING "Blackfisk project files (*.bfp)|*.bfp"
 
-#define BF_CRONTAB                  "wxCron/crontab"
+//#define BF_CRONTAB                  "wxCron/crontab"
 
 #define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s %s"
 

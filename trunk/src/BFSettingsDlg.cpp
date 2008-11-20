@@ -425,7 +425,7 @@ void BFSettingsDlg::SetTextCrontab ()
             break;
 
         case 1:
-            pTextCrontab_->SetValue(BF_CRONTAB);
+            pTextCrontab_->SetValue(wxGetApp().GetInBuildCrontabFileName());
             break;
 
         case 2:

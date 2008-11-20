@@ -31,6 +31,7 @@ class BFMainFrame;
 #include <wx/wx.h>
 #include <wx/intl.h>
 #include "BFCore.h"
+#include "BFLog.h"
 #include "BFMsgObserver.h"
 
 
@@ -49,6 +50,14 @@ class BFApp : public wxApp
             just use OBSystem to display messages to the user */
         BFMsgObserver           msgObserver_;
 
+        ///
+        wxString                strApplicationDir_;
+
+        /** it log messages recieving from BFSystem;
+            there is no need to touch BFLog directly
+            just use BFSystem to create messages */
+        BFLog*      pLog_;
+
         /** Read a file from a ftp-server and return in as a wxString.
             The parameters are selfdescribing. If 'strFtpUser' and/or
             'strFtpPwd' isn't set it will set with the default-values
@@ -58,6 +67,9 @@ class BFApp : public wxApp
                                   const wxString& strFtpFile,
                                   const wxString& strFtpUser = wxEmptyString,
                                   const wxString& strFtpPwd = wxEmptyString);
+
+        ///
+        void RememberApplicationDirectory ();
 
     protected:
         /// reference to the OBCore instance
@@ -94,6 +106,17 @@ class BFApp : public wxApp
             string1 = "ABCDEFG" and string2 = "ABCwdFG
             return value is "ABC" */
         static wxString ExtractCommunity (const wxArrayString& rStrings);
+
+        ///
+        const wxString& GetApplicationDirectory ();
+        ///
+        const wxString GetLogFileName ();
+        ///
+        const wxString GetGraphicDir ();
+        ///
+        const wxString GetSettingsFileName ();
+        ///
+        const wxString GetInBuildCrontabFileName ();
 
         ///
         const wxString& GetCurrentProjectFilename ();

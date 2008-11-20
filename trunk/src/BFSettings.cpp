@@ -21,6 +21,7 @@
  ***/
 
 #include "BFSettings.h"
+#include "BFApp.h"
 #include "blackfisk.h"
 
 
@@ -42,25 +43,28 @@
 
 //
 BFSettings::BFSettings ()
-          : bFillBlackfiskPlaceholders_(false),
-            bWithFiles_(false),
-            lMaxLogFileSize_(1024),
-            bOpenLastProject_(false),
-            verboseLog_(MsgINFO),
-            lang_(wxLANGUAGE_DEFAULT),
-            sizeMainWindow_(wxDefaultSize),
-            pointMainWindow_(wxDefaultPosition),
-            bMainWindowMaximized_(false),
-            bSwitchMainCtrls_(false),
-            iSashPositionInMainWindow_(-1),
-            bShowHiddenFiles_(false),
-            lDaysTillNextCheck_(0),
-            dateLastVersionCheck_(wxDateTime::Now().SetYear(2000)),
-            lScheduler_(1),
-            strCrontab_(BF_CRONTAB)
 {
 }
 
+void BFSettings::InitDefaultValues()
+{
+    bFillBlackfiskPlaceholders_     = false;
+    bWithFiles_                     = false;
+    lMaxLogFileSize_                = 1024;
+    bOpenLastProject_               = false;
+    verboseLog_                     = MsgINFO;
+    lang_                           = wxLANGUAGE_DEFAULT;
+    sizeMainWindow_                 = wxDefaultSize;
+    pointMainWindow_                = wxDefaultPosition;
+    bMainWindowMaximized_           = false;
+    bSwitchMainCtrls_               = false;
+    iSashPositionInMainWindow_      = -1;
+    bShowHiddenFiles_               = false;
+    lDaysTillNextCheck_             = 0;
+    dateLastVersionCheck_           = wxDateTime::Now().SetYear(2000);
+    lScheduler_                     = 1;
+    strCrontab_                     = wxGetApp().GetInBuildCrontabFileName();
+}
 
 //
 /*virtual*/ BFSettings::~BFSettings ()
@@ -337,7 +341,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         if (rA.GetVersion() < 1030)
         {
             lScheduler_ = 1;
-            strCrontab_ = BF_CRONTAB;
+            strCrontab_ = wxGetApp().GetInBuildCrontabFileName();
         }
         else
         {

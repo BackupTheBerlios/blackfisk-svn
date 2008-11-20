@@ -101,6 +101,9 @@ class BFSettings
         virtual ~BFSettings ();
 
         ///
+        void InitDefaultValues();
+
+        ///
         BFProjectSettings& GetDefaultProjectSettings ();
         ///
         bool GetFillBlackfiskPlaceholders();

@@ -62,7 +62,9 @@ BFAboutDlg::BFAboutDlg ()
     wxBoxSizer* pMLeftSizer     = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pMRightSizer    = new wxBoxSizer(wxVERTICAL);
 
-    wxStaticBitmap* pLogo = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "logo_text.png"), wxBITMAP_TYPE_PNG));
+    wxStaticBitmap* pLogo = new wxStaticBitmap(this,
+                                               wxID_ANY,
+                                               wxBitmap(wxGetApp().GetGraphicDir() + "logo_text.png", wxBITMAP_TYPE_PNG));
 
     wxStaticText* pName = new wxStaticText(this, wxID_ANY, wxString::Format("Version: %s", BFApp::GetVersion()));
     font = pName->GetFont();

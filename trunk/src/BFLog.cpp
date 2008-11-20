@@ -22,11 +22,12 @@
 
 
 #include "BFLog.h"
-#include "blackfisk.h"
+#include "BFApp.h"
 #include "BFSettings.h"
 
 BFLog::BFLog ()
-     : BFLogBase(BF_LOGFILE_NAME, BFSettings::Instance().GetMaxLogFileSize()*1024)
+     : BFLogBase(wxGetApp().GetLogFileName(),
+                 BFSettings::Instance().GetMaxLogFileSize()*1024)
 {
     fileLog_.Write("\n");
 }

@@ -33,7 +33,7 @@
 #include <wx/file.h>
 #include <wx/imaglist.h>
 
-#include "BFLog.h"
+//#include "BFLog.h"
 #include "BFundef.h"
 
 
@@ -69,7 +69,7 @@ class BFCore
         /** it log messages recieving from OBSystem;
             there is no need to touch OBLog directly
             just use OBSystem to create messages */
-        BFLog       log_;
+        //BFLog       log_;
 
         /** indicates that a backup is running
             so that backup messages will be created */

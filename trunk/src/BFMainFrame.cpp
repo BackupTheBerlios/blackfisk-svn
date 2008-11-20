@@ -323,7 +323,7 @@ BFBackupTree* BFMainFrame::BackupTree ()
 void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
 {
     wxArrayString arr;
-    arr.Add(BF_LOGFILE_NAME);
+    arr.Add(wxGetApp().GetLogFileName());
     new BFLogViewDlg(this, arr);
 }
 
@@ -542,11 +542,13 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
     Test();
 }
-#include <wx/textfile.h>
-#include "BFwxLog.h"
+#include <wx/msw/registry.h>
+
 void BFMainFrame::Test ()
 {
-    BFCore::Instance().ReplaceLineInFile("wxCron\\crontab", "# XXX", "# zzz ICKE WAR HIER www");
+    wxRegKey *pRegKey = new wxRegKey(wxT("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"));
+    pRegKey->Create();
+    pRegKey->SetValue(wxT("wxCron (blackfisk inbuild"), wxT("C:\\Programme\\"));
 }
 #endif
 

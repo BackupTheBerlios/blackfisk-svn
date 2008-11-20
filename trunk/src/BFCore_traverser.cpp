@@ -22,6 +22,8 @@
 
 #include "BFCore_traverser.h"
 
+#include "BFSystem.h"
+#include "BFundef.h"
 #include "Progress.h"
 #include "blackfisk.h"
 

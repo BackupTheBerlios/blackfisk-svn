@@ -117,6 +117,7 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 }
 
 BFApp::BFApp ()
+     : pLog_(NULL)
 {
 }
 
@@ -126,6 +127,12 @@ BFApp::BFApp ()
 
 bool BFApp::OnInit()
 {
+    //
+    RememberApplicationDirectory();
+
+    //
+    pLog_ = new BFLog();
+
     // log target
     wxLog::SetActiveTarget(new BFwxLog);
 
@@ -142,6 +149,7 @@ bool BFApp::OnInit()
     BFSystem::Log(wxString::Format(_("Starting %s ..."), GetFullApplicationName()));
 
     // read the configuration file
+    BFSettings::Instance().InitDefaultValues();
     ReadSettings();
 
     // init locals
@@ -175,15 +183,84 @@ bool BFApp::OnInit()
     SaveSettings();
     BFSystem::Log(wxString::Format(_("%s closed\n"), BF_PRGNAME).c_str());
 
+    if (pLog_)
+        delete pLog_;
+
     return 1;
 }
 
+void BFApp::RememberApplicationDirectory ()
+{
+    strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
+
+    if (strApplicationDir_.IsEmpty())
+        strApplicationDir_ = wxGetCwd();
+}
+
+const wxString& BFApp::GetApplicationDirectory ()
+{
+    return strApplicationDir_;
+}
+
+const wxString BFApp::GetLogFileName ()
+{
+    #if defined(__WXMSW__)
+        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "bf.log";
+    #elif defined(__UNIX__)
+        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
+    #else
+        #error "Unsupported plattform! Please contact the project maintainer for support!"
+    #endif
+
+    return str;
+}
+
+const wxString BFApp::GetGraphicDir ()
+{
+    #if defined(__WXMSW__)
+        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "graphic" + wxFILE_SEP_PATH;
+    #elif defined(__UNIX__)
+        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
+    #else
+        #error "Unsupported plattform! Please contact the project maintainer for support!"
+    #endif
+
+    return str;
+}
+
+const wxString BFApp::GetSettingsFileName ()
+{
+    #if defined(__WXMSW__)
+        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "blackfisk.cfg";
+    #elif defined(__UNIX__)
+        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
+    #else
+        #error "Unsupported plattform! Please contact the project maintainer for support!"
+    #endif
+
+    return str;
+}
+
+const wxString BFApp::GetInBuildCrontabFileName ()
+{
+    #if defined(__WXMSW__)
+        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "crontab";
+    #elif defined(__UNIX__)
+        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
+    #else
+        #error "Unsupported plattform! Please contact the project maintainer for support!"
+    #endif
+
+    return str;
+}
+
+
 /*static*/ bool BFApp::ReadSettings ()
 {
-    if ( !(wxFileName::FileExists(BF_SETTINGS)) )
+    if ( !(wxFileName::FileExists(wxGetApp().GetSettingsFileName())) )
         SaveSettings();
 
-    wxFileInputStream   in(BF_SETTINGS);
+    wxFileInputStream   in(wxGetApp().GetSettingsFileName());
     jbSerialize         archive(in, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
@@ -191,7 +268,7 @@ bool BFApp::OnInit()
 
 /*static*/ bool BFApp::SaveSettings ()
 {
-    wxFileOutputStream  out(BF_SETTINGS);
+    wxFileOutputStream  out(wxGetApp().GetSettingsFileName());
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);

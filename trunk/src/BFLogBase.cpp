@@ -21,7 +21,7 @@
  ***/
 
 #include "BFLogBase.h"
-#include "blackfisk.h"
+#include "BFSystem.h"
 #include "BFCore.h"
 
 BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0*/ )
@@ -62,7 +62,7 @@ void BFLogBase::CareSize ()
         // close the file
         fileLog_.Close();
         // backup the file
-        BFCore::Instance().MoveFile(strLogFileName_, strLogFileName_ + BF_LOGFILE_BAKSUFFIX, true);
+        BFCore::Instance().MoveFile(strLogFileName_, strLogFileName_ + ".bak", true);
         // create a new empty file
         fileLog_.Open(strLogFileName_, wxFile::write_append);
     }

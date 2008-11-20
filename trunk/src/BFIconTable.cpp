@@ -24,6 +24,7 @@
 
 #include <wx/artprov.h>
 
+#include "BFApp.h"
 #include "blackfisk.h"
 
 
@@ -55,37 +56,37 @@ void BFIconTable::Init ()
 {
     // filesystem icons
     imgFilesystem_.RemoveAll();
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "logo16.png"), wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "logo16.png", wxBITMAP_TYPE_PNG));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_HARDDISK));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_FLOPPY));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_CDROM));
     imgFilesystem_.Add(wxArtProvider::GetIcon(wxART_REMOVABLE));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_closed.png"), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_open.png"), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_virtual_closed.png"), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "folder_virtual_open.png"), wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_dc.png"),   wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_fc.png"),   wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_ar.png"),  wxBITMAP_TYPE_PNG));
-    imgFilesystem_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "task_sy.png"),  wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "folder_closed.png",           wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "folder_open.png",             wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "folder_virtual_closed.png",   wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "folder_virtual_open.png",     wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "task_dc.png",                 wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "task_fc.png",                 wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "task_ar.png",                 wxBITMAP_TYPE_PNG));
+    imgFilesystem_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "task_sy.png",                 wxBITMAP_TYPE_PNG));
 
     // button icons
     imgButtons_.RemoveAll();
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "yes16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "no16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "yes16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "no16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "stop_prj16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "stop_task16.png"), wxBITMAP_TYPE_PNG));
-    imgButtons_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "ignore16.png"), wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "yes16.png",      wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "no16.png",       wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "yes16.png",      wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "no16.png",       wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "stop_prj16.png", wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "stop_task16.png",wxBITMAP_TYPE_PNG));
+    imgButtons_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "ignore16.png",   wxBITMAP_TYPE_PNG));
 
     // message icons
     imgMessage_.RemoveAll();
-    imgMessage_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "question64.png"), wxBITMAP_TYPE_PNG));
-    imgMessage_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "info64.png"), wxBITMAP_TYPE_PNG));
-    imgMessage_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "warning64.png"), wxBITMAP_TYPE_PNG));
-    imgMessage_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "error64.png"), wxBITMAP_TYPE_PNG));
-    imgMessage_.Add(wxBitmap(wxString::Format("%s%s", BF_GRAPHICDIR, "fatal64.png"), wxBITMAP_TYPE_PNG));
+    imgMessage_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "question64.png", wxBITMAP_TYPE_PNG));
+    imgMessage_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "info64.png",     wxBITMAP_TYPE_PNG));
+    imgMessage_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "warning64.png",  wxBITMAP_TYPE_PNG));
+    imgMessage_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "error64.png",    wxBITMAP_TYPE_PNG));
+    imgMessage_.Add(wxBitmap(wxGetApp().GetGraphicDir() + "fatal64.png",    wxBITMAP_TYPE_PNG));
 }
 
 wxImageList* BFIconTable::GetFilesystemImageList ()
