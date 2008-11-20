@@ -154,6 +154,16 @@ class BFApp : public wxApp
             The current-version-info specify the newest release of blackfisk. */
         const wxString& GetNewestVersion ();
 
+        /** Check (on Win32) if the in-build scheduler wxCron
+            is setup as autostart. */
+        bool IsSchedulerInAutostart ();
+        /** Setup (on Win32) the in-build scheduler wxCron
+            as autostart. */
+        void SetSchedulerInAutostart ();
+        /** Remove (on Win32) the in-build scheduler wxCron
+            from autostart. */
+        void RemoveSchedulerFromAutostart ();
+
 #ifdef _DEBUG
         void Test ();
 #endif

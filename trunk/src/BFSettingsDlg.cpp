@@ -590,9 +590,29 @@ void BFSettingsDlg::SetData ()
 
     rS.SetScheduler(pRadioScheduler_->GetSelection());
     rS.SetCrontab(pTextCrontab_->GetValue());
+
+    // menu project planer
     if ( rS.GetScheduler() == 0 )
         BFMainFrame::Instance()->EnableMenuProjectPlanner(false);
     else
         BFMainFrame::Instance()->EnableMenuProjectPlanner(true);
+
+    // autostart scheduler?
+    if ( rS.GetScheduler() == 1 )
+    {
+        if ( wxGetApp().IsSchedulerInAutostart() == false )
+        {
+            BFSystem::Info(_("Blackfisk's own scheduler wxCron is selected to handle backup tasks.\nThe scheduler is setup to run automaticly on system startup!"));
+            wxGetApp().SetSchedulerInAutostart();
+        }
+    }
+    else
+    {
+        if ( wxGetApp().IsSchedulerInAutostart() == true )
+        {
+            BFSystem::Info(_("Blackfisk's own scheduler wxCron is NOT selected to handle backup tasks.\nA extern scheduler is used for that.\nBlackfisk's own wxCron is removed from the autostart list!"));
+            wxGetApp().RemoveSchedulerFromAutostart();
+        }
+    }
 }
 

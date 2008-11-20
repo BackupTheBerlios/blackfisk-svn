@@ -30,6 +30,7 @@
 #include <wx/sound.h>
 #include <wx/protocol/ftp.h>
 #include <wx/snglinst.h>
+#include <wx/msw/registry.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
@@ -173,6 +174,16 @@ bool BFApp::OnInit()
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
+
+    // check the scheduler
+    if ( BFSettings::Instance().GetScheduler() == 1 )
+    {
+        if ( IsSchedulerInAutostart() == false )
+        {
+            BFSystem::Info(_("Blackfisk's own scheduler wxCron is selected to handle backup tasks.\nThe scheduler is setup to run automaticly on system startup!"));
+            SetSchedulerInAutostart();
+        }
+    }
 
     // open the last project ?
     if (strToOpen.IsEmpty())
@@ -447,3 +458,20 @@ wxString BFApp::ReadFileFromFTP (const wxString& strFtpServer,
     return strData;
 }
 
+bool BFApp::IsSchedulerInAutostart ()
+{
+    wxRegKey key(BF_REGKEY_AUTOSTART);
+    return key.HasValue(BF_REGKEY_VALUE);
+}
+
+void BFApp::SetSchedulerInAutostart ()
+{
+    wxRegKey key(BF_REGKEY_AUTOSTART);
+    key.SetValue(BF_REGKEY_VALUE, "EXECUTE ME : EXE");
+}
+
+void BFApp::RemoveSchedulerFromAutostart ()
+{
+    wxRegKey key(BF_REGKEY_AUTOSTART);
+    key.DeleteValue(BF_REGKEY_VALUE);
+}

@@ -46,6 +46,9 @@
 #define BF_PROJECT_EXTENSION        ".bfp"
 #define BF_PROJECT_EXTENSION_STRING "Blackfisk project files (*.bfp)|*.bfp"
 
+#define BF_REGKEY_AUTOSTART         "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+#define BF_REGKEY_VALUE             "wxCron (blackfisk in-build scheduler"
+
 #define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s %s"
 
 #endif // BLACKFISK_H

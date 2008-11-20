@@ -554,13 +554,9 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
     Test();
 }
-#include <wx/msw/registry.h>
 
 void BFMainFrame::Test ()
 {
-    wxRegKey *pRegKey = new wxRegKey(wxT("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"));
-    pRegKey->Create();
-    pRegKey->SetValue(wxT("wxCron (blackfisk inbuild"), wxT("C:\\Programme\\"));
 }
 #endif
 
@@ -601,7 +597,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     }
 }
 
-bool BFMainFrame::QuestionYesNo (const wxString& strQuestion)
+/*static*/ bool BFMainFrame::QuestionYesNo (const wxString& strQuestion)
 {
     BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNO, strQuestion, _("Question"));
 
@@ -611,7 +607,7 @@ bool BFMainFrame::QuestionYesNo (const wxString& strQuestion)
     return false;
 }
 
-int BFMainFrame::QuestionYesNoCancel (const wxString& strQuestion)
+/*static*/ int BFMainFrame::QuestionYesNoCancel (const wxString& strQuestion)
 {
     BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, strQuestion, _("Question"));
 
