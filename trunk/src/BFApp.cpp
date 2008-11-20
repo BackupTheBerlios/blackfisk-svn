@@ -39,7 +39,6 @@
 #include "BFRootTaskApp.h"
 #include "Progress.h"
 #include "BFSettings.h"
-#include "BFCmdLine.h"
 #include "BFLog.h"
 #include "BFwxLog.h"
 
@@ -121,12 +120,67 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 
 BFApp::BFApp ()
      : pLog_(NULL),
-       pSingleInstanceChecker_(NULL)
+       pSingleInstanceChecker_(NULL),
+       strCmdOpen_(wxEmptyString),
+       bCmdRun_(false),
+       bCmdUsage_(false)
 {
 }
 
 /*virtual*/ BFApp::~BFApp ()
 {
+}
+
+void BFApp::ParseCmdLine ()
+{
+    //wxApp::argc;
+    //wxApp::argv;
+
+    wxString str;
+
+    for (int i = 1; i < argc; ++i)
+    {
+        str = argv[i];
+
+        if ( str.StartsWith("-h")
+          || str.StartsWith("/h")
+          || str.StartsWith("--help")
+          || str.StartsWith("-?")
+          || str.StartsWith("/?") )
+        {
+            bCmdUsage_ = true;
+        }
+        else if ( str.StartsWith("-r")
+               || str.StartsWith("/r")
+               || str.StartsWith("--run") )
+        {
+            if (argc > i)
+            {
+                ++i;
+                strCmdOpen_ = argv[i];
+                bCmdRun_    = true;
+            }
+        }
+        else
+        {
+            strCmdOpen_ = argv[i];
+        }
+    }
+}
+
+void BFApp::DisplayUsage ()
+{
+    wxMessageOutput* out = wxMessageOutput::Get();
+
+    out->Printf("");
+    out->Printf("=== %s === (GPLv3 licensed)", GetFullApplicationName());
+    out->Printf("USAGE: %s [projectfile] [-r|--run projectfile] [-h|--help]", BF_PRGNAME);
+    out->Printf("");
+    out->Printf("  [projectfile]            Open the project.");
+    out->Printf("");
+    out->Printf("  -r|--run projectfile     Run the project.");
+    out->Printf("");
+    out->Printf("  -h|--help                Display this text.");
 }
 
 bool BFApp::OnInit()
@@ -157,11 +211,24 @@ bool BFApp::OnInit()
     wxString strToOpen;
 
     // parse command line
-    BFCmdLine cmdLine;
-    cmdLine.SetCmdLine(wxApp::argc, wxApp::argv);
-    cmdLine.Parse();
-    if (cmdLine.GetParamCount() > 0)
-        strToOpen = cmdLine.GetParam(0);
+    ParseCmdLine ();
+
+    // usage?
+    if ( bCmdUsage_ )
+    {
+        DisplayUsage ();
+        return false;
+    }
+
+    // run?
+    if ( bCmdRun_ )
+    {
+        if ( strCmdOpen_.IsEmpty() )
+        {
+            DisplayUsage();
+            return false;
+        }
+    }
 
     // log application start
     BFSystem::Log(wxString::Format(_("Starting %s ..."), GetFullApplicationName()));
@@ -186,12 +253,12 @@ bool BFApp::OnInit()
     }
 
     // open the last project ?
-    if (strToOpen.IsEmpty())
+    if (strCmdOpen_.IsEmpty())
         if (BFSettings::Instance().GetOpenLastProject())
-            strToOpen = BFSettings::Instance().GetLastProject();
+            strCmdOpen_ = BFSettings::Instance().GetLastProject();
 
-    if ( !(strToOpen.IsEmpty()) )
-        OpenProject(strToOpen);
+    if ( !(strCmdOpen_.IsEmpty()) )
+        OpenProject(strCmdOpen_);
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
@@ -200,7 +267,19 @@ bool BFApp::OnInit()
     //
     BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));
 
-    return TRUE;
+    // run automaticly?
+    if ( bCmdRun_ )
+    {
+        BFSystem::Log(wxString::Format(_("Run the project %s automaticly..."), strCmdOpen_));
+
+        // start the backup if everything is fine
+        if ( BFRootTaskApp::Instance().PreBackupCheck() )
+            new BFBackupProgressDlg(BFMainFrame::Instance());
+
+        Exit();
+    }
+
+    return true;
 }
 
 /*virtual*/ int BFApp::OnExit()
@@ -214,7 +293,7 @@ bool BFApp::OnInit()
     if (pSingleInstanceChecker_)
         delete pSingleInstanceChecker_;
 
-    return 1;
+    return 0;
 }
 
 void BFApp::RememberApplicationDirectory ()

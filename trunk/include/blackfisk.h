@@ -49,6 +49,6 @@
 #define BF_REGKEY_AUTOSTART         "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
 #define BF_REGKEY_VALUE             "wxCron (blackfisk in-build scheduler"
 
-#define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s %s"
+#define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s --run %s"
 
 #endif // BLACKFISK_H

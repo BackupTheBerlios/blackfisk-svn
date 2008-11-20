@@ -111,9 +111,6 @@
 		<Unit filename="include\BFBitmapButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
-		<Unit filename="include\BFCmdLine.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
 		<Unit filename="include\BFCore.h">
 			<Option virtualFolder="AppLayer\Core\" />
 		</Unit>
@@ -260,9 +257,6 @@
 		</Unit>
 		<Unit filename="src\BFBitmapButton.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
-		</Unit>
-		<Unit filename="src\BFCmdLine.cpp">
-			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="src\BFCore.cpp">
 			<Option virtualFolder="AppLayer\Core\" />

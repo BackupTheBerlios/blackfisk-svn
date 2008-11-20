@@ -62,6 +62,16 @@ class BFApp : public wxApp
         ///
         wxSingleInstanceChecker*    pSingleInstanceChecker_;
 
+        /** Used while parseing the command line.
+            It is the backup project to open or run. */
+        wxString                    strCmdOpen_;
+        /** Used while parseing the command line.
+            If 'true' the backup project should run. */
+        bool                        bCmdRun_;
+        /** Used while parseing the command line.
+            If 'true' only the usage is displayed. */
+        bool                        bCmdUsage_;
+
         /** Read a file from a ftp-server and return in as a wxString.
             The parameters are selfdescribing. If 'strFtpUser' and/or
             'strFtpPwd' isn't set it will set with the default-values
@@ -74,6 +84,12 @@ class BFApp : public wxApp
 
         ///
         void RememberApplicationDirectory ();
+
+        ///
+        void ParseCmdLine ();
+
+        ///
+        void DisplayUsage ();
 
     protected:
         /// reference to the OBCore instance

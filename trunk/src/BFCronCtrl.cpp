@@ -152,10 +152,12 @@ void BFCronCtrl::SetData ()
     }
 }
 
+#include <wx/msgdlg.h>
 
 wxString BFCronCtrl::GetCrontabline ()
 {
     SetData();
+
     return wxString::Format("%s %s %s %s %s %s",
                             arrCrontabline_[0],
                             arrCrontabline_[1],
