@@ -26,12 +26,13 @@
 
 // forwarde declarations
 class BFMainFrame;
+class BFLog;
+class wxSingleInstanceChecker;
 
 // includes
 #include <wx/wx.h>
 #include <wx/intl.h>
 #include "BFCore.h"
-#include "BFLog.h"
 #include "BFMsgObserver.h"
 
 
@@ -40,23 +41,26 @@ class BFApp : public wxApp
 {
     private:
         /// for internationalization
-        wxLocale                locale_;
+        wxLocale                    locale_;
 
         /// the main window
-        static BFMainFrame*     spMainFrame_;
+        static BFMainFrame*         spMainFrame_;
 
         /** handle messages from the application
             it is not needed to touch it directly!
             just use OBSystem to display messages to the user */
-        BFMsgObserver           msgObserver_;
+        BFMsgObserver               msgObserver_;
 
         ///
-        wxString                strApplicationDir_;
+        wxString                    strApplicationDir_;
 
         /** it log messages recieving from BFSystem;
             there is no need to touch BFLog directly
             just use BFSystem to create messages */
-        BFLog*      pLog_;
+        BFLog*                      pLog_;
+
+        ///
+        wxSingleInstanceChecker*    pSingleInstanceChecker_;
 
         /** Read a file from a ftp-server and return in as a wxString.
             The parameters are selfdescribing. If 'strFtpUser' and/or

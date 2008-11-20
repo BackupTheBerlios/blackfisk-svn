@@ -29,6 +29,7 @@
 #include <wx/zipstrm.h>
 #include <wx/sound.h>
 #include <wx/protocol/ftp.h>
+#include <wx/snglinst.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
@@ -38,6 +39,7 @@
 #include "Progress.h"
 #include "BFSettings.h"
 #include "BFCmdLine.h"
+#include "BFLog.h"
 #include "BFwxLog.h"
 
 IMPLEMENT_APP(BFApp);
@@ -117,7 +119,8 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 }
 
 BFApp::BFApp ()
-     : pLog_(NULL)
+     : pLog_(NULL),
+       pSingleInstanceChecker_(NULL)
 {
 }
 
@@ -127,6 +130,20 @@ BFApp::BFApp ()
 
 bool BFApp::OnInit()
 {
+    // check if another instance is running
+    pSingleInstanceChecker_ = new wxSingleInstanceChecker
+                                    (
+                                        wxString::Format("%s-%s",
+                                                         GetFullApplicationName(),
+                                                         wxGetUserId())
+                                    );
+
+    if ( pSingleInstanceChecker_->IsAnotherRunning() )
+    {
+        wxMessageBox("Another program instance is already running!\nAborting...");
+        return false;
+    }
+
     //
     RememberApplicationDirectory();
 
@@ -163,10 +180,7 @@ bool BFApp::OnInit()
             strToOpen = BFSettings::Instance().GetLastProject();
 
     if ( !(strToOpen.IsEmpty()) )
-    {
         OpenProject(strToOpen);
-        //MainFrame()->RefreshTitle();
-    }
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */
@@ -185,6 +199,9 @@ bool BFApp::OnInit()
 
     if (pLog_)
         delete pLog_;
+
+    if (pSingleInstanceChecker_)
+        delete pSingleInstanceChecker_;
 
     return 1;
 }

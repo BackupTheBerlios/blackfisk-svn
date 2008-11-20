@@ -73,6 +73,8 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
     EVT_MENU    (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
     EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
+    EVT_MENU    (BF_ID_MAINFRAME_MAIL,              BFMainFrame::OnMail)
+    EVT_BUTTON  (BF_ID_MAINFRAME_MAIL,              BFMainFrame::OnMail)
     EVT_MENU    (BF_ID_MAINFRAME_BACKUP,            BFMainFrame::OnBackup)
     EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,          BFMainFrame::OnSettings)
 #ifdef _DEBUG
@@ -138,6 +140,7 @@ END_EVENT_TABLE()
     menuHelp->Append( BF_ID_MAINFRAME_OPENWEBSITE,   _("&Website") );
     menuHelp->Append( BF_ID_MAINFRAME_SUBMITBUG,     _("Report a &Bug") );
     menuHelp->Append( BF_ID_MAINFRAME_FEAUTERREQUEST,_("Submit a &Feauter Request") );
+    menuHelp->Append( BF_ID_MAINFRAME_MAIL,          _("E-Mail Contact") );
     menuHelp->Append( BF_ID_MAINFRAME_SHOWLICENSE,   _("&License") );
     menuHelp->Append( BF_ID_MAINFRAME_SHOWHISTORY,   _("&History") );
     menuHelp->AppendSeparator();
@@ -172,12 +175,16 @@ END_EVENT_TABLE()
     wxButton* pButtonBug        = new wxButton(this, BF_ID_MAINFRAME_SUBMITBUG,      _("Bug Report"));
     wxButton* pButtonFeauter    = new wxButton(this, BF_ID_MAINFRAME_FEAUTERREQUEST, _("Feauter Request"));
     wxButton* pButtonWebsite    = new wxButton(this, BF_ID_MAINFRAME_OPENWEBSITE,    _("Website"));
+    wxButton* pButtonMail       = new wxButton(this, BF_ID_MAINFRAME_MAIL,           _("E-Mail Contact"));
 
     pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonWebsite,  wxSizerFlags(0).Border(wxALL, 10));
+    pButtonSizer->AddStretchSpacer(1);
+    pButtonSizer->Add( pButtonMail,     wxSizerFlags(0).Border(wxALL, 10));
+
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
@@ -354,6 +361,11 @@ void BFMainFrame::OnSubmitBug (wxCommandEvent& event)
 void BFMainFrame::OnFeauterRequest (wxCommandEvent& event)
 {
     new BFThread_LaunchBrowser(BF_URL_FEAUTERREQUEST);
+}
+
+void BFMainFrame::OnMail (wxCommandEvent& event)
+{
+    new BFThread_LaunchBrowser(BF_URL_MAIL);
 }
 
 void BFMainFrame::OnProject (wxCommandEvent& event)

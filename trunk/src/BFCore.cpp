@@ -36,6 +36,7 @@
 #include "BFApp.h"
 #include "BFRootTaskApp.h"
 #include "Progress.h"
+#include "BFSystem.h"
 #include "blackfisk.h"
 #include "BFundef.h"
 

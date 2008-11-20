@@ -33,7 +33,6 @@
 #include <wx/file.h>
 #include <wx/imaglist.h>
 
-//#include "BFLog.h"
 #include "BFundef.h"
 
 
@@ -64,12 +63,6 @@ class BFCore
         wxString    strCurrentDate_Old_;
         /// Please see SetCurrentDateTime() for more detailes.
         wxString    strCurrentTime_Old_;
-
-
-        /** it log messages recieving from OBSystem;
-            there is no need to touch OBLog directly
-            just use OBSystem to create messages */
-        //BFLog       log_;
 
         /** indicates that a backup is running
             so that backup messages will be created */
