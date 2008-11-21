@@ -410,6 +410,8 @@ void BFRootTaskApp::ModifyDestination (const wxString& strOldDestination,
 
 bool BFRootTaskApp::PreBackupCheck ()
 {
+    BFSystem::Log(wxString::Format(_("PreBackup Check for %s ..."), GetCurrentFilename()));
+
     // get the tasks
     wxString str;
     BFTaskVector vec;

@@ -272,11 +272,13 @@ bool BFApp::OnInit()
     {
         BFSystem::Log(wxString::Format(_("Run the project %s automaticly..."), strCmdOpen_));
 
-        // start the backup if everything is fine
+        // start the backup
         if ( BFRootTaskApp::Instance().PreBackupCheck() )
             new BFBackupProgressDlg(BFMainFrame::Instance());
+        else
+            BFSystem::Log(_("PreBackup failed. Aborting ..."));
 
-        Exit();
+        return false;
     }
 
     return true;

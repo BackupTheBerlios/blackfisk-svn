@@ -591,9 +591,11 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 
     if (iAnswer != wxID_CANCEL)
     {
-        // start the backup if everything is fine
+        // start the backup
         if ( BFRootTaskApp::Instance().PreBackupCheck() )
             new BFBackupProgressDlg(this);
+        else
+            BFSystem::Log(_("PreBackup failed. Aborting ..."));
     }
 }
 
