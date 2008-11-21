@@ -109,6 +109,19 @@ class BFCore
                                 const wxString& strOld,
                                 const wxString& strNew);
 
+        /** Open a file specified by 'strFilename', search for a line specified by 'strLine'
+            and delete the line.
+            It return 'true' if a the line was found and deleted and 'false' if the
+            line wasn't found or an error occured. */
+        bool DeleteLineInFile (const wxString& strFilename,
+                               const wxString& strLine);
+
+        /** Open a file specified by 'strFilename', search for a line specified by 'strLine'.
+            It return 'true' if a the line was found and 'false' if the
+            line wasn't found or an error occured. */
+        bool IsLineInFile (const wxString& strFilename,
+                           const wxString& strLine);
+
         /** move a file */
         bool MoveFile (const wxString &strSource, const wxString& Destination, bool bOverwrite = BF_DEFAULT_OVERWRITE);
         /** copy a file

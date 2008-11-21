@@ -124,7 +124,7 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
     if ( strOld.IsEmpty() )
     {
         // add the new line
-        file.AddLine('\n');
+        //file.AddLine('\n');
         file.AddLine(strNew);
     }
     else
@@ -149,6 +149,62 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
     return rc;
 }
 
+
+bool BFCore::DeleteLineInFile (const wxString& strFilename,
+                               const wxString& strLine)
+{
+    wxTextFile file(strFilename);
+    bool rc = false;
+
+    // open the file
+    if ( file.Open(strFilename) == false )
+        return rc;
+
+    // iterate on file
+    for (wxString str = file.GetFirstLine();
+         !(file.Eof());
+         str = file.GetNextLine())
+    {
+        if (str == strLine)
+        {
+            file.RemoveLine(file.GetCurrentLine());
+            rc = true;
+            break;
+        }
+    }
+
+    file.Write();
+    file.Close();
+
+    return rc;
+}
+
+bool BFCore::IsLineInFile (const wxString& strFilename,
+                           const wxString& strLine)
+{
+    wxTextFile file(strFilename);
+    bool rc = false;
+
+    // open the file
+    if ( file.Open(strFilename) == false )
+        return rc;
+
+    // iterate on file
+    for (wxString str = file.GetFirstLine();
+         !(file.Eof());
+         str = file.GetNextLine())
+    {
+        if (str == strLine)
+        {
+            rc = true;
+            break;
+        }
+    }
+
+    file.Close();
+
+    return rc;
+}
 
 wxArrayString& BFCore::GetDirListing (const wxString& strDir,
                                       wxArrayString& arr,

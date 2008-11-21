@@ -152,8 +152,6 @@ void BFCronCtrl::SetData ()
     }
 }
 
-#include <wx/msgdlg.h>
-
 wxString BFCronCtrl::GetCrontabline ()
 {
     SetData();

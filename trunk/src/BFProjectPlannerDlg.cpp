@@ -31,13 +31,17 @@
 #include "BFSettings.h"
 #include "ids.h"
 
+#include <wx/tglbtn.h>
+
 #define BFPROJECTPLANNERDLG_ID_BUTTONOK          1 + BF_PROJECTPLANNER_ID_HIGHEST
 #define BFPROJECTPLANNERDLG_ID_BUTTONCANCEL      2 + BF_PROJECTPLANNER_ID_HIGHEST
+#define BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE    3 + BF_PROJECTPLANNER_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFProjectPlannerDlg, wxDialog)
-  EVT_CLOSE     (                                       BFProjectPlannerDlg::OnClose)
-  EVT_BUTTON    (BFPROJECTPLANNERDLG_ID_BUTTONOK,       BFProjectPlannerDlg::OnButton_Ok)
-  EVT_BUTTON    (BFPROJECTPLANNERDLG_ID_BUTTONCANCEL,   BFProjectPlannerDlg::OnButton_Cancel)
+  EVT_CLOSE         (                                       BFProjectPlannerDlg::OnClose)
+  EVT_BUTTON        (BFPROJECTPLANNERDLG_ID_BUTTONOK,       BFProjectPlannerDlg::OnButton_Ok)
+  EVT_BUTTON        (BFPROJECTPLANNERDLG_ID_BUTTONCANCEL,   BFProjectPlannerDlg::OnButton_Cancel)
+  EVT_TOGGLEBUTTON  (BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE, BFProjectPlannerDlg::OnButton_Schedule)
 END_EVENT_TABLE()
 
 
@@ -51,8 +55,9 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     SetTitle(wxString::Format("Project Planner for %s", BFRootTaskApp::Instance().GetProjectName()));
 
     // get crontabline
-    wxArrayString arr;
-    BFRootTaskApp::ParseCrontabline(BFRootTaskApp::Instance().GetCrontabline(), arr);
+    wxString        strCrontabLine = BFRootTaskApp::Instance().GetCrontabline();
+    wxArrayString   arr;
+    BFRootTaskApp::ParseCrontabline(strCrontabLine, arr);
 
     wxStaticText* pStatic = NULL;
 
@@ -72,7 +77,12 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
         pStatic = new wxStaticText(this, wxID_ANY, str);
     }
 
-    // buttons
+    // schedule button
+    pButtonSchedule_ = new wxToggleButton(this,
+                                          BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE,
+                                          _("Scheduler activated"));
+
+    // standard buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
                                                        BFPROJECTPLANNERDLG_ID_BUTTONOK,
                                                        BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
@@ -82,11 +92,15 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
                                                        BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
                                                        _("Cancel"));
 
+    // scheduler active?
+    ToogleButton_Schedule ( !(strCrontabLine.IsEmpty()) );
+
     // sizer, arrange and show
     wxBoxSizer* pDlgSizer       = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
+    pDlgSizer->Add (pButtonSchedule_,   wxSizerFlags(0).Center().Border());
     if (pCronCtrl_)
         pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
     else
@@ -111,11 +125,19 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
     if (pCronCtrl_)
     {
-        wxString strOld = BFRootTaskApp::Instance().GetCrontabline();
-        wxString strNew = pCronCtrl_->GetCrontabline();
+        if ( pButtonSchedule_->GetValue() )
+        {
+            wxString strOld = BFRootTaskApp::Instance().GetCrontabline();
+            wxString strNew = pCronCtrl_->GetCrontabline();
 
-        if (strOld != strNew)
-            BFCore::Instance().ReplaceLineInFile(BFSettings::Instance().GetCrontab(), strOld, strNew);
+            if (strOld != strNew)
+                BFCore::Instance().ReplaceLineInFile(BFSettings::Instance().GetCrontab(), strOld, strNew);
+        }
+        else
+        {
+            BFCore::Instance().DeleteLineInFile(BFSettings::Instance().GetCrontab(),
+                                                BFRootTaskApp::Instance().GetCrontabline());
+        }
     }
 
     Close();
@@ -124,4 +146,26 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
 void BFProjectPlannerDlg::OnButton_Cancel (wxCommandEvent& rEvent)
 {
     Close();
+}
+
+void BFProjectPlannerDlg::OnButton_Schedule (wxCommandEvent& rEvent)
+{
+    ToogleButton_Schedule(pButtonSchedule_->GetValue());
+}
+
+void BFProjectPlannerDlg::ToogleButton_Schedule (bool bValue)
+{
+    if ( bValue != pButtonSchedule_->GetValue() )
+        pButtonSchedule_->SetValue (bValue);
+
+    if ( bValue )
+    {
+        pButtonSchedule_->SetLabel(_("Scheduler active"));
+        pCronCtrl_->Enable();
+    }
+    else
+    {
+        pButtonSchedule_->SetLabel(_("Scheduler inactive"));
+        pCronCtrl_->Enable(false);
+    }
 }

@@ -300,6 +300,12 @@ bool BFApp::OnInit()
 
 void BFApp::RememberApplicationDirectory ()
 {
+// XXX
+#ifdef _DEBUG
+    strApplicationDir_ = "D:\\Garage\\projekte\\blackfisk\\trunk";
+    return;
+#endif
+
     strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
 
     if (strApplicationDir_.IsEmpty())
@@ -548,7 +554,7 @@ bool BFApp::IsSchedulerInAutostart ()
 void BFApp::SetSchedulerInAutostart ()
 {
     wxRegKey key(BF_REGKEY_AUTOSTART);
-    key.SetValue(BF_REGKEY_VALUE, "EXECUTE ME : EXE");
+    key.SetValue(BF_REGKEY_VALUE, GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "wxCron.exe");
 }
 
 void BFApp::RemoveSchedulerFromAutostart ()
