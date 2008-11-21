@@ -412,10 +412,20 @@ wxString BFTask::GetArchiveExtension()
 
 bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
 {
-    // create destination string
     wxString strDest, strSrc;
-    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName() + "." + GetArchiveExtension();
+
+    // source
     strSrc  = GetSource();
+
+    // destination
+    strDest = strDest + GetDestination();
+
+    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
+        strDest = strDest + wxFILE_SEP_PATH;
+
+    strDest =  strDest + GetName() + "." + GetArchiveExtension();
+
+    // handle placeholders
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
@@ -453,8 +463,19 @@ bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
 bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
 {
     wxString strDest, strSrc;
-    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
+
+    // source
     strSrc  = GetSource();
+
+    // destination
+    strDest = strDest + GetDestination();
+
+    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
+        strDest = strDest + wxFILE_SEP_PATH;
+
+    strDest = strDest + GetName();
+
+    // handle placeholders
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
@@ -472,10 +493,20 @@ bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
 
 bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
 {
-    // create destination string
     wxString strDest, strSrc;
-    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
+
+    // source
     strSrc  = GetSource();
+
+    // destination
+    strDest = strDest + GetDestination();
+
+    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
+        strDest = strDest + wxFILE_SEP_PATH;
+
+    strDest = strDest + GetName();
+
+    // handle placeholders
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
@@ -492,17 +523,27 @@ bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
 
 bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
 {
-    // create destination string
     wxString strDest, strSrc;
-    strDest = strDest + GetDestination() + wxFILE_SEP_PATH + GetName();
+
+    // source
     strSrc  = GetSource();
+
+    // destination
+    strDest = strDest + GetDestination();
+
+    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
+        strDest = strDest + wxFILE_SEP_PATH;
+
+    strDest = strDest + GetName();
+
+    // handle placeholders
     FillBlackfiskPlaceholders(strDest);
     FillBlackfiskPlaceholders(strSrc);
 
     return BFCore::Instance().Synchronise
     (
-        strSrc.wx_str(),
-        strDest.wx_str(),
+        strSrc,
+        strDest,
         Verify(),
         VerifyContent(),
         GetRealSync(),

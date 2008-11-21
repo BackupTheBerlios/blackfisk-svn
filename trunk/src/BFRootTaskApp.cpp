@@ -154,11 +154,6 @@ bool BFRootTaskApp::Run_Start ()
     if (BFBackupProgressDlg::Instance() == NULL)
         return false;
 
-    /* deactivate the default wxLog target
-       and set a new one that handle messages
-       with BFSystem */
-    //XXX wxLog::SetActiveTarget(new BFwxLog);
-
     // init
     bStopProject_   = false;
     bStopTask_      = false;
@@ -225,9 +220,6 @@ bool BFRootTaskApp::Run_Finished ()
     pBackupLog_     = NULL;
     pProgressTask_  = NULL;
     pProgressTotal_ = NULL;
-
-    // reset the default wxLog target
-    // XXX delete wxLog::SetActiveTarget(NULL);
 
     wxGetApp().Sound_BackupFinished();
 

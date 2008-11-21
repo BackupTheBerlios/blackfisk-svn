@@ -1,4 +1,3 @@
-- BUG: new project not in crontab
 - BUG: open project, open task dialog, change nothing!, click ok, close app, save question
 - BUG: create new project, close app, save questions two times!
 

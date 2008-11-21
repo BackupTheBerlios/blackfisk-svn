@@ -780,6 +780,7 @@ bool BFCore::Synchronise (const wxString& strOriginal,
     // synchronise the dir
     wxDir dir(strOriginal);
     wxArrayString arrOriginalListing;
+
     BFSynchroniseDirTraverser trav(strOriginal,
                                    strToSynchronise,
                                    arrOriginalListing,

@@ -13,6 +13,7 @@
 				<Option object_output=".out\objs_debd" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option parameters="--run D:\garage\projekte\blackfisk\trunk\test.bfp" />
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Compiler>
 					<Add option="-g" />
