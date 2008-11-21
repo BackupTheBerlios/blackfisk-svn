@@ -113,6 +113,10 @@ class BFApp : public wxApp
             see the call in the BFMainFrame ctor for more details */
         static void SetMainFrame (BFMainFrame* pMainFrame);
 
+        /** Return true if the current project is executed from commandline
+            with the option --run. */
+        bool IsAutorun ();
+
         ///
         static wxString GetFullApplicationName ();
         /// return major, minor, release number and extensions as string

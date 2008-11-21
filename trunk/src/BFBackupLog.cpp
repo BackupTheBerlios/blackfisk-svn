@@ -160,8 +160,16 @@ bool BFTaskLog::Write ()
 wxString BFTaskLog::GetFileName ()
 {
     wxString str;
-    str << rTask_.GetDestination() << wxFILE_SEP_PATH << rTask_.GetName() << ".log";
+
+    str << rTask_.GetDestination();
+
+    if ( !(str.EndsWith(wxFILE_SEP_PATH)) )
+        str << wxFILE_SEP_PATH;
+
+    str << rTask_.GetName() << ".log";
+
     BFTask::FillBlackfiskPlaceholders(str);
+
     return str;
 }
 

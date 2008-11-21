@@ -225,6 +225,12 @@ bool BFRootTaskApp::Run_Finished ()
 
     BFBackupProgressDlg::Instance()->Close();
 
+    /* If the project was started automaticly from
+       commandline or scheduler, blackfisk need
+       to close after the backup. */
+    if ( wxGetApp().IsAutorun() )
+        wxGetApp().Exit();
+
     return true;
 }
 

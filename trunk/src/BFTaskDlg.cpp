@@ -384,7 +384,15 @@ void BFTaskDlg::SetData ()
     // name
     if (pNameCtrl_->IsModified())
     {
-        strOldPath = pTask_->GetDestination() + wxFILE_SEP_PATH + pTask_->GetName();
+        // old path
+        strOldPath = pTask_->GetDestination();
+
+        if ( !(strOldPath.EndsWith(wxFILE_SEP_PATH)) )
+            strOldPath = strOldPath + wxFILE_SEP_PATH;
+
+        strOldPath = strOldPath + pTask_->GetName();
+
+        // new path
         strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
 
         pTask_->SetName(pNameCtrl_->GetValue());
@@ -407,7 +415,15 @@ void BFTaskDlg::SetData ()
     // destination
     if (pDestCtrl_->GetPath() != pTask_->GetDestination())
     {
-        strOldPath = pTask_->GetDestination() + wxFILE_SEP_PATH + pTask_->GetName();
+        // old path
+        strOldPath = pTask_->GetDestination();
+
+        if ( !(strOldPath.EndsWith(wxFILE_SEP_PATH)) )
+            strOldPath = strOldPath + wxFILE_SEP_PATH;
+
+        strOldPath = strOldPath + pTask_->GetName();
+
+        // new path
         strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
 
         pTask_->SetDestination(pDestCtrl_->GetPath());

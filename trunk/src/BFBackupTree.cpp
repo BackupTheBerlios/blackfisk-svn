@@ -567,7 +567,15 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
     // set the new destination
     if ( pItemData )
     {
-        wxString strOldPath = pTask->GetDestination() + wxFILE_SEP_PATH + pTask->GetName();
+        // old path
+        wxString strOldPath = pTask->GetDestination();
+
+        if ( !(strOldPath.EndsWith(wxFILE_SEP_PATH)) )
+            strOldPath = strOldPath + wxFILE_SEP_PATH;
+
+        strOldPath = strOldPath + pTask->GetName();
+
+        // new path
         wxString strNewPath = pItemData->GetPath() + wxFILE_SEP_PATH + pTask->GetName();
 
         pTask->SetDestination(pItemData->GetPath());
@@ -1023,7 +1031,12 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
             if (pTask == NULL)
                 return;
 
-            strDropedFilename_ = strDropedFilename_ + pTask->GetDestination() + wxFILE_SEP_PATH + pTask->GetName();
+            strDropedFilename_ = strDropedFilename_ + pTask->GetDestination();
+
+            if ( !(strDropedFilename_.EndsWith(wxFILE_SEP_PATH)) )
+                strDropedFilename_ = strDropedFilename_ + wxFILE_SEP_PATH;
+
+            strDropedFilename_ = strDropedFilename_ + pTask->GetName();
         }
     }
 

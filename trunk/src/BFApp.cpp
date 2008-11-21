@@ -57,6 +57,11 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     spMainFrame_ = pMainFrame;
 }
 
+bool BFApp::IsAutorun ()
+{
+    return bCmdRun_;
+}
+
 /*static*/ wxString BFApp::GetFullApplicationName ()
 {
     return wxString::Format("%s %d.%d.%d %s",
@@ -274,11 +279,14 @@ bool BFApp::OnInit()
 
         // start the backup
         if ( BFRootTaskApp::Instance().PreBackupCheck() )
+        {
             new BFBackupProgressDlg(BFMainFrame::Instance());
+        }
         else
-            BFSystem::Log(_("PreBackup failed. Aborting ..."));
-
-        return false;
+        {
+            BFSystem::Error(_("PreBackupCheck failed. Aborting ..."));
+            return false;
+        }
     }
 
     return true;
