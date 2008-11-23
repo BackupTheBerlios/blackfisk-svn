@@ -27,8 +27,6 @@
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
 
-#include "BFSystem.h"
-
 BFBitmapButton::BFBitmapButton (wxWindow* pParent,
                                 wxWindowID id,
                                 const wxBitmap& rBitmap,

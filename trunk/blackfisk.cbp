@@ -13,7 +13,6 @@
 				<Option object_output=".out\objs_debd" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--run D:\garage\projekte\blackfisk\trunk\test.bfp" />
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Compiler>
 					<Add option="-g" />
@@ -39,7 +38,6 @@
 				<Option compiler="gcc" />
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Linker>
-					<Add library="libwxmsw$(#wxversion)u.a" />
 					<Add library="libwxzlib.a" />
 					<Add library="libwxpng.a" />
 					<Add library="comctl32" />
@@ -48,6 +46,7 @@
 					<Add library="uuid" />
 					<Add library="winmm" />
 					<Add library="wsock32" />
+					<Add library="libwxbase$(#wxversion)u.a" />
 					<Add directory="$(#wx)\lib\gcc_lib" />
 				</Linker>
 			</Target>

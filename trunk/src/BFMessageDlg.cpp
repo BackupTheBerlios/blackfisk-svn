@@ -109,7 +109,6 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     pSizerV->Add(pSizerHb, wxSizerFlags(0).Center().Border());
     SetSizerAndFit(pSizerV);
     Center();
-    ShowModal();
 }
 
 //

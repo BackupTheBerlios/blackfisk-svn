@@ -1,6 +1,4 @@
-- BUG: autorun doesn't work
 - BUG: open project, open task dialog, change nothing!, click ok, close app, save question
-- BUG: create new project, close app, save questions two times!
 
 0.0.1
 ~~~~~
