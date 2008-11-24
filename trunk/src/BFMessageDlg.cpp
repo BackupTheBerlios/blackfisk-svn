@@ -51,7 +51,7 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
                             const wxString& strMsg,
                             const wxString& strTitle /*= wxEmptyString*/,
                             BFMessageDlg_Type type_icon /*= BF_MSGDLG_NOTUSED*/)
-            : wxDialog(NULL, wxID_ANY, strTitle)
+            : wxDialog(BFMainFrame::Instance(), wxID_ANY, strTitle)
 {
     // sizer
     wxBoxSizer* pSizerV = new wxBoxSizer(wxVERTICAL);
@@ -118,7 +118,7 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     pSizerV->Add(pSizerHa, wxSizerFlags(0).Center().Border());
     pSizerV->Add(pSizerHb, wxSizerFlags(0).Center().Border());
     SetSizerAndFit(pSizerV);
-    Center();
+    CenterOnParent();
 
     if (bShow)
         ShowModal();

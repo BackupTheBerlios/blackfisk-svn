@@ -90,9 +90,7 @@
 		<Unit filename="README">
 			<Option virtualFolder="doc\" />
 		</Unit>
-		<Unit filename="TODO">
-			<Option virtualFolder="doc\" />
-		</Unit>
+		<Unit filename="TODO" />
 		<Unit filename="bf.log" />
 		<Unit filename="blackfisk.rc">
 			<Option compilerVar="WINDRES" />

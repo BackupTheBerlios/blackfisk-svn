@@ -552,8 +552,10 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 #ifdef _DEBUG
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, "MyQuestion", _("Question"));
-    dlg.ShowModal();
+    /*BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, "MyQuestion", _("Question"));
+    dlg.ShowModal();*/
+    //wxBell();
+    wxSystem(wxString::Format("echo %c", 7));
 }
 
 void BFMainFrame::Test ()

@@ -101,6 +101,8 @@ void BFLogViewDlg::Init ()
     }
 
     SetSizerAndFit(pBookSizer);
+
+    CenterOnParent();
 }
 
 void BFLogViewDlg::OnClose (wxCloseEvent& event)
