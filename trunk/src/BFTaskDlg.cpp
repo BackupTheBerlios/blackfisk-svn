@@ -452,8 +452,11 @@ void BFTaskDlg::SetData ()
     // real sync
     if (pRealSyncCheck_)
     {
-        pTask_->SetRealSync(pRealSyncCheck_->GetValue());
-        BFRootTask::Instance().SetModified();
+        if ( pTask_->GetRealSync() != pRealSyncCheck_->GetValue() )
+        {
+            pTask_->SetRealSync(pRealSyncCheck_->GetValue());
+            BFRootTask::Instance().SetModified();
+        }
     }
 
     // exclude list
