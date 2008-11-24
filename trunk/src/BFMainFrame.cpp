@@ -267,7 +267,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     if (BFRootTaskApp::Instance().IsProjectModified())
     {
         // ask for save
-        iAnswer = QuestionYesNoCancel(_("111 The current project is modified!\nSave it?"));
+        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
 
         // cancel/abort
         if (iAnswer == wxID_CANCEL)

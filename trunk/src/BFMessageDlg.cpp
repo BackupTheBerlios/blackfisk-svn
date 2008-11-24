@@ -84,15 +84,24 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     pSizerHa->Add(pSBitmap, wxSizerFlags(0).Border());
     pSizerHa->Add(pSText, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
 
+    /* If the dialog display a message as question ShowModal()
+       need to be called explicite externaly because of catching
+       the users answer back.
+       But if it is just a message with an OK button ShowModal()
+       is called by the constructor automaticly. */
+    bool bShow = false;
+
     // buttons
     switch (type)
     {
         case BF_MSGDLG_QUESTION_YESNO:
             CreateButtons_Question (pSizerHb, false);
+            bShow = false;
             break;
 
         case BF_MSGDLG_QUESTION_YESNOCANCEL:
             CreateButtons_Question (pSizerHb, true);
+            bShow = false;
             break;
 
         case BF_MSGDLG_BACKUP_QUESTION:
@@ -101,6 +110,7 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
 
         default:
             CreateButtons_Default (pSizerHb);
+            bShow = true;
             break;
     }
 
@@ -109,6 +119,9 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     pSizerV->Add(pSizerHb, wxSizerFlags(0).Center().Border());
     SetSizerAndFit(pSizerV);
     Center();
+
+    if (bShow)
+        ShowModal();
 }
 
 //
