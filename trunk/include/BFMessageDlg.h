@@ -69,6 +69,8 @@ class BFMessageDlg : public wxDialog
         ///
         static const wxBitmap GetMessageTypeBitmap (BFMessageDlg_Type type);
         ///
+        static const void PlayMessageTypeSound (BFMessageDlg_Type type);
+        ///
         const wxBitmap GetButtonBitmap (wxWindowID id);
 
         ///

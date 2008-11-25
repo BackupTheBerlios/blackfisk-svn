@@ -42,6 +42,7 @@
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
 #include "BFMainFrame.h"
+#include "BFEnvironment.h"
 #include "blackfisk.h"
 #include "ids.h"
 
@@ -425,7 +426,7 @@ void BFSettingsDlg::SetTextCrontab ()
             break;
 
         case 1:
-            pTextCrontab_->SetValue(wxGetApp().GetInBuildCrontabFileName());
+            pTextCrontab_->SetValue(BFEnvironment::GetInBuildCrontabFileName());
             break;
 
         case 2:

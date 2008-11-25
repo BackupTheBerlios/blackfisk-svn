@@ -51,6 +51,7 @@
 #include "BFMessageDlg.h"
 #include "BFBitmapButton.h"
 #include "BFProjectPlannerDlg.h"
+#include "BFEnvironment.h"
 
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
@@ -79,6 +80,7 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,          BFMainFrame::OnSettings)
 #ifdef _DEBUG
     EVT_MENU    (BF_ID_MAINFRAME_TEST,              BFMainFrame::OnTest)
+    EVT_BUTTON  (BF_ID_MAINFRAME_TEST,              BFMainFrame::OnTest)
 #endif
 
     EVT_COMMAND (BF_ID_MAINFRAME, BF_EVENT_THREAD_END, BFMainFrame::OnThreadEnd)
@@ -177,6 +179,12 @@ END_EVENT_TABLE()
     wxButton* pButtonWebsite    = new wxButton(this, BF_ID_MAINFRAME_OPENWEBSITE,    _("Website"));
     wxButton* pButtonMail       = new wxButton(this, BF_ID_MAINFRAME_MAIL,           _("E-Mail Contact"));
 
+#ifdef _DEBUG
+    wxButton* pButtonTest       = new wxButton(this, BF_ID_MAINFRAME_TEST, _(" T E S T "));
+    pButtonSizer->Add( pButtonTest, wxSizerFlags(0).Border(wxALL, 10) );
+    pButtonSizer->AddStretchSpacer(1);
+#endif
+
     pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
@@ -184,7 +192,6 @@ END_EVENT_TABLE()
     pButtonSizer->Add( pButtonWebsite,  wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonMail,     wxSizerFlags(0).Border(wxALL, 10));
-
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
@@ -330,7 +337,7 @@ BFBackupTree* BFMainFrame::BackupTree ()
 void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
 {
     wxArrayString arr;
-    arr.Add(wxGetApp().GetLogFileName());
+    arr.Add(BFEnvironment::GetLogFileName());
     new BFLogViewDlg(this, arr);
 }
 
@@ -550,12 +557,20 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 }
 
 #ifdef _DEBUG
+#include "BFSound.h"
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    /*BFMessageDlg dlg(BF_MSGDLG_QUESTION_YESNOCANCEL, "MyQuestion", _("Question"));
-    dlg.ShowModal();*/
     //wxBell();
-    wxSystem(wxString::Format("echo %c", 7));
+    //wxSystem(wxString::Format("echo %c", 7));
+
+    /*Beep(3500, 1000);
+    wxGetApp().Sound_BackupFinished();*/
+
+    BFMessageDlg dlg1(BF_MSGDLG_INFO, "test");
+    BFMessageDlg dlg2(BF_MSGDLG_WARNING, "test");
+    BFMessageDlg dlg3(BF_MSGDLG_ERROR, "test");
+    BFMessageDlg dlg4(BF_MSGDLG_FATAL, "test");
+    BFSound::Finish();
 }
 
 void BFMainFrame::Test ()

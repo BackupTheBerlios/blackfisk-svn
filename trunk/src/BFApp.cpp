@@ -27,7 +27,6 @@
 #include <wx/dir.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
-#include <wx/sound.h>
 #include <wx/protocol/ftp.h>
 #include <wx/snglinst.h>
 #include <wx/msw/registry.h>
@@ -41,6 +40,7 @@
 #include "BFSettings.h"
 #include "BFLog.h"
 #include "BFwxLog.h"
+#include "BFEnvironment.h"
 
 IMPLEMENT_APP(BFApp);
 
@@ -205,7 +205,7 @@ bool BFApp::OnInit()
     }
 
     //
-    RememberApplicationDirectory();
+    BFEnvironment::RememberApplicationDirectory(argv);
 
     //
     pLog_ = new BFLog();
@@ -305,7 +305,7 @@ bool BFApp::OnInit()
 
     return 0;
 }
-
+/*
 void BFApp::RememberApplicationDirectory ()
 {
 // XXX
@@ -351,6 +351,19 @@ const wxString BFApp::GetGraphicDir ()
     return str;
 }
 
+const wxString BFApp::GetSoundDir ()
+{
+    #if defined(__WXMSW__)
+        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "sound" + wxFILE_SEP_PATH;
+    #elif defined(__UNIX__)
+        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
+    #else
+        #error "Unsupported plattform! Please contact the project maintainer for support!"
+    #endif
+
+    return str;
+}
+
 const wxString BFApp::GetSettingsFileName ()
 {
     #if defined(__WXMSW__)
@@ -375,15 +388,15 @@ const wxString BFApp::GetInBuildCrontabFileName ()
     #endif
 
     return str;
-}
+}*/
 
 
 /*static*/ bool BFApp::ReadSettings ()
 {
-    if ( !(wxFileName::FileExists(wxGetApp().GetSettingsFileName())) )
+    if ( !(wxFileName::FileExists(BFEnvironment::GetSettingsFileName())) )
         SaveSettings();
 
-    wxFileInputStream   in(wxGetApp().GetSettingsFileName());
+    wxFileInputStream   in(BFEnvironment::GetSettingsFileName());
     jbSerialize         archive(in, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
@@ -391,7 +404,7 @@ const wxString BFApp::GetInBuildCrontabFileName ()
 
 /*static*/ bool BFApp::SaveSettings ()
 {
-    wxFileOutputStream  out(wxGetApp().GetSettingsFileName());
+    wxFileOutputStream  out(BFEnvironment::GetSettingsFileName());
     jbSerialize         archive(out, BF_SETTINGS_CURRENT_VERSION);
 
     return BFSettings::Instance().Serialize(archive);
@@ -458,12 +471,6 @@ void BFApp::Test ()
     BFSystem::Fatal("Fatal");
 }
 #endif
-
-void BFApp::Sound_BackupFinished ()
-{
-    wxSound("sound\\finish.wav").Play();
-}
-
 
 bool BFApp::IsNewVersionAvailable ()
 {
@@ -562,7 +569,7 @@ bool BFApp::IsSchedulerInAutostart ()
 void BFApp::SetSchedulerInAutostart ()
 {
     wxRegKey key(BF_REGKEY_AUTOSTART);
-    key.SetValue(BF_REGKEY_VALUE, GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "wxCron.exe");
+    key.SetValue(BF_REGKEY_VALUE, BFEnvironment::GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "wxCron.exe");
 }
 
 void BFApp::RemoveSchedulerFromAutostart ()

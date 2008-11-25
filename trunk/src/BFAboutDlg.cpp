@@ -34,6 +34,7 @@
 #include "BFHyperlinkCtrl.h"
 #include "BFApp.h"
 #include "jbSerialize.h"
+#include "BFEnvironment.h"
 
 #define BFABOUTDLG_ID_VIEWLICENSE   1 + wxID_HIGHEST
 #define BFABOUTDLG_ID_OK            2 + wxID_HIGHEST
@@ -64,7 +65,7 @@ BFAboutDlg::BFAboutDlg ()
 
     wxStaticBitmap* pLogo = new wxStaticBitmap(this,
                                                wxID_ANY,
-                                               wxBitmap(wxGetApp().GetGraphicDir() + "logo_text.png", wxBITMAP_TYPE_PNG));
+                                               wxBitmap(BFEnvironment::GetGraphicDir() + "logo_text.png", wxBITMAP_TYPE_PNG));
 
     wxStaticText* pName = new wxStaticText(this, wxID_ANY, wxString::Format("Version: %s", BFApp::GetVersion()));
     font = pName->GetFont();

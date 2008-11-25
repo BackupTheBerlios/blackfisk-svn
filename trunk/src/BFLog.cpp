@@ -22,11 +22,11 @@
 
 
 #include "BFLog.h"
-#include "BFApp.h"
+#include "BFEnvironment.h"
 #include "BFSettings.h"
 
 BFLog::BFLog ()
-     : BFLogBase(wxGetApp().GetLogFileName(),
+     : BFLogBase(BFEnvironment::GetLogFileName(),
                  BFSettings::Instance().GetMaxLogFileSize()*1024)
 {
     fileLog_.Write("\n");

@@ -21,7 +21,7 @@
  ***/
 
 #include "BFSettings.h"
-#include "BFApp.h"
+#include "BFEnvironment.h"
 #include "blackfisk.h"
 
 
@@ -63,7 +63,7 @@ void BFSettings::InitDefaultValues()
     lDaysTillNextCheck_             = 0;
     dateLastVersionCheck_           = wxDateTime::Now().SetYear(2000);
     lScheduler_                     = 1;
-    strCrontab_                     = wxGetApp().GetInBuildCrontabFileName();
+    strCrontab_                     = BFEnvironment::GetInBuildCrontabFileName();
 }
 
 //
@@ -341,7 +341,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         if (rA.GetVersion() < 1030)
         {
             lScheduler_ = 1;
-            strCrontab_ = wxGetApp().GetInBuildCrontabFileName();
+            strCrontab_ = BFEnvironment::GetInBuildCrontabFileName();
         }
         else
         {

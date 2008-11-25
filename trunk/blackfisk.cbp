@@ -135,6 +135,9 @@
 		<Unit filename="include\BFDirCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="include\BFEnvironment.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="include\BFExcludeCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
@@ -197,6 +200,9 @@
 		</Unit>
 		<Unit filename="include\BFSettingsDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="include\BFSound.h">
+			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="include\BFSystem.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
@@ -282,6 +288,9 @@
 		<Unit filename="src\BFDirCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
+		<Unit filename="src\BFEnvironment.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="src\BFExcludeCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
@@ -344,6 +353,9 @@
 		</Unit>
 		<Unit filename="src\BFSettingsDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
+		</Unit>
+		<Unit filename="src\BFSound.cpp">
+			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="src\BFSystem.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />

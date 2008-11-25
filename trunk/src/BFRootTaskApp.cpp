@@ -40,6 +40,7 @@
 #include "BFIconTable.h"
 #include "BFTaskListCtrl.h"
 #include "BFSettings.h"
+#include "BFSound.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
 
@@ -221,7 +222,7 @@ bool BFRootTaskApp::Run_Finished ()
     pProgressTask_  = NULL;
     pProgressTotal_ = NULL;
 
-    wxGetApp().Sound_BackupFinished();
+    BFSound::Finish();
 
     BFBackupProgressDlg::Instance()->Close();
 

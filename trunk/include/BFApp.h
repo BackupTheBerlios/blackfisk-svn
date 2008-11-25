@@ -51,8 +51,7 @@ class BFApp : public wxApp
             just use OBSystem to display messages to the user */
         BFMsgObserver               msgObserver_;
 
-        ///
-        wxString                    strApplicationDir_;
+        // XXX        wxString                    strApplicationDir_;
 
         /** it log messages recieving from BFSystem;
             there is no need to touch BFLog directly
@@ -82,8 +81,7 @@ class BFApp : public wxApp
                                   const wxString& strFtpUser = wxEmptyString,
                                   const wxString& strFtpPwd = wxEmptyString);
 
-        ///
-        void RememberApplicationDirectory ();
+        // XXX void RememberApplicationDirectory ();
 
         ///
         void ParseCmdLine ();
@@ -131,16 +129,18 @@ class BFApp : public wxApp
             return value is "ABC" */
         static wxString ExtractCommunity (const wxArrayString& rStrings);
 
-        ///
+        /* XXX
         const wxString& GetApplicationDirectory ();
         ///
         const wxString GetLogFileName ();
         ///
         const wxString GetGraphicDir ();
         ///
+        const wxString GetSoundDir ();
+        ///
         const wxString GetSettingsFileName ();
         ///
-        const wxString GetInBuildCrontabFileName ();
+        const wxString GetInBuildCrontabFileName ();*/
 
         ///
         const wxString& GetCurrentProjectFilename ();
@@ -158,9 +158,6 @@ class BFApp : public wxApp
         bool SaveCurrentProject ();
         /** it close the current project */
         bool CloseCurrentProject (bool bCheckForModifications = true);
-
-        ///
-        void Sound_BackupFinished ();
 
         /** Check if a newer version of blackfisk is available.
             It read a version-info-file from the internet and

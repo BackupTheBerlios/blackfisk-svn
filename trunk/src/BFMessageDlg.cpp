@@ -35,6 +35,7 @@
 #include "BFBitmapButton.h"
 #include "BFMainFrame.h"
 #include "BFIconTable.h"
+#include "BFSound.h"
 
 BEGIN_EVENT_TABLE(BFMessageDlg, wxDialog)
     EVT_BUTTON(BF_MSGDLG_ID_OK,         BFMessageDlg::OnButton)
@@ -120,6 +121,10 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     SetSizerAndFit(pSizerV);
     CenterOnParent();
 
+    // sound
+    PlayMessageTypeSound(type);
+
+    // show
     if (bShow)
         ShowModal();
 }
@@ -219,6 +224,32 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
 
         default:
             return wxBitmap();
+    }
+}
+
+/*static*/ const void BFMessageDlg::PlayMessageTypeSound (BFMessageDlg_Type type)
+{
+    switch (type)
+    {
+        case BF_MSGDLG_QUESTION_YESNO:
+        case BF_MSGDLG_QUESTION_YESNOCANCEL:
+        case BF_MSGDLG_BACKUP_QUESTION:
+        case BF_MSGDLG_INFO:
+            BFSound::Info();
+            break;
+
+        case BF_MSGDLG_WARNING:
+            BFSound::Warning();
+            break;
+
+        case BF_MSGDLG_ERROR:
+            BFSound::Error();
+            break;
+
+        case BF_MSGDLG_FATAL:
+        default:
+            BFSound::Fatal();
+            break;
     }
 }
 
