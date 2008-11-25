@@ -25,7 +25,8 @@
 
 #include <wx/filefn.h>
 
-/*static*/ wxString BFEnvironment::strApplicationDir_ = wxEmptyString;
+/*static*/ wxString BFEnvironment::strApplicationDir_   = wxEmptyString;
+/*static*/ bool     BFEnvironment::bProjectScheduled_   = false;
 
 BFEnvironment::BFEnvironment ()
 {
@@ -119,4 +120,14 @@ BFEnvironment::BFEnvironment ()
     #endif
 
     return str;
+}
+
+/*static*/ void BFEnvironment::SetProjectScheduled (bool bScheduled)
+{
+    bProjectScheduled_ = bScheduled;
+}
+
+/*static*/ bool BFEnvironment::IsProjectScheduled ()
+{
+    return bProjectScheduled_;
 }

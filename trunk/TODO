@@ -1,7 +1,8 @@
+- BUG: set project planner daily 1 hour doesn't work correct
 - show backup log after autorun backup?
 - how to handle temporary volumes?
 - log-behaviour project specific?
-- sounds: backup finished, info, warning, error, fatal error
+
 
 0.0.1
 ~~~~~

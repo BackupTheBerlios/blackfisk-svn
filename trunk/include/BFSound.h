@@ -31,6 +31,9 @@ class BFSound
         /// ctor
         BFSound ();
 
+        ///
+        static void Beep (int frqz, int ms);
+
     public:
         /// virtual dtor
         virtual ~BFSound ();

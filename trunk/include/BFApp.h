@@ -64,9 +64,9 @@ class BFApp : public wxApp
         /** Used while parseing the command line.
             It is the backup project to open or run. */
         wxString                    strCmdOpen_;
-        /** Used while parseing the command line.
-            If 'true' the backup project should run. */
-        bool                        bCmdRun_;
+        /* XXX Used while parseing the command line.
+            If 'true' the backup project should run. *
+        bool                        bCmdRun_;*/
         /** Used while parseing the command line.
             If 'true' only the usage is displayed. */
         bool                        bCmdUsage_;
@@ -80,8 +80,6 @@ class BFApp : public wxApp
                                   const wxString& strFtpFile,
                                   const wxString& strFtpUser = wxEmptyString,
                                   const wxString& strFtpPwd = wxEmptyString);
-
-        // XXX void RememberApplicationDirectory ();
 
         ///
         void ParseCmdLine ();
@@ -111,10 +109,6 @@ class BFApp : public wxApp
             see the call in the BFMainFrame ctor for more details */
         static void SetMainFrame (BFMainFrame* pMainFrame);
 
-        /** Return true if the current project is executed from commandline
-            with the option --run. */
-        bool IsAutorun ();
-
         ///
         static wxString GetFullApplicationName ();
         /// return major, minor, release number and extensions as string
@@ -128,19 +122,6 @@ class BFApp : public wxApp
             string1 = "ABCDEFG" and string2 = "ABCwdFG
             return value is "ABC" */
         static wxString ExtractCommunity (const wxArrayString& rStrings);
-
-        /* XXX
-        const wxString& GetApplicationDirectory ();
-        ///
-        const wxString GetLogFileName ();
-        ///
-        const wxString GetGraphicDir ();
-        ///
-        const wxString GetSoundDir ();
-        ///
-        const wxString GetSettingsFileName ();
-        ///
-        const wxString GetInBuildCrontabFileName ();*/
 
         ///
         const wxString& GetCurrentProjectFilename ();

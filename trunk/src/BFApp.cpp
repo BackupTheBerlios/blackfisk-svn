@@ -57,11 +57,6 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     spMainFrame_ = pMainFrame;
 }
 
-bool BFApp::IsAutorun ()
-{
-    return bCmdRun_;
-}
-
 /*static*/ wxString BFApp::GetFullApplicationName ()
 {
     return wxString::Format("%s %d.%d.%d %s",
@@ -127,7 +122,6 @@ BFApp::BFApp ()
      : pLog_(NULL),
        pSingleInstanceChecker_(NULL),
        strCmdOpen_(wxEmptyString),
-       bCmdRun_(false),
        bCmdUsage_(false)
 {
 }
@@ -163,7 +157,7 @@ void BFApp::ParseCmdLine ()
             {
                 ++i;
                 strCmdOpen_ = argv[i];
-                bCmdRun_    = true;
+                BFEnvironment::SetProjectScheduled(true);
             }
         }
         else
@@ -226,7 +220,7 @@ bool BFApp::OnInit()
     }
 
     // run?
-    if ( bCmdRun_ )
+    if ( BFEnvironment::IsProjectScheduled() )
     {
         if ( strCmdOpen_.IsEmpty() )
         {
@@ -273,7 +267,7 @@ bool BFApp::OnInit()
     BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));
 
     // run automaticly?
-    if ( bCmdRun_ )
+    if ( BFEnvironment::IsProjectScheduled() )
     {
         BFSystem::Log(wxString::Format(_("Run the project %s automaticly..."), strCmdOpen_));
 
@@ -305,90 +299,6 @@ bool BFApp::OnInit()
 
     return 0;
 }
-/*
-void BFApp::RememberApplicationDirectory ()
-{
-// XXX
-#ifdef _DEBUG
-    strApplicationDir_ = "D:\\Garage\\projekte\\blackfisk\\trunk";
-    return;
-#endif
-
-    strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
-
-    if (strApplicationDir_.IsEmpty())
-        strApplicationDir_ = wxGetCwd();
-}
-
-const wxString& BFApp::GetApplicationDirectory ()
-{
-    return strApplicationDir_;
-}
-
-const wxString BFApp::GetLogFileName ()
-{
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "bf.log";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
-
-    return str;
-}
-
-const wxString BFApp::GetGraphicDir ()
-{
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "graphic" + wxFILE_SEP_PATH;
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
-
-    return str;
-}
-
-const wxString BFApp::GetSoundDir ()
-{
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "sound" + wxFILE_SEP_PATH;
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
-
-    return str;
-}
-
-const wxString BFApp::GetSettingsFileName ()
-{
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "blackfisk.cfg";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
-
-    return str;
-}
-
-const wxString BFApp::GetInBuildCrontabFileName ()
-{
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "crontab";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
-
-    return str;
-}*/
 
 
 /*static*/ bool BFApp::ReadSettings ()

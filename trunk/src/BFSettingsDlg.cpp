@@ -79,6 +79,9 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     // *** VIEW-page ***
     pBook->AddPage(CreatePage_View(pBook),      _("View"));
 
+    // *** SOUND-page ***
+    pBook->AddPage(CreatePage_Sound(pBook),     _("Sound"));
+
     // *** LOG-page ***
     pBook->AddPage(CreatePage_Log(pBook),       _("Logging"));
 
@@ -270,6 +273,59 @@ wxWindow* BFSettingsDlg::CreatePage_View (wxTreebook* pBook)
     return pPage;
 }
 
+wxWindow* BFSettingsDlg::CreatePage_Sound (wxTreebook* pBook)
+{
+    // page panel
+    wxPanel* pPage = new wxPanel(pBook);
+
+    // help ctrl
+    BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
+
+    // sound
+    wxString choicesSound[] = { _("sound on"),
+                                _("sound on only while scheduled tasks"),
+                                _("sound off") };
+    pRadioSound_ = new wxRadioBox (pPage,
+                                   wxID_ANY,
+                                   _("Sound"),
+                                   wxDefaultPosition,
+                                   wxDefaultSize,
+                                   3,
+                                   choicesSound,
+                                   1,
+                                   wxRA_SPECIFY_COLS);
+    pHelpCtrl->Connect(pRadioSound_, _("It affects the blackfisk's behaviour\nof playing sounds (wave-files) on events."));
+
+    // beep
+    wxString choicesBeep[] = { _("beep on"),
+                               _("beep on only while scheduled tasks"),
+                               _("beep off") };
+    pRadioBeep_ = new wxRadioBox (pPage,
+                                  wxID_ANY,
+                                  _("Beep"),
+                                  wxDefaultPosition,
+                                  wxDefaultSize,
+                                  3,
+                                  choicesBeep,
+                                  1,
+                                  wxRA_SPECIFY_COLS);
+    pHelpCtrl->Connect(pRadioBeep_, _("It affects the blackfisk's behaviour\nof beeping (pc-speaker) on events."));
+
+    // arrange
+    wxBoxSizer*         pSizer              = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer*         pSizerH             = new wxBoxSizer(wxVERTICAL);
+
+    AddHead(pSizer, pPage, _("Sound"));
+    pSizerH->Add(pRadioSound_,  wxSizerFlags(0).Center().Border());
+    pSizerH->Add(pRadioBeep_,   wxSizerFlags(0).Center().Border());
+    pSizer->Add(pSizerH,    wxSizerFlags(1).Expand());
+    pSizer->Add(pHelpCtrl,  wxSizerFlags(0).Expand().Bottom());
+
+    pPage->SetSizer(pSizer);
+
+    return pPage;
+}
+
 wxWindow* BFSettingsDlg::CreatePage_Log (wxTreebook* pBook)
 {
     // page panel
@@ -371,19 +427,20 @@ wxWindow* BFSettingsDlg::CreatePage_Scheduler (wxTreebook* pBook)
     BFHelpCtrl* pHelpCtrl = new BFHelpCtrl(pPage);
 
     // radio box
-    wxString choices[] = { "no scheduler",
-                           "wxCron (in-build; default)",
-                           "wxCron (extern)" };
+    wxString choices[] = { _("no scheduler"),
+                           _("wxCron (in-build; default)"),
+                           _("wxCron (extern)") };
 
     pRadioScheduler_ = new wxRadioBox (pPage,
                                        BFSETTINGSDLG_ID_RADIO_SCHEDULER,
-                                       "Select a scheduler",
+                                       _("Select a scheduler"),
                                        wxDefaultPosition,
                                        wxDefaultSize,
                                        3,
                                        choices,
                                        1,
                                        wxRA_SPECIFY_COLS);
+    pHelpCtrl->Connect(pRadioScheduler_, _("Select the type of scheduler here."));
 
     wxStaticText* pLabelCrontab = new wxStaticText (pPage, wxID_ANY, _("Location of the crontab-file :"));
 
@@ -538,6 +595,9 @@ void BFSettingsDlg::GetData ()
 
     pRadioScheduler_->SetSelection(rS.GetScheduler());
     pTextCrontab_->SetValue(rS.GetCrontab());
+
+    pRadioSound_->SetSelection(rS.GetSoundBehaviour());
+    pRadioBeep_->SetSelection(rS.GetBeepBehaviour());
 }
 
 void BFSettingsDlg::SetData ()
@@ -615,5 +675,8 @@ void BFSettingsDlg::SetData ()
             wxGetApp().RemoveSchedulerFromAutostart();
         }
     }
+
+    rS.SetSoundBehaviour(pRadioSound_->GetSelection());
+    rS.SetBeepBehaviour(pRadioBeep_->GetSelection());
 }
 

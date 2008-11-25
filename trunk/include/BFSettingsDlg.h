@@ -63,6 +63,12 @@ class BFSettingsDlg : public wxDialog
         ///
         wxCheckBox*             pCheckHiddenFiles_;
 
+        // --- SOUND PAGE ---
+        ///
+        wxRadioBox*             pRadioSound_;
+        ///
+        wxRadioBox*             pRadioBeep_;
+
         // --- LOG PAGE ---
         ///
         wxSpinCtrl*             pSpinLogSize_;
@@ -90,6 +96,8 @@ class BFSettingsDlg : public wxDialog
         wxWindow* CreatePage_General (wxTreebook* pBook);
         ///
         wxWindow* CreatePage_View (wxTreebook* pBook);
+        ///
+        wxWindow* CreatePage_Sound (wxTreebook* pBook);
         ///
         wxWindow* CreatePage_Log (wxTreebook* pBook);
         ///

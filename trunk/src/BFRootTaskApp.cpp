@@ -41,6 +41,7 @@
 #include "BFTaskListCtrl.h"
 #include "BFSettings.h"
 #include "BFSound.h"
+#include "BFEnvironment.h"
 
 /*static*/ BFRootTaskApp BFRootTaskApp::sInstance_(&(BFRootTask::Instance()));
 
@@ -229,7 +230,7 @@ bool BFRootTaskApp::Run_Finished ()
     /* If the project was started automaticly from
        commandline or scheduler, blackfisk need
        to close after the backup. */
-    if ( wxGetApp().IsAutorun() )
+    if ( BFEnvironment::IsProjectScheduled() )
         wxGetApp().Exit();
 
     return true;

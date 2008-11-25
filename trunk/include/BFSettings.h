@@ -84,6 +84,17 @@ class BFSettings
         ///
         wxString            strCrontab_;
 
+        /** Behaviour of sounds (wave-files).
+            0 means sound is played.
+            1 means only if autobackup (option --run) sound is played.
+            2 means no sound is played. */
+        int                 iSound_;
+        /** Behaviour of beeps (pc-speaker).
+            0 means beep is played.
+            1 means only if autobackup (option --run) beep is played.
+            2 means no beep is played. */
+        int                 iBeep_;
+
         ///
         static BFSettings   sSettings_;
 
@@ -175,6 +186,15 @@ class BFSettings
         const wxString& GetCrontab ();
         ///
         void SetCrontab (const wxString& strCrontab);
+
+        ///
+        void SetSoundBehaviour (int iSound);
+        ///
+        int GetSoundBehaviour ();
+        ///
+        void SetBeepBehaviour (int iBeep);
+        ///
+        int GetBeepBehaviour ();
 
         ///
         bool Serialize (jbSerialize& rA);

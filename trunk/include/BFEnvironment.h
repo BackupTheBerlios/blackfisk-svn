@@ -36,6 +36,10 @@ class BFEnvironment
 
         ///
         static wxString     strApplicationDir_;
+        /** If 'true' the current backup project is opened
+            with the option '--run'. Normaly it is done by
+            schedulers. */
+        static bool         bProjectScheduled_;
 
     public:
         /// virtual dtor
@@ -56,6 +60,11 @@ class BFEnvironment
         static const wxString GetSettingsFileName ();
         ///
         static const wxString GetInBuildCrontabFileName ();
+
+        ///
+        static void SetProjectScheduled (bool bScheduled);
+        ///
+        static bool IsProjectScheduled ();
 
 };
 

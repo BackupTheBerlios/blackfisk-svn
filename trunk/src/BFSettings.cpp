@@ -64,6 +64,8 @@ void BFSettings::InitDefaultValues()
     dateLastVersionCheck_           = wxDateTime::Now().SetYear(2000);
     lScheduler_                     = 1;
     strCrontab_                     = BFEnvironment::GetInBuildCrontabFileName();
+    iSound_                         = 2;
+    iBeep_                          = 2;
 }
 
 //
@@ -263,6 +265,27 @@ void BFSettings::SetCrontab (const wxString& strCrontab)
     strCrontab_ = strCrontab;
 }
 
+void BFSettings::SetSoundBehaviour (int iSound)
+{
+    if ( iSound >= 0 && iSound <= 2 )
+        iSound_ = iSound;
+}
+
+int BFSettings::GetSoundBehaviour ()
+{
+    return iSound_;
+}
+
+void BFSettings::SetBeepBehaviour (int iBeep)
+{
+    if ( iBeep >= 0 && iBeep <= 2 )
+        iBeep_ = iBeep;
+}
+
+int BFSettings::GetBeepBehaviour ()
+{
+    return iBeep_;
+}
 
 bool BFSettings::Serialize (jbSerialize& rA)
 {
@@ -292,6 +315,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << dateLastVersionCheck_;
         rA << lScheduler_;
         rA << strCrontab_;
+        rA << iSound_;
+        rA << iBeep_;
     }
     else
     // ** serialize FROM file **
@@ -347,6 +372,18 @@ bool BFSettings::Serialize (jbSerialize& rA)
         {
             rA >> lScheduler_;
             rA >> strCrontab_;
+        }
+
+        // options added in version 1040
+        if (rA.GetVersion() < 1040)
+        {
+            iSound_ = 2;
+            iBeep_ = 2;
+        }
+        else
+        {
+            rA >> iSound_;
+            rA >> iBeep_;
         }
     }
 
