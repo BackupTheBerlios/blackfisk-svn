@@ -32,7 +32,6 @@
 #define BFCRONCTRL_ID_COMBOFIXED                    3 + BF_CRONCTRL_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFCronCtrl, wxPanel)
-    //EVT_RADIOBUTTON(wxID_ANY,                   BFCronCtrl::OnRadioButton)
     EVT_COMBOBOX(BFCRONCTRL_ID_COMBOTYPE,       BFCronCtrl::OnCombo)
 END_EVENT_TABLE()
 
@@ -64,34 +63,11 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
                                       NULL,
                                       wxCB_READONLY);
 
-/*    pComboFixed_ = new wxComboBox(this,
-                                  BFCRONCTRL_ID_COMBOFIXED,
-                                  "33",
-                                  wxDefaultPosition,
-                                  wxDefaultSize,
-                                  0,
-                                  NULL,
-                                  wxCB_READONLY);
-
-    pRadioIntervall_ = new wxRadioButton(this,
-                                         wxID_ANY,
-                                         _("Interval"),
-                                         wxDefaultPosition,
-                                         wxDefaultSize,
-                                         wxRB_GROUP);
-
-    pRadioFixed_ = new wxRadioButton(this,
-                                     wxID_ANY,
-                                     _("Fixed"));*/
-
     // sizer and arrange
     wxBoxSizer*         pSizerV = new wxBoxSizer(wxVERTICAL);
     wxFlexGridSizer*    pSizerFG = new wxFlexGridSizer(1, 25, 5);
     wxStaticBoxSizer*   pSizerSB = new wxStaticBoxSizer(wxVERTICAL, this);
-    //pSizerFG->Add ( pRadioIntervall_,   wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
     pSizerFG->Add ( pComboIntervall_,   wxSizerFlags(0).Expand() );
-    //pSizerFG->Add ( pRadioFixed_,       wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
-    //pSizerFG->Add ( pComboFixed_,       wxSizerFlags(0).Expand() );
     pSizerSB->Add ( pSizerFG,   wxSizerFlags(0).Border(wxTOP | wxBOTTOM, 15) );
     pSizerV->Add ( pComboType_, wxSizerFlags(0).Center().DoubleBorder() );
     pSizerV->Add ( pSizerSB,    wxSizerFlags(0).Center().Border() );
@@ -143,10 +119,13 @@ void BFCronCtrl::SetData ()
             break;
 
         case 1:
+            arrCrontabline_[0] = "0";
             arrCrontabline_[1] = str;
             break;
 
         case 2:
+            arrCrontabline_[0] = "0";
+            arrCrontabline_[1] = "0";
             arrCrontabline_[2] = str;
             break;
     }
@@ -177,30 +156,15 @@ bool /*static*/ BFCronCtrl::IsCrontablineUsable (const wxArrayString& arr)
         return false;
 
     // minute
-    if ( (arr[0].Length() == 1 && arr[0] != "*")
-       && arr[0].StartsWith("*/") == false )
-        return false;
-
-    // houre
-    if ( (arr[1].Length() == 1 && arr[1] != "*")
-       && arr[1].StartsWith("*/") == false )
-        return false;
-
-    // day
-    if ( (arr[2].Length() == 1 && arr[2] != "*")
-       && arr[2].StartsWith("*/") == false )
-        return false;
-
-    // minute
     if ( arr[0].StartsWith("*/") && arr[1] != "*" && arr[2] != "*")
         return false;
 
     // houre
-    if ( arr[1].StartsWith("*/") && arr[0] != "*" && arr[2] != "*")
+    if ( arr[1].StartsWith("*/") && arr[0] != "0" && arr[2] != "*")
         return false;
 
     // day
-    if ( arr[2].StartsWith("*/") && arr[1] != "*" && arr[0] != "*")
+    if ( arr[2].StartsWith("*/") && arr[1] != "0" && arr[0] != "0")
         return false;
 
     // no error detected
@@ -308,16 +272,3 @@ void BFCronCtrl::FillCombos ()
     pComboIntervall_->Append(arrIntervall);
     pComboIntervall_->Select(0);
 }
-/*
-void BFCronCtrl::CheckRadios ()
-{
-    pComboIntervall_->Enable(pRadioIntervall_->GetValue());
-
-    pComboFixed_->Enable(pRadioFixed_->GetValue());
-}
-
-void BFCronCtrl::OnRadioButton (wxCommandEvent& rEvent)
-{
-    CheckRadios();
-}*/
-

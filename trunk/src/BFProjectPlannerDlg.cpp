@@ -161,11 +161,13 @@ void BFProjectPlannerDlg::ToogleButton_Schedule (bool bValue)
     if ( bValue )
     {
         pButtonSchedule_->SetLabel(_("Scheduler active"));
-        pCronCtrl_->Enable();
+        if (pCronCtrl_)
+            pCronCtrl_->Enable();
     }
     else
     {
         pButtonSchedule_->SetLabel(_("Scheduler inactive"));
-        pCronCtrl_->Enable(false);
+        if (pCronCtrl_)
+            pCronCtrl_->Enable(false);
     }
 }
