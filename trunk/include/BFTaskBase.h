@@ -39,7 +39,8 @@ enum BF_StopLevel
     BFDO_STOPPRJ,
     BFDO_STOPTSK,
     BFDO_ASK,
-    BFDO_IGNORE
+    BFDO_IGNORE,
+    BFDO_UNKNOWN
 };
 
 

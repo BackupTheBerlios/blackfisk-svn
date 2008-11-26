@@ -95,12 +95,14 @@ class BFRootTaskApp
 
         ///
         BF_VerboseLevel GetVerboseLevel ();
-        ///
+        /*
         BF_StopLevel GetStopLevelOnFatal ();
         ///
         BF_StopLevel GetStopLevelOnError ();
         ///
-        BF_StopLevel GetStopLevelOnWarning ();
+        BF_StopLevel GetStopLevelOnWarning ();*/
+        ///
+        static BF_StopLevel GetStopLevel (BFMessageType type);
 
         ///
         static wxString GetStopLevelString (BF_StopLevel stopLevel);

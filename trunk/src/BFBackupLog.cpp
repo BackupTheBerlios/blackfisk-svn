@@ -78,6 +78,10 @@ void BFTaskLog::Message (BFMessageType type,
         case MsgFATAL:
             ++lCountFatal_;
             break;
+
+        default:
+            // do nothing
+            break;
     };
 }
 
@@ -132,15 +136,15 @@ bool BFTaskLog::Write ()
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnWarning()) << "\n";
+    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgWARNING)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnError()) << "\n";
+    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgERROR)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnFatal()) << "\n";
+    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgFATAL)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();
@@ -326,15 +330,15 @@ bool BFBackupLog::Write ()
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnWarning()) << "\n";
+    strLine << _("Stop-Level on Warnings:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgWARNING)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnError()) << "\n";
+    strLine << _("Stop-Level on Errors:\t\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgERROR)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();
-    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::Instance().GetStopLevelOnFatal()) << "\n";
+    strLine << _("Stop-Level on Fatal Errors:\t") << BFRootTaskApp::GetStopLevelString(BFRootTaskApp::GetStopLevel(MsgFATAL)) << "\n";
     file.Write(strLine);
 
     strLine.Clear();

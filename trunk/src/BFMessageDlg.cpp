@@ -122,7 +122,7 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
     CenterOnParent();
 
     // sound
-    PlayMessageTypeSound(type);
+    PlayMessageTypeSound(type_icon);
 
     // show
     if (bShow)
@@ -227,7 +227,7 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
     }
 }
 
-/*static*/ const void BFMessageDlg::PlayMessageTypeSound (BFMessageDlg_Type type)
+/*static*/ void BFMessageDlg::PlayMessageTypeSound (BFMessageDlg_Type type)
 {
     switch (type)
     {

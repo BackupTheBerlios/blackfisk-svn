@@ -135,6 +135,10 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
 
         pLogCtrl_->SetInsertionPoint(0);
         pLogCtrl_->WriteText(str);
+
+        // XXX
+        if ( BFRootTaskApp::GetStopLevel(pSys->GetLastType()) != BFDO_ASK )
+            BFSystem::PlayMessageTypeSound(pSys->GetLastType());
     }
 
     // count message type
@@ -150,6 +154,10 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
 
         case MsgFATAL:
             ++lCountFatal_;
+            break;
+
+        default:
+            // do nothing
             break;
     };
 

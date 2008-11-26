@@ -376,6 +376,10 @@ void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
         case BFDO_IGNORE:
             pRadioWarningIgn_->SetValue(true);
             break;
+
+        default:
+            // should never be reached
+            break;
     };
 
     // set radio button for error
@@ -396,6 +400,10 @@ void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
         case BFDO_IGNORE:
             pRadioErrorIgn_->SetValue(true);
             break;
+
+        default:
+            // should never be reached
+            break;
     };
 
     // set radio button for fatals
@@ -415,6 +423,10 @@ void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
 
         case BFDO_IGNORE:
             pRadioFatalIgn_->SetValue(true);
+            break;
+
+        default:
+            // should never be reached
             break;
     };
 }

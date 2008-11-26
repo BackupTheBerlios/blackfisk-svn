@@ -21,6 +21,7 @@
  ***/
 
 #include "BFSettings.h"
+#include "BFSound.h"
 
 BFSystem BFSystem::sSystem_;
 
@@ -59,6 +60,41 @@ long BFSystem::GetBackupObservers ()
     return lBackupObservers_;
 }
 
+/*static*/ void BFSystem::PlayMessageTypeSound (BFMessageType type)
+{
+/*  MsgUNKNOWN,
+    MsgBACKUP,
+    MsgINFO,
+    MsgWARNING,
+    MsgERROR,
+    MsgFATAL,
+    MsgLOG,
+    MsgDEBUG
+*/
+    switch (type)
+    {
+        case MsgBACKUP:
+        case MsgINFO:
+        case MsgLOG:
+        case MsgDEBUG:
+            BFSound::Info();
+            break;
+
+        case MsgWARNING:
+            BFSound::Warning();
+            break;
+
+        case MsgERROR:
+            BFSound::Error();
+            break;
+
+        case MsgFATAL:
+        default:
+            BFSound::Fatal();
+            break;
+    }
+}
+
 void BFSystem::Message (BFMessageType msgType,
                         const wxString& strMessage,
                         const wxString& strLocation /*= wxEmptyString*/)
@@ -77,6 +113,7 @@ void BFSystem::Message (BFMessageType msgType,
     lastType_        = msgType;
     strLastLocation_ = strLocation;
     strLastMessage_  = strMessage;
+    // XXX PlayMessageTypeSound(lastType_);
 
     /* mark beginning of broadcasting the observers
        all new messages (while broadcasting) will be remmembered */
@@ -93,6 +130,7 @@ void BFSystem::Message (BFMessageType msgType,
         lastType_        = vecWaiting_Type_[0];
         strLastLocation_ = vecWaiting_Location_[0];
         strLastMessage_  = vecWaiting_Message_[0];
+        // XXX PlayMessageTypeSound(lastType_);
 
         // erase the unremembered messages
         vecWaiting_Type_.erase(vecWaiting_Type_.begin());

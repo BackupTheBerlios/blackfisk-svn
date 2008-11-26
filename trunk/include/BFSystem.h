@@ -89,6 +89,8 @@ class BFSystem : public Subject
         /** tell you how many observers for messages of the type MsgBACKUP are alaive */
         long GetBackupObservers ();
 
+        static void PlayMessageTypeSound (BFMessageType type);
+
         ///
         static BFSystem& Instance ();
         ///

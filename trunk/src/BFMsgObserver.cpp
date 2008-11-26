@@ -68,8 +68,14 @@ BFMsgObserver::BFMsgObserver ()
     if ( BFCore::Instance().IsWhileBackup() )
     // ** BACKUP **
     {
-        // stop level
-        BF_StopLevel stop = BFDO_ASK;
+        // get stop level
+        BF_StopLevel stop = BFRootTaskApp::GetStopLevel(pSys->GetLastType());
+
+        // don't handle other message types while a backup
+        if ( stop == BFDO_UNKNOWN )
+            return;
+
+        /*BFDO_ASK;
 
         // get the stop level
         switch (pSys->GetLastType())
@@ -90,7 +96,7 @@ BFMsgObserver::BFMsgObserver ()
             default:
                 return;
                 break;
-        };
+        };*/
 
         // act depending on the stop level
         if (stop == BFDO_ASK)
@@ -134,6 +140,11 @@ BFMsgObserver::BFMsgObserver ()
                 BFRootTaskApp::Instance().StopCurrentTask();
                 return;
                 break;
+
+            default:
+                // should never be reached
+                break;
+
         }
     }
     else

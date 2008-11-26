@@ -110,7 +110,7 @@ BF_VerboseLevel BFRootTaskApp::GetVerboseLevel ()
 {
     return pRootTask_->GetSettings().GetVerboseLevel();
 }
-
+/*
 BF_StopLevel BFRootTaskApp::GetStopLevelOnFatal ()
 {
     return pRootTask_->GetSettings().GetStopLevelOnFatal();
@@ -124,6 +124,26 @@ BF_StopLevel BFRootTaskApp::GetStopLevelOnError ()
 BF_StopLevel BFRootTaskApp::GetStopLevelOnWarning ()
 {
     return pRootTask_->GetSettings().GetStopLevelOnWarning();
+}*/
+
+/*static*/ BF_StopLevel BFRootTaskApp::GetStopLevel (BFMessageType type)
+{
+    // get the stop level
+    switch (type)
+    {
+        case MsgWARNING:
+            return Instance().pRootTask_->GetSettings().GetStopLevelOnWarning();
+
+        case MsgERROR:
+            return Instance().pRootTask_->GetSettings().GetStopLevelOnError();
+
+        case MsgFATAL:
+            return Instance().pRootTask_->GetSettings().GetStopLevelOnFatal();
+
+        // there is now "stop level" for other message types
+        default:
+            return BFDO_UNKNOWN;
+    };
 }
 
 /*static*/ wxString BFRootTaskApp::GetStopLevelString (BF_StopLevel stopLevel)
@@ -141,9 +161,10 @@ BF_StopLevel BFRootTaskApp::GetStopLevelOnWarning ()
 
         case BFDO_STOPPRJ:
             return _("stop project");
-    };
 
-    return _("unknown stopLevel");
+        default:
+            return _("unknown stopLevel");
+    };
 }
 
 bool BFRootTaskApp::IsProjectModified ()
