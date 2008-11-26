@@ -443,7 +443,8 @@ void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
     BackupTree()->RefreshPlaceholders();
 
     // view backup-log
-    new BFLogViewDlg(this, BFRootTaskApp::Instance().GetLastLogFiles());
+    if ( !(BFEnvironment::IsProjectScheduled()) )
+        new BFLogViewDlg(this, BFRootTaskApp::Instance().GetLastLogFiles());
 }
 
 void BFMainFrame::DeleteRememberedThreads ()

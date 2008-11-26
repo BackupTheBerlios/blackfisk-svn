@@ -235,20 +235,20 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
         case BF_MSGDLG_QUESTION_YESNOCANCEL:
         case BF_MSGDLG_BACKUP_QUESTION:
         case BF_MSGDLG_INFO:
-            BFSound::Info();
+            BFSound::PlayMessageTypeSound(MsgINFO);
             break;
 
         case BF_MSGDLG_WARNING:
-            BFSound::Warning();
+            BFSound::PlayMessageTypeSound(MsgWARNING);
             break;
 
         case BF_MSGDLG_ERROR:
-            BFSound::Error();
+            BFSound::PlayMessageTypeSound(MsgERROR);
             break;
 
         case BF_MSGDLG_FATAL:
         default:
-            BFSound::Fatal();
+            BFSound::PlayMessageTypeSound(MsgFATAL);
             break;
     }
 }

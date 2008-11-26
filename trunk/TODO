@@ -1,11 +1,6 @@
-- sound on only-log-messages
-
-- BUG: set project planner daily 1 hour doesn't work correct
 - don't remember with --run opened projects for auto-open-on-startup feauter
-- show backup log after autorun backup?
 - how to handle temporary volumes?
-- log-behaviour project specific?
-
+- BUG: set project planner daily 1 hour doesn't work correct
 
 0.0.1
 ~~~~~

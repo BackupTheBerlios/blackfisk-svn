@@ -169,7 +169,7 @@ void BFBackupProgressDlg::OnQuestion (wxCommandEvent& rEvent)
 {
     // ask questioin
     BFMessageDlg dlg(BF_MSGDLG_BACKUP_QUESTION,
-                     rEvent.GetString() + _("\n\nHow is to be continued?"),
+                     rEvent.GetString() + _("\n\nHow to continue?"),
                      wxEmptyString,
                      BFMessageDlg::GetDlgType((BFMessageType)rEvent.GetExtraLong()));
 

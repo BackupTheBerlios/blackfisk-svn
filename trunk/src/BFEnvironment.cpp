@@ -40,8 +40,8 @@ BFEnvironment::BFEnvironment ()
 
 /*static*/ void BFEnvironment::RememberApplicationDirectory (const wxCmdLineArgsArray& argv)
 {
-// XXX
 #ifdef _DEBUG
+    // this is needed because of mysterious debuger internals
     strApplicationDir_ = "D:\\Garage\\projekte\\blackfisk\\trunk";
     return;
 #endif

@@ -61,6 +61,42 @@ BFSound::BFSound ()
     #endif
 }
 
+/*static*/ void BFSound::PlayMessageTypeSound (BFMessageType type)
+{
+/*  MsgUNKNOWN,
+    MsgBACKUP,
+    MsgINFO,
+    MsgWARNING,
+    MsgERROR,
+    MsgFATAL,
+    MsgLOG,
+    MsgDEBUG
+*/
+    switch (type)
+    {
+        case MsgBACKUP:
+        case MsgINFO:
+        case MsgLOG:
+        case MsgDEBUG:
+            BFSound::Info();
+            break;
+
+        case MsgWARNING:
+            BFSound::Warning();
+            break;
+
+        case MsgERROR:
+            BFSound::Error();
+            break;
+
+        case MsgFATAL:
+        default:
+            BFSound::Fatal();
+            break;
+    }
+}
+
+
 /*static*/ void BFSound::Info ()
 {
     if ( BFSettings::Instance().Instance().GetSoundBehaviour() == 0

@@ -30,14 +30,11 @@
 #include "BFThread_ProjectRunner.h"
 #include "BFMessageDlg.h"
 
-//
 BFMsgObserver::BFMsgObserver ()
              : Observer(&(BFSystem::Instance()))
 {
 }
 
-
-//
 /*virtual*/ BFMsgObserver::~BFMsgObserver ()
 {
 }
@@ -74,29 +71,6 @@ BFMsgObserver::BFMsgObserver ()
         // don't handle other message types while a backup
         if ( stop == BFDO_UNKNOWN )
             return;
-
-        /*BFDO_ASK;
-
-        // get the stop level
-        switch (pSys->GetLastType())
-        {
-            case MsgWARNING:
-                stop = BFRootTaskApp::Instance().GetStopLevelOnWarning();
-                break;
-
-            case MsgERROR:
-                stop = BFRootTaskApp::Instance().GetStopLevelOnError();
-                break;
-
-            case MsgFATAL:
-                stop = BFRootTaskApp::Instance().GetStopLevelOnFatal();
-                break;
-
-            // don't handle other message types while a backup
-            default:
-                return;
-                break;
-        };*/
 
         // act depending on the stop level
         if (stop == BFDO_ASK)

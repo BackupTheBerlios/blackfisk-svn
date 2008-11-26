@@ -51,8 +51,6 @@ class BFApp : public wxApp
             just use OBSystem to display messages to the user */
         BFMsgObserver               msgObserver_;
 
-        // XXX        wxString                    strApplicationDir_;
-
         /** it log messages recieving from BFSystem;
             there is no need to touch BFLog directly
             just use BFSystem to create messages */
@@ -64,9 +62,7 @@ class BFApp : public wxApp
         /** Used while parseing the command line.
             It is the backup project to open or run. */
         wxString                    strCmdOpen_;
-        /* XXX Used while parseing the command line.
-            If 'true' the backup project should run. *
-        bool                        bCmdRun_;*/
+
         /** Used while parseing the command line.
             If 'true' only the usage is displayed. */
         bool                        bCmdUsage_;

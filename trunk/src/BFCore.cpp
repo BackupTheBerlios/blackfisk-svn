@@ -1116,7 +1116,9 @@ bool BFCore::VerifyFile (const wxString& strFile1,
     fn1.GetTimes(NULL, &dt1m, NULL);
     fn2.GetTimes(NULL, &dt2m, NULL);
 
-    /* XXX */
+    /* The difference don't have to be an error.
+       Some filesystems (e.g. FAT32) save there filetimes in a lower resolution
+       then 1 seconds. We need to handle this cases here. */
     if (dt1m != dt2m)
     {
         // take care of the low-resolution of some filesystems (e.g. FAT32 2sec-steps)

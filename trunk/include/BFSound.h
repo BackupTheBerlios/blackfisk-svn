@@ -24,6 +24,8 @@
 #ifndef BFSOUND_H
 #define BFSOUND_H
 
+#include "BFSystemBase.h"
+
 ///
 class BFSound
 {
@@ -37,6 +39,9 @@ class BFSound
     public:
         /// virtual dtor
         virtual ~BFSound ();
+
+        ///
+        static void PlayMessageTypeSound (BFMessageType type);
 
         ///
         static void Info ();

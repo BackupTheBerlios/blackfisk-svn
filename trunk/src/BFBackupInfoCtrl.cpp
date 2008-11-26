@@ -29,6 +29,7 @@
 #include "BFSystem.h"
 #include "BFRootTaskApp.h"
 #include "BFTimeDurationCtrl.h"
+#include "BFSound.h"
 
 BFBackupInfoCtrl::BFBackupInfoCtrl (wxWindow* pParent)
                 : wxPanel(pParent),
@@ -136,9 +137,9 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
         pLogCtrl_->SetInsertionPoint(0);
         pLogCtrl_->WriteText(str);
 
-        // XXX
+        // play sound only when the message is not handle by a question dialog (BFMessageDlg)
         if ( BFRootTaskApp::GetStopLevel(pSys->GetLastType()) != BFDO_ASK )
-            BFSystem::PlayMessageTypeSound(pSys->GetLastType());
+            BFSound::PlayMessageTypeSound(pSys->GetLastType());
     }
 
     // count message type
