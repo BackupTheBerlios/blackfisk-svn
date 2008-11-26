@@ -334,7 +334,7 @@ bool BFApp::OpenProject (const wxString& strFilename)
 {
     bool rc = BFRootTaskApp::Instance().ReadFromFile(strFilename);
 
-    if (rc)
+    if (rc && !(BFEnvironment::IsProjectScheduled()))
     {
         BFSettings::Instance().SetLastProject(strFilename);
         SaveSettings();
@@ -347,8 +347,11 @@ bool BFApp::SaveProject (const wxString& strFilename)
 {
     bool rc = BFRootTaskApp::Instance().StoreToFile(strFilename);
 
-    if (rc)
+    if (rc && !(BFEnvironment::IsProjectScheduled()))
+    {
         BFSettings::Instance().SetLastProject(strFilename);
+        SaveSettings();
+    }
 
     return rc;
 }
