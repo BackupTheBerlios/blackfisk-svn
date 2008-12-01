@@ -278,7 +278,7 @@ bool BFApp::OnInit()
         }
         else
         {
-            BFSystem::Error(_("PreBackupCheck failed. Aborting ..."));
+            BFSystem::Warning(_("PreBackupCheck failed. Aborting ..."));
             return false;
         }
     }

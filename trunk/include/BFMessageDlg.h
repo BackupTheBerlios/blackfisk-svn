@@ -24,6 +24,7 @@
 #ifndef BFMESSAGEDLG_H
 #define BFMESSAGEDLG_H
 
+//
 typedef short BFMessageDlg_Type;
 
 #define BF_MSGDLG_QUESTION_YESNO        1
@@ -42,8 +43,10 @@ typedef short BFMessageDlg_Type;
 #define BF_MSGDLG_ID_STOPPRJ    1 + wxID_HIGHEST
 #define BF_MSGDLG_ID_STOPTSK    2 + wxID_HIGHEST
 #define BF_MSGDLG_ID_IGNORE     3 + wxID_HIGHEST
+#define BF_MSGDLG_ID_TIMER      4 + wxID_HIGHEST
 
 #include <wx/dialog.h>
+#include <wx/timer.h>
 
 #include "BFSystemBase.h"
 
@@ -65,6 +68,13 @@ class BFMessageDlg : public wxDialog
 {
     private:
         ///
+        BFMessageDlg_Type   type_;
+        ///
+        wxTimer*            pTimer_;
+        ///
+        long                lTimer_;
+
+        ///
         static wxString GetMessageTypeString (BFMessageDlg_Type type);
         ///
         static const wxBitmap GetMessageTypeBitmap (BFMessageDlg_Type type);
@@ -83,6 +93,9 @@ class BFMessageDlg : public wxDialog
         ///
         void Wrap (wxString& strMyMsg);
 
+        ///
+        void SetTitle ();
+
     public:
         /**
          The parameter 'type' specify the concret type of the message dialog.
@@ -92,17 +105,20 @@ class BFMessageDlg : public wxDialog
          empty a default string corrosponding to 'type' will be used.
          The parameter 'type_icon' specify the type of icon to use. This parameter
          can be used to set a icon different from the first parameter 'type'.
-         */
+         For more detailes on 'lTimer' please look at the member 'lTimer_'. */
         BFMessageDlg (BFMessageDlg_Type type,
                       const wxString& strMsg,
                       const wxString& strTitle = wxEmptyString,
-                      BFMessageDlg_Type type_icon = BF_MSGDLG_NOTUSED);
+                      BFMessageDlg_Type type_icon = BF_MSGDLG_NOTUSED,
+                      long lTimer = 0);
 
         /// virtual dtor
         virtual ~BFMessageDlg ();
 
         ///
         void OnButton (wxCommandEvent& rEvent);
+        ///
+        void OnTimer (wxTimerEvent& rEvent);
 
         ///
         static BFMessageDlg_Type GetDlgType (BFMessageType type);

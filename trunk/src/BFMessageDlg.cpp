@@ -51,16 +51,42 @@ END_EVENT_TABLE()
 BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
                             const wxString& strMsg,
                             const wxString& strTitle /*= wxEmptyString*/,
-                            BFMessageDlg_Type type_icon /*= BF_MSGDLG_NOTUSED*/)
-            : wxDialog(BFMainFrame::Instance(), wxID_ANY, strTitle)
+                            BFMessageDlg_Type type_icon /*= BF_MSGDLG_NOTUSED*/,
+                            long lTimer /*= 0*/)
+            : wxDialog(BFMainFrame::Instance(),
+                       wxID_ANY,
+                       strTitle),
+              type_(type),
+              pTimer_(NULL),
+              lTimer_(lTimer)
 {
+    // timer
+    if ( lTimer_ > 0 )
+    {
+        // create timer
+        pTimer_ = new wxTimer(this, BF_MSGDLG_ID_TIMER);
+
+        // connect timer
+        Connect
+        (
+            BF_MSGDLG_ID_TIMER,
+            wxEVT_TIMER,
+            wxTimerEventHandler(BFMessageDlg::OnTimer),
+            NULL,
+            this
+        );
+
+        // start timer that check if the thread is alive
+        pTimer_->Start(1000, wxTIMER_CONTINUOUS);
+    }
+
     // sizer
     wxBoxSizer* pSizerV = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pSizerHa = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer* pSizerHb = new wxBoxSizer(wxHORIZONTAL);
 
     // title
-    SetTitle(GetMessageTypeString(type));
+    SetTitle();
 
     // icon
     if (type_icon == BF_MSGDLG_NOTUSED)
@@ -132,6 +158,28 @@ BFMessageDlg::BFMessageDlg (BFMessageDlg_Type type,
 //
 /*virtual*/ BFMessageDlg::~BFMessageDlg ()
 {
+    if (pTimer_)
+        delete pTimer_;
+}
+
+void BFMessageDlg::SetTitle ()
+{
+    wxString str = GetMessageTypeString(type_);
+
+    if ( pTimer_ )
+        str << wxString::Format(" (%d...)", lTimer_);
+
+    wxDialog::SetTitle(str);
+}
+
+void BFMessageDlg::OnTimer (wxTimerEvent& rEvent)
+{
+    lTimer_--;
+
+    SetTitle ();
+
+    if ( lTimer_ < 1 )
+        EndModal(BF_MSGDLG_ID_TIMER);
 }
 
 void BFMessageDlg::CreateButtons_Default (wxSizer* pSizer)

@@ -567,11 +567,7 @@ void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
     /*Beep(3500, 1000);
     wxGetApp().Sound_BackupFinished();*/
 
-    BFMessageDlg dlg1(BF_MSGDLG_INFO, "test");
-    BFMessageDlg dlg2(BF_MSGDLG_WARNING, "test");
-    BFMessageDlg dlg3(BF_MSGDLG_ERROR, "test");
-    BFMessageDlg dlg4(BF_MSGDLG_FATAL, "test");
-    BFSound::Finish();
+    BFMessageDlg dlg1(BF_MSGDLG_INFO, "testwwwwwwwwwwwwwwwwwwwwwww", "title", BF_MSGDLG_NOTUSED, 10);
 }
 
 void BFMainFrame::Test ()
