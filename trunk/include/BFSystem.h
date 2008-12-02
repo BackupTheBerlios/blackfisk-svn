@@ -43,6 +43,12 @@ class BFSystem : public Subject
         wxString            strLastMessage_;
         /// timestamp of the last message
         wxDateTime          lastTimestamp_;
+        /** Seconds to wait before the message apear.
+            This affects only message observers (e.g. BFMessageDlg)
+            that handle this value.
+            If '0' no timer is set. */
+        long                lLastTimerSec_;
+
         /// count observers for messages of type MsgBACKUP
         long                lBackupObservers_;
 
@@ -55,7 +61,10 @@ class BFSystem : public Subject
         /// see 'vecWaiting_Type_' for more detailes
         std::vector<wxString>       vecWaiting_Location_;
         /// see 'vecWaiting_Type_' for more detailes
+        std::vector<long>           vecWaiting_TimerSec_;
+        /// see 'vecWaiting_Type_' for more detailes
         bool                        bWhileBroadcast_;
+
 
         /// ctor
         BFSystem();
@@ -75,6 +84,8 @@ class BFSystem : public Subject
         const wxString& GetLastLocation ();
         ///
         const wxString& GetLastMessage ();
+        ///
+        const long GetLastTimerSec ();
 
         /** return true if the last message should be handled
             depending on its message-type and the specified
@@ -100,7 +111,10 @@ class BFSystem : public Subject
         static bool HandleThisMessage (BFMessageType msgType, BF_VerboseLevel lvlVerbose);
 
         /// create a message
-        void Message (BFMessageType msgType, const wxString& strMessage, const wxString& strLocation = wxEmptyString);
+        void Message (BFMessageType msgType,
+                      const wxString& strMessage,
+                      const wxString& strLocation = wxEmptyString,
+                      long lTimerSec = 0);
 
         /// create a backup message to "log" a running backup process
         static void Backup (const wxString& strMessage);
@@ -113,7 +127,9 @@ class BFSystem : public Subject
         /// create a fatal error message
         static void Fatal (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
         /// create a errror message
-        static void Error (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
+        static void Error (const wxString& strMessage,
+                           const wxString& strLocation = wxEmptyString,
+                           long lTimerSec = 0);
         /// create a debug message
         static void Debug (const wxString& strMessage, const wxString& strLocation = wxEmptyString);
 };

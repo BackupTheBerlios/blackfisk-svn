@@ -31,7 +31,8 @@ BFSystem BFSystem::sSystem_;
 }
 
 BFSystem::BFSystem()
-        : lBackupObservers_(0),
+        : lLastTimerSec_(0),
+          lBackupObservers_(0),
           bWhileBroadcast_(false)
 {
 }
@@ -60,7 +61,8 @@ long BFSystem::GetBackupObservers ()
 
 void BFSystem::Message (BFMessageType msgType,
                         const wxString& strMessage,
-                        const wxString& strLocation /*= wxEmptyString*/)
+                        const wxString& strLocation /*= wxEmptyString*/,
+                        long lTimerSec /*= 0*/)
 {
     // remember the message for later use because another one is currently proceeded
     if (bWhileBroadcast_)
@@ -68,14 +70,16 @@ void BFSystem::Message (BFMessageType msgType,
         vecWaiting_Type_.push_back(msgType);
         vecWaiting_Message_.push_back(strMessage);
         vecWaiting_Location_.push_back(strLocation);
+        vecWaiting_TimerSec_.push_back(lTimerSec);
         return;
     }
 
     // set current message
-    lastTimestamp_   .SetToCurrent();
-    lastType_        = msgType;
-    strLastLocation_ = strLocation;
-    strLastMessage_  = strMessage;
+    lastTimestamp_      .SetToCurrent();
+    lastType_           = msgType;
+    strLastLocation_    = strLocation;
+    strLastMessage_     = strMessage;
+    lLastTimerSec_      = lTimerSec;
 
     /* mark beginning of broadcasting the observers
        all new messages (while broadcasting) will be remmembered */
@@ -88,15 +92,17 @@ void BFSystem::Message (BFMessageType msgType,
     while (vecWaiting_Type_.size() > 0)
     {
         // set current message
-        lastTimestamp_   .SetToCurrent();
-        lastType_        = vecWaiting_Type_[0];
-        strLastLocation_ = vecWaiting_Location_[0];
-        strLastMessage_  = vecWaiting_Message_[0];
+        lastTimestamp_      .SetToCurrent();
+        lastType_           = vecWaiting_Type_[0];
+        strLastLocation_    = vecWaiting_Location_[0];
+        strLastMessage_     = vecWaiting_Message_[0];
+        lLastTimerSec_      = vecWaiting_TimerSec_[0];
 
         // erase the unremembered messages
         vecWaiting_Type_.erase(vecWaiting_Type_.begin());
         vecWaiting_Message_.erase(vecWaiting_Message_.begin());
         vecWaiting_Location_.erase(vecWaiting_Location_.begin());
+        vecWaiting_TimerSec_.erase(vecWaiting_TimerSec_.begin());
 
         //
         broadcastObservers();
@@ -131,9 +137,11 @@ void BFSystem::Message (BFMessageType msgType,
     Instance().Message(MsgFATAL, strMessage, strLocation);
 }
 
-/*static*/ void BFSystem::Error (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
+/*static*/ void BFSystem::Error (const wxString& strMessage,
+                                 const wxString& strLocation /*= wxEmptyString*/,
+                                 long lTimerSec /*= 0*/)
 {
-    Instance().Message(MsgERROR, strMessage, strLocation);
+    Instance().Message(MsgERROR, strMessage, strLocation, lTimerSec);
 }
 
 /*static*/ void BFSystem::Debug (const wxString& strMessage, const wxString& strLocation /*= wxEmptyString*/)
@@ -222,6 +230,11 @@ const wxString& BFSystem::GetLastLocation ()
 const wxString& BFSystem::GetLastMessage ()
 {
     return strLastMessage_;
+}
+
+const long BFSystem::GetLastTimerSec ()
+{
+    return lLastTimerSec_;
 }
 
 bool BFSystem::HandleLastMessage (BF_VerboseLevel verbose)

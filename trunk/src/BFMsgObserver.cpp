@@ -29,6 +29,7 @@
 #include "BFBackupProgressDlg.h"
 #include "BFThread_ProjectRunner.h"
 #include "BFMessageDlg.h"
+#include "BFEnvironment.h"
 
 BFMsgObserver::BFMsgObserver ()
              : Observer(&(BFSystem::Instance()))
@@ -124,9 +125,18 @@ BFMsgObserver::BFMsgObserver ()
     else
     // ** DEFAULT **
     {
+        long lTimerSec = pSys->GetLastTimerSec();
+
+        /* If the backup was started by a scheduler all message dialogs
+           need to wait some seconds. */
+        if ( lTimerSec == 0 && BFEnvironment::IsProjectScheduled() )
+            lTimerSec = 60;
+
         BFMessageDlg dlg(GetMsgStyle(pSys->GetLastType()),
                          strMsg,
-                         BFSystem::GetTypeString(pSys->GetLastType()) );
+                         BFSystem::GetTypeString(pSys->GetLastType()),
+                         BF_MSGDLG_NOTUSED,
+                         lTimerSec );
     }
 }
 

@@ -449,8 +449,20 @@ bool BFRootTaskApp::PreBackupCheck ()
 
         if ( wxDir::Exists( str ) == false )
         {
-            BFSystem::Error(wxString::Format(_("The destination %s doesn't exsits!"), str));
-            return false;
+            BFSystem::Error
+            (
+                wxString::Format(_("The volume %s doesn't exsits!\nPlease connect the volume to the system!"), str),
+                wxEmptyString,
+                60  // The user has 60 seconds to connect the volume.
+            );
+
+            // try again
+            if ( wxDir::Exists( str ) == false )
+            {
+                BFSystem::Error( wxString::Format(_("The volume %s doesn't exists!"), str) );
+
+                return false;
+            }
         }
 
         // * check source *
