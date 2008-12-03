@@ -240,9 +240,7 @@
 		<Unit filename="include\Progress.h">
 			<Option virtualFolder="DataLayer\" />
 		</Unit>
-		<Unit filename="include\blackfisk.h">
-			<Option virtualFolder="AppLayer\" />
-		</Unit>
+		<Unit filename="include\blackfisk.h" />
 		<Unit filename="include\ids.h">
 			<Option virtualFolder="PresentationLayer\" />
 		</Unit>

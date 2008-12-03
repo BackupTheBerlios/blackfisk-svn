@@ -27,7 +27,7 @@
 #define BF_VERSION_MAJOR            0
 #define BF_VERSION_MINOR            0
 #define BF_VERSION_RELEASE          0
-#define BF_VERSION_EXTENSION        "snapshot 2008-12-02 (rev133)" // ( "alpha" )
+#define BF_VERSION_EXTENSION        "alpha" // "snapshot 2008-12-02 (rev133)"
 #define BF_AUTHOR                   "Christian Buhtz"
 //__VERSION__ (gcc version)
 
@@ -50,5 +50,7 @@
 #define BF_REGKEY_VALUE             "wxCron (blackfisk in-build scheduler"
 
 #define BF_CRONTABLINE_DEFAULT      "* * /1 * * %s --run %s"
+
+#define BF_MSG_DEFAULT_TIMER        10
 
 #endif // BLACKFISK_H

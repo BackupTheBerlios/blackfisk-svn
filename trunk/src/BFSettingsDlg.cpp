@@ -663,7 +663,12 @@ void BFSettingsDlg::SetData ()
     {
         if ( wxGetApp().IsSchedulerInAutostart() == false )
         {
-            BFSystem::Info(_("Blackfisk's own scheduler wxCron is selected to handle backup tasks.\nThe scheduler is setup to run automaticly on system startup!"));
+            BFSystem::Info
+            (
+                _("Blackfisk's own scheduler wxCron is selected to handle backup tasks." \
+                "\nThe scheduler is setup to run automaticly on system startup!" \
+                "\n\nSee \"Global Settings/Scheduler\" to change this behaviour.")
+            );
             wxGetApp().SetSchedulerInAutostart();
         }
     }
@@ -671,7 +676,13 @@ void BFSettingsDlg::SetData ()
     {
         if ( wxGetApp().IsSchedulerInAutostart() == true )
         {
-            BFSystem::Info(_("Blackfisk's own scheduler wxCron is NOT selected to handle backup tasks.\nA extern scheduler is used for that.\nBlackfisk's own wxCron is removed from the autostart list!"));
+            BFSystem::Info
+            (
+                _("Blackfisk's own scheduler wxCron is NOT selected to handle backup tasks." \
+                "\nA extern scheduler is used for that." \
+                "\nBlackfisk's own wxCron is removed from the autostart list!" \
+                "\n\nSee \"Global Settings/Scheduler\" to change this behaviour.")
+            );
             wxGetApp().RemoveSchedulerFromAutostart();
         }
     }

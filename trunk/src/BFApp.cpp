@@ -246,7 +246,12 @@ bool BFApp::OnInit()
     {
         if ( IsSchedulerInAutostart() == false )
         {
-            BFSystem::Info(_("Blackfisk's own scheduler wxCron is selected to handle backup tasks.\nThe scheduler is setup to run automaticly on system startup!"));
+            BFSystem::Info
+            (
+                _("Blackfisk's own scheduler wxCron is selected to handle backup tasks." \
+                "\nThe scheduler is setup to run automaticly on system startup!" \
+                "\n\nSee \"Global Settings/Scheduler\" to change this behaviour.")
+            );
             SetSchedulerInAutostart();
         }
     }

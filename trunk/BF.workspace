@@ -2,6 +2,5 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="BF workspace">
 		<Project filename="blackfisk.cbp" active="1" />
-		<Project filename="..\..\wxPTB\trunk\wxPTB.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -30,6 +30,7 @@
 #include "BFThread_ProjectRunner.h"
 #include "BFMessageDlg.h"
 #include "BFEnvironment.h"
+#include "blackfisk.h"
 
 BFMsgObserver::BFMsgObserver ()
              : Observer(&(BFSystem::Instance()))
@@ -130,7 +131,7 @@ BFMsgObserver::BFMsgObserver ()
         /* If the backup was started by a scheduler all message dialogs
            need to wait some seconds. */
         if ( lTimerSec == 0 && BFEnvironment::IsProjectScheduled() )
-            lTimerSec = 60;
+            lTimerSec = BF_MSG_DEFAULT_TIMER;
 
         BFMessageDlg dlg(GetMsgStyle(pSys->GetLastType()),
                          strMsg,
