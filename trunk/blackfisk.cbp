@@ -102,6 +102,9 @@
 		<Unit filename="include\BFApp.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
+		<Unit filename="include\BFBackup.h">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
 		<Unit filename="include\BFBackupInfoCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
@@ -177,6 +180,9 @@
 		<Unit filename="include\BFProgressCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
+		<Unit filename="include\BFProject.h">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
 		<Unit filename="include\BFProjectPlannerDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
@@ -188,12 +194,6 @@
 		</Unit>
 		<Unit filename="include\BFProjectSettingsDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="include\BFRootTask.h">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="include\BFRootTaskApp.h">
-			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="include\BFSettings.h">
 			<Option virtualFolder="DataLayer\" />
@@ -251,6 +251,9 @@
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="src\BFApp.cpp">
+			<Option virtualFolder="AppLayer\" />
+		</Unit>
+		<Unit filename="src\BFBackup.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="src\BFBackupInfoCtrl.cpp">
@@ -328,6 +331,9 @@
 		<Unit filename="src\BFProgressCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
+		<Unit filename="src\BFProject.cpp">
+			<Option virtualFolder="DataLayer\" />
+		</Unit>
 		<Unit filename="src\BFProjectPlannerDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
@@ -339,12 +345,6 @@
 		</Unit>
 		<Unit filename="src\BFProjectSettingsDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
-		</Unit>
-		<Unit filename="src\BFRootTask.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="src\BFRootTaskApp.cpp">
-			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="src\BFSettings.cpp">
 			<Option virtualFolder="DataLayer\" />

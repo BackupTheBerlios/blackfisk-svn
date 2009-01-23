@@ -21,7 +21,7 @@
  ***/
 
 #include "BFProjectSettings.h"
-#include "BFRootTask.h"
+#include "BFProject.h"
 #include "BFApp.h"
 
 //
@@ -84,15 +84,15 @@ BF_StopLevel BFProjectSettings::GetStopLevelOnWarning ()
 
 const wxString& BFProjectSettings::GetBackupLogLocation ()
 {
-    if (BFRootTask::Instance().Has(this))
-    {
+    //if (BFProject::Instance().Has(this))
+    //{
         if (strBackupLogLocation_.IsEmpty())
-            strBackupLogLocation_ = BFApp::ExtractCommunity(BFRootTask::Instance().GetDestinations());
+            strBackupLogLocation_ = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
 
         if (strBackupLogLocation_.IsEmpty())
-            if (BFRootTask::Instance().GetDestinations().GetCount() > 0)
-                strBackupLogLocation_ = BFRootTask::Instance().GetDestinations()[0];
-    }
+            if (BFProject::Instance().GetAllDestinations().GetCount() > 0)
+                strBackupLogLocation_ = BFProject::Instance().GetAllDestinations()[0];
+    //}
 
     return strBackupLogLocation_;
 }

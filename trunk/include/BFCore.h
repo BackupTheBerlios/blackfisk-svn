@@ -249,8 +249,9 @@ class BFCore
         wxUint32 GetFileCrc (const wxString& strFilename);
 
     private:
-        /// compare the file-attributes of two files
-        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2, bool bIgnoreArchiveBit = false);
+        /** Compare the some (NOT ALL!!!) file-attributes of two files.
+            See the methode code for more details. */
+        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
         /// compare the content of to files
         bool VerifyFileContents (wxFile& f1, wxFile& f2);
 };    // class BFCore

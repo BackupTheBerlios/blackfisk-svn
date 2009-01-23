@@ -41,7 +41,7 @@
 #include "BFSettings.h"
 #include "BFLogViewDlg.h"
 #include "BFAboutDlg.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
 #include "BFThread_ProjectRunner.h"
@@ -271,7 +271,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     BFSettings::Instance().SetSashPositionInMainWindow(pSplitterCtrl_->GetSashPosition());
 
     // check for a modified project
-    if (BFRootTaskApp::Instance().IsProjectModified())
+    if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
@@ -383,7 +383,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
     {
         case BF_ID_MAINFRAME_OPENPRJ:
             if (AskModification())
-                wxGetApp().CloseCurrentProject(false);
+                wxGetApp().ResetProject();
 
             if (AskOpenProject(strProject))
                 wxGetApp().OpenProject(strProject);
@@ -409,7 +409,7 @@ void BFMainFrame::OnProject (wxCommandEvent& event)
         case BF_ID_MAINFRAME_CLOSEPRJ:
         case BF_ID_MAINFRAME_NEWPRJ:
             if (AskModification())
-                wxGetApp().CloseCurrentProject(false);
+                wxGetApp().ResetProject();
             break;
 
         case BF_ID_MAINFRAME_PRJSETTINGS:
@@ -444,7 +444,7 @@ void BFMainFrame::OnThreadEnd (wxCommandEvent& event)
 
     // view backup-log
     if ( !(BFEnvironment::IsProjectScheduled()) )
-        new BFLogViewDlg(this, BFRootTaskApp::Instance().GetLastLogFiles());
+        new BFLogViewDlg(this, BFBackup::Instance().GetLastLogFiles());
 }
 
 void BFMainFrame::DeleteRememberedThreads ()
@@ -473,7 +473,7 @@ void BFMainFrame::RememberThread (wxThread* pThread)
 bool BFMainFrame::AskModification ()
 {
     // check for a modified project
-    if (BFRootTaskApp::Instance().IsProjectModified())
+    if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
         int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
@@ -501,7 +501,7 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
     (
         this,
         _("Open a project"),
-        BFRootTaskApp::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH),
+        BFBackup::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH),
         wxEmptyString,
         BF_PROJECT_EXTENSION_STRING,
         wxFD_OPEN
@@ -520,11 +520,11 @@ bool BFMainFrame::AskOpenProject (wxString& strProject)
 
 bool BFMainFrame::AskSaveProject (wxString& strProject)
 {
-    wxString strPath = BFRootTaskApp::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH);
-    wxString strFile = BFRootTaskApp::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
+    wxString strPath = BFBackup::Instance().GetCurrentFilename().BeforeLast(wxFILE_SEP_PATH);
+    wxString strFile = BFBackup::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
 
     if (strFile.IsEmpty())
-        strFile = BFRootTaskApp::Instance().GetProjectName();
+        strFile = BFBackup::Instance().GetProjectName();
 
     wxFileDialog dlg
     (
@@ -559,15 +559,60 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 
 #ifdef _DEBUG
 #include "BFSound.h"
+#include "BFundef.h"
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    //wxBell();
-    //wxSystem(wxString::Format("echo %c", 7));
+    wxFileName  fn1("D:\\org_WipeOutHD\\xxxx.mp4");
+    wxFileName  fn2("C:\\synced_WipeOutHD\\xxxx.mp4");
 
-    /*Beep(3500, 1000);
-    wxGetApp().Sound_BackupFinished();*/
+    long lAttr1 = GetFileAttributes(fn1.GetFullPath());
+    long lAttr2 = GetFileAttributes(fn2.GetFullPath());
 
-    BFMessageDlg dlg1(BF_MSGDLG_INFO, "testwwwwwwwwwwwwwwwwwwwwwww", "title", BF_MSGDLG_NOTUSED, 10);
+    if ( (lAttr1 & FILE_ATTRIBUTE_READONLY) != (lAttr2 & FILE_ATTRIBUTE_READONLY) )
+        BFSystem::Info("ERROR");
+    else
+        BFSystem::Info("OK");
+
+    return;
+
+
+    // PPP
+    /*long lAttr1 = GetFileAttributes(fn1.GetFullPath());
+    long lAttr2 = GetFileAttributes(fn2.GetFullPath());*/
+
+    BFSystem::Info(wxString::Format("%d %d", lAttr1, lAttr2));
+
+    if ( lAttr2 & FILE_ATTRIBUTE_ARCHIVE )
+    {
+        BFSystem::Info("lAttr2 change archive-bit");
+        lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
+    }
+
+    BFSystem::Info(wxString::Format("%d %d", lAttr1, lAttr2));
+
+    return;
+
+    /*if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
+        lAttr1 = lAttr1 & FILE_ATTRIBUTE_ARCHIVE;
+
+    if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
+        BFSystem::Info("org ARCHIVE+");
+    else
+        BFSystem::Info("org ARCHIVE-");*/
+
+    if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
+        lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
+
+    if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
+        BFSystem::Info("synced ARCHIVE+");
+    else
+        BFSystem::Info("synced ARCHIVE-");
+
+    // verify file attributes but ignore archive-bit
+    if ( lAttr1 == lAttr2 ) //BFCore::Instance().VerifyFileAttributes(fn1, fn2, true) )
+        BFSystem::Info(wxString::Format("OK %d %d", lAttr1, lAttr2));
+    else
+        BFSystem::Error(wxString::Format("ERRROR VERIFY %d %d", lAttr1, lAttr2));
 }
 
 void BFMainFrame::Test ()
@@ -580,7 +625,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     int iAnswer = wxID_YES;
 
     // check for a modified project
-    if (BFRootTaskApp::Instance().IsProjectModified())
+    if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
         iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it before running the backup?"));
@@ -607,7 +652,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     if (iAnswer != wxID_CANCEL)
     {
         // start the backup
-        if ( BFRootTaskApp::Instance().PreBackupCheck() )
+        if ( BFBackup::Instance().PreBackupCheck() )
             new BFBackupProgressDlg(this);
         else
             BFSystem::Log(_("PreBackup failed. Aborting ..."));

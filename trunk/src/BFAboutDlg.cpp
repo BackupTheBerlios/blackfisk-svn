@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
 
 BFAboutDlg::BFAboutDlg ()
-          : wxDialog(NULL,
+          : wxDialog(BFMainFrame::Instance(),
                      wxID_ANY,
                      wxString(_("About ")) + BF_PRGNAME,
                      wxDefaultPosition,

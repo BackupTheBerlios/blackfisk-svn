@@ -30,8 +30,8 @@
 #include "BFCore.h"
 #include "BFApp.h"
 #include "BFMainFrame.h"
-#include "BFRootTask.h"
-#include "BFRootTaskApp.h"
+#include "BFProject.h"
+#include "BFBackup.h"
 #include "BFIconTable.h"
 #include "BFDestinationCtrl.h"
 #include "BFPlaceholderButton.h"
@@ -256,7 +256,7 @@ wxSizer* BFTaskDlg::CreateButtons ()
 void BFTaskDlg::OnClose(wxCloseEvent& rEvent)
 {
     // is it a unsaved/new created task?
-    if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
+    if ( BFProject::Instance().HasTask(pTask_->GetOID()) == false )
         delete pTask_;
 
     BFMainFrame::Instance()->Enable();
@@ -301,7 +301,7 @@ void BFTaskDlg::OnCombo_TypeSelect (wxCommandEvent& rEvent)
     if (tt != pTask_->GetType())
     {
         pTask_->SetTaskType(tt);
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
     }
 
     InitTypeCtrl();
@@ -396,19 +396,19 @@ void BFTaskDlg::SetData ()
         strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
 
         pTask_->SetName(pNameCtrl_->GetValue());
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
         pNameCtrl_->DiscardEdits();
 
         // does the tree-item related to this task has children (maybe other tasks) ?
         if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
-            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
+            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
     }
 
     // source
     if (pSourceCtrl_->IsModified())
     {
         pTask_->SetSource(pSourceCtrl_->GetValue());
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
         pSourceCtrl_->DiscardEdits();
     }
 
@@ -430,23 +430,23 @@ void BFTaskDlg::SetData ()
 
         // does the tree-item related to this task has children (maybe other tasks) ?
         if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
-            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
+            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
 
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
     }
 
     // verify
     if (pVerifyCheck_->GetValue() != pTask_->Verify())
     {
         pTask_->SetVerify(pVerifyCheck_->GetValue());
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
     }
 
     // verify content
     if (pVerifyContentCheck_->GetValue() != pTask_->VerifyContent())
     {
         pTask_->SetVerifyContent(pVerifyContentCheck_->GetValue());
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
     }
 
     // real sync
@@ -455,7 +455,7 @@ void BFTaskDlg::SetData ()
         if ( pTask_->GetRealSync() != pRealSyncCheck_->GetValue() )
         {
             pTask_->SetRealSync(pRealSyncCheck_->GetValue());
-            BFRootTask::Instance().SetModified();
+            BFProject::Instance().SetModified();
         }
     }
 
@@ -467,20 +467,20 @@ void BFTaskDlg::SetData ()
         if (arrExclude != pTask_->GetExclude())
         {
             pTask_->SetExclude(arrExclude);
-            BFRootTask::Instance().SetModified();
+            BFProject::Instance().SetModified();
         }
     }
 
     // add task if needed
-    if ( BFRootTask::Instance().HasTask(pTask_->GetOID()) == false )
+    if ( BFProject::Instance().HasTask(pTask_->GetOID()) == false )
     {
-        BFRootTask::Instance().AppendTask(*pTask_);
-        BFRootTask::Instance().broadcastObservers();
+        BFProject::Instance().AppendTask(*pTask_);
+        BFProject::Instance().broadcastObservers();
     }
     else
     {
-        if ( BFRootTask::Instance().IsModified() )
-            BFRootTask::Instance().broadcastObservers();
+        if ( BFProject::Instance().IsModified() )
+            BFProject::Instance().broadcastObservers();
     }
 }
 

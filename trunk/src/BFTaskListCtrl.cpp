@@ -26,7 +26,7 @@
 #include <wx/gdicmn.h>
 #include <wx/settings.h>
 
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFTask.h"
 #include "BFSystem.h"
 #include "BFIsWorkingCtrl.h"
@@ -39,7 +39,7 @@ BFTaskListCtrl::BFTaskListCtrl (wxWindow* pParent)
                 oidActive_(BFInvalidOID),
                 bActiveTaskSucceeded_(true)
 {
-    BFRootTaskApp::Instance().InitThat(this);
+    BFBackup::Instance().InitThat(this);
 
     this->AddStretchSpacer(1);
     this->Add(new BFIsWorkingCtrl(pParent, 5), wxSizerFlags(0).Center().Border());
@@ -64,7 +64,7 @@ BFTaskListCtrl::BFTaskListCtrl (wxWindow* pParent)
     if ( tMsg == MsgWARNING
       || tMsg == MsgERROR
       || tMsg == MsgFATAL
-      || BFRootTaskApp::Instance().GetStopCurrentTask())
+      || BFBackup::Instance().GetStopCurrentTask())
     {
         bActiveTaskSucceeded_ = false;
     }

@@ -35,7 +35,7 @@
 #include "BFMainFrame.h"
 #include "BFBackupProgressDlg.h"
 #include "BFTaskDlg.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "Progress.h"
 #include "BFSettings.h"
 #include "BFLog.h"
@@ -277,7 +277,7 @@ bool BFApp::OnInit()
         BFSystem::Log(wxString::Format(_("Run the project %s automaticly..."), strCmdOpen_));
 
         // start the backup
-        if ( BFRootTaskApp::Instance().PreBackupCheck() )
+        if ( BFBackup::Instance().PreBackupCheck() )
         {
             new BFBackupProgressDlg(BFMainFrame::Instance());
         }
@@ -327,17 +327,17 @@ bool BFApp::OnInit()
 
 const wxString& BFApp::GetCurrentProjectFilename ()
 {
-    return BFRootTaskApp::Instance().GetCurrentFilename();
+    return BFBackup::Instance().GetCurrentFilename();
 }
 
 wxString BFApp::GetCurrentProjectName ()
 {
-    return wxString(BFRootTaskApp::Instance().GetProjectName());
+    return wxString(BFBackup::Instance().GetProjectName());
 }
 
 bool BFApp::OpenProject (const wxString& strFilename)
 {
-    bool rc = BFRootTaskApp::Instance().ReadFromFile(strFilename);
+    bool rc = BFBackup::Instance().ReadFromFile(strFilename);
 
     if (rc && !(BFEnvironment::IsProjectScheduled()))
     {
@@ -350,7 +350,7 @@ bool BFApp::OpenProject (const wxString& strFilename)
 
 bool BFApp::SaveProject (const wxString& strFilename)
 {
-    bool rc = BFRootTaskApp::Instance().StoreToFile(strFilename);
+    bool rc = BFBackup::Instance().StoreToFile(strFilename);
 
     if (rc && !(BFEnvironment::IsProjectScheduled()))
     {
@@ -363,19 +363,15 @@ bool BFApp::SaveProject (const wxString& strFilename)
 
 bool BFApp::SaveCurrentProject ()
 {
-    return BFRootTaskApp::Instance().StoreToFile
+    return BFBackup::Instance().StoreToFile
     (
-        BFRootTaskApp::Instance().GetCurrentFilename()
+        BFBackup::Instance().GetCurrentFilename()
     );
 }
 
-bool BFApp::CloseCurrentProject (bool bCheckForModifications /*= true*/)
+bool BFApp::ResetProject ()
 {
-    if (bCheckForModifications)
-        if (BFRootTaskApp::Instance().IsProjectModified())
-            return false;
-
-    BFRootTaskApp::Instance().Close();
+    BFBackup::Instance().Reset();
 
     return true;
 }

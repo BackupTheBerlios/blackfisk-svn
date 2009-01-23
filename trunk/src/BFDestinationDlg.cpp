@@ -28,7 +28,7 @@
 #include "BFBitmapButton.h"
 #include "BFMainFrame.h"
 #include "BFBackupTree.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 
 BEGIN_EVENT_TABLE(BFDestinationDlg, wxDialog)
   EVT_CLOSE   (BFDestinationDlg::OnClose)
@@ -107,7 +107,7 @@ void BFDestinationDlg::OnButton_Ok (wxCommandEvent& rEvent)
     // modify the destination and rebuild the tree
     if (action_ == modify_destination)
     {
-        BFRootTaskApp::Instance().ModifyDestination(strInitialPath_, pDestCtrl_->GetPath());
+        BFBackup::Instance().ModifyDestination(strInitialPath_, pDestCtrl_->GetPath());
         pBackupTree->Init();
     }
 

@@ -26,7 +26,7 @@
 #include "BFCronCtrl.h"
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFCore.h"
 #include "BFSettings.h"
 #include "ids.h"
@@ -52,12 +52,12 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
                      pCronCtrl_(NULL)
 {
     // title
-    SetTitle(wxString::Format("Project Planner for %s", BFRootTaskApp::Instance().GetProjectName()));
+    SetTitle(wxString::Format("Project Planner for %s", BFBackup::Instance().GetProjectName()));
 
     // get crontabline
-    wxString        strCrontabLine = BFRootTaskApp::Instance().GetCrontabline();
+    wxString        strCrontabLine = BFBackup::Instance().GetCrontabline();
     wxArrayString   arr;
-    BFRootTaskApp::ParseCrontabline(strCrontabLine, arr);
+    BFBackup::ParseCrontabline(strCrontabLine, arr);
 
     wxStaticText* pStatic = NULL;
 
@@ -107,6 +107,7 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
         pDlgSizer->Add(pStatic,          wxSizerFlags(0).DoubleBorder());
     pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center());
     SetSizerAndFit(pDlgSizer);
+    CenterOnParent();
     ShowModal();
 }
 
@@ -127,7 +128,7 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
     {
         if ( pButtonSchedule_->GetValue() )
         {
-            wxString strOld = BFRootTaskApp::Instance().GetCrontabline();
+            wxString strOld = BFBackup::Instance().GetCrontabline();
             wxString strNew = pCronCtrl_->GetCrontabline();
 
             if (strOld != strNew)
@@ -136,7 +137,7 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
         else
         {
             BFCore::Instance().DeleteLineInFile(BFSettings::Instance().GetCrontab(),
-                                                BFRootTaskApp::Instance().GetCrontabline());
+                                                BFBackup::Instance().GetCrontabline());
         }
     }
 

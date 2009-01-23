@@ -31,8 +31,8 @@
 #include "blackfisk.h"
 #include "BFApp.h"
 #include "BFTaskBase.h"
-#include "BFRootTask.h"
-#include "BFRootTaskApp.h"
+#include "BFProject.h"
+#include "BFBackup.h"
 #include "BFTaskDlg.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
@@ -75,7 +75,7 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
                          wxDefaultPosition,
                          wxDefaultSize,
                          wxTR_EDIT_LABELS | wxTR_HAS_BUTTONS),
-              Observer(&(BFRootTask::Instance())),
+              Observer(&(BFProject::Instance())),
               oidCurrentDrag_(BFInvalidOID),
               bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders())
 {
@@ -104,7 +104,7 @@ void BFBackupTree::Init ()
     Freeze();
 
     // recreate the treeCtrl with all tasks
-    BFRootTaskApp::Instance().InitThat(this);
+    BFBackup::Instance().InitThat(this);
 
     // expand all items in the treeCtlr
     ExpandAll();
@@ -233,7 +233,7 @@ void BFBackupTree::UpdatePlaceholders ()
         wxString strPlaceholder;
 
         // find all tasks with placeholders
-        BFRootTask::Instance().FindAllTasksWithPlaceholders(vecTasks);
+        BFProject::Instance().FindAllTasksWithPlaceholders(vecTasks);
 
         // iterate over all relevant items
         for (BFTaskVectorIt it = vecTasks.begin();
@@ -552,7 +552,7 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
         return false;
 
     // get the oid-related BFTask
-    BFTask* pTask = BFRootTask::Instance().GetTask(oidCurrentDrag_);
+    BFTask* pTask = BFProject::Instance().GetTask(oidCurrentDrag_);
 
     if (pTask == NULL)
         return false;
@@ -581,10 +581,10 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
         pTask->SetDestination(pItemData->GetPath());
 
         if ( HasChildren(pTask) )
-            BFRootTaskApp::Instance().ModifyDestination(strOldPath, strNewPath);
+            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
 
-        BFRootTask::Instance().SetModified();
-        BFRootTask::Instance().broadcastObservers();
+        BFProject::Instance().SetModified();
+        BFProject::Instance().broadcastObservers();
     }
 
     oidCurrentDrag_ = BFInvalidOID;
@@ -615,7 +615,7 @@ void BFBackupTree::OnBeginDrag (wxTreeEvent& event)
     else
     {
         // remember the currently draged task
-        BFTask* pTask = BFRootTask::Instance().GetTask(pItemData->GetOID());
+        BFTask* pTask = BFProject::Instance().GetTask(pItemData->GetOID());
 
         if (pTask == NULL)
             return;
@@ -712,7 +712,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
             return;
 
         if ( BFMainFrame::Instance()->QuestionYesNo(_("Should this task be deleted?")) )
-            BFRootTask::Instance().DeleteTask(pTask->GetOID());
+            BFProject::Instance().DeleteTask(pTask->GetOID());
     }
     else
     /* a couple of tasks */
@@ -742,7 +742,7 @@ void BFBackupTree::OnDeleteTask (wxCommandEvent& rEvent)
         if ( BFMainFrame::Instance()->QuestionYesNo(str) )
         {
             // delete the tasks
-            BFRootTask::Instance().DeleteTasks(vecTasks);
+            BFProject::Instance().DeleteTasks(vecTasks);
         }
     }
 }
@@ -999,7 +999,7 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
             pTask->SetTaskType(type);
     }
 
-    BFRootTask::Instance().SetModified(true);
+    BFProject::Instance().SetModified(true);
     UpdateItems(vecLastChildTasks_);
 }
 
@@ -1026,7 +1026,7 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
         // a task
         else
         {
-            BFTask* pTask = BFRootTask::Instance().GetTask(pItemData->GetOID());
+            BFTask* pTask = BFProject::Instance().GetTask(pItemData->GetOID());
 
             if (pTask == NULL)
                 return;
@@ -1078,8 +1078,8 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 
     if ( pTask->IsValid() )
     {
-        BFRootTask::Instance().AppendTask(*pTask);
-        BFRootTask::Instance().broadcastObservers();
+        BFProject::Instance().AppendTask(*pTask);
+        BFProject::Instance().broadcastObservers();
     }
     else
     {
@@ -1102,13 +1102,13 @@ void BFBackupTree::OnBeginLabelEdit (wxTreeEvent& rEvent)
 void BFBackupTree::OnEndLabelEdit (wxTreeEvent& rEvent)
 {
     if (rEvent.GetItem() == GetRootItem())
-        BFRootTask::Instance().SetName(rEvent.GetLabel());
+        BFProject::Instance().SetName(rEvent.GetLabel());
 }
 
 
 /*virtual*/ void BFBackupTree::ValueChanged (Subject* pSender)
 {
-    if ( pSender != &(BFRootTask::Instance()) )
+    if ( pSender != &(BFProject::Instance()) )
         return;
 
     this->AddPendingEvent(wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, BF_BACKUPTREE_REBUILD));
@@ -1128,7 +1128,7 @@ BFTask* BFBackupTree::GetTaskByItem (wxTreeItemId itemId)
         return NULL;
 
     // get the task object from the data layer
-    return BFRootTask::Instance().GetTask(pItemData->GetOID());
+    return BFProject::Instance().GetTask(pItemData->GetOID());
 }
 
 

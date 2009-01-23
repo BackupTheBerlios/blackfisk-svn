@@ -25,7 +25,7 @@
 #include "BFSystem.h"
 #include "BFCore.h"
 #include "BFProjectSettings.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFBackupProgressDlg.h"
 #include "BFThread_ProjectRunner.h"
 #include "BFMessageDlg.h"
@@ -68,7 +68,7 @@ BFMsgObserver::BFMsgObserver ()
     // ** BACKUP **
     {
         // get stop level
-        BF_StopLevel stop = BFRootTaskApp::GetStopLevel(pSys->GetLastType());
+        BF_StopLevel stop = BFBackup::GetStopLevel(pSys->GetLastType());
 
         // don't handle other message types while a backup
         if ( stop == BFDO_UNKNOWN )
@@ -108,12 +108,12 @@ BFMsgObserver::BFMsgObserver ()
                 break;
 
             case BFDO_STOPPRJ:
-                BFRootTaskApp::Instance().StopProject();
+                BFBackup::Instance().StopBackup();
                 return;
                 break;
 
             case BFDO_STOPTSK:
-                BFRootTaskApp::Instance().StopCurrentTask();
+                BFBackup::Instance().StopCurrentTask();
                 return;
                 break;
 

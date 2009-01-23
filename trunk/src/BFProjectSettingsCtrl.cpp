@@ -25,7 +25,7 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 
-#include "BFRootTask.h"
+#include "BFProject.h"
 #include "BFHelpCtrl.h"
 
 #define BFSTOPLVL_RADIO_WARNING_PRJ  1 + wxID_HIGHEST
@@ -469,6 +469,6 @@ void BFProjectSettingsCtrl::SetData (BFProjectSettings& rSettings)
     }
 
     if (bModified)
-        if (&(BFRootTask::Instance().GetSettings()) == &rSettings)
-            BFRootTask::Instance().SetModified();
+        if (&(BFProject::Instance().GetSettings()) == &rSettings)
+            BFProject::Instance().SetModified();
 }

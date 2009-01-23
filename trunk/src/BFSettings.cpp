@@ -64,8 +64,8 @@ void BFSettings::InitDefaultValues()
     dateLastVersionCheck_           = wxDateTime::Now().SetYear(2000);
     lScheduler_                     = 1;
     strCrontab_                     = BFEnvironment::GetInBuildCrontabFileName();
-    iSound_                         = 2;
-    iBeep_                          = 2;
+    iSound_                         = 0;
+    iBeep_                          = 0;
 }
 
 //
@@ -377,8 +377,8 @@ bool BFSettings::Serialize (jbSerialize& rA)
         // options added in version 1040
         if (rA.GetVersion() < 1040)
         {
-            iSound_ = 2;
-            iBeep_ = 2;
+            iSound_ = 0;
+            iBeep_ = 0;
         }
         else
         {

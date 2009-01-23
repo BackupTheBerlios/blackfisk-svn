@@ -133,8 +133,10 @@ class BFApp : public wxApp
         static bool SaveSettings ();
         ///
         bool SaveCurrentProject ();
-        /** it close the current project */
-        bool CloseCurrentProject (bool bCheckForModifications = true);
+        /** Reset the project to it's default values.
+            It doesn't check for unsaved modifications!
+            You need to take care by yourself if the project was saved! */
+        bool ResetProject ();
 
         /** Check if a newer version of blackfisk is available.
             It read a version-info-file from the internet and

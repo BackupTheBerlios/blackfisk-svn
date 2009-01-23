@@ -1,3 +1,9 @@
+- improve to BFProject and BFTask
+- implement BFBackup and BFOperation
+
+- Drag&Drop source to an empty project open a task-dialog with an empty destination
+  -> "select destination dialog" should open automaticly in that case
+- "stop prj" & "stop task" button should be disabled ("wait...") after clicking
 
 0.0.1
 ~~~~~

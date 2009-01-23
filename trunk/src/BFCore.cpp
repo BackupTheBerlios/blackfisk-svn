@@ -34,7 +34,7 @@
 
 #include "BFCore_traverser.h"
 #include "BFApp.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "Progress.h"
 #include "BFSystem.h"
 #include "blackfisk.h"
@@ -102,8 +102,8 @@ bool BFCore::IsWhileBackup ()
 /*static*/ bool BFCore::IsStop ()
 {
     if (Instance().IsWhileBackup())
-        if ( BFRootTaskApp::Instance().GetStopCurrentTask() == true
-          || BFRootTaskApp::Instance().GetStopProject() == true)
+        if ( BFBackup::Instance().GetStopCurrentTask() == true
+          || BFBackup::Instance().GetStopBackup() == true)
           return true;
 
     return false;
@@ -266,25 +266,30 @@ bool BFCore::SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry)
 }
 
 bool BFCore::VerifyFileAttributes (wxFileName& fn1,
-                                   wxFileName& fn2,
-                                   bool bIgnoreArchiveBit /*= false*/)
+                                   wxFileName& fn2)
 {
-    // PPP
+    /* handle only this attributes
+       FILE_ATTRIBUTE_READONLY
+       FILE_ATTRIBUTE_HIDDEN
+       FILE_ATTRIBUTE_SYSTEM */
+
+    // get attributes
     long lAttr1 = GetFileAttributes(fn1.GetFullPath());
     long lAttr2 = GetFileAttributes(fn2.GetFullPath());
 
-    // remove archive bit if there is one
-    if (bIgnoreArchiveBit)
-    {
-        if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
-            lAttr1 = lAttr1 & ~FILE_ATTRIBUTE_ARCHIVE;
+    // FILE_ATTRIBUTE_READONLY
+    if ( (lAttr1 & FILE_ATTRIBUTE_READONLY) != (lAttr2 & FILE_ATTRIBUTE_READONLY) )
+        return false;
 
-        if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
-            lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
-    }
+    // FILE_ATTRIBUTE_HIDDEN
+    if ( (lAttr1 & FILE_ATTRIBUTE_HIDDEN) != (lAttr2 & FILE_ATTRIBUTE_HIDDEN) )
+        return false;
 
-    // compare attributes
-    return lAttr1 == lAttr2;
+    // FILE_ATTRIBUTE_SYSTEM
+    if ( (lAttr1 & FILE_ATTRIBUTE_SYSTEM) != (lAttr2 & FILE_ATTRIBUTE_SYSTEM) )
+        return false;
+
+    return true;
 }
 
 
@@ -1128,8 +1133,8 @@ bool BFCore::VerifyFile (const wxString& strFile1,
         }
     }
 
-    // verify file attributes but ignore archive-bit
-    if ( !(VerifyFileAttributes(fn1, fn2, true)) )
+    // verify some file attributes
+    if ( !(VerifyFileAttributes(fn1, fn2)) )
         return false;
 
     // verify byte-by-byte

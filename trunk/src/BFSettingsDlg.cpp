@@ -61,7 +61,9 @@ END_EVENT_TABLE()
 
 //
 BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
-             : wxDialog(pParent, wxID_ANY, wxString(_("Global Settings")))
+             : wxDialog(pParent,
+                        wxID_ANY,
+                        _("Global Settings"))
 {
     // the book
     wxTreebook* pBook = new wxTreebook(this,
@@ -111,6 +113,7 @@ BFSettingsDlg::BFSettingsDlg (wxWindow* pParent)
     pDlgSizer->Add(pButtonSizer,            wxSizerFlags(0).Center());
     SetSizerAndFit(pDlgSizer);
     GetData();
+    CenterOnParent();
     ShowModal();
 }
 

@@ -26,7 +26,7 @@
 
 #include "BFProgressCtrl.h"
 #include "Progress.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFLogViewDlg.h"
 #include "BFThread_ProjectRunner.h"
 #include "BFMainFrame.h"
@@ -63,7 +63,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
     Center();
     pMutex_ = new wxMutex();
     pCondition_ = new wxCondition(*pMutex_);
-    BFRootTaskApp::Instance().Run_Start();
+    BFBackup::Instance().Run_Start();
 }
 
 void BFBackupProgressDlg::OnClose(wxCloseEvent& rEvent)
@@ -86,8 +86,8 @@ void BFBackupProgressDlg::Init ()
     pCtrlTaskList_      = new BFTaskListCtrl(this);
 
     // progress ctrls
-    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFRootTaskApp::Instance().GetProgressTask());
-    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFRootTaskApp::Instance().GetProgressTotal());
+    pCtrlTaskProgress_  = new BFProgressTaskCtrl(this, BFBackup::Instance().GetProgressTask());
+    pCtrlTotalProgress_ = new BFProgressTotalCtrl(this, BFBackup::Instance().GetProgressTotal());
 
     // backup info ctrl
     BFBackupInfoCtrl* pInfoCtrl = new BFBackupInfoCtrl(this);
@@ -130,7 +130,7 @@ void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
         return;
 
     // get pos of current task
-    long lPos = BFRootTaskApp::Instance().GetTaskPosition(pTask);
+    long lPos = BFBackup::Instance().GetTaskPosition(pTask);
 
     // set task name in progress ctrl
     pCtrlTaskProgress_->SetTextA
@@ -138,7 +138,7 @@ void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
         wxString::Format(_("%s (%d of %d)"),
                             pTask->GetName(),
                             lPos+1,
-                            BFRootTaskApp::Instance().GetTaskCount())
+                            BFBackup::Instance().GetTaskCount())
     );
 
     // set active task in task-list-ctrl
@@ -147,12 +147,12 @@ void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
 
 void BFBackupProgressDlg::OnStopTask (wxCommandEvent& rEvent)
 {
-    BFRootTaskApp::Instance().StopCurrentTask();
+    BFBackup::Instance().StopCurrentTask();
 }
 
 void BFBackupProgressDlg::OnStopProject (wxCommandEvent& rEvent)
 {
-    BFRootTaskApp::Instance().StopProject();
+    BFBackup::Instance().StopBackup();
 }
 
 wxMutex* BFBackupProgressDlg::GetMutex ()

@@ -27,7 +27,7 @@
 #include <wx/gbsizer.h>
 
 #include "BFSystem.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFTimeDurationCtrl.h"
 #include "BFSound.h"
 
@@ -72,7 +72,7 @@ void BFBackupInfoCtrl::Init ()
 
     // message counters
     wxStaticText* pStatVerbose = new wxStaticText(this, wxID_ANY, _("verbose level"));
-    wxStaticText* pStatVerboseLvl = new wxStaticText(this, wxID_ANY, BFSystem::GetVerboseString(BFRootTaskApp::Instance().GetVerboseLevel()));
+    wxStaticText* pStatVerboseLvl = new wxStaticText(this, wxID_ANY, BFSystem::GetVerboseString(BFBackup::Instance().GetVerboseLevel()));
     wxStaticText* pStatWarning = new wxStaticText(this, wxID_ANY, _("warnings:"));
     wxStaticText* pStatError = new wxStaticText(this, wxID_ANY, _("errors:"));
     wxStaticText* pStatFatalError = new wxStaticText(this, wxID_ANY, _("fatal errors:"));
@@ -87,7 +87,7 @@ void BFBackupInfoCtrl::Init ()
     pFatalErrorsCounter_ = new wxStaticText(this, wxID_ANY, "000");
 
     // time duration
-    BFTimeDurationCtrl* pTimeDurationCtrl = new BFTimeDurationCtrl(this, BFRootTaskApp::Instance().GetProgressTotal());
+    BFTimeDurationCtrl* pTimeDurationCtrl = new BFTimeDurationCtrl(this, BFBackup::Instance().GetProgressTotal());
 
     // sizer and arrange
     wxBoxSizer*     pTopSizer   = new wxBoxSizer(wxVERTICAL);
@@ -127,7 +127,7 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
         return;
 
     // add message
-    if ( pSys->HandleLastMessage(BFRootTaskApp::Instance().GetVerboseLevel()) )
+    if ( pSys->HandleLastMessage(BFBackup::Instance().GetVerboseLevel()) )
     {
         wxString str;
 
@@ -138,7 +138,7 @@ void BFBackupInfoCtrl::RefreshCounterCtrls()
         pLogCtrl_->WriteText(str);
 
         // play sound only when the message is not handle by a question dialog (BFMessageDlg)
-        if ( BFRootTaskApp::GetStopLevel(pSys->GetLastType()) != BFDO_ASK )
+        if ( BFBackup::GetStopLevel(pSys->GetLastType()) != BFDO_ASK )
             BFSound::PlayMessageTypeSound(pSys->GetLastType());
     }
 

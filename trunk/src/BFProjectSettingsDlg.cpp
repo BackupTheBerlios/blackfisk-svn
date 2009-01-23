@@ -26,7 +26,7 @@
 #include <wx/stattext.h>
 
 #include "BFProjectSettingsCtrl.h"
-#include "BFRootTask.h"
+#include "BFProject.h"
 #include "BFHelpCtrl.h"
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
@@ -41,7 +41,9 @@ END_EVENT_TABLE()
 
 //
 BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
-                    : wxDialog(pParent, wxID_ANY, wxString(_("Project settings")))
+                    : wxDialog(pParent,
+                               wxID_ANY,
+                               _("Project settings"))
 {
     wxString strTip;
 
@@ -89,6 +91,7 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
     // arrange and show
     SetSizerAndFit(pTopSizer);
     GetData();
+    CenterOnParent();
     ShowModal();
 }
 
@@ -117,7 +120,7 @@ void BFProjectSettingsDlg::OnButton_Cancel (wxCommandEvent& rEvent)
 
 void BFProjectSettingsDlg::GetData ()
 {
-    BFRootTask& rPrj = BFRootTask::Instance();
+    BFProject& rPrj = BFProject::Instance();
 
     pNameCtrl_->SetValue(rPrj.GetName());
     pCtrl_->GetData(rPrj.GetSettings());
@@ -125,13 +128,13 @@ void BFProjectSettingsDlg::GetData ()
 
 void BFProjectSettingsDlg::SetData ()
 {
-    BFRootTask& rPrj = BFRootTask::Instance();
+    BFProject& rPrj = BFProject::Instance();
     bool bBroadcast = false;
 
     if (rPrj.GetName() != pNameCtrl_->GetValue())
     {
         rPrj.SetName(pNameCtrl_->GetValue());
-        BFRootTask::Instance().SetModified();
+        BFProject::Instance().SetModified();
         bBroadcast = true;
     }
 

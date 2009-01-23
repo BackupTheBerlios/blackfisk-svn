@@ -22,7 +22,7 @@
 
 
 #include "BFThread_ProjectRunner.h"
-#include "BFRootTaskApp.h"
+#include "BFBackup.h"
 #include "BFTask.h"
 #include "BFCore.h"
 #include "BFBackupProgressDlg.h"
@@ -67,10 +67,10 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
         BFCore::Instance().CreatePath(str);
 
     // run the task
-    pTask_->Run( *(BFRootTaskApp::Instance().GetProgressTask()) );
+    pTask_->Run( *(BFBackup::Instance().GetProgressTask()) );
 
     // finish this and run next task
-    BFRootTaskApp::Instance().Run_NextTask();
+    BFBackup::Instance().Run_NextTask();
 
     // last task
     if ( !(BFCore::Instance().IsWhileBackup()) )

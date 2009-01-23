@@ -23,7 +23,7 @@
 
 #include "BFTask.h"
 #include "BFCore.h"
-#include "BFRootTask.h"
+#include "BFProject.h"
 #include "BFundef.h"
 #include "BFSystem.h"
 #include "blackfisk.h"
@@ -47,7 +47,7 @@ BFTaskData::BFTaskData (BFTaskType type,
             arrExclude_(arrExclude),
             bRealSync_(bRealSync)
 {
-    oid_ = BFRootTask::Instance().CreateOID();
+    oid_ = BFProject::Instance().CreateOID();
 }
 
 BFTaskData::BFTaskData ()
@@ -131,7 +131,7 @@ bool BFTaskData::GetRealSync () const
 
 bool BFTaskData::SetOID (BFoid oid)
 {
-    if (BFRootTask::Instance().HasTask(oid))
+    if (BFProject::Instance().HasTask(oid))
         return false;
 
     oid_ = oid;
@@ -314,7 +314,7 @@ bool BFTask::Serialize (jbSerialize& rA)
         if (rA.GetVersion() < 1010)
         {
             bVerifyContent = false;
-            BFRootTask::Instance().SetModified(true);
+            BFProject::Instance().SetModified(true);
         }
         else
         {
