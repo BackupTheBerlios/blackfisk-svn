@@ -123,7 +123,7 @@ BFAboutDlg::BFAboutDlg ()
     wxSizer* pThird4 = CreateThirdPartySizer("http://prismtone.jp",
                                              "FreeFont \"NORDIC round\"",
                                              " from PRISMTONE",
-                                             _(" 前田 龍 (Ryuichi Maeda) alias PRISMTONE\n created the font used in the blackfiks logo."));
+                                             wxT(" 前田 龍 (Ryuichi Maeda) alias PRISMTONE\n created the font used in the blackfiks logo."));
 
 
     wxSizer* pTools1 = CreateThirdPartySizer("http://www.codeblocks.org",
