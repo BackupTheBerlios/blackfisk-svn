@@ -118,6 +118,34 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     return str;
 }
 
+
+/*static*/ wxString BFApp::CutCommunity (wxArrayString& rStrings)
+{
+    wxString strCommunity = ExtractCommunity(rStrings);
+    long lCommunityLength = strCommunity.Length();
+    wxArrayString arrResult;
+
+    for ( size_t i = 0; i < rStrings.GetCount(); ++i )
+        arrResult.Add(rStrings[i].Mid(lCommunityLength));
+
+    rStrings.Clear();
+    rStrings = arrResult;
+
+    return strCommunity;
+}
+
+
+/*static*/ wxArrayString& BFApp::Remove (wxArrayString& arrOriginal, const wxArrayString& arrToRemove)
+{
+    for ( size_t i = 0; i < arrToRemove.GetCount(); ++i )
+    {
+        while ( arrOriginal.Index(arrToRemove[i]) != wxNOT_FOUND )
+            arrOriginal.Remove(arrToRemove[i]);
+    }
+
+    return arrOriginal;
+}
+
 BFApp::BFApp ()
      : pLog_(NULL),
        pSingleInstanceChecker_(NULL),
@@ -235,6 +263,10 @@ bool BFApp::OnInit()
     // read the configuration file
     BFSettings::Instance().InitDefaultValues();
     ReadSettings();
+
+    //
+    pLog_->SetMaxSize(BFSettings::Instance().GetMaxLogFileSize());
+    pLog_->CareSize();
 
     // init locals
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);

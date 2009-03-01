@@ -47,7 +47,9 @@ class BFProgressCtrlBase : public wxPanel, Observer
         ///
         wxStaticText*   pTextA_;
         /// by default it is used for the progress-value in %
-        wxStaticText*   pTextB_;
+        wxStaticText*   pTextB1_;
+        ///
+        wxStaticText*   pTextB2_;
         ///
         wxStaticText*   pTextC_;
 

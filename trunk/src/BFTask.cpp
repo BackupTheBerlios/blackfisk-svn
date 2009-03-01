@@ -1,8 +1,7 @@
 /**
  * Name:        BFTask.cpp
- * Purpose:     BFTask and BFTaskData class implementation
+ * Purpose:     BFTask class implementation
  * Author:      Christian Buhtz
- * Modified by:
  * Created:     2006-04-28
  * Copyright:   (c) 2006 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
@@ -22,21 +21,21 @@
 
 
 #include "BFTask.h"
-#include "BFCore.h"
+//#include "BFCore.h"
 #include "BFProject.h"
 #include "BFundef.h"
 #include "BFSystem.h"
 #include "blackfisk.h"
 
-BFTaskData::BFTaskData (BFTaskType type,
-                        const wxString& strSource,
-                        const wxString& strDestination,
-                        const wxString& strName,
-                        bool bVerify,
-                        bool bVerifyContent,
-                        BFArchiveFormat archive,
-                        wxArrayString& arrExclude,
-                        bool bRealSync)
+BFTask::BFTask (BFTaskType type,
+                    const wxString& strSource,
+                    const wxString& strDestination,
+                    const wxString& strName,
+                    bool bVerify,
+                    bool bVerifyContent,
+                    BFArchiveFormat archive,
+                    wxArrayString& arrExclude,
+                    bool bRealSync)
           : type_(type),
             strSource_(strSource),
             strDestination_(strDestination),
@@ -50,21 +49,21 @@ BFTaskData::BFTaskData (BFTaskType type,
     oid_ = BFProject::Instance().CreateOID();
 }
 
-BFTaskData::BFTaskData ()
-          : oid_(BFInvalidOID),
-            type_(TaskINVALID),
-            bVerify_(true),
-            bVerifyContent_(false),
-            archiveFormat_(CompressNOTUSED),
-            bRealSync_(true)
+BFTask::BFTask ()
+      : oid_(BFInvalidOID),
+        type_(TaskINVALID),
+        bVerify_(true),
+        bVerifyContent_(false),
+        archiveFormat_(CompressNOTUSED),
+        bRealSync_(true)
 {
 }
 
-/*virtual*/ BFTaskData::~BFTaskData ()
+/*virtual*/ BFTask::~BFTask ()
 {
 }
 
-bool BFTaskData::IsValid ()
+bool BFTask::IsValid ()
 {
     if (oid_ == BFInvalidOID)
         return false;
@@ -84,52 +83,52 @@ bool BFTaskData::IsValid ()
     return true;
 }
 
-BFTaskType BFTaskData::GetType () const
+BFTaskType BFTask::GetType () const
 {
     return type_;
 }
 
-const wxString& BFTaskData::GetSource () const
+const wxString& BFTask::GetSource () const
 {
     return strSource_;
 }
 
-const wxString& BFTaskData::GetDestination () const
+const wxString& BFTask::GetDestination () const
 {
     return strDestination_;
 }
 
-const wxString& BFTaskData::GetName () const
+const wxString& BFTask::GetName () const
 {
     return strName_;
 }
 
-bool BFTaskData::Verify () const
+bool BFTask::Verify () const
 {
     return bVerify_;
 }
 
-bool BFTaskData::VerifyContent () const
+bool BFTask::VerifyContent () const
 {
     return bVerifyContent_;
 }
 
-BFArchiveFormat BFTaskData::GetArchiveFormat () const
+BFArchiveFormat BFTask::GetArchiveFormat () const
 {
     return archiveFormat_;
 }
 
-const wxArrayString& BFTaskData::GetExclude () const
+const wxArrayString& BFTask::GetExclude () const
 {
     return arrExclude_;
 }
 
-bool BFTaskData::GetRealSync () const
+bool BFTask::GetRealSync () const
 {
     return bRealSync_;
 }
 
-bool BFTaskData::SetOID (BFoid oid)
+bool BFTask::SetOID (BFoid oid)
 {
     if (BFProject::Instance().HasTask(oid))
         return false;
@@ -139,7 +138,7 @@ bool BFTaskData::SetOID (BFoid oid)
     return true;
 }
 
-void BFTaskData::SetTaskType (BFTaskType type)
+void BFTask::SetTaskType (BFTaskType type)
 {
     // it is a fresh task (maybe while serializing from file)
     if (GetType() == TaskINVALID)
@@ -162,21 +161,19 @@ void BFTaskData::SetTaskType (BFTaskType type)
             return;
         }
     }
-
-    BFSystem::Fatal("not able to set task type", "BFTaskData::SetTaskType()");
 }
 
-BFoid BFTaskData::GetOID () const
+BFoid BFTask::GetOID () const
 {
     return oid_;
 }
 
-void BFTaskData::SetSource (const wxString& source)
+void BFTask::SetSource (const wxString& source)
 {
     strSource_ = source;
 }
 
-void BFTaskData::SetDestination (const wxString& dest)
+void BFTask::SetDestination (const wxString& dest)
 {
     strDestination_ = dest;
 
@@ -184,72 +181,42 @@ void BFTaskData::SetDestination (const wxString& dest)
     strDestination_.SetChar(0, wxString(strDestination_[0]).MakeUpper()[0]);
 }
 
-void BFTaskData::SetName (const wxString& name)
+void BFTask::SetName (const wxString& name)
 {
     strName_ = name;
 }
 
-void BFTaskData::SetVerify (bool verify)
+void BFTask::SetVerify (bool verify)
 {
     bVerify_ = verify;
 }
 
-void BFTaskData::SetVerifyContent (bool verify_content)
+void BFTask::SetVerifyContent (bool verify_content)
 {
     bVerifyContent_ = verify_content;
 }
 
-void BFTaskData::SetArchiveFormat (BFArchiveFormat archiveFormat)
+void BFTask::SetArchiveFormat (BFArchiveFormat archiveFormat)
 {
     archiveFormat_ = archiveFormat;
 }
 
-void BFTaskData::SetExclude (const wxArrayString& exclude)
+void BFTask::SetExclude (const wxArrayString& exclude)
 {
     arrExclude_ = exclude;
 }
 
-void BFTaskData::SetRealSync (bool bRealSync)
+void BFTask::SetRealSync (bool bRealSync)
 {
     bRealSync_ = bRealSync;
 }
 
-/*static*/ wxString BFTask::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
-{
-    wxString strDesc;
-
-    switch (type)
-    {
-        case TaskARCHIVE:
-            strDesc << _("compress to a ") << GetArchiveExtension(format) << _(" archive");
-            break;
-
-        case TaskDIRCOPY:
-            strDesc = _("copy the directory");
-            break;
-
-        case TaskFILECOPY:
-            strDesc = _("copy the file");
-            break;
-
-        case TaskSYNC:
-            strDesc = _("synchronise directories");
-            break;
-
-        default:
-            strDesc = "unknown task type";
-            break;
-    };
-
-    return strDesc;
-}
-
 wxString BFTask::GetTypeDescription ()
 {
-    return GetTypeDescription(GetType(), GetArchiveFormat());
+    return BFProject::GetTypeDescription(GetType(), GetArchiveFormat());
 }
 
-void BFTaskData::GetAvailableTypes (BFTypeVector& rVecType)
+void BFTask::GetAvailableTypes (BFTypeVector& rVecType)
 {
     switch (GetType())
     {
@@ -268,6 +235,12 @@ void BFTaskData::GetAvailableTypes (BFTypeVector& rVecType)
 
     rVecType.insert (rVecType.begin(), GetType());
 }
+
+wxString BFTask::GetArchiveExtension()
+{
+    return BFProject::GetArchiveExtension(GetArchiveFormat());
+}
+
 
 bool BFTask::Serialize (jbSerialize& rA)
 {
@@ -367,232 +340,4 @@ bool BFTask::Serialize (jbSerialize& rA)
     }
 
     return rc;
-}
-
-BFTask::BFTask (BFTaskType type,
-                const wxString& strSource,
-                const wxString& strDestination,
-                const wxString& strName,
-                bool bVerify,
-                bool bVerifyContent,
-                BFArchiveFormat archiveFormat,
-                wxArrayString& arrExclude,
-                bool bRealSync)
-      : BFTaskData(type, strSource, strDestination, strName, bVerify, bVerifyContent, archiveFormat, arrExclude, bRealSync),
-        bStopTask_(false)
-{
-}
-
-BFTask::BFTask ()
-{
-}
-
-//
-/*virtual*/ BFTask::~BFTask ()
-{
-}
-
-
-wxString BFTask::GetArchiveExtension()
-{
-    return GetArchiveExtension(GetArchiveFormat());
-}
-
-/*static*/ wxString BFTask::GetArchiveExtension(BFArchiveFormat format)
-{
-    switch (format)
-    {
-        case CompressZIP:
-            return "zip";
-            break;
-    }
-
-    return "unknown";
-}
-
-bool BFTask::RunForArchive (ProgressWithMessage& rProgress)
-{
-    wxString strDest, strSrc;
-
-    // source
-    strSrc  = GetSource();
-
-    // destination
-    strDest = strDest + GetDestination();
-
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
-
-    strDest =  strDest + GetName() + "." + GetArchiveExtension();
-
-    // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
-
-    // exclude something?
-    wxArrayString* pArr = NULL;
-    if (GetExclude().Count() > 0)
-        pArr = new wxArrayString(GetExclude());
-
-    switch (GetArchiveFormat())
-    {
-        case CompressZIP:
-            BFCore::Instance().CreateZipFromDir
-            (
-                strDest.c_str(),
-                strSrc.c_str(),
-                pArr,
-                Verify(),
-                &rProgress
-            );
-        break;
-
-        default:
-            BFSystem::Fatal("unknown archive type", "BFTask::RunForArchive()");
-            break;
-    }
-
-    // delete temporary exclude array
-    if (pArr != NULL)
-        delete pArr;
-
-    return true;
-}
-
-
-bool BFTask::RunForDirCopy (ProgressWithMessage& rProgress)
-{
-    wxString strDest, strSrc;
-
-    // source
-    strSrc  = GetSource();
-
-    // destination
-    strDest = strDest + GetDestination();
-
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
-
-    strDest = strDest + GetName();
-
-    // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
-
-    // copy dir
-    return BFCore::Instance().CopyDir
-    (
-        strSrc.c_str(),
-        strDest.c_str(),
-        Verify(),
-        VerifyContent(),
-        &rProgress
-    );
-}
-
-
-bool BFTask::RunForFileCopy(ProgressWithMessage& rProgress)
-{
-    wxString strDest, strSrc;
-
-    // source
-    strSrc  = GetSource();
-
-    // destination
-    strDest = strDest + GetDestination();
-
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
-
-    strDest = strDest + GetName();
-
-    // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
-
-    // copy file
-    return BFCore::Instance().CopyFile
-    (
-        strSrc.c_str(),
-        strDest.c_str(),
-        true,
-        Verify(),
-        VerifyContent()
-    );
-}
-
-bool BFTask::RunForDirSync (ProgressWithMessage& rProgress)
-{
-    wxString strDest, strSrc;
-
-    // source
-    strSrc  = GetSource();
-
-    // destination
-    strDest = strDest + GetDestination();
-
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
-
-    strDest = strDest + GetName();
-
-    // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
-
-    return BFCore::Instance().Synchronise
-    (
-        strSrc,
-        strDest,
-        Verify(),
-        VerifyContent(),
-        GetRealSync(),
-        &rProgress
-    );
-}
-
-void BFTask::StopTask ()
-{
-    bStopTask_ = true;
-}
-
-bool BFTask::Run (ProgressWithMessage& rProgress)
-{
-    switch (GetType())
-    {
-        case TaskARCHIVE:
-            RunForArchive(rProgress);
-            break;
-
-        case TaskDIRCOPY:
-            RunForDirCopy(rProgress);
-            break;
-
-        case TaskFILECOPY:
-            RunForFileCopy(rProgress);
-            break;
-
-        case TaskSYNC:
-            RunForDirSync(rProgress);
-            break;
-
-        default:
-            break;
-    };  // switch(type_)
-
-    if ( BFCore::IsStop() )
-        return false;
-
-    return true;
-}
-
-/*static*/ wxString& BFTask::FillBlackfiskPlaceholders (wxString& rStr)
-{
-    // BFTASK_PLACEHOLDER_DATE
-    rStr.Replace(BFTASK_PLACEHOLDER_DATE, BFCore::Instance().GetDateString());
-
-    // BFTASK_PLACEHOLDER_TIME
-    rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
-
-    return rStr;
 }

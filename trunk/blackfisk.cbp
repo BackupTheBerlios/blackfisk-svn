@@ -6,7 +6,7 @@
 		<Option pch_mode="0" />
 		<Option default_target="debug_unicode" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Task\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;PresentationLayer\Controls\Observers\;doc\;" />
+		<Option virtualFolders="AppLayer\;DataLayer\;PresentationLayer\;PresentationLayer\Dialogs\;PresentationLayer\Controls\;DataLayer\Project\;AppLayer\Core\;AppLayer\InfoSystem\;AppLayer\wxSerialize\;PresentationLayer\Controls\Observers\;doc\;AppLayer\Backup\;" />
 		<Build>
 			<Target title="Win32 - Debug Dynamic">
 				<Option output=".\blackfiskDd.exe" prefix_auto="0" extension_auto="0" />
@@ -103,7 +103,7 @@
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="include\BFBackup.h">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\Backup\" />
 		</Unit>
 		<Unit filename="include\BFBackupInfoCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
@@ -174,6 +174,9 @@
 		<Unit filename="include\BFMsgObserver.h">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
+		<Unit filename="include\BFOperation.h">
+			<Option virtualFolder="AppLayer\Backup\" />
+		</Unit>
 		<Unit filename="include\BFPlaceholderButton.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
@@ -181,13 +184,13 @@
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
 		<Unit filename="include\BFProject.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="include\BFProjectPlannerDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="include\BFProjectSettings.h">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="include\BFProjectSettingsCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\" />
@@ -211,10 +214,10 @@
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="include\BFTask.h">
-			<Option virtualFolder="DataLayer\Task\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="include\BFTaskBase.h">
-			<Option virtualFolder="DataLayer\Task\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="include\BFTaskDlg.h">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
@@ -222,8 +225,8 @@
 		<Unit filename="include\BFTaskListCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
-		<Unit filename="include\BFThread_ProjectRunner.h">
-			<Option virtualFolder="AppLayer\" />
+		<Unit filename="include\BFThread_BackupRunner.h">
+			<Option virtualFolder="AppLayer\Backup\" />
 		</Unit>
 		<Unit filename="include\BFTimeDurationCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
@@ -254,7 +257,7 @@
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
 		<Unit filename="src\BFBackup.cpp">
-			<Option virtualFolder="AppLayer\" />
+			<Option virtualFolder="AppLayer\Backup\" />
 		</Unit>
 		<Unit filename="src\BFBackupInfoCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
@@ -325,6 +328,9 @@
 		<Unit filename="src\BFMsgObserver.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
+		<Unit filename="src\BFOperation.cpp">
+			<Option virtualFolder="AppLayer\Backup\" />
+		</Unit>
 		<Unit filename="src\BFPlaceholderButton.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
 		</Unit>
@@ -332,13 +338,13 @@
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
 		<Unit filename="src\BFProject.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="src\BFProjectPlannerDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
 		</Unit>
 		<Unit filename="src\BFProjectSettings.cpp">
-			<Option virtualFolder="DataLayer\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="src\BFProjectSettingsCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\" />
@@ -359,10 +365,7 @@
 			<Option virtualFolder="AppLayer\InfoSystem\" />
 		</Unit>
 		<Unit filename="src\BFTask.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
-		</Unit>
-		<Unit filename="src\BFTaskBase.cpp">
-			<Option virtualFolder="DataLayer\Task\" />
+			<Option virtualFolder="DataLayer\Project\" />
 		</Unit>
 		<Unit filename="src\BFTaskDlg.cpp">
 			<Option virtualFolder="PresentationLayer\Dialogs\" />
@@ -370,8 +373,8 @@
 		<Unit filename="src\BFTaskListCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
-		<Unit filename="src\BFThread_ProjectRunner.cpp">
-			<Option virtualFolder="AppLayer\" />
+		<Unit filename="src\BFThread_BackupRunner.cpp">
+			<Option virtualFolder="AppLayer\Backup\" />
 		</Unit>
 		<Unit filename="src\BFTimeDurationCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />

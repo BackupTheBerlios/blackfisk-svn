@@ -69,13 +69,20 @@ wxDirTraverseResult BFDirListingTraverser::HandleDirAndFile(const wxString& name
     // check for exclusion
     if ( pExcludeList_ )
     {
+        // exact fit
         if ( pExcludeList_->Index(strCur) != wxNOT_FOUND )
             return wxDIR_CONTINUE;
 
-        // handle placeholders
         for (size_t i = 0; i < pExcludeList_->Count(); ++i)
+        {
+            // handle placeholders
             if ( strCur.Matches((*pExcludeList_)[i]) )
                 return wxDIR_CONTINUE;
+
+            // begin with
+            if ( strCur.StartsWith((*pExcludeList_)[i] + wxFILE_SEP_PATH) )
+                return wxDIR_CONTINUE;
+        }
     }
 
     // add the dir to the listing
@@ -88,13 +95,13 @@ const wxArrayString& BFDirListingTraverser::ListingArray ()
 {
     return rList_;
 }
-
+/*
 BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOriginalDirectory,
                                                       const wxString& strToSynchroniseDirectory,
                                                       wxArrayString& rList,
                                                       bool bVerify,
                                                       bool bVerifyContent,
-                                                      ProgressWithMessage* pProgress /*= NULL*/)
+                                                      ProgressWithMessage* pProgress /*= NULL*)
                           : BFDirListingTraverser(rList, strOriginalDirectory),
                             strToSynchronise_(strToSynchroniseDirectory),
                             pProgress_(pProgress),
@@ -103,7 +110,7 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
 {
 }
 
-/*virtual*/ wxDirTraverseResult BFSynchroniseDirTraverser::OnFile(const wxString& filename)
+/*virtual* wxDirTraverseResult BFSynchroniseDirTraverser::OnFile(const wxString& filename)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -123,16 +130,16 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
     if ( !(BFCore::Instance().VerifyFile(filename, strTarget, bVerifyContent_)) )
     {
         // get write-protection from destination
-        bool bWriteprotectionDestination = BFCore::Instance().IsWriteProtected(strTarget);
+        bool bWriteprotectionDestination = BFCore::HasFileAttribute_ReadOnly(strTarget);
 
         //
         if (bWriteprotectionDestination)
         {
             // remove write-protection from destination file
-            BFCore::Instance().SetWriteProtected(strTarget, false);
+            BFCore::SetFileAttribute_ReadOnly(strTarget, false);
 
             // get write-protection from source
-            bool bWriteprotectionSource = BFCore::Instance().IsWriteProtected(filename);
+            bool bWriteprotectionSource = BFCore::HasFileAttribute_ReadOnly(filename);
 
             // copy the file
             if ( BFCore::Instance().CopyFile(filename, strTarget, true, false) == false )
@@ -144,7 +151,7 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
             // reset write-protection on the destination if there was one on the source
             if (bWriteprotectionSource)
             {
-                BFCore::Instance().SetWriteProtected(strTarget, bWriteprotectionSource);
+                BFCore::SetFileAttribute_ReadOnly(strTarget, bWriteprotectionSource);
 
                 if (bVerify_)
                 {
@@ -170,7 +177,7 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
     return wxDIR_CONTINUE;
 }
 
-/*virtual*/ wxDirTraverseResult BFSynchroniseDirTraverser::OnDir(const wxString& dirname)
+/*virtual* wxDirTraverseResult BFSynchroniseDirTraverser::OnDir(const wxString& dirname)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -201,7 +208,7 @@ BFSynchroniseDirTraverser::BFSynchroniseDirTraverser (const wxString& strOrigina
     }
 
     return wxDIR_CONTINUE;
-}
+}*/
 
 BFCountDirTraverser::BFCountDirTraverser ()
                     : lDirCount_(0),

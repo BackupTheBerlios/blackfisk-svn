@@ -41,7 +41,8 @@
                                      Observer(pProgress),
                                      pBar_(NULL),
                                      pTextA_(NULL),
-                                     pTextB_(NULL),
+                                     pTextB1_(NULL),
+                                     pTextB2_(NULL),
                                      pTextC_(NULL)
 {
 }
@@ -78,14 +79,14 @@
 
 /*virtual*/ void BFProgressCtrlBase::UpdateText (Progress* pP)
 {
-    if (pP == NULL || pTextB_ == NULL)
+    if (pP == NULL || pTextB1_ == NULL)
         return;
 
     wxString strLabel = wxString::Format("%d %%", pP->GetProgress());
 
-    if (strLabel != pTextB_->GetLabel())
+    if (strLabel != pTextB1_->GetLabel())
     {
-        pTextB_->SetLabel ( strLabel );
+        pTextB1_->SetLabel ( strLabel );
         Layout();
     }
 }
@@ -139,7 +140,7 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 
 /*virtual*/ void BFProgressTotalCtrl::InitControls ()
 {
-    if (pTextA_ != NULL || pTextB_ != NULL || pBar_ != NULL)
+    if (pTextA_ != NULL || pTextB1_ != NULL || pBar_ != NULL)
         return;
 
     // sizer
@@ -150,8 +151,8 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
     wxFont font = pTextA_->GetFont();
     font.SetWeight(wxFONTWEIGHT_BOLD);
     pTextA_->SetFont(font);
-    pTextB_ = new wxStaticText(this, -1, "000 %", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-    pTextB_->SetFont(font);
+    pTextB1_ = new wxStaticText(this, -1, "000 %", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+    pTextB1_->SetFont(font);
     pBar_   = new wxGauge(this,
                           -1,
                           100,
@@ -161,7 +162,7 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 
     // arange
     pTopSizer   ->Add ( pTextA_,    wxSizerFlags(0).Center() );
-    pTopSizer   ->Add ( pTextB_,    wxSizerFlags(0).Center() );
+    pTopSizer   ->Add ( pTextB1_,    wxSizerFlags(0).Center() );
     pTopSizer   ->Add ( pBar_,      wxSizerFlags(1).Expand() );
     SetSizer( pTopSizer );
 }
@@ -170,10 +171,12 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 // ++++++++++++++++++++++++++++++
 // ++ class BFProgressTaskCtrl ++
 // ++++++++++++++++++++++++++++++
+// XXX
+#include <wx/colour.h>
 
 /*virtual*/ void BFProgressTaskCtrl::InitControls ()
 {
-    if (pTextA_ != NULL || pTextB_ != NULL || pTextC_ != NULL || pBar_ != NULL)
+    if (pTextA_ != NULL || pTextB1_ != NULL || pTextB2_ != NULL || pTextC_ != NULL || pBar_ != NULL)
         return;
 
     // sizer
@@ -193,19 +196,28 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
                           wxDefaultPosition,
                           wxSize(450, 15),
                           wxGA_HORIZONTAL | wxGA_SMOOTH);
-    pTextB_ = new wxStaticText(this,
+    pTextB1_ = new wxStaticText(this,
                                -1,
-                               "   \n   ",
+                               "\n",
                                wxDefaultPosition,
                                wxDefaultSize,
-                               wxST_NO_AUTORESIZE | wxST_MARKUP);
+                               wxST_NO_AUTORESIZE);
+    pTextB2_ = new wxStaticText(this,
+                               -1,
+                               "\n",
+                               wxDefaultPosition,
+                               wxDefaultSize,
+                               wxST_NO_AUTORESIZE);
+    // XXX pTextB1_->SetBackgroundColour(*wxRED);
+    // XXX pTextB2_->SetBackgroundColour(*wxGREEN);
 
     // arange
     pSubSizer->Add(pTextA_, wxSizerFlags(0).Center() );
     pSubSizer->Add(pTextC_, wxSizerFlags(0).Center().Border(wxLEFT, 5) );
     pSizer->Add(pSubSizer,  wxSizerFlags(0).Center() );
     pSizer->Add(pBar_,      wxSizerFlags(0).Border(wxTOP|wxBOTTOM, 3));
-    pSizer->Add(pTextB_,    wxSizerFlags(0).Expand());
+    pSizer->Add(pTextB1_,   wxSizerFlags(0).Expand());
+    pSizer->Add(pTextB2_,   wxSizerFlags(0).Border(wxLEFT, 5).Expand());
     SetSizerAndFit(pSizer);
 }
 
@@ -227,7 +239,7 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
     ProgressWithMessage* pPM = dynamic_cast<ProgressWithMessage*>(pP);
 
     // check variables
-    if (pPM == NULL || pTextA_ == NULL || pTextB_ == NULL || pTextC_ == NULL)
+    if (pPM == NULL || pTextA_ == NULL || pTextB1_ == NULL || pTextB2_ == NULL || pTextC_ == NULL)
         return;
 
     // set the progress in %
@@ -236,8 +248,8 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
     // check the width of the message
     wxString strMsg = pPM->GetMessage();
     wxClientDC dc(this);
-    dc.SetFont(pTextB_->GetFont());
-    int widthCtrl = pTextB_->GetClientSize().GetWidth();
+    dc.SetFont(pTextB1_->GetFont());
+    int widthCtrl = pTextB1_->GetClientSize().GetWidth();
     int widthText = dc.GetTextExtent(strMsg).GetWidth();
 
     if ( widthText > widthCtrl )
@@ -257,6 +269,7 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
         widthText = dc.GetTextExtent(strMsg).GetWidth();
     }
 
-    pTextB_->SetLabel ( wxString::Format("%s\n%s", pPM->GetLabel(), strMsg) );
+    pTextB1_->SetLabel ( wxString::Format("%s", pPM->GetLabel()) );
+    pTextB2_->SetLabel ( wxString::Format("%s", strMsg) );
 }
 

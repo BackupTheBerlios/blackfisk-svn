@@ -52,8 +52,9 @@ class BFDirCtrl;
 #define BF_ID_MAINFRAME_FEAUTERREQUEST  17 + BF_MAINFRAME_ID_HIGHEST
 #define BF_ID_MAINFRAME_PRJPLANNER      18 + BF_MAINFRAME_ID_HIGHEST
 #define BF_ID_MAINFRAME_MAIL            19 + BF_MAINFRAME_ID_HIGHEST
+#define BF_ID_MAINFRAME_FEEDBACK        20 + BF_MAINFRAME_ID_HIGHEST
 #ifdef _DEBUG
-    #define BF_ID_MAINFRAME_TEST        20 + BF_MAINFRAME_ID_HIGHEST
+    #define BF_ID_MAINFRAME_TEST        21 + BF_MAINFRAME_ID_HIGHEST
 #endif
 
 ///
@@ -135,6 +136,8 @@ class BFMainFrame : public wxFrame
         void OnFeauterRequest (wxCommandEvent& event);
         ///
         void OnMail (wxCommandEvent& event);
+        ///
+        void OnFeedback (wxCommandEvent& event);
         ///
         void OnThreadEnd (wxCommandEvent& event);
 

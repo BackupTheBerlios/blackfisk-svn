@@ -43,6 +43,13 @@ class BFLogBase : public Observer
         /// direct interface to the log file
         wxFile      fileLog_;
 
+        /// the ctor set its 'subject' by itself
+        BFLogBase (const wxString& strLogFileName, long lMaxSize = 0);
+
+    public:
+        /// virtual destructor
+        virtual ~BFLogBase ();
+
         /** take care that size of the logfile is not to big */
         void CareSize ();
 
@@ -50,13 +57,6 @@ class BFLogBase : public Observer
         long GetMaxSize ();
         ///
         void SetMaxSize (long lMaxSizeInBytes);
-
-        /// the ctor set its 'subject' by itself
-        BFLogBase (const wxString& strLogFileName, long lMaxSize = 0);
-
-    public:
-        /// virtual destructor
-        virtual ~BFLogBase ();
 
 };    // class BFLogBase
 

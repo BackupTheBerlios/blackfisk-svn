@@ -64,7 +64,7 @@ BFTaskListCtrl::BFTaskListCtrl (wxWindow* pParent)
     if ( tMsg == MsgWARNING
       || tMsg == MsgERROR
       || tMsg == MsgFATAL
-      || BFBackup::Instance().GetStopCurrentTask())
+      || BFBackup::Instance().GetStopCurrentOperation())
     {
         bActiveTaskSucceeded_ = false;
     }

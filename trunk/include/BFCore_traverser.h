@@ -118,7 +118,7 @@ class BFCopyDirTraverser : public wxDirTraverser
         virtual wxDirTraverseResult OnFile(const wxString& filename);
 
 };  // class BFCopyDirTraverser
-
+/*
 class BFSynchroniseDirTraverser : public BFDirListingTraverser
 {
     private:
@@ -145,5 +145,5 @@ class BFSynchroniseDirTraverser : public BFDirListingTraverser
         ///
         virtual wxDirTraverseResult OnFile(const wxString& filename);
 };  // class BFSynchroniseDirTraverser
-
+*/
 #endif // BFCORE_TRAVERSER_H

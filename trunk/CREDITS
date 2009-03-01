@@ -29,6 +29,12 @@ Thanks to...
 - to InterNetworX
   hosting the project domain <http://www.inwx.de>
 
+- GIMP
+  GIMP is the GNU Image Manipulation Program. It is a freely
+  distributed piece of software for such tasks as photo retouching,
+  image composition and image authoring. It works on many operating
+  systems, in many languages. <http://www.gimp.org>
+
 - Inkscape
   Open Source vector graphics editor, using the W3C standard Scalable
   Vector Graphics (SVG) file format. <http://www.inkscape.org>
@@ -39,7 +45,12 @@ Thanks to...
   Icon editor. <http://icofx.ro>
 
 - 7-Zip
-  It is a file archiver with a high compression ratio. <http://www.7-zip.org/>
+  It is a file archiver with a high compression ratio.
+  <http://www.7-zip.org/>
+
+- 前田 龍 (Ryuichi Maeda) alias PRISMTONE
+  Created the FreeFont "NORDIC round" used in the blackfisk logo.
+  <http://prismtone.jp>
 
 - persons created some stuff that is not in the release-version
 

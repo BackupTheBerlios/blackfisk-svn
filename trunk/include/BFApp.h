@@ -111,13 +111,29 @@ class BFApp : public wxApp
         static wxString GetVersion ();
 
         /** prepend a string on each element of a string array
-            and return the reference of the array */
+            and return the reference of the array
+            example:
+            'strToPrpepend' + 'rStrings[n]' */
         static wxArrayString& PrependString (wxArrayString& rStrings, const wxString& strToPrepend);
-        /** search for community on all strings and return the community
+        /** Search for community on all strings and return the community.
             example:
             string1 = "ABCDEFG" and string2 = "ABCwdFG
             return value is "ABC" */
         static wxString ExtractCommunity (const wxArrayString& rStrings);
+        /** Look for the community of all strings and cut it off.
+            It return the community.
+            Example:
+            "C:\Programme\file1.dat"
+            "C:\Programme\file2.dat"
+            Result:
+            "file1.dat"
+            "file2.dat"
+            Return value: "C:\Programme\" */
+        static wxString CutCommunity (wxArrayString& rStrings);
+        /** Removes all items from 'arrOriginal' matching one
+            of the values in 'arrToRemove'. It return a reference
+            to 'arrOriginal'. */
+        static wxArrayString& Remove (wxArrayString& arrOriginal, const wxArrayString& arrToRemove);
 
         ///
         const wxString& GetCurrentProjectFilename ();

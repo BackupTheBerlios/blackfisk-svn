@@ -1,5 +1,5 @@
 /**
- * Name:        BFThread_ProjectRunner.cpp
+ * Name:        BFThread_BackupRunner.cpp
  * Purpose:
  * Author:      Christian Buhtz
  * Modified by:
@@ -21,7 +21,7 @@
  ***/
 
 
-#include "BFThread_ProjectRunner.h"
+#include "BFThread_BackupRunner.h"
 #include "BFBackup.h"
 #include "BFTask.h"
 #include "BFCore.h"
@@ -30,19 +30,18 @@
 
 DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
 
-/*static*/ BFThread_ProjectRunner* BFThread_ProjectRunner::sp_project_runner_ = NULL;
+/*static*/ BFThread_BackupRunner* BFThread_BackupRunner::sp_project_runner_ = NULL;
 
-/*static*/ bool BFThread_ProjectRunner::Run (BFTask* pTask)
+/*static*/ bool BFThread_BackupRunner::Run (BFOperation* pOperation)
 {
-    BFMainFrame::Instance()->RememberThread( new BFThread_ProjectRunner(pTask) );
+    BFMainFrame::Instance()->RememberThread( new BFThread_BackupRunner(pOperation) );
 
     return true;
 }
 
-//
-BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
+BFThread_BackupRunner::BFThread_BackupRunner (BFOperation* pOperation)
                       : wxThread(wxTHREAD_JOINABLE),
-                        pTask_(pTask)
+                        pOperation_(pOperation)
 {
     sp_project_runner_ = this;
 
@@ -51,41 +50,36 @@ BFThread_ProjectRunner::BFThread_ProjectRunner (BFTask* pTask)
 }
 
 
-//
-/*virtual*/ BFThread_ProjectRunner::~BFThread_ProjectRunner ()
+/*virtual*/ BFThread_BackupRunner::~BFThread_BackupRunner ()
 {
     sp_project_runner_ = NULL;
 }
 
 
-/*virtual*/ void* BFThread_ProjectRunner::Entry()
+/*virtual*/ void* BFThread_BackupRunner::Entry()
 {
-    wxString str = pTask_->GetDestination();
-
-    // create directory if needed
-    if ( !(wxDir::Exists(BFTask::FillBlackfiskPlaceholders(str))) )
-        BFCore::Instance().CreatePath(str);
-
-    // run the task
-    pTask_->Run( *(BFBackup::Instance().GetProgressTask()) );
+    // run the operation
+    pOperation_->Run( *(BFBackup::Instance().GetProgressTask()) );
 
     // finish this and run next task
-    BFBackup::Instance().Run_NextTask();
+    BFBackup::Instance().Run_NextOperation();
 
     // last task
     if ( !(BFCore::Instance().IsWhileBackup()) )
         // send pending event
-        BFMainFrame::Instance()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
+        BFMainFrame::Instance()->GetEventHandler()->AddPendingEvent(wxCommandEvent(BF_EVENT_THREAD_END, BF_ID_MAINFRAME));
 
     return NULL;
 }
 
-BF_StopLevel BFThread_ProjectRunner::GetUsersStopAnswer ()
+
+BF_StopLevel BFThread_BackupRunner::GetUsersStopAnswer ()
 {
     return stopAnswer_;
 }
 
-void BFThread_ProjectRunner::SetUsersStopAnswer (BF_StopLevel stop)
+
+void BFThread_BackupRunner::SetUsersStopAnswer (BF_StopLevel stop)
 {
     stopAnswer_ = stop;
 }

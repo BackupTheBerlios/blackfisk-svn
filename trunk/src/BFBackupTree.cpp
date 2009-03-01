@@ -138,7 +138,7 @@ void BFBackupTree::UpdateItem (wxTreeItemId id)
         wxString str(pTask->GetName());
 
         if (bFillBlackfiskPlaceholders_)
-            BFTask::FillBlackfiskPlaceholders(str);
+            BFBackup::FillBlackfiskPlaceholders(str);
 
         SetItemText(id, str);
 
@@ -190,7 +190,7 @@ void BFBackupTree::RefreshPlaceholders ()
                       || strLabel.Matches(BF_BACKUPTREE_FILLED_TIME_MASK))
                     {
                         strLabel = strPath.AfterLast(wxFILE_SEP_PATH);
-                        SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
+                        SetItemText(*it, BFBackup::FillBlackfiskPlaceholders(strLabel));
                     }
 
                     // cut the last diretory from path
@@ -223,7 +223,7 @@ void BFBackupTree::UpdatePlaceholders ()
              ++it)
         {
             strLabel = GetItemText(*it);
-            SetItemText(*it, BFTask::FillBlackfiskPlaceholders(strLabel));
+            SetItemText(*it, BFBackup::FillBlackfiskPlaceholders(strLabel));
         }
     }
     else
@@ -763,7 +763,7 @@ wxTreeItemId BFBackupTree::AddDestination (const wxString& strPath)
         strCurrFilled   = strCurr;
 
         if (bFillBlackfiskPlaceholders_)
-            BFTask::FillBlackfiskPlaceholders(strCurrFilled);
+            BFBackup::FillBlackfiskPlaceholders(strCurrFilled);
 
         idLast = FindItem(idCurr, strCurrFilled, false);
 
@@ -909,7 +909,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
     strFull << strName;
 
     if (bFillBlackfiskPlaceholders_)
-        BFTask::FillBlackfiskPlaceholders(str);
+        BFBackup::FillBlackfiskPlaceholders(str);
 
     // add the destination items and the task item itself
     wxTreeItemId id = AppendItem
@@ -981,7 +981,7 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 
     // build the question
     strQuestion = wxString::Format(_("The type of the following tasks will be changed to \"%s\".\n\n%s\n\nChange the type?"),
-                                   BFTask::GetTypeDescription(type),
+                                   BFProject::GetTypeDescription(type, CompressNOTUSED),
                                    wxJoin(arrTasks, '\n'));
 
     // ask the user

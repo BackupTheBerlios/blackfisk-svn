@@ -29,6 +29,7 @@
 #include <wx/imaglist.h>
 #include <wx/tooltip.h>
 #include <wx/aboutdlg.h>
+#include <wx/toolbar.h>
 
 #include "blackfisk.h"
 #include "BFApp.h"
@@ -44,7 +45,7 @@
 #include "BFBackup.h"
 #include "BFBackupProgressDlg.h"
 #include "BFHyperlinkCtrl.h"
-#include "BFThread_ProjectRunner.h"
+#include "BFThread_BackupRunner.h"
 #include "ids.h"
 #include "BFIsWorkingCtrl.h"
 #include "BFHelpCtrl.h"
@@ -71,13 +72,14 @@ BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_MENU    (BF_ID_MAINFRAME_OPENWEBSITE,       BFMainFrame::OnOpenWebSite)
     EVT_BUTTON  (BF_ID_MAINFRAME_OPENWEBSITE,       BFMainFrame::OnOpenWebSite)
     EVT_MENU    (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
-    EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
+    //EVT_BUTTON  (BF_ID_MAINFRAME_SUBMITBUG,         BFMainFrame::OnSubmitBug)
     EVT_MENU    (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
-    EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
+    //EVT_BUTTON  (BF_ID_MAINFRAME_FEAUTERREQUEST,    BFMainFrame::OnFeauterRequest)
     EVT_MENU    (BF_ID_MAINFRAME_MAIL,              BFMainFrame::OnMail)
-    EVT_BUTTON  (BF_ID_MAINFRAME_MAIL,              BFMainFrame::OnMail)
+    //EVT_BUTTON  (BF_ID_MAINFRAME_MAIL,              BFMainFrame::OnMail)
     EVT_MENU    (BF_ID_MAINFRAME_BACKUP,            BFMainFrame::OnBackup)
     EVT_MENU    (BF_ID_MAINFRAME_SETTINGS,          BFMainFrame::OnSettings)
+    EVT_BUTTON  (BF_ID_MAINFRAME_FEEDBACK,          BFMainFrame::OnFeedback)
 #ifdef _DEBUG
     EVT_MENU    (BF_ID_MAINFRAME_TEST,              BFMainFrame::OnTest)
     EVT_BUTTON  (BF_ID_MAINFRAME_TEST,              BFMainFrame::OnTest)
@@ -106,8 +108,9 @@ END_EVENT_TABLE()
        early while creation time of the BFMainFrame object */
     wxGetApp().SetMainFrame(this);
 
-    // set the window icon
-    SetIcon(BFIconTable::Instance()->GetIcon(BFIconTable::logo));
+    // set the window icon XXX
+    //SetIcon(BFIconTable::Instance()->GetIcon(BFIconTable::logo));
+    SetIcon(BFIconTable::GetMainFrameIcon());
 
     // set as top window
     wxGetApp().SetTopWindow(this);
@@ -140,12 +143,13 @@ END_EVENT_TABLE()
     // ** menu HELP **
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append( BF_ID_MAINFRAME_OPENWEBSITE,   _("&Website") );
-    menuHelp->Append( BF_ID_MAINFRAME_SUBMITBUG,     _("Report a &Bug") );
-    menuHelp->Append( BF_ID_MAINFRAME_FEAUTERREQUEST,_("Submit a &Feauter Request") );
-    menuHelp->Append( BF_ID_MAINFRAME_MAIL,          _("E-Mail Contact") );
-    menuHelp->Append( BF_ID_MAINFRAME_SHOWLICENSE,   _("&License") );
-    menuHelp->Append( BF_ID_MAINFRAME_SHOWHISTORY,   _("&History") );
     menuHelp->AppendSeparator();
+    menuHelp->Append( BF_ID_MAINFRAME_FEAUTERREQUEST,_("Submit a &Feauter Request") );
+    menuHelp->Append( BF_ID_MAINFRAME_SUBMITBUG,     _("Report a &Bug") );
+    menuHelp->Append( BF_ID_MAINFRAME_MAIL,          _("E-Mail Contact") );
+    menuHelp->AppendSeparator();
+    menuHelp->Append( BF_ID_MAINFRAME_SHOWHISTORY,   _("&History") );
+    menuHelp->Append( BF_ID_MAINFRAME_SHOWLICENSE,   _("&License") );
     menuHelp->Append( BF_ID_MAINFRAME_ABOUT,         _("&About") );
 
     // menu bar
@@ -174,10 +178,8 @@ END_EVENT_TABLE()
 
     // buttons
     wxBoxSizer* pButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxButton* pButtonBug        = new wxButton(this, BF_ID_MAINFRAME_SUBMITBUG,      _("Bug Report"));
-    wxButton* pButtonFeauter    = new wxButton(this, BF_ID_MAINFRAME_FEAUTERREQUEST, _("Feauter Request"));
     wxButton* pButtonWebsite    = new wxButton(this, BF_ID_MAINFRAME_OPENWEBSITE,    _("Website"));
-    wxButton* pButtonMail       = new wxButton(this, BF_ID_MAINFRAME_MAIL,           _("E-Mail Contact"));
+    wxButton* pButtonFeedback   = new wxButton(this, BF_ID_MAINFRAME_FEEDBACK,       _("Feedback"));
 
 #ifdef _DEBUG
     wxButton* pButtonTest       = new wxButton(this, BF_ID_MAINFRAME_TEST, _(" T E S T "));
@@ -185,13 +187,15 @@ END_EVENT_TABLE()
     pButtonSizer->AddStretchSpacer(1);
 #endif
 
-    pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
+    /*pButtonSizer->Add( pButtonBug,      wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
     pButtonSizer->Add( pButtonFeauter,  wxSizerFlags(0).Border(wxALL, 10));
-    pButtonSizer->AddStretchSpacer(1);
+    pButtonSizer->AddStretchSpacer(1);*/
     pButtonSizer->Add( pButtonWebsite,  wxSizerFlags(0).Border(wxALL, 10));
     pButtonSizer->AddStretchSpacer(1);
-    pButtonSizer->Add( pButtonMail,     wxSizerFlags(0).Border(wxALL, 10));
+    /*pButtonSizer->Add( pButtonMail,     wxSizerFlags(0).Border(wxALL, 10));
+    pButtonSizer->AddStretchSpacer(1);*/
+    pButtonSizer->Add( pButtonFeedback, wxSizerFlags(0).Border(wxALL, 10));
 
     // ** sizer **
     wxSizer* pSizer = new wxBoxSizer (wxVERTICAL);
@@ -214,6 +218,19 @@ END_EVENT_TABLE()
 
     // sash position
     pSplitterCtrl_->SetSashPosition(BFSettings::Instance().GetSashPositionInMainWindow());
+
+    // toolbar
+    /*wxToolBar* pToolBar =  new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    SetToolBar(pToolBar);
+    pToolBar->AddTool
+    (
+        wxID_ANY,
+        "Label",
+        //wxBitmap(10, 10),
+        //BFIconTable::GetBitmap(BFIconTable::logo),
+        wxBitmap(BFEnvironment::GetGraphicDir() + "logo_warp.png", wxBITMAP_TYPE_PNG),
+        "short help"
+    );*/
 
     //
     Show(TRUE);
@@ -373,6 +390,16 @@ void BFMainFrame::OnFeauterRequest (wxCommandEvent& event)
 void BFMainFrame::OnMail (wxCommandEvent& event)
 {
     new BFThread_LaunchBrowser(BF_URL_MAIL);
+}
+
+
+void BFMainFrame::OnFeedback (wxCommandEvent& event)
+{
+    wxMenu menu;
+    menu.Append(BF_ID_MAINFRAME_FEAUTERREQUEST, _("Feauter Request"));
+    menu.Append(BF_ID_MAINFRAME_SUBMITBUG,      _("Bug Report"));
+    menu.Append(BF_ID_MAINFRAME_MAIL,           _("E-Mail Contact"));
+    PopupMenu(&menu, ScreenToClient(wxGetMousePosition()));
 }
 
 void BFMainFrame::OnProject (wxCommandEvent& event)
@@ -562,57 +589,7 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 #include "BFundef.h"
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    wxFileName  fn1("D:\\org_WipeOutHD\\xxxx.mp4");
-    wxFileName  fn2("C:\\synced_WipeOutHD\\xxxx.mp4");
-
-    long lAttr1 = GetFileAttributes(fn1.GetFullPath());
-    long lAttr2 = GetFileAttributes(fn2.GetFullPath());
-
-    if ( (lAttr1 & FILE_ATTRIBUTE_READONLY) != (lAttr2 & FILE_ATTRIBUTE_READONLY) )
-        BFSystem::Info("ERROR");
-    else
-        BFSystem::Info("OK");
-
-    return;
-
-
-    // PPP
-    /*long lAttr1 = GetFileAttributes(fn1.GetFullPath());
-    long lAttr2 = GetFileAttributes(fn2.GetFullPath());*/
-
-    BFSystem::Info(wxString::Format("%d %d", lAttr1, lAttr2));
-
-    if ( lAttr2 & FILE_ATTRIBUTE_ARCHIVE )
-    {
-        BFSystem::Info("lAttr2 change archive-bit");
-        lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
-    }
-
-    BFSystem::Info(wxString::Format("%d %d", lAttr1, lAttr2));
-
-    return;
-
-    /*if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
-        lAttr1 = lAttr1 & FILE_ATTRIBUTE_ARCHIVE;
-
-    if (lAttr1 & FILE_ATTRIBUTE_ARCHIVE)
-        BFSystem::Info("org ARCHIVE+");
-    else
-        BFSystem::Info("org ARCHIVE-");*/
-
-    if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
-        lAttr2 = lAttr2 & ~FILE_ATTRIBUTE_ARCHIVE;
-
-    if (lAttr2 & FILE_ATTRIBUTE_ARCHIVE)
-        BFSystem::Info("synced ARCHIVE+");
-    else
-        BFSystem::Info("synced ARCHIVE-");
-
-    // verify file attributes but ignore archive-bit
-    if ( lAttr1 == lAttr2 ) //BFCore::Instance().VerifyFileAttributes(fn1, fn2, true) )
-        BFSystem::Info(wxString::Format("OK %d %d", lAttr1, lAttr2));
-    else
-        BFSystem::Error(wxString::Format("ERRROR VERIFY %d %d", lAttr1, lAttr2));
+    wxLaunchDefaultBrowser(BF_URL_MAIL);
 }
 
 void BFMainFrame::Test ()

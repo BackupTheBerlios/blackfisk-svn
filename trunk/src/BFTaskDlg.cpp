@@ -332,7 +332,7 @@ void BFTaskDlg::InitTypeCtrl ()
          ++it)
     {
         BFTaskType type = (*it);
-        pTypeCtrl_->Append(BFTask::GetTypeDescription(type),
+        pTypeCtrl_->Append(BFProject::GetTypeDescription(type),
                            BFIconTable::Instance()->GetBitmap(BFBackupTree::GetTypeIconId(type)));
     }
 

@@ -172,7 +172,7 @@ wxString BFTaskLog::GetFileName ()
 
     str << rTask_.GetName() << ".log";
 
-    BFTask::FillBlackfiskPlaceholders(str);
+    BFBackup::FillBlackfiskPlaceholders(str);
 
     return str;
 }
@@ -288,7 +288,7 @@ bool BFBackupLog::Write ()
     wxString strFile;
     strFile = BFBackup::Instance().GetBackupLogLocation();
     strFile = strFile + wxFILE_SEP_PATH + BFBackup::Instance().GetProjectName() + ".log";
-    BFTask::FillBlackfiskPlaceholders(strFile);
+    BFBackup::FillBlackfiskPlaceholders(strFile);
 
     // remember the filename
     BFBackup::Instance().SetProjectLogFile(strFile);

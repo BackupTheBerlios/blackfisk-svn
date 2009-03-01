@@ -40,7 +40,8 @@ class ProgressWithMessage;
 class BFProgressTaskCtrl;
 class BFProgressTotalCtrl;
 class BFTaskListCtrl;
-class BFTask;
+class BFOperation;
+class BFBitmapButton;
 
 ///
 class BFBackupProgressDlg : public wxDialog
@@ -52,6 +53,10 @@ class BFBackupProgressDlg : public wxDialog
         BFProgressTotalCtrl*        pCtrlTotalProgress_;
         ///
         BFProgressTaskCtrl*         pCtrlTaskProgress_;
+        ///
+        BFBitmapButton*             pButtonStopTask_;
+        ///
+        BFBitmapButton*             pButtonStopBackup_;
 
         ///
         wxMutex*                    pMutex_;
@@ -87,18 +92,18 @@ class BFBackupProgressDlg : public wxDialog
         wxCondition* GetCondition ();
 
         ///
-        void SetCurrentTask (BFTask* pTask);
+        void SetCurrentOperation (BFOperation* pOperation);
 
         ///
         void OnClose (wxCloseEvent& rEvent);
         ///
         void OnStopTask (wxCommandEvent& rEvent);
         ///
-        void OnStopProject (wxCommandEvent& rEvent);
+        void OnStopBackup (wxCommandEvent& rEvent);
         ///
         void OnQuestion (wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
-};    // class BFBackupProgressDlg
+};
 
 #endif    // BFTASKPROGRESSDLG_H

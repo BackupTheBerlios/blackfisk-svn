@@ -66,7 +66,7 @@ class BFCore
 
         /** indicates that a backup is running
             so that backup messages will be created */
-        bool        bWhileBackup_;
+        static bool bWhileBackup_;
 
         /** get attributes from a file ('rFn') and set them to a ZipEntry ('pEntry')
             this methode should be to encapsulate plattformdependend code! */
@@ -128,24 +128,33 @@ class BFCore
             'pSource' can have placeholders
             'pDestination' can be a concret file or only a directory
             return false if there are one or more errors */
-        bool CopyFile (const wxString& Source,
-                       const wxString& Destination,
-                       bool bOverwrite = BF_DEFAULT_OVERWRITE,
-                       bool bVerify = false,
-                       bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
+        static bool CopyFile (const wxString& Source,
+                              const wxString& Destination,
+                              bool bOverwrite = BF_DEFAULT_OVERWRITE,
+                              bool bVerify = false,
+                              bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
-        /** synchroinze two directories */
+        /* synchroinze two directories *
         bool Synchronise (const wxString& strOriginal,
                           const wxString& strToSynchronise,
                           bool bVerify,
                           bool bVerifyContent,
                           bool bRealSync = true,
-                          ProgressWithMessage* pProgress = NULL);
+                          ProgressWithMessage* pProgress = NULL);*/
 
-        /// to patch for wxWidgets
-        bool IsWriteProtected (const wxString& strFilename);
-        /// to patch for wxWidgets
-        bool SetWriteProtected (const wxString& strFilename, bool bWriteProtected);
+        ///
+        static bool HasFileAttribute_ReadOnly (const wxString& strFilename);
+        ///
+        static bool HasFileAttribute_Archive (const wxString& strFilename);
+        ///
+        static bool HasFileAttribute_Hidden (const wxString& strFilename);
+
+        ///
+        static bool SetFileAttribute_ReadOnly (const wxString& strFilename, bool bReadOnly);
+        ///
+        static bool SetFileAttribute_Archive (const wxString& strFilename, bool bArchive);
+        ///
+        static bool SetFileAttribute_Hidden (const wxString& strFilename, bool bHidden);
 
         /// return number of files and directories in a directory and its subdirectories (return -1 on error)
         long GetDirFileCount(const wxString& Dir, long* pDirCount = NULL, long* pFileCount = NULL);
@@ -153,22 +162,30 @@ class BFCore
         /** get all files and subdirectories in 'dir' and store them to 'arr'
             it is possible to store them as relative pathes
             files and directories that should not be in the listing can be specified in 'pExcludeListing' */
-        wxArrayString& GetDirListing (const wxString& strDir,
-                                      wxArrayString& arr,
-                                      wxArrayString* pExcludeListing = NULL,
-                                      bool bRelativ = false);
+        static wxArrayString& GetDirListing (const wxString& strDir,
+                                             wxArrayString& arr,
+                                             wxArrayString* pExcludeListing = NULL,
+                                             bool bRelativ = false);
+
+        /** Check each entry in 'arrListing' if it is a file or a diretorie
+            and store it in 'arrResultDirectories' or 'arrResultFiles'.
+            The result arrays are not cleared before. */
+        static void SeparateListingInDirectoriesAndFiles (wxArrayString& arrListing,
+                                                   wxArrayString& arrResultDirectories,
+                                                   wxArrayString& arrResultFiles);
 
         /** read the attributes (like file-attributes) from a dir ('pSourceDir') and
             copy them to another dir ('pDestinationDir') */
-        bool CopyDirAttributes (const wxString& strSourceDir, const wxString& strDestinationDir);
+        static bool CopyDirAttributes (const wxString& strSourceDir,
+                                       const wxString& strDestinationDir);
 
         /** create a directory
             there should be just one new directory to create
             look at CreatePath() to create more than one new directories */
-        bool CreateDir (const wxString& strNewDir);
+        static bool CreateDir (const wxString& strNewDir);
         /** create a path
             there could be more than one new directories in the path */
-        bool CreatePath (const wxString& strPath);
+        static bool CreatePath (const wxString& strPath);
 
         /** copy a directory */
         bool CopyDir (const wxString& strSourceDir,
@@ -204,18 +221,13 @@ class BFCore
             if bOnlyIfEmpty = true it delete the directory only if there are no files or dirs in it
             if bIgnoreWriteprotection = false it does not delete files or directories with writeprotection
             if bIgnoreWriteprotection = true it remove writeprotection from all files and dirs and delete them */
-        bool DeleteDir (const wxString& strDir,
-                        bool bOnlyIfEmpty = false,
-                        bool bIgnoreWriteprotection = false);
+        static bool DeleteDir (const wxString& strDir, bool bOnlyIfEmpty = false, bool bIgnoreWriteprotection = false);
 
         /** delete a file */
-        bool DeleteFile (const wxString& strFile,
-                         bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
+        static bool DeleteFile (const wxString& strFile, bool bIgnoreWriteProtection = BF_DEFAULT_OVERWRITE);
 
         /** delete files and directories specified by the array */
-        bool Delete (wxArrayString& arrDelete,
-                     bool bOnlyIfEmpty = false,
-                     bool bIgnoreWriteprotection = false);
+        static bool Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty = false, bool bIgnoreWriteprotection = false);
 
         /** add all subdirectories of 'strDir' to 'arr' including subdirectories
             in all levels. the point is it add the deepest (last) subdirectory
@@ -226,13 +238,13 @@ class BFCore
                  X:\dir\sub2\
             it searches for hidden directories, too
             it is used by DeleteDir() */
-        wxArrayString& GetSubDirectories (const wxString& strDir, wxArrayString& arr);
+        static wxArrayString& GetSubDirectories (const wxString& strDir, wxArrayString& arr);
 
         // >>> VERIFICATION methodes  <<<
     public:
         /** verify the file in this order:
             file-size, file-attributes, file-content*/
-        bool VerifyFile (const wxString& strFile1, const wxString& strFile2, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
+        static bool VerifyFile (const wxString& strFile1, const wxString& strFile2, bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
         /** compare a pair-list (map) of files and break on the first uncompare filepair
             if 'pProgress' is used it call IncrementActualWithMessage() on it with each compared file
@@ -248,12 +260,15 @@ class BFCore
         /** create a CRC checksum of a file */
         wxUint32 GetFileCrc (const wxString& strFilename);
 
-    private:
         /** Compare the some (NOT ALL!!!) file-attributes of two files.
             See the methode code for more details. */
-        bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
+        static bool VerifyFileAttributes (wxFileName& fn1, wxFileName& fn2);
+        /** A wrapper for VerifyFileAttributes(wxFileName&, wxFileName&).
+            See more detailes there. */
+        static bool VerifyFileAttributes (wxString& strFile1, wxString& strFile2);
+
         /// compare the content of to files
-        bool VerifyFileContents (wxFile& f1, wxFile& f2);
+        static bool VerifyFileContents (wxFile& f1, wxFile& f2);
 };    // class BFCore
 
 #endif    // BFCORE_H

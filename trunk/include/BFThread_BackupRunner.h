@@ -1,8 +1,7 @@
 /**
- * Name:        BFThread_ProjectRunner.h
+ * Name:        BFThread_BackupRunner.h
  * Purpose:
  * Author:      Christian Buhtz
- * Modified by:
  * Created:     2007-09-28
  * Copyright:   (c) 2007 Christian Buhtz <exsudat@gmx.de>
  * Licence:     GNU General Public License (Version 3)
@@ -37,38 +36,39 @@
     END_DECLARE_EVENT_TYPES()
 #endif
 
-class BFTask;
+// forwarde declarations
+class BFOperation;
 
 ///
-class BFThread_ProjectRunner : public wxThread
+class BFThread_BackupRunner : public wxThread
 {
     private:
         ///
-        BFTask*         pTask_;
+        BFOperation*    pOperation_;
         ///
         wxCondition*    pCondition_;
         ///
         BF_StopLevel    stopAnswer_;
 
         ///
-        static BFThread_ProjectRunner* sp_project_runner_;
+        static BFThread_BackupRunner* sp_project_runner_;
 
         /// ctor
-        BFThread_ProjectRunner (BFTask* pTask);
+        BFThread_BackupRunner (BFOperation* pOperation);
 
         /// default ctor
-        BFThread_ProjectRunner () {};
+        BFThread_BackupRunner () {};
 
     public:
         ///
-        static BFThread_ProjectRunner* CurrentlyRunning ()
+        static BFThread_BackupRunner* CurrentlyRunning ()
         { return sp_project_runner_; }
 
         ///
-        static bool Run (BFTask* pTask);
+        static bool Run (BFOperation* pOperation);
 
         /// virtual dtor
-        virtual ~BFThread_ProjectRunner ();
+        virtual ~BFThread_BackupRunner ();
 
         /// thread execution starts here
         virtual void *Entry();

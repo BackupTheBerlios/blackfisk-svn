@@ -44,9 +44,35 @@ enum BF_StopLevel
 };
 
 
+/** define the type of the task
+    it says what the tasks exactly do */
+typedef wxUint8 BFTaskType;
+#define TaskINVALID     0
+#define TaskARCHIVE     1       // comprase backup-source to an archive
+#define TaskDIRCOPY     2       // copy a complete directory
+#define TaskFILECOPY    3       // copy a file
+#define TaskSYNC        4       // synchronise directories
+#define TaskHIGHEST     TaskSYNC    // ! just to know the end of the taks types !
+
 ///
+typedef std::vector<BFTaskType> BFTypeVector;
+
+/** define the compression types
+    which compression format should be used for TaskARCHIVE */
+typedef wxUint8 BFArchiveFormat;
+#define CompressNOTUSED 0
+#define CompressZIP     1
+//#define Compress7Z    2
+//#define CompressTAR   3
+//#define ...
+
+// forwarde declarations
 class BFTask;
+
+///
 typedef std::vector<BFTask*>    BFTaskVector;
+///
 typedef BFTaskVector::iterator  BFTaskVectorIt;
+
 
 #endif    // BFTASKBASE_H

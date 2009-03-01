@@ -28,12 +28,12 @@
 #include "Progress.h"
 #include "BFBackup.h"
 #include "BFLogViewDlg.h"
-#include "BFThread_ProjectRunner.h"
+#include "BFThread_BackupRunner.h"
 #include "BFMainFrame.h"
 #include "BFBackupInfoCtrl.h"
 #include "BFCore.h"
 #include "BFTaskListCtrl.h"
-#include "BFTask.h"
+#include "BFOperation.h"
 #include "BFBackupTree.h"
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
@@ -45,14 +45,16 @@
 BEGIN_EVENT_TABLE(BFBackupProgressDlg, wxDialog)
   EVT_CLOSE   (                                         BFBackupProgressDlg::OnClose)
   EVT_BUTTON  (BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK,  BFBackupProgressDlg::OnStopTask)
-  EVT_BUTTON  (BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,   BFBackupProgressDlg::OnStopProject)
+  EVT_BUTTON  (BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,   BFBackupProgressDlg::OnStopBackup)
   EVT_MENU    (BF_BACKUPPROGRESSDLG_QUESTION,           BFBackupProgressDlg::OnQuestion)
 END_EVENT_TABLE()
 
 /*static*/ BFBackupProgressDlg* BFBackupProgressDlg::sp_backup_progress_dlg_ = NULL;
 
 BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
-                   : wxDialog(pParent, -1, wxString(_("Task Progress")))
+                   : wxDialog(pParent,
+                              -1,
+                              _("Task Progress"))
 {
     sp_backup_progress_dlg_ = this;
 
@@ -93,16 +95,17 @@ void BFBackupProgressDlg::Init ()
     BFBackupInfoCtrl* pInfoCtrl = new BFBackupInfoCtrl(this);
 
     // * buttons *
-    pButtonSizer->Add (new BFBitmapButton(this,
-                                          BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK,
-                                          BFIconTable::GetBitmap(BFIconTable::stop_task),
-                                          _("stop task")),
-                      wxSizerFlags(0).Expand().Border());
-    pButtonSizer->Add (new BFBitmapButton(this,
-                                          BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,
-                                          BFIconTable::GetBitmap(BFIconTable::stop_prj),
-                                          _("stop project")),
-                       wxSizerFlags(0).Expand().Border());
+    pButtonStopTask_ = new BFBitmapButton (this,
+                                           BFBACKUPPROGRESSDLG_ID_BUTTON_STOPTASK,
+                                           BFIconTable::GetBitmap(BFIconTable::stop_task),
+                                           _("stop task"));
+
+    pButtonStopBackup_ = new BFBitmapButton (this,
+                                             BFBACKUPPROGRESSDLG_ID_BUTTON_STOPPRJ,
+                                             BFIconTable::GetBitmap(BFIconTable::stop_prj),
+                                             _("stop backup"));
+    pButtonSizer->Add (pButtonStopTask_, wxSizerFlags(0).Expand().Border());
+    pButtonSizer->Add (pButtonStopBackup_, wxSizerFlags(0).Expand().Border());
 
     // arrange
     pSizerB         ->Add(pCtrlTaskProgress_,   wxSizerFlags(0).Expand().Border(wxBOTTOM, 5));
@@ -124,35 +127,45 @@ void BFBackupProgressDlg::Init ()
     sp_backup_progress_dlg_ = NULL;
 }
 
-void BFBackupProgressDlg::SetCurrentTask (BFTask* pTask)
+void BFBackupProgressDlg::SetCurrentOperation (BFOperation* pOperation)
 {
-    if (pTask == NULL || pCtrlTaskProgress_ == NULL || pCtrlTaskList_ == NULL)
+    if (pOperation == NULL || pCtrlTaskProgress_ == NULL || pCtrlTaskList_ == NULL)
         return;
 
+    // reactivate stop-task button
+    pButtonStopTask_->Enable(true);
+
     // get pos of current task
-    long lPos = BFBackup::Instance().GetTaskPosition(pTask);
+    long lPos = BFBackup::Instance().GetTaskPosition(pOperation);
+
+    // XXX
+    wxString str1 = pOperation->Task()->GetName();
+    wxString str2 = wxString::Format("%d", lPos+1);
+    wxString str3 = wxString::Format("%d", BFBackup::Instance().GetTaskCount());
 
     // set task name in progress ctrl
     pCtrlTaskProgress_->SetTextA
     (
         wxString::Format(_("%s (%d of %d)"),
-                            pTask->GetName(),
+                            pOperation->Task()->GetName(),
                             lPos+1,
                             BFBackup::Instance().GetTaskCount())
     );
 
     // set active task in task-list-ctrl
-    pCtrlTaskList_->SetTask_Active(pTask->GetOID());
+    pCtrlTaskList_->SetTask_Active(pOperation->Task()->GetOID());
 }
 
 void BFBackupProgressDlg::OnStopTask (wxCommandEvent& rEvent)
 {
-    BFBackup::Instance().StopCurrentTask();
+    BFBackup::Instance().StopCurrentOperation();
+    pButtonStopTask_->Enable(false);
 }
 
-void BFBackupProgressDlg::OnStopProject (wxCommandEvent& rEvent)
+void BFBackupProgressDlg::OnStopBackup (wxCommandEvent& rEvent)
 {
     BFBackup::Instance().StopBackup();
+    pButtonStopBackup_->Enable(false);
 }
 
 wxMutex* BFBackupProgressDlg::GetMutex ()
@@ -191,7 +204,7 @@ void BFBackupProgressDlg::OnQuestion (wxCommandEvent& rEvent)
     };
 
     // set answer
-    BFThread_ProjectRunner::CurrentlyRunning()->SetUsersStopAnswer(answer);
+    BFThread_BackupRunner::CurrentlyRunning()->SetUsersStopAnswer(answer);
 
     // resume the asking thread
     wxMutexLocker lock( *pMutex_ );

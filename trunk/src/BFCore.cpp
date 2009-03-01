@@ -43,6 +43,7 @@
 
 wxDEFINE_SCOPED_PTR_TYPE(wxZipEntry);
 
+/*static*/ bool BFCore::bWhileBackup_ = false;
 
 BFCore BFCore::sCore_;
 
@@ -56,8 +57,8 @@ BFCore& BFCore::Instance ()
 
 
 BFCore::BFCore ()
-      : bWhileBackup_(false)
 {
+    bWhileBackup_ = false;
     SetCurrentDateTime();
 }
 
@@ -102,7 +103,7 @@ bool BFCore::IsWhileBackup ()
 /*static*/ bool BFCore::IsStop ()
 {
     if (Instance().IsWhileBackup())
-        if ( BFBackup::Instance().GetStopCurrentTask() == true
+        if ( BFBackup::Instance().GetStopCurrentOperation() == true
           || BFBackup::Instance().GetStopBackup() == true)
           return true;
 
@@ -206,10 +207,10 @@ bool BFCore::IsLineInFile (const wxString& strFilename,
     return rc;
 }
 
-wxArrayString& BFCore::GetDirListing (const wxString& strDir,
-                                      wxArrayString& arr,
-                                      wxArrayString* pExcludeListing /*= NULL*/,
-                                      bool bRelativ /*= false*/)
+/*static*/ wxArrayString& BFCore::GetDirListing (const wxString& strDir,
+                                                 wxArrayString& arr,
+                                                 wxArrayString* pExcludeListing /*= NULL*/,
+                                                 bool bRelativ /*= false*/)
 {
     wxDir                   dirSource(strDir);
     wxString                strStartDir;
@@ -217,11 +218,27 @@ wxArrayString& BFCore::GetDirListing (const wxString& strDir,
     if (bRelativ)
         strStartDir = strDir;
 
-    BFDirListingTraverser   trav(arr, strStartDir, pExcludeListing);
+    BFDirListingTraverser trav(arr, strStartDir, pExcludeListing);
 
     dirSource.Traverse(trav);
 
     return arr;
+}
+
+
+/*static*/ void BFCore::SeparateListingInDirectoriesAndFiles (wxArrayString& arrListing,
+                                                   wxArrayString& arrResultDirectories,
+                                                   wxArrayString& arrResultFiles)
+{
+    for (size_t i = 0; i < arrListing.GetCount(); i++)
+    {
+        // is directory?
+        if ( wxDirExists(arrListing[i]) )
+            arrResultDirectories.Add(arrListing[i]);
+        else
+        // or a file?
+            arrResultFiles.Add(arrListing[i]);
+    }
 }
 
 
@@ -265,7 +282,7 @@ bool BFCore::SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry)
     return true;
 }
 
-bool BFCore::VerifyFileAttributes (wxFileName& fn1,
+/*static*/ bool BFCore::VerifyFileAttributes (wxFileName& fn1,
                                    wxFileName& fn2)
 {
     /* handle only this attributes
@@ -292,6 +309,14 @@ bool BFCore::VerifyFileAttributes (wxFileName& fn1,
     return true;
 }
 
+/*static*/ bool BFCore::VerifyFileAttributes (wxString& strFile1,
+                                   wxString& strFile2)
+{
+    wxFileName fn1(strFile1);
+    wxFileName fn2(strFile2);
+
+    return VerifyFileAttributes (fn1, fn2);
+}
 
 bool BFCore::CreateZipFromDir (const wxString& strZipName,
                                const wxString& strSourceDir,
@@ -505,7 +530,7 @@ bool BFCore::MoveFile (const wxString& strSource,
 }
 
 
-bool BFCore::CopyFile (const wxString& strSource,
+/*static*/ bool BFCore::CopyFile (const wxString& strSource,
                        const wxString& strDestination,
                        bool bOverwrite /*= DEFAULT_OVERWRITE*/,
                        bool bVerify /*= false*/,
@@ -555,6 +580,10 @@ bool BFCore::CopyFile (const wxString& strSource,
     if ( BFCore::IsStop() )
         return false;
 
+    // backup message
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("Copy %s to %s..."), strSource, strDestination));
+
     if ( arrSource.Count() == 0 )
     {   // one file to copy
         rc = ::wxCopyFile(strSrc, strDest, bOverwrite);
@@ -592,24 +621,21 @@ bool BFCore::CopyFile (const wxString& strSource,
             }
     }
 
-    if (rc && bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("%s copyied to %s"), strSource, strDestination));
-
     return rc;
 }
 
 
-bool BFCore::DeleteFile (const wxString& strFile, bool bIgnoreWriteProtection /*= DEFAULT_OVERWRITE*/)
+/*static*/ bool BFCore::DeleteFile (const wxString& strFile, bool bIgnoreWriteProtection /*= DEFAULT_OVERWRITE*/)
 {
     // stop ?
     if ( BFCore::IsStop() )
         return false;
 
-    if ( IsWriteProtected(strFile) )
+    if ( HasFileAttribute_ReadOnly(strFile) )
     {
         if (bIgnoreWriteProtection)
         {
-            SetWriteProtected(strFile, false);
+            SetFileAttribute_ReadOnly(strFile, false);
         }
         else
         {
@@ -624,7 +650,7 @@ bool BFCore::DeleteFile (const wxString& strFile, bool bIgnoreWriteProtection /*
     return ::wxRemoveFile(strFile);
 }
 
-wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString& arr)
+/*static*/ wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString& arr)
 {
     // check parameters
     if (!(wxDir::Exists(strDir)) )
@@ -663,14 +689,18 @@ wxArrayString& BFCore::GetSubDirectories (const wxString& strDir, wxArrayString&
     return arr;
 }
 
-bool BFCore::DeleteDir (const wxString& strDir,
+/*static*/ bool BFCore::DeleteDir (const wxString& strDir,
                         bool bOnlyIfEmpty /*= false*/,
                         bool bIgnoreWriteprotection /*= false*/)
 {
     // check parameters
     if (!(wxDir::Exists(strDir)) )
     {
-        BFSystem::Fatal(_("wrong parameters"), "BFCore::DeleteDir()");
+        BFSystem::Fatal
+        (
+            wxString::Format(_("wrong parameter: %s"), strDir),
+            "BFCore::DeleteDir()"
+        );
         return false;
     }
 
@@ -709,9 +739,9 @@ bool BFCore::DeleteDir (const wxString& strDir,
          ++i)
     {
         // remove write protection
-        if (bIgnoreWriteprotection)
-            if (IsWriteProtected(arrToDelete[i]))
-                SetWriteProtected(arrToDelete[i], false);
+        if ( bIgnoreWriteprotection )
+            if ( HasFileAttribute_ReadOnly(arrToDelete[i]) )
+                SetFileAttribute_ReadOnly(arrToDelete[i], false);
 
         // files in it?
         wxDir* pDirSub = new wxDir(arrToDelete[i]);
@@ -734,7 +764,7 @@ bool BFCore::DeleteDir (const wxString& strDir,
     return true;
 }
 
-bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
+/*static*/ bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bool bIgnoreWriteprotection /*= false*/)
 {
     for (size_t i = 0; i < arrDelete.GetCount(); ++i)
     {
@@ -750,13 +780,13 @@ bool BFCore::Delete (wxArrayString& arrDelete, bool bOnlyIfEmpty /*= false*/, bo
 
     return true;
 }
-
+/*
 bool BFCore::Synchronise (const wxString& strOriginal,
                           const wxString& strToSynchronise,
                           bool bVerify,
                           bool bVerifyContent,
-                          bool bRealSync /*= true*/,
-                          ProgressWithMessage* pProgress /*= NULL*/)
+                          bool bRealSync /*= true*,
+                          ProgressWithMessage* pProgress /*= NULL*)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -825,7 +855,7 @@ bool BFCore::Synchronise (const wxString& strOriginal,
     }
 
     return true;
-}
+}*/
 
 long BFCore::GetDirFileCount(const wxString& strDir,
                              long* pDirCount /*= NULL*/,
@@ -852,7 +882,7 @@ long BFCore::GetDirFileCount(const wxString& strDir,
     return trav.GetCount();
 }
 
-bool BFCore::CreateDir (const wxString& strNewDir)
+/*static*/ bool BFCore::CreateDir (const wxString& strNewDir)
 {
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("create dir %s"), strNewDir));
@@ -861,7 +891,7 @@ bool BFCore::CreateDir (const wxString& strNewDir)
 }
 
 
-bool BFCore::CreatePath (const wxString& strPath)
+/*static*/ bool BFCore::CreatePath (const wxString& strPath)
 {
     if (bWhileBackup_)
         BFSystem::Backup(wxString::Format(_("create path %s"), strPath));
@@ -960,31 +990,243 @@ bool BFCore::CopyDir (const wxString&       strSourceDir,
 }
 
 
-bool BFCore::IsWriteProtected (const wxString& strFilename)
+/*static*/ bool BFCore::HasFileAttribute_ReadOnly (const wxString& strFilename)
 {
-    wxStructStat strucStat;
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
 
-    wxStat(strFilename, &strucStat);
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::HasFileAttribute_ReadOnly()"
+        );
+        return false;
+    }
 
-    return !(strucStat.st_mode & _S_IWRITE);
+    // check for concrete attribute
+    if ( attr & FILE_ATTRIBUTE_READONLY )
+        return true;
+
+    return false;
 }
 
 
-bool BFCore::SetWriteProtected (const wxString& strFilename, bool bWriteProtected)
+/*static*/ bool BFCore::HasFileAttribute_Archive (const wxString& strFilename)
 {
-    int iMode;
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
 
-    if (bWriteProtected)
-        iMode = _S_IREAD;
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::HasFileAttribute_Archive()"
+        );
+        return false;
+    }
+
+    // check for concrete attribute
+    if ( attr & FILE_ATTRIBUTE_ARCHIVE )
+        return true;
+
+    return false;
+}
+
+
+/*static*/ bool BFCore::HasFileAttribute_Hidden (const wxString& strFilename)
+{
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
+
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::HasFileAttribute_Hidden()"
+        );
+        return false;
+    }
+
+    // check for concrete attribute
+    if ( attr & FILE_ATTRIBUTE_HIDDEN )
+        return true;
+
+    return false;
+}
+
+
+/*static*/ bool BFCore::SetFileAttribute_ReadOnly (const wxString& strFilename, bool bReadOnly)
+{
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
+
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_ReadOnly()"
+        );
+        return false;
+    }
+
+    if ( attr & FILE_ATTRIBUTE_READONLY )
+    {
+        if ( !bReadOnly )
+            attr = attr & ~FILE_ATTRIBUTE_READONLY;
+    }
     else
-        iMode = _S_IWRITE;
+    {
+        if ( bReadOnly )
+            attr = attr | FILE_ATTRIBUTE_READONLY;
+    }
 
-    // TODO wxChmod()
-#ifdef _UNICODE
-    return _wchmod(strFilename, iMode);
-#else
-    return _chmod(strFilename, iMode);
-#endif
+    if ( SetFileAttributes(strFilename, attr) == 0 )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Not able to set file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_ReadOnly()"
+        );
+        return false;
+    }
+
+    return true;
+}
+
+
+/*static*/ bool BFCore::SetFileAttribute_Archive (const wxString& strFilename, bool bArchive)
+{
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
+
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_Archive()"
+        );
+        return false;
+    }
+
+    if ( attr & FILE_ATTRIBUTE_ARCHIVE )
+    {
+        if ( !bArchive )
+            attr = attr & ~FILE_ATTRIBUTE_ARCHIVE;
+    }
+    else
+    {
+        if ( bArchive )
+            attr = attr | FILE_ATTRIBUTE_ARCHIVE;
+    }
+
+    if ( SetFileAttributes(strFilename, attr) == 0 )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Not able to set file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_Archive()"
+        );
+        return false;
+    }
+
+    return true;
+}
+
+
+/*static*/ bool BFCore::SetFileAttribute_Hidden (const wxString& strFilename, bool bHidden)
+{
+    // get attributes
+    DWORD attr = GetFileAttributes(strFilename);
+
+    // attributes valid?
+    if ( attr == INVALID_FILE_ATTRIBUTES )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Invalid file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_Hidden()"
+        );
+        return false;
+    }
+
+    if ( attr & FILE_ATTRIBUTE_HIDDEN )
+    {
+        if ( !bHidden )
+            attr = attr & ~FILE_ATTRIBUTE_HIDDEN;
+    }
+    else
+    {
+        if ( bHidden )
+            attr = attr | FILE_ATTRIBUTE_HIDDEN;
+    }
+
+    if ( SetFileAttributes(strFilename, attr) == 0 )
+    {
+        BFSystem::Fatal
+        (
+            wxString::Format
+            (
+                _("Not able to set file attributes for %s. Return code of GetLastError() is %d"),
+                strFilename,
+                GetLastError()
+            ),
+            "BFCore::SetFileAttribute_Hidden()"
+        );
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -1008,13 +1250,14 @@ const wxString& BFCore::GetTimeString_Old ()
     return strCurrentTime_Old_;
 }
 
-bool BFCore::CopyDirAttributes (const wxString& strSourceDir, const wxString& strDestinationDir)
+/*static*/ bool BFCore::CopyDirAttributes (const wxString& strSourceDir,
+                                           const wxString& strDestinationDir)
 {
     return SetFileAttributes(strDestinationDir, GetFileAttributes(strSourceDir));
 }
 
 
-bool BFCore::VerifyFileContents (wxFile& f1, wxFile& f2)
+/*static*/ bool BFCore::VerifyFileContents (wxFile& f1, wxFile& f2)
 {
     const int       ciSize = 4096;
     int             iRead = 0;
@@ -1091,7 +1334,7 @@ bool BFCore::VerifyFiles(MapStringPair& rMap,
 }
 
 
-bool BFCore::VerifyFile (const wxString& strFile1,
+/*static*/ bool BFCore::VerifyFile (const wxString& strFile1,
                          const wxString& strFile2,
                          bool bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/)
 {

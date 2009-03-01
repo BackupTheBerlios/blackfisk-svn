@@ -44,6 +44,7 @@ BFIconTable::BFIconTable ()
              imgMessage_(64, 64)
 {
     wxImage::AddHandler(new wxPNGHandler());
+    wxImage::AddHandler(new wxICOHandler());
     Init();
 }
 
@@ -86,6 +87,11 @@ void BFIconTable::Init ()
     imgMessage_.Add(wxBitmap(BFEnvironment::GetGraphicDir() + "warning64.png",  wxBITMAP_TYPE_PNG));
     imgMessage_.Add(wxBitmap(BFEnvironment::GetGraphicDir() + "error64.png",    wxBITMAP_TYPE_PNG));
     imgMessage_.Add(wxBitmap(BFEnvironment::GetGraphicDir() + "fatal64.png",    wxBITMAP_TYPE_PNG));
+}
+
+/*static*/ wxIcon BFIconTable::GetMainFrameIcon ()
+{
+    return wxIcon(BFEnvironment::GetGraphicDir() + "logo.ico", wxBITMAP_TYPE_ICO);
 }
 
 wxImageList* BFIconTable::GetFilesystemImageList ()

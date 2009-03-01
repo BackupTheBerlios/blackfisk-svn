@@ -34,7 +34,7 @@
 #include "BFwxLog.h"
 #include "BFBackupProgressDlg.h"
 #include "BFCore.h"
-#include "BFThread_ProjectRunner.h"
+#include "BFThread_BackupRunner.h"
 #include "BFApp.h"
 #include "BFBackupTree.h"
 #include "blackfisk.h"
@@ -50,9 +50,9 @@
 //
 BFBackup::BFBackup (BFProject* pProject)
              : pProject_(pProject),
-               pRunningTask_(NULL),
+               lRunningOperation_(-1),
                bStopBackup_(false),
-               bStopTask_(false),
+               bStopOperation_(false),
                pBackupLog_(NULL),
                pProgressTotal_(NULL),
                pProgressTask_(NULL)
@@ -68,16 +68,29 @@ BFBackup::BFBackup (BFProject* pProject)
 void BFBackup::Reset ()
 {
     pProject_->Reset();
+    ClearOperationVector();
     strCurrentFilename_ = wxEmptyString;
     bStopBackup_        = false;
-    bStopTask_          = false;
-    pRunningTask_       = NULL;
+    bStopOperation_     = false;
+    lRunningOperation_  = -1;
     pBackupLog_         = NULL;
 }
 
-long BFBackup::GetTaskPosition (BFTask* pTask)
+void BFBackup::ClearOperationVector ()
 {
-    return pProject_->FindTask(pTask);
+    BFOperationVectorIt itVec;
+
+	for (itVec = vecOperations_.begin();
+		 itVec != vecOperations_.end();
+		 ++itVec)
+        delete (*itVec);
+
+    vecOperations_.clear();
+}
+
+long BFBackup::GetTaskPosition (BFOperation* pOperation)
+{
+    return pProject_->FindTask(pOperation->Task());
 }
 
 long BFBackup::GetTaskCount ()
@@ -164,32 +177,43 @@ bool BFBackup::Run_Start ()
         return false;
 
     // init
-    bStopBackup_    = false;
-    bStopTask_      = false;
-    pBackupLog_     = new BFBackupLog();
-    pRunningTask_   = NULL;
+    bStopBackup_        = false;
+    bStopOperation_     = false;
+    pBackupLog_         = new BFBackupLog();
+    lRunningOperation_  = -1;
+
+    // create operation list
+    BFTask* pTask = NULL;
+
+    do
+    {
+        pTask = pProject_->GetNextTask (pTask);
+        vecOperations_.push_back ( new BFOperation(pTask) );
+    }
+    while ( pTask != pProject_->GetLastTask() );
+
 
     // mark the backup start in the logfile
     pBackupLog_->BackupStarted();
     // the core need to create backup messages
     BFCore::Instance().BackupStarted();
 
-    return Run_NextTask ();
+    return Run_NextOperation ();
 }
 
-bool BFBackup::Run_NextTask ()
+bool BFBackup::Run_NextOperation ()
 {
     // finished the last runned task
-    if (pRunningTask_ != NULL)
+    if (lRunningOperation_ != -1)
     {
         // increment task progress
         GetProgressTotal()->IncrementActual();
 
         // check how the task ended
-        if (GetStopCurrentTask())
+        if (GetStopCurrentOperation())
         {
             pBackupLog_->TaskStoped();
-            bStopTask_ = false;
+            bStopOperation_ = false;
         }
         else
         {
@@ -197,20 +221,20 @@ bool BFBackup::Run_NextTask ()
         }
     }
 
-    // all tasks runned or stoped?
-    if (pRunningTask_ == pProject_->GetLastTask() || GetStopBackup())
+    // all operations runned or stoped?
+    if ( lRunningOperation_ == (((long)vecOperations_.size())-1) || GetStopBackup() )
         return Run_Finished();
 
     // get the next task
-    pRunningTask_ = pProject_->GetNextTask(pRunningTask_);
+    lRunningOperation_ += 1;
 
     if (!GetStopBackup())
     {
         // log running task
-        pBackupLog_->TaskStarted(*pRunningTask_);
+        pBackupLog_->TaskStarted( *(vecOperations_[lRunningOperation_]->Task()) );
         //
-        BFBackupProgressDlg::Instance()->SetCurrentTask(pRunningTask_);
-        BFThread_ProjectRunner::Run(pRunningTask_);
+        BFBackupProgressDlg::Instance()->SetCurrentOperation( vecOperations_[lRunningOperation_] );
+        BFThread_BackupRunner::Run( vecOperations_[lRunningOperation_] );
     }
 
     return true;
@@ -234,6 +258,8 @@ bool BFBackup::Run_Finished ()
 
     BFBackupProgressDlg::Instance()->Close();
 
+    Reset();
+
     /* If the project was started automaticly from
        commandline or scheduler, blackfisk need
        to close after the backup. */
@@ -244,31 +270,29 @@ bool BFBackup::Run_Finished ()
 }
 
 
-void BFBackup::StopCurrentTask ()
+void BFBackup::StopCurrentOperation ()
 {
-    bStopTask_      = true;
+    bStopOperation_ = true;
     bStopBackup_    = false;
 
     BFSystem::Backup(_("try to stop the current running task"));
 
-    if (pRunningTask_ != NULL)
-        pRunningTask_->StopTask();
+    vecOperations_[lRunningOperation_]->StopOperation();
 }
 
 void BFBackup::StopBackup ()
 {
-    bStopTask_      = true;
+    bStopOperation_ = true;
     bStopBackup_    = true;
 
     BFSystem::Backup(_("try to stop the current running backup"));
 
-    if (pRunningTask_ != NULL)
-        pRunningTask_->StopTask();
+    vecOperations_[lRunningOperation_]->StopOperation();
 }
 
-bool BFBackup::GetStopCurrentTask ()
+bool BFBackup::GetStopCurrentOperation ()
 {
-    return bStopTask_;
+    return bStopOperation_;
 }
 
 bool BFBackup::GetStopBackup ()
@@ -544,4 +568,15 @@ wxString BFBackup::GetCrontabline ()
                          arr);
 
     return arr;
+}
+
+/*static*/ wxString& BFBackup::FillBlackfiskPlaceholders (wxString& rStr)
+{
+    // BFTASK_PLACEHOLDER_DATE
+    rStr.Replace(BFTASK_PLACEHOLDER_DATE, BFCore::Instance().GetDateString());
+
+    // BFTASK_PLACEHOLDER_TIME
+    rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
+
+    return rStr;
 }

@@ -30,7 +30,6 @@ BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0
        strLogFileName_(strLogFileName),
        fileLog_(strLogFileName, wxFile::write_append)
 {
-    CareSize();
 }
 
 /*virtual*/ BFLogBase::~BFLogBase ()

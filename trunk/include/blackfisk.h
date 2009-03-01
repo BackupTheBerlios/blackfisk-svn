@@ -32,8 +32,8 @@
 //__VERSION__ (gcc version)
 
 #define BF_URL_WEBSITE              "http://www.blackfisk.org"
-#define BF_URL_BUGREPORT            "http://developer.berlios.de/bugs/?func=addbug&group_id=8687"
-#define BF_URL_FEAUTERREQUEST       "http://developer.berlios.de/feature/?func=addfeature&group_id=8687"
+#define BF_URL_BUGREPORT            "http://developer.berlios.de/bugs/?group_id=8687"
+#define BF_URL_FEAUTERREQUEST       "http://developer.berlios.de/feature/?group_id=8687"
 #define BF_URL_MAIL                 "mailto:blackfisk@web.de"
 
 #define BF_FTP_URL                  "ftp.berlios.de"

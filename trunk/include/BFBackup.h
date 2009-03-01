@@ -29,10 +29,10 @@
 
 #include "BFTaskBase.h"
 #include "BFSystemBase.h"
+#include "BFOperation.h"
 
 // forwarde declarations
 class BFProject;
-class BFTask;
 class BFBackupLog;
 class Progress;
 class ProgressTotal;
@@ -50,6 +50,11 @@ class BFBackup
         BFProject* pProject_;
 
         ///
+        BFOperationVector           vecOperations_;
+        ///
+        long                        lRunningOperation_;
+
+        ///
         static BFBackup sInstance_;
 
         /// ctor
@@ -61,18 +66,23 @@ class BFBackup
         /** The complete filename of the current open project
             if nothing is open it is empty. */
         wxString            strCurrentFilename_;
-        /// current running task
-        BFTask*             pRunningTask_;
+
+        /// current running backup operation
+        BFOperation*        pRunningOperation_;
+
         ///
         bool                bStopBackup_;
         ///
-        bool                bStopTask_;
+        bool                bStopOperation_;
         ///
         BFBackupLog*        pBackupLog_;
         ///
         ProgressTotal*          pProgressTotal_;
         ///
         ProgressWithMessage*    pProgressTask_;
+
+        ///
+        void ClearOperationVector ();
 
     public:
         ///
@@ -85,7 +95,7 @@ class BFBackup
         virtual ~BFBackup ();
 
         ///
-        long GetTaskPosition (BFTask* pTask);
+        long GetTaskPosition (BFOperation* pOperation);
         ///
         long GetTaskCount ();
 
@@ -110,7 +120,7 @@ class BFBackup
         /// run all tasks
         bool Run_Start ();
         ///
-        bool Run_NextTask ();
+        bool Run_NextOperation ();
         ///
         bool Run_Finished ();
 
@@ -121,11 +131,11 @@ class BFBackup
         ProgressWithMessage* GetProgressTask ();
 
         ///
-        void StopCurrentTask ();
+        void StopCurrentOperation ();
         ///
         void StopBackup ();
         ///
-        bool GetStopCurrentTask ();
+        bool GetStopCurrentOperation ();
         ///
         bool GetStopBackup ();
 
@@ -173,6 +183,10 @@ class BFBackup
             day-of-week and the command are extracted.
             If there are not enough (<5) parameters in the line, 'arr' is empty. */
         static wxArrayString& ParseCrontabline (const wxString& strLine, wxArrayString& arr);
+
+        /** search for blackfisk-specific placeholders in 'rStr'
+            and replace them with the needed value */
+        static wxString& FillBlackfiskPlaceholders (wxString& rStr);
 };
 
 #endif    // BFBACKUP_H

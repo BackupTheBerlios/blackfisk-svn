@@ -109,7 +109,7 @@ BFTask* BFProject::GetNextTask (BFTask* pTask)
     // current task position
     long lPos = FindTask(pTask);
 
-    if (lPos == -1 || (lPos+1) == vecTasks_.size())
+    if (lPos == -1 || (lPos+1) == (long)vecTasks_.size())
         return vecTasks_[0];
 
     return vecTasks_[lPos+1];
@@ -323,7 +323,7 @@ BFoid BFProject::AppendTask (BFTask& rTask)
        task (source == destination_of_other_task), rTask
        should be executed after the source is created by
        the other task(s) */
-    if (idx == -1 || idx == (vecTasks_.size()-1))
+    if (idx == -1 || idx == (long)(vecTasks_.size()-1))
     {
         vecTasks_.push_back(&rTask);
     }
@@ -414,4 +414,46 @@ wxArrayString BFProject::GetAllDestinations ()
         arr.Add((*itVec)->GetDestination());
 
     return arr;
+}
+
+/*static*/ wxString BFProject::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
+{
+    wxString strDesc;
+
+    switch (type)
+    {
+        case TaskARCHIVE:
+            strDesc << _("compress to a ") << GetArchiveExtension(format) << _(" archive");
+            break;
+
+        case TaskDIRCOPY:
+            strDesc = _("copy the directory");
+            break;
+
+        case TaskFILECOPY:
+            strDesc = _("copy the file");
+            break;
+
+        case TaskSYNC:
+            strDesc = _("synchronise directories");
+            break;
+
+        default:
+            strDesc = "unknown task type";
+            break;
+    };
+
+    return strDesc;
+}
+
+/*static*/ wxString BFProject::GetArchiveExtension(BFArchiveFormat format)
+{
+    switch (format)
+    {
+        case CompressZIP:
+            return "zip";
+            break;
+    }
+
+    return "unknown";
 }

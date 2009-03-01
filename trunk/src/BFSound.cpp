@@ -75,6 +75,9 @@ BFSound::BFSound ()
     switch (type)
     {
         case MsgBACKUP:
+            // no sound
+            break;
+
         case MsgINFO:
         case MsgLOG:
         case MsgDEBUG:

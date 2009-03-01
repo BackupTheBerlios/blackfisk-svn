@@ -27,7 +27,7 @@
 #include "BFProjectSettings.h"
 #include "BFBackup.h"
 #include "BFBackupProgressDlg.h"
-#include "BFThread_ProjectRunner.h"
+#include "BFThread_BackupRunner.h"
 #include "BFMessageDlg.h"
 #include "BFEnvironment.h"
 #include "blackfisk.h"
@@ -94,11 +94,11 @@ BFMsgObserver::BFMsgObserver ()
             //
             BFBackupProgressDlg::Instance()->GetMutex()->Lock();
             // send event
-            BFBackupProgressDlg::Instance()->AddPendingEvent(event);
-            // want for answer from main-thread/user
+            BFBackupProgressDlg::Instance()->GetEventHandler()->AddPendingEvent(event);
+            // wait for answer from main-thread/user
             BFBackupProgressDlg::Instance()->GetCondition()->Wait();
             // get the answer
-            stop = BFThread_ProjectRunner::CurrentlyRunning()->GetUsersStopAnswer();
+            stop = BFThread_BackupRunner::CurrentlyRunning()->GetUsersStopAnswer();
         }
 
         switch (stop)
@@ -113,7 +113,7 @@ BFMsgObserver::BFMsgObserver ()
                 break;
 
             case BFDO_STOPTSK:
-                BFBackup::Instance().StopCurrentTask();
+                BFBackup::Instance().StopCurrentOperation();
                 return;
                 break;
 

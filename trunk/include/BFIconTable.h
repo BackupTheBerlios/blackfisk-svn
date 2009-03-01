@@ -96,6 +96,10 @@ class BFIconTable
             _message_unused_ // to check for invalid values
         };
 
+        /** Return a wxIcon object based on an ico-file
+            with multible bitmaps in it. */
+        static wxIcon GetMainFrameIcon ();
+
         ///
         wxImageList* GetFilesystemImageList ();
 

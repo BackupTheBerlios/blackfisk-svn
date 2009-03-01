@@ -148,6 +148,12 @@ class BFProject : public Subject
         /** Find all tasks with placeholders in its string-members */
         BFTaskVector& FindAllTasksWithPlaceholders (BFTaskVector& rVec);
 
+        ///
+        static wxString GetTypeDescription (BFTaskType type,
+                                            BFArchiveFormat format = CompressNOTUSED);
+        ///
+        static wxString GetArchiveExtension(BFArchiveFormat format);
+
 };
 
 #endif    // BFPROJECT_H

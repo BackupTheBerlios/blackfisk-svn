@@ -100,9 +100,10 @@ BFAboutDlg::BFAboutDlg ()
                                              "wxSerialize",
                                              wxString::Format
                                              (
-                                                _(" (v%d.%d) from Jorgen Bodde"),
+                                                _(" (v%d.%d.%d) from Jorgen Bodde"),
                                                 WXSERIALIZE_MAJOR_VERSION,
-                                                WXSERIALIZE_MINOR_VERSION
+                                                WXSERIALIZE_MINOR_VERSION,
+                                                WXSERIALIZE_RELEASE_VERSION
                                              ),
                                              _(" serialize data to files"));
     wxSizer* pThird2 = CreateThirdPartySizer("http://www.wxwidgets.org",
@@ -119,6 +120,12 @@ BFAboutDlg::BFAboutDlg ()
                                              "wxCron",
                                              "",
                                              _(" The in-build scheduler."));
+    wxSizer* pThird4 = CreateThirdPartySizer("http://prismtone.jp",
+                                             "FreeFont \"NORDIC round\"",
+                                             " from PRISMTONE",
+                                             _(" 前田 龍 (Ryuichi Maeda) alias PRISMTONE\n created the font used in the blackfiks logo."));
+
+
     wxSizer* pTools1 = CreateThirdPartySizer("http://www.codeblocks.org",
                                              "Code::Blocks",
                                              "",
@@ -127,15 +134,19 @@ BFAboutDlg::BFAboutDlg ()
                                              "MinGW",
                                              "",
                                              _(" GNU based compiler system for Windows"));
-    wxSizer* pTools3 = CreateThirdPartySizer("http://www.inkscape.org",
+    wxSizer* pTools3 = CreateThirdPartySizer("http://www.gimp.org",
+                                             "GIMP",
+                                             "",
+                                             _(" GNU Image Manipulation Program"));
+    wxSizer* pTools4 = CreateThirdPartySizer("http://www.inkscape.org",
                                              "Inkscape",
                                              "",
                                              _(" open source vector graphics editor"));
-    wxSizer* pTools4 = CreateThirdPartySizer("http://icofx.ro",
+    wxSizer* pTools5 = CreateThirdPartySizer("http://icofx.ro",
                                              "IcoFX",
                                              "",
                                              _(" icon editor"));
-    wxSizer* pTools5 = CreateThirdPartySizer("http://www.7-zip.org",
+    wxSizer* pTools6 = CreateThirdPartySizer("http://www.7-zip.org",
                                              "7-Zip",
                                              "",
                                              _(" a file archiver with a high compression ratio"));
@@ -163,31 +174,40 @@ BFAboutDlg::BFAboutDlg ()
     // arrange
     pNameSizer->Add(pLogo, wxSizerFlags(0).Expand());
     pNameSizer->Add(pName, wxSizerFlags(0).Center());
+
     pTopSizer->Add(pNameSizer, wxSizerFlags(0).Center().Border(wxBOTTOM, 10));
     pTopSizer->Add(pCopy, wxSizerFlags(0).Center());
     pTopSizer->Add(pDesc, wxSizerFlags(0).Center().Border());
     pTopSizer->Add(pWeb, wxSizerFlags(0).Center());
     pTopSizer->Add(pLicense, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pTopSizer->Add(pViewLicense, wxSizerFlags(0).Center().Border(wxBOTTOM, 10));
+
     pMLeftSizer->Add(pDev, wxSizerFlags(0).Center());
     pMLeftSizer->Add(pDev1, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMLeftSizer->Add(pSupporters, wxSizerFlags(0).Center().Border(wxTOP, 10));
-    pMLeftSizer->Add(pSupporters1, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMLeftSizer->Add(pSupporters2, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMLeftSizer->Add(pSupporters3, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMLeftSizer->Add(pSupporters4, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pThird, wxSizerFlags(0).Center());
+
+    pMLeftSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxTOP, 10));
+    pMLeftSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools3, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools4, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools5, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMLeftSizer->Add(pTools6, wxSizerFlags(0).Border(wxBOTTOM, 3));
+
+    pMRightSizer->Add(pSupporters, wxSizerFlags(0).Center());
+    pMRightSizer->Add(pSupporters1, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pSupporters2, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pSupporters3, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pSupporters4, wxSizerFlags(0).Border(wxBOTTOM, 3));
+
+    pMRightSizer->Add(pThird, wxSizerFlags(0).Center().Border(wxTOP, 10));
     pMRightSizer->Add(pThird1, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pThird2, wxSizerFlags(0).Border(wxBOTTOM, 3));
     pMRightSizer->Add(pThird3, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools, wxSizerFlags(0).Center().Border(wxTOP, 10));
-    pMRightSizer->Add(pTools1, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools2, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools3, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools4, wxSizerFlags(0).Border(wxBOTTOM, 3));
-    pMRightSizer->Add(pTools5, wxSizerFlags(0).Border(wxBOTTOM, 3));
+    pMRightSizer->Add(pThird4, wxSizerFlags(0).Border(wxBOTTOM, 3));
+
     pMiddleSizer->Add(pMLeftSizer, wxSizerFlags(0).Expand());
     pMiddleSizer->Add(pMRightSizer, wxSizerFlags(0).Expand());
+
     pTopSizer->Add(pMiddleSizer, wxSizerFlags(0).Expand().Center().Border(wxLEFT | wxRIGHT, 20));
     pTopSizer->Add(pOk, wxSizerFlags(0).Center().Border(wxALL, 25));
 
