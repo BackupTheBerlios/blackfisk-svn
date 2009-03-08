@@ -926,7 +926,7 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
 
 void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 {
-    long iCount;
+    long iCount(0);
     wxString strQuestion;
     wxArrayString arrTasks;
 

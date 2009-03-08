@@ -99,7 +99,7 @@ void BFCronCtrl::GetData()
     pComboType_->Select(iType);
     FillCombos();
 
-    if ( (lVal-1) > pComboIntervall_->GetCount() )
+    if ( (lVal-1) > (long)pComboIntervall_->GetCount() )
         return;
 
     pComboIntervall_->SetSelection(lVal-1);

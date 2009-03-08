@@ -171,8 +171,6 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
 // ++++++++++++++++++++++++++++++
 // ++ class BFProgressTaskCtrl ++
 // ++++++++++++++++++++++++++++++
-// XXX
-#include <wx/colour.h>
 
 /*virtual*/ void BFProgressTaskCtrl::InitControls ()
 {
@@ -208,8 +206,6 @@ BFProgressTotalCtrl::BFProgressTotalCtrl (wxWindow* pParent, Progress* pProgress
                                wxDefaultPosition,
                                wxDefaultSize,
                                wxST_NO_AUTORESIZE);
-    // XXX pTextB1_->SetBackgroundColour(*wxRED);
-    // XXX pTextB2_->SetBackgroundColour(*wxGREEN);
 
     // arange
     pSubSizer->Add(pTextA_, wxSizerFlags(0).Center() );

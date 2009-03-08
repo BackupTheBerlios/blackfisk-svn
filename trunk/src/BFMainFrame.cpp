@@ -109,7 +109,6 @@ END_EVENT_TABLE()
     wxGetApp().SetMainFrame(this);
 
     // set the window icon XXX
-    //SetIcon(BFIconTable::Instance()->GetIcon(BFIconTable::logo));
     SetIcon(BFIconTable::GetMainFrameIcon());
 
     // set as top window

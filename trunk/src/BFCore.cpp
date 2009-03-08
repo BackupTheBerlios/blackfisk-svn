@@ -508,12 +508,15 @@ wxUint32 BFCore::GetFileCrc (const wxString& strFilename)
 
     // read data
     size_t bufsize = file.Length();
-    Bytef buffer[bufsize];
-    file.Read(&buffer, bufsize);
+    Bytef* pBuffer = new Bytef[bufsize];
+    file.Read(pBuffer, bufsize);
 
     // get crc for data
-    return crc32(0, buffer, bufsize);
+    wxUint32 rc = crc32(0, pBuffer, bufsize);
 
+	delete pBuffer;
+
+	return rc;
     // DEBUG
     // for portability look at boost::crc
 }

@@ -138,11 +138,6 @@ void BFBackupProgressDlg::SetCurrentOperation (BFOperation* pOperation)
     // get pos of current task
     long lPos = BFBackup::Instance().GetTaskPosition(pOperation);
 
-    // XXX
-    wxString str1 = pOperation->Task()->GetName();
-    wxString str2 = wxString::Format("%d", lPos+1);
-    wxString str3 = wxString::Format("%d", BFBackup::Instance().GetTaskCount());
-
     // set task name in progress ctrl
     pCtrlTaskProgress_->SetTextA
     (
