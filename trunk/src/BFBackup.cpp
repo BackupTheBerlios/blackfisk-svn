@@ -67,7 +67,7 @@ BFBackup::BFBackup (BFProject* pProject)
 
 void BFBackup::Reset ()
 {
-    // kill pProject_->Reset();
+    pProject_->Reset();
     ClearOperationVector();
     strCurrentFilename_ = wxEmptyString;
     bStopBackup_        = false;
@@ -258,7 +258,11 @@ bool BFBackup::Run_Finished ()
 
     BFBackupProgressDlg::Instance()->Close();
 
-    Reset();
+    ClearOperationVector();
+    bStopBackup_        = false;
+    bStopOperation_     = false;
+    lRunningOperation_  = -1;
+    pBackupLog_         = NULL;
 
     /* If the project was started automaticly from
        commandline or scheduler, blackfisk need
@@ -305,7 +309,7 @@ const wxString& BFBackup::GetCurrentFilename ()
     return strCurrentFilename_;
 }
 
-const wxString& BFBackup::GetBackupLogLocation ()
+wxString BFBackup::GetBackupLogLocation ()
 {
     return pProject_->GetSettings().GetBackupLogLocation();
 }

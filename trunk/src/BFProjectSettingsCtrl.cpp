@@ -24,6 +24,7 @@
 
 #include <wx/statbox.h>
 #include <wx/stattext.h>
+#include <wx/gbsizer.h>
 
 #include "BFProject.h"
 #include "BFHelpCtrl.h"
@@ -61,8 +62,7 @@ BFProjectSettingsCtrl::BFProjectSettingsCtrl (wxWindow* pParent, BFHelpCtrl* pHe
                      : wxPanel (pParent, wxID_ANY),
                        iStopLevelOnFatal_(BFDO_STOPPRJ),
                        iStopLevelOnError_(BFDO_STOPPRJ),
-                       iStopLevelOnWarning_(BFDO_STOPPRJ),
-                       iLabelWidth_(85)
+                       iStopLevelOnWarning_(BFDO_STOPPRJ)
 {
     Init(pHelpCtrl);
 }
@@ -71,8 +71,7 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
 {
     // verbose
     wxString arrVerbose[] = { _("information"), _("warning"), _("error"), _("fatal error") };
-    wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("verbose level: "));
-    pVerboseLabel->SetMinSize(wxSize(GetLabelWidth(), pVerboseLabel->GetSize().GetHeight()));
+    wxStaticText* pVerboseLabel = new wxStaticText(this, wxID_ANY, _("verbose level:"));
     pComboVerbose_ = new wxComboBox(this,
                                     wxID_ANY,
                                     arrVerbose[1],
@@ -92,8 +91,7 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
     wxSizer* pStopSizer = CreateStopLevelCtrl(pHelpCtrl);
 
     // backup-log
-    wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("location of the logfile: "));
-    pBackupLogLabel->SetMinSize(wxSize(GetLabelWidth(), pBackupLogLabel->GetSize().GetHeight()));
+    wxStaticText* pBackupLogLabel = new wxStaticText(this, wxID_ANY, _("location of logfile:"));
     pPickerBackupLog_ = new wxDirPickerCtrl (this,
                                              wxID_ANY,
                                              wxEmptyString,
@@ -108,17 +106,15 @@ void BFProjectSettingsCtrl::Init (BFHelpCtrl* pHelpCtrl)
     }
 
     // sizer and arrange
-    wxBoxSizer* pTopSizer       = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* pBackupLogSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pVerboseSizer   = new wxBoxSizer(wxHORIZONTAL);
-    pBackupLogSizer ->Add(pBackupLogLabel, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pBackupLogSizer ->Add(pPickerBackupLog_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
-    pVerboseSizer   ->Add(pVerboseLabel, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
-    pVerboseSizer   ->Add(pComboVerbose_, wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL));
-    pTopSizer   ->Add(pBackupLogSizer, wxSizerFlags(0).Border(wxUP, 5).Expand());
-    pTopSizer   ->Add(pVerboseSizer, wxSizerFlags(0).Border(wxUP, 5).Expand());
-    pTopSizer   ->Add(pStopSizer, wxSizerFlags(0).Border(wxUP, 11));
-    SetSizerAndFit(pTopSizer);
+    wxGridBagSizer* pSizer = new wxGridBagSizer (5, 5);
+
+    pSizer->Add ( pBackupLogLabel,      wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL );
+    pSizer->Add ( pPickerBackupLog_,    wxGBPosition(0, 1), wxGBSpan(1, 2), wxEXPAND);
+    pSizer->Add ( pVerboseLabel,        wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_CENTER_VERTICAL );
+    pSizer->Add ( pComboVerbose_,       wxGBPosition(1, 1), wxGBSpan(1, 2), wxEXPAND );
+    pSizer->Add ( pStopSizer,           wxGBPosition(2, 0), wxGBSpan(1, 3) );
+
+    SetSizer ( pSizer );
 }
 
 //
@@ -340,10 +336,10 @@ void BFProjectSettingsCtrl::OnRadio (wxCommandEvent& event)
     }
 }
 
-int BFProjectSettingsCtrl::GetLabelWidth ()
+/*int BFProjectSettingsCtrl::GetLabelWidth ()
 {
     return iLabelWidth_;
-}
+}*/
 
 void BFProjectSettingsCtrl::GetData (BFProjectSettings& rSettings)
 {

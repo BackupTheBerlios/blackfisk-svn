@@ -72,9 +72,6 @@ class BFProjectSettingsCtrl : public wxPanel
         wxRadioButton*      pRadioFatalIgn_;
 
         ///
-        int                 iLabelWidth_;
-
-        ///
         wxSizer* CreateStopLevelCtrl (BFHelpCtrl* pHelpCtrl);
 
         ///
@@ -93,8 +90,7 @@ class BFProjectSettingsCtrl : public wxPanel
         ///
         void OnRadio (wxCommandEvent& event);
 
-        ///
-        int GetLabelWidth ();
+        //        int GetLabelWidth ();
 
         ///
         void GetData (BFProjectSettings& rSettings);

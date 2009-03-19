@@ -76,7 +76,7 @@ class BFProjectSettings
         ///
         BF_StopLevel GetStopLevelOnWarning ();
         ///
-        const wxString& GetBackupLogLocation ();
+        wxString GetBackupLogLocation ();
         ///
         void SetBackupLogLocation (const wxString& strFile);
 

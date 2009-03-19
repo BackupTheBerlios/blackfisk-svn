@@ -24,6 +24,7 @@
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/statline.h>
 
 #include "BFProjectSettingsCtrl.h"
 #include "BFProject.h"
@@ -55,7 +56,7 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
 
     // name
     wxStaticText* pNameLabel = new wxStaticText(this, wxID_ANY, _("Name:"));
-    pNameLabel->SetMinSize(wxSize(pCtrl_->GetLabelWidth(), pNameLabel->GetSize().GetHeight()));
+    //pNameLabel->SetMinSize(wxSize(pCtrl_->GetLabelWidth(), pNameLabel->GetSize().GetHeight()));
     pNameCtrl_ = new wxTextCtrl(this, wxID_ANY);
     strTip = _("name of the backup project");
     pNameLabel->SetHelpText(strTip);
@@ -75,14 +76,15 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
     wxBoxSizer*         pTopSizer       = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer*         pNameSizer      = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer*         pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
-    pNameSizer->Add(pNameLabel, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL));
+    pNameSizer->Add(pNameLabel, wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border(wxRIGHT));
     pNameSizer->Add(pNameCtrl_, wxSizerFlags(1));
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-    pTopSizer->Add(pNameSizer,      wxSizerFlags(0).Border(wxLEFT | wxUP | wxRIGHT).Expand());
-    pTopSizer->Add(pCtrl_,          wxSizerFlags(0).Border());
-    pTopSizer->Add(pHelp_,          wxSizerFlags(0).Border().Expand());
-    pTopSizer->Add(pButtonSizer,    wxSizerFlags(0).Center());
+    pTopSizer->Add(pNameSizer,              wxSizerFlags(0).Border(wxLEFT | wxUP | wxRIGHT).Expand());
+    pTopSizer->Add(new wxStaticLine(this),  wxSizerFlags(0).Border().Expand());
+    pTopSizer->Add(pCtrl_,                  wxSizerFlags(0).Border());
+    pTopSizer->Add(pHelp_,                  wxSizerFlags(0).Border().Expand());
+    pTopSizer->Add(pButtonSizer,            wxSizerFlags(0).Center());
 
     // motion events
     pHelp_->Connect(pNameLabel);

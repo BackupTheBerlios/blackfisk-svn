@@ -82,24 +82,41 @@ BF_StopLevel BFProjectSettings::GetStopLevelOnWarning ()
     return iStopLevelOnWarning_;
 }
 
-const wxString& BFProjectSettings::GetBackupLogLocation ()
+wxString BFProjectSettings::GetBackupLogLocation ()
 {
-    //if (BFProject::Instance().Has(this))
-    //{
-        if (strBackupLogLocation_.IsEmpty())
-            strBackupLogLocation_ = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
+    wxString strReturn = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
 
-        if (strBackupLogLocation_.IsEmpty())
+    if (strBackupLogLocation_.IsEmpty())
+    {
+        strReturn = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
+
+        if (strReturn.IsEmpty())
             if (BFProject::Instance().GetAllDestinations().GetCount() > 0)
-                strBackupLogLocation_ = BFProject::Instance().GetAllDestinations()[0];
-    //}
+                strReturn = BFProject::Instance().GetAllDestinations()[0];
+    }
+    else
+    {
+        if ( strBackupLogLocation_ != strReturn )
+        {
+            strReturn = strBackupLogLocation_;
+        }
+        else
+        {
+            strBackupLogLocation_ = wxEmptyString;
+        }
+    }
 
-    return strBackupLogLocation_;
+    return strReturn;
 }
 
 void BFProjectSettings::SetBackupLogLocation (const wxString& strFile)
 {
-    strBackupLogLocation_ = strFile;
+	wxString strReturn = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
+
+	if (strFile == strReturn)
+		strBackupLogLocation_ = wxEmptyString;
+	else
+		strBackupLogLocation_ = strFile;
 }
 
 bool BFProjectSettings::Serialize (jbSerialize& rA)

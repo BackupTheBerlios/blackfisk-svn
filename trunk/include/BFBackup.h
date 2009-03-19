@@ -104,7 +104,7 @@ class BFBackup
         ///
         const wxString& GetCurrentFilename ();
         ///
-        const wxString& GetBackupLogLocation ();
+        wxString GetBackupLogLocation ();
 
         ///
         BF_VerboseLevel GetVerboseLevel ();

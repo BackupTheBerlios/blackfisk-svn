@@ -896,8 +896,8 @@ long BFCore::GetDirFileCount(const wxString& strDir,
 
 /*static*/ bool BFCore::CreatePath (const wxString& strPath)
 {
-    if (bWhileBackup_)
-        BFSystem::Backup(wxString::Format(_("create path %s"), strPath));
+    /*if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("create path %s"), strPath));*/
 
     // init
     wxString strSub;
@@ -1256,7 +1256,10 @@ const wxString& BFCore::GetTimeString_Old ()
 /*static*/ bool BFCore::CopyDirAttributes (const wxString& strSourceDir,
                                            const wxString& strDestinationDir)
 {
-    return SetFileAttributes(strDestinationDir, GetFileAttributes(strSourceDir));
+    if ( SetFileAttributes(strDestinationDir, GetFileAttributes(strSourceDir)) )
+		return true;
+	else
+		return false;
 }
 
 

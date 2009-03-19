@@ -584,16 +584,10 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 }
 
 #ifdef _DEBUG
-#include "BFSound.h"
-#include "BFundef.h"
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-    wxLaunchDefaultBrowser(BF_URL_MAIL);
 }
 
-void BFMainFrame::Test ()
-{
-}
 #endif
 
 void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))

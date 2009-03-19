@@ -96,6 +96,12 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     wxString strA;
     bool     bA;
 
+    // arrays
+    wxArrayString arrSourceDirs;
+    wxArrayString arrSourceFiles;
+    wxArrayString arrDestinationDirs;
+    wxArrayString arrDestinationFiles;
+
     // source
     wxString strSource = pTask_->GetSource();
 
@@ -118,10 +124,11 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     // progress ...
     rProgress.SetLabel ( wxString::Format
     (
-        _("synchronise from %s to %s\ncounting directories and files"),
+        _("synchronise from %s to %s"),
         strSource,
         strDestination
     ) );
+    rProgress.SetMessage ( _("calculating directories and files") );
 
     // ** listing source **
     wxArrayString arrExclude = pTask_->GetExclude();
@@ -131,9 +138,31 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     if ( BFCore::IsStop() )
         return false;
 
+    // check for deletable files ...
+    if ( pTask_->GetRealSync() )
+    {
+        // get destination listing
+        BFCore::GetDirListing(strDestination, arrDestination_);
+
+        // stop?
+        if ( BFCore::IsStop() )
+            return false;
+
+        // cut destination and source string from the listings
+        wxArrayString arrSourceTemp = arrSource_;
+        wxString strDestinationCommunity    = BFApp::CutCommunity (arrDestination_);
+        wxString strSourceCommunity         = BFApp::CutCommunity (arrSourceTemp);
+
+        // remove in-source-existing-files from the destination listing
+        BFApp::Remove (arrDestination_, arrSourceTemp);
+
+        // add the destination string to the destination listing
+        BFApp::PrependString(arrDestination_, strDestinationCommunity);
+    }
+
     // progress ...
     rProgress.SetActual ( 0 );
-    rProgress.SetRange ( arrSource_.GetCount() );
+    rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
     rProgress.SetLabel ( wxString::Format
     (
         _("synchronise from %s to %s"),
@@ -149,9 +178,6 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     ) );
 
     // separate directories and files
-    wxArrayString arrSourceDirs;
-    wxArrayString arrSourceFiles;
-
     BFCore::SeparateListingInDirectoriesAndFiles
     (
         arrSource_,
@@ -239,7 +265,7 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
         return false;
 
     // check for deletable files ...
-    if ( pTask_->GetRealSync() )
+    if ( arrDestination_.GetCount() > 0 )
     {
         // progress ...
         rProgress.SetLabel ( _("check for deletable files and directories") );
@@ -252,27 +278,7 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
             strSource
         ) );
 
-        // get destination listing
-        BFCore::GetDirListing(strDestination, arrDestination_);
-
-        // stop?
-        if ( BFCore::IsStop() )
-            return false;
-
-        // cut destination and source string from the listings
-        wxString strDestinationCommunity    = BFApp::CutCommunity (arrDestination_);
-        wxString strSourceCommunity         = BFApp::CutCommunity (arrSource_);
-
-        // remove in-source-existing-files from the destination listing
-        BFApp::Remove (arrDestination_, arrSource_);
-
-        // add the destination string to the destination listing
-        BFApp::PrependString(arrDestination_, strDestinationCommunity);
-
         // separate in files and dirs
-        wxArrayString arrDestinationDirs;
-        wxArrayString arrDestinationFiles;
-
         BFCore::SeparateListingInDirectoriesAndFiles
         (
             arrDestination_,
@@ -290,6 +296,10 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
             if ( BFCore::IsStop() )
                 return false;
 
+            // progress
+            rProgress.IncrementActualWithMessage(arrDestinationFiles[i]);
+
+            // delete
             BFCore::DeleteFile(arrDestinationFiles[i]);
         }
 
@@ -300,6 +310,10 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
             if ( BFCore::IsStop() )
                 return false;
 
+            // progress
+            rProgress.IncrementActualWithMessage(arrDestinationDirs[i-1]);
+
+            // delete
             BFCore::DeleteDir(arrDestinationDirs[i-1]);
         }
     }

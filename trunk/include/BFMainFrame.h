@@ -82,10 +82,6 @@ class BFMainFrame : public wxFrame
         ///
         void DeleteRememberedThreads ();
 
-#ifdef _DEBUG
-    void Test ();
-#endif
-
     protected:
         /// proteced members
 

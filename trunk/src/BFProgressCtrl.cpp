@@ -245,7 +245,7 @@ BFProgressTaskCtrl::BFProgressTaskCtrl (wxWindow* pParent, Progress* pProgress)
     wxString strMsg = pPM->GetMessage();
     wxClientDC dc(this);
     dc.SetFont(pTextB1_->GetFont());
-    int widthCtrl = pTextB1_->GetClientSize().GetWidth();
+    int widthCtrl = pTextB2_->GetClientSize().GetWidth();
     int widthText = dc.GetTextExtent(strMsg).GetWidth();
 
     if ( widthText > widthCtrl )

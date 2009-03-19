@@ -107,7 +107,7 @@ class ProgressWithMessage : public Progress
         /// set 'strLabel_' and broadcast the observer
         void SetLabel (const wxString& strLabel);
         /// set 'strMessage_'
-        void SetMessage (const wxString& strMessage);
+        void SetMessage (const wxString& strMessage, bool bBroadcast = true);
         ///
         const wxString& GetMessage ();
         ///

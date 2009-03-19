@@ -1,38 +1,4 @@
-- FIXED: correct use of exclude directories in BFDirListingTraverser::HandleDirAndFile()
-- ADDED to class wxIcon
-    + BFIconTable::GetMainFrameIcon ()
-- ADDED to class wxCron
-    + SeparateListingInDirectoriesAndFiles (...)
-    + HasFileAttribute_ReadOnly (...)
-    + HasFileAttribute_Archive (...)
-    + HasFileAttribute_Hidden (...)
-    + SetFileAttribute_ReadOnly (...)
-    + SetFileAttribute_Archive (...)
-    + SetFileAttribute_Hidden (...)
-- ADDED to class BFApp
-    + CutCommunity (...)
-    + Remove (wxArrayString&, const wxArrayString&)
-- ADDED to directory graphic
-    + logo.xcf
-    + logo_text.xcf
-	+ logo_warp.xcf
-	+ logo_warp.png
-    + yes.xcf
-- ADDED a Feedback button to the main window
-- ADDED to credits
-    + GIMP
-    + Ryuichi Maeda "Prismtone"
-- IMPLEMENT BFBackup and BFOperation
-- IMPROVED to BFProject and BFTask
-- IMPROVED class BFProgressCtrl (pTextB_ -> pTextB1_, pTextB2_)
-- IMPROVED class BFBackupProgressDlg
-    + "stop prj" & "stop task" button disabled after clicking
-- KILLED (outcommented) in class BFCore
-    + Synchronise ()
-- KILLED (outcommented) class BFSynchroniseDirTraverser
-
-
-- BUG: using 前田 龍 directly in source doesn't work
+- rewrite the file list in the readme file because of /build
 
 - maybe kill Progress::bDeadCountMode_ & all affected members?
 
@@ -40,6 +6,10 @@
 
 - tooltip with task-infos on mouse-over on a backup-task
 - tooltips on BFHyperlinkCtrl with URL
+
+- remove verify-flag on sync-tasks?
+
+- auto-save-project option
 
 - Drag&Drop source to an empty project open a task-dialog with an empty destination
   -> "select destination dialog" should open automaticly in that case

@@ -173,7 +173,7 @@ ProgressWithMessage::ProgressWithMessage ()
 
 bool ProgressWithMessage::IncrementActualWithMessage (const wxString& strMessage)
 {
-    SetMessage(strMessage);
+    SetMessage(strMessage, false);
 
     if (Progress::IncrementActual())
     {
@@ -206,9 +206,12 @@ void ProgressWithMessage::SetLabel (const wxString& strLabel)
     broadcastObservers();
 }
 
-void ProgressWithMessage::SetMessage (const wxString& strMessage)
+void ProgressWithMessage::SetMessage (const wxString& strMessage, bool bBroadcast /*= true*/)
 {
     strMessage_ = strMessage;
+
+    if (bBroadcast)
+        broadcastObservers();
 }
 
 ProgressTotal::ProgressTotal(long lProgressCount,
