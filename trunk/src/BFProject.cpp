@@ -27,7 +27,7 @@
 
 #include "blackfisk.h"
 
-#define BFPROJECT_DEFAULT_NAME _("unnamed")
+#define BFPROJECT_DEFAULT_NAME _("unnamed backup")
 
 BFProject BFProject::sProject_;
 

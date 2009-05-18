@@ -95,7 +95,7 @@ class BFCountDirTraverser : public wxDirTraverser
 };  // class BFCountDirTraverser
 
 
-/// to copy a dir with all files and sub-dirs in it
+/* to copy a dir with all files and sub-dirs in it
 class BFCopyDirTraverser : public wxDirTraverser
 {
     protected:
@@ -118,7 +118,7 @@ class BFCopyDirTraverser : public wxDirTraverser
         virtual wxDirTraverseResult OnFile(const wxString& filename);
 
 };  // class BFCopyDirTraverser
-/*
+*//*
 class BFSynchroniseDirTraverser : public BFDirListingTraverser
 {
     private:

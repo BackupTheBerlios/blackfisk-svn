@@ -584,8 +584,19 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 }
 
 #ifdef _DEBUG
+#include "BFSound.h"
+#include <wx/process.h>
+
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
+	wxArrayString arr;
+	wxProcess* pProcess = new wxProcess(wxPROCESS_REDIRECT);
+	BFSound::Warning();
+	BFSound::Warning();
+	//wxExecute("C:\\Programme\\wxPTB\\wxPTB -o D:\\ptb.sig", arr, wxEXEC_ASYNC | wxEXEC_NODISABLE);
+	wxExecute("C:\\Programme\\wxPTB\\wxPTB -o D:\\ptb.sig", wxEXEC_ASYNC | wxEXEC_NOHIDE, pProcess);
+	BFSound::Finish();
+	pProcess->Detach();
 }
 
 #endif

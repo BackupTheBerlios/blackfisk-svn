@@ -187,23 +187,32 @@ class BFCore
             there could be more than one new directories in the path */
         static bool CreatePath (const wxString& strPath);
 
-        /** copy a directory */
+        /* copy a directory *
         bool CopyDir (const wxString& strSourceDir,
                       const wxString& strDestinationDir,
                       bool bVerify,
                       bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT,
-                      ProgressWithMessage* pProgress = NULL);
+                      ProgressWithMessage* pProgress = NULL);*/
 
 
         /** create a zipfile ('pstrZipName') from a directory ('pstrSourceDir')
             files and directories that should not be zipped can be specified in 'pExcludeListing'
-            'pExcludeListing' and 'pProgress' can be NULL*/
+            'pExcludeListing' and 'pProgress' can be NULL*
         bool CreateZipFromDir (const wxString& strZipName,
                                const wxString& strSourceDir,
                                wxArrayString* pExcludeListing,
                                bool bVerify,
-                               ProgressWithMessage* pProgress = NULL);
+                               ProgressWithMessage* pProgress = NULL);*/
 
+		/** Create a ZIP-archive ('strArchiveName'). The entries are in 'arrEntries' and can be
+			files and directories.
+			If 'pProgress' is specified there would be a message and a increment operation
+			for each entry in 'arrEntries'.
+			The range of 'pProgress' is not modified.
+			There is no verify for the created archive. Use VerifyZip() for that. */
+        bool CreateArchive (const wxString&			strArchiveName,
+							const wxArrayString&	arrEntries,
+                            ProgressWithMessage*	pProgress = NULL);
         ///
         const wxString& GetDateString ();
         ///

@@ -108,7 +108,11 @@ void BFBackupTree::Init ()
 
     // expand all items in the treeCtlr
     ExpandAll();
-    SelectItem(lastItemId_);
+
+	if ( lastItemId_.IsOk() )
+		SelectItem(lastItemId_);
+	else
+		SelectItem(GetRootItem());
 
     SetToolTip(_("files and directories for the backup"));
 
@@ -456,7 +460,7 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
     }
 
     if (menu.GetMenuItemCount() > 0)
-        PopupMenu(&menu, point);
+        PopupMenu(&menu);//, point);
 }
 
 /*virtual*/ wxDragResult BFBackupTree::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)

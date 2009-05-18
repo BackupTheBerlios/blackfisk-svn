@@ -42,15 +42,15 @@ class BFOperation
         wxArrayString   arrSource_;
         ///
         wxArrayString   arrDestination_;
-
-        /*
+        
+        ///
+        bool RunForFileCopy(ProgressWithMessage& rProgress);
+		///
         bool RunForArchive (ProgressWithMessage& rProgress);
+		///
+        bool RunForDirSync (ProgressWithMessage& rProgress);
         ///
         bool RunForDirCopy (ProgressWithMessage& rProgress);
-        ///
-        bool RunForFileCopy(ProgressWithMessage& rProgress);*/
-        ///
-        bool RunForDirSync (ProgressWithMessage& rProgress);
 
         ///
         bool bStopOperation_;

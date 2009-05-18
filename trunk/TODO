@@ -1,5 +1,14 @@
-- rewrite the file list in the readme file because of /build
+- new Backup Engine (BFProject, BFBackup, BFTask, BFOperation) is full implemented now (it is Beta)
+- outcommented a lot of code of the old Backup Engine
+- FIXED: Microsoft Visual C++ 2008 Express Edition does work now
 
+- BUG?: "default project settings" are used for new projects?
+
+- BUG: modify destination on volumes cause in crash!
+-    : "add as destination directory" (dir-ctrl) crashes
+-    : PopupMenu() used with wxMenu on stack or heap? (causes in crash with MSVC but not with MinGw)
+
+- register BFP-Files with wxMimeTypesManager::AddFallback
 - maybe kill Progress::bDeadCountMode_ & all affected members?
 
 - fix wxSerialize compiler warnings
@@ -21,6 +30,7 @@
 
 0.0.1
 ~~~~~
+- Backup-LOG: Zusammenfassung (Zählung) der copy, delete, create aktionen (hauptsächlich bei sync)
 - improve BFBackupInfoCtrl with easier readable messages (icons, colors)
   maybe with wxListBox, wxListCtrl or wxGrid
 - log files as parseable (for icons) text-files and/or standard conform html-files or pdf

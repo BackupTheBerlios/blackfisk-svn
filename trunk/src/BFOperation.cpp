@@ -55,21 +55,21 @@ bool BFOperation::Run (ProgressWithMessage& rProgress)
         BFCore::Instance().CreatePath(str);
 
     switch (pTask_->GetType())
-    {/*
-        case TaskARCHIVE:
-            RunForArchive(rProgress);
-            break;
-
-        case TaskDIRCOPY:
-            RunForDirCopy(rProgress);
-            break;
-
+    {
         case TaskFILECOPY:
             RunForFileCopy(rProgress);
             break;
-*/
+
         case TaskSYNC:
             RunForDirSync(rProgress);
+            break;
+
+		case TaskDIRCOPY:
+            RunForDirCopy(rProgress);
+            break;
+
+		case TaskARCHIVE:
+            RunForArchive(rProgress);
             break;
 
         default:
@@ -319,57 +319,215 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     }
 
     return true;
-/*
-    return BFCore::Instance().Synchronise
-    (
-        strSrc,
-        strDest,
-        pTask_->Verify(),
-        pTask_->VerifyContent(),
-        pTask_->GetRealSync(),
-        &rProgress
-    );*/
 }
 
-void BFOperation::StopOperation ()
-{
-    bStopOperation_ = true;
-}
 
-/*
-bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
+bool BFOperation::RunForDirCopy (ProgressWithMessage& rProgress)
 {
-    wxString strDest, strSrc;
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
 
-    // source
-    strSrc  = GetSource();
+    // init;
+    arrSource_      .Clear();
+    arrDestination_ .Clear();
+
+    // helper variables
+    wxString strA;
+
+    // arrays
+    wxArrayString arrSourceDirs;
+    wxArrayString arrSourceFiles;
+    wxArrayString arrDestinationDirs;
+    wxArrayString arrDestinationFiles;
+
+	// source
+    wxString strSource = pTask_->GetSource();
 
     // destination
-    strDest = strDest + GetDestination();
+    wxString strDestination = pTask_->GetDestination();
 
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
+    if ( !(strDestination.EndsWith(wxFILE_SEP_PATH)) )
+        strDestination += wxFILE_SEP_PATH;
 
-    strDest =  strDest + GetName() + "." + GetArchiveExtension();
+    strDestination = strDestination + pTask_->GetName();
 
     // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
+    BFBackup::FillBlackfiskPlaceholders(strSource);
+    BFBackup::FillBlackfiskPlaceholders(strDestination);
 
-    // exclude something?
-    wxArrayString* pArr = NULL;
-    if (GetExclude().Count() > 0)
-        pArr = new wxArrayString(GetExclude());
+    // create destination if needed
+    if ( !(wxDir::Exists(strDestination)) )
+        BFCore::Instance().CreatePath(strDestination);
 
-    switch (GetArchiveFormat())
+    // progress ...
+    rProgress.SetLabel ( wxString::Format
+    (
+        _("copy directory %s to %s"),
+        strSource,
+        strDestination
+    ) );
+    rProgress.SetMessage ( _("calculating directories and files") );
+
+    // ** listing source **
+    wxArrayString arrExclude = pTask_->GetExclude();
+    BFCore::GetDirListing(pTask_->GetSource(), arrSource_, &arrExclude);
+
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
+
+    // progress ...
+    rProgress.SetActual ( 0 );
+    rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
+    rProgress.SetLabel ( wxString::Format
+    (
+        _("copy directory %s to %s"),
+        strSource,
+        strDestination
+    ) );
+
+    // backup message ...
+    BFSystem::Backup ( wxString::Format
+    (
+        _("copy directory %s to %s"),
+        strDestination, strSource
+    ) );
+
+    // separate directories and files
+    BFCore::SeparateListingInDirectoriesAndFiles
+    (
+        arrSource_,
+        arrSourceDirs,
+        arrSourceFiles
+    );
+
+    // ** each source dir **
+    for (size_t i = 0; i < arrSourceDirs.GetCount(); i++)
+    {
+        // stop?
+        if ( BFCore::IsStop() )
+            return false;
+
+        // create distination string
+        strA = strDestination + arrSourceDirs[i].Right(arrSourceDirs[i].Length() - strSource.Length());
+
+        // progress ...
+        rProgress.IncrementActualWithMessage(strA);
+
+        // check existence
+        if ( !(wxDirExists(strA)) )
+            BFCore::CreatePath(strA);
+
+        // check some(!) attributes
+        // see VerifyFileAttributes() for more details!
+        if ( !(BFCore::VerifyFileAttributes(arrSourceDirs[i], strA)) )
+            BFCore::CopyDirAttributes(arrSourceDirs[i], strA);
+    }
+
+    // ** each source file **
+    for (size_t i = 0; i < arrSourceFiles.GetCount(); i++)
+    {
+        // stop?
+        if ( BFCore::IsStop() )
+            return false;
+
+        // create destination string
+        strA = strDestination + arrSourceFiles[i].Right(arrSourceFiles[i].Length() - strSource.Length());
+
+        // progress
+        rProgress.IncrementActualWithMessage(strA);
+
+        // copy complete file
+        BFCore::CopyFile
+        (
+            arrSourceFiles[i],      // source
+            strA,                   // destination
+            true,                   // overwrite
+            pTask_->Verify(),       // verify
+            pTask_->VerifyContent() // verify content
+        );
+    }
+
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
+
+	return true;
+}
+
+
+
+bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
+{
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
+
+    // init;
+    arrSource_      .Clear();
+    arrDestination_ .Clear();
+
+    // source
+    wxString strSource = pTask_->GetSource();
+
+	   // destination
+    wxString strDestination = pTask_->GetDestination();
+
+    if ( !(strDestination.EndsWith(wxFILE_SEP_PATH)) )
+        strDestination += wxFILE_SEP_PATH;
+
+    strDestination = strDestination + pTask_->GetName() + "." + pTask_->GetArchiveExtension();
+
+    // handle placeholders
+    BFBackup::FillBlackfiskPlaceholders(strSource);
+    BFBackup::FillBlackfiskPlaceholders(strDestination);
+
+    // progress ...
+    rProgress.SetLabel ( wxString::Format
+    (
+        _("compress directory %s to %s"),
+        strSource,
+        strDestination
+    ) );
+    rProgress.SetMessage ( _("calculating directories and files") );
+
+    // ** listing source **
+    wxArrayString arrExclude = pTask_->GetExclude();
+    BFCore::GetDirListing(pTask_->GetSource(), arrSource_, &arrExclude);
+
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
+
+	// progress ...
+    rProgress.SetActual ( 0 );
+    rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
+	if ( pTask_->Verify() )
+		rProgress.SetRange( rProgress.GetRange() * 2 );
+    rProgress.SetLabel ( wxString::Format
+    (
+        _("compress directory %s to %s"),
+        strSource,
+        strDestination
+    ) );
+
+    // backup message ...
+    BFSystem::Backup ( wxString::Format
+    (
+        _("compress directory %s to %s"),
+        strSource,
+		strDestination
+    ) );
+
+	// archive format
+    switch (pTask_->GetArchiveFormat())
     {
         case CompressZIP:
-            BFCore::Instance().CreateZipFromDir
+            BFCore::Instance().CreateArchive
             (
-                strDest.c_str(),
-                strSrc.c_str(),
-                pArr,
-                Verify(),
+                strDestination,
+                arrSource_,                
                 &rProgress
             );
         break;
@@ -379,71 +537,58 @@ bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
             break;
     }
 
-    // delete temporary exclude array
-    if (pArr != NULL)
-        delete pArr;
+	if ( pTask_->Verify() )
+	{
+		BFCore::Instance().VerifyZip (strDestination, arrSource_, &rProgress);
+	}
 
     return true;
 }
 
 
-bool BFOperation::RunForDirCopy (ProgressWithMessage& rProgress)
-{
-    wxString strDest, strSrc;
-
-    // source
-    strSrc  = GetSource();
-
-    // destination
-    strDest = strDest + GetDestination();
-
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
-
-    strDest = strDest + GetName();
-
-    // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
-
-    // copy dir
-    return BFCore::Instance().CopyDir
-    (
-        strSrc.c_str(),
-        strDest.c_str(),
-        Verify(),
-        VerifyContent(),
-        &rProgress
-    );
-}
-
-
 bool BFOperation::RunForFileCopy(ProgressWithMessage& rProgress)
 {
-    wxString strDest, strSrc;
+    // stop?
+    if ( BFCore::IsStop() )
+        return false;
 
-    // source
-    strSrc  = GetSource();
+	// source
+    wxString strSource = pTask_->GetSource();
 
     // destination
-    strDest = strDest + GetDestination();
+    wxString strDestination = pTask_->GetDestination();
 
-    if ( !(strDest.EndsWith(wxFILE_SEP_PATH)) )
-        strDest = strDest + wxFILE_SEP_PATH;
+    if ( !(strDestination.EndsWith(wxFILE_SEP_PATH)) )
+        strDestination += wxFILE_SEP_PATH;
 
-    strDest = strDest + GetName();
+    strDestination = strDestination + pTask_->GetName();
 
     // handle placeholders
-    FillBlackfiskPlaceholders(strDest);
-    FillBlackfiskPlaceholders(strSrc);
+    BFBackup::FillBlackfiskPlaceholders(strSource);
+    BFBackup::FillBlackfiskPlaceholders(strDestination);
+
+	// progress ...
+    rProgress.SetActual ( 0 );
+    rProgress.SetRange ( 1 );
+    rProgress.SetLabel ( wxString::Format
+    (
+        _("Copy file %s to %s"),
+        strSource,
+        strDestination
+    ) );
 
     // copy file
     return BFCore::Instance().CopyFile
     (
-        strSrc.c_str(),
-        strDest.c_str(),
+        strSource,
+        strDestination,
         true,
-        Verify(),
-        VerifyContent()
+        pTask_->Verify(),
+        pTask_->VerifyContent()
     );
-}*/
+}
+
+void BFOperation::StopOperation ()
+{
+    bStopOperation_ = true;
+}

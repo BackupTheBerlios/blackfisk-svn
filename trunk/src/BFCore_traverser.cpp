@@ -232,10 +232,10 @@ BFCountDirTraverser::BFCountDirTraverser ()
     return wxDIR_CONTINUE;
 }
 
-
+/*
 BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
-                                        MapStringPair* pRememberToVerify /*=NULL*/,
-                                        ProgressWithMessage* pProgress /*= NULL*/)
+                                        MapStringPair* pRememberToVerify /*=NULL*,
+                                        ProgressWithMessage* pProgress /*= NULL*)
                   : strDestination_(strDestinationDirectory),
                     pProgress_(pProgress),
                     pRememberToVerify_(pRememberToVerify)
@@ -243,7 +243,7 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
 }
 
 
-/*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnDir(const wxString& dirname)
+/*virtual* wxDirTraverseResult BFCopyDirTraverser::OnDir(const wxString& dirname)
 {
     if ( BFCore::IsStop() )
         return wxDIR_STOP;
@@ -271,7 +271,7 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
 }
 
 
-/*virtual*/ wxDirTraverseResult BFCopyDirTraverser::OnFile(const wxString& fileName)
+/*virtual* wxDirTraverseResult BFCopyDirTraverser::OnFile(const wxString& fileName)
 {
     if ( BFCore::IsStop() )
         return wxDIR_STOP;
@@ -292,5 +292,5 @@ BFCopyDirTraverser::BFCopyDirTraverser (const wxString& strDestinationDirectory,
         pRememberToVerify_->push_back(PairString(strFrom, strTo));
 
     return wxDIR_CONTINUE;
-}
+}*/
 

@@ -318,11 +318,112 @@ bool BFCore::SetZipEntryFileAttributes (wxFileName& rFn, wxZipEntry* pEntry)
     return VerifyFileAttributes (fn1, fn2);
 }
 
+
+bool BFCore::CreateArchive (const wxString&			strArchiveName,
+							const wxArrayString&	arrEntries,
+							ProgressWithMessage*	pProgress /*= NULL*/)
+{
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
+    // backup message
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("Create archive %s..."), strArchiveName));
+
+	// get source dir
+	wxString strSource = BFApp::ExtractCommunity(arrEntries);
+
+    // init zip streams
+    wxFFileOutputStream out(strArchiveName);
+    wxZipOutputStream   zip(out);
+    wxFFileInputStream* pIn             = NULL;
+    wxZipEntry*         pEntry          = NULL;
+    wxFileName          fileName;
+    long                lLen            = wxString(strSource).Length();
+
+    // check if streams are ready
+    if ( !(out.Ok()) || !(zip.IsOk()) )
+        return false;
+
+    // iterate on files and dirs
+    for (size_t i = 0; i < arrEntries.GetCount(); ++i)
+    {
+        // stop ?
+        if ( BFCore::IsStop() )
+            return false;
+
+        fileName.Assign(arrEntries[i]);
+
+		// backup message
+		if (bWhileBackup_)
+			BFSystem::Backup(wxString::Format(_("Compress %s..."), fileName.GetFullPath()));
+		
+        // is it a file ?
+        if ( fileName.FileExists() )
+        {   // create zip-entry for a file
+
+            pEntry = new wxZipEntry(fileName.GetFullPath().Mid(lLen), fileName.GetModificationTime());
+            pIn = new wxFFileInputStream(fileName.GetFullPath(), "rb");
+            // set file attributes for this entry
+            SetZipEntryFileAttributes(fileName, pEntry);
+            zip.PutNextEntry(pEntry);
+            // write it in the zip-file
+            zip.Write(*pIn);
+        }
+        else
+        {
+            // is a directory
+            if ( fileName.DirExists() )
+            {
+                wxDir dir(arrEntries[i]);
+
+                // if it is an empty directory create it explicit as a zip-entry
+                if ( !(dir.HasFiles() || dir.HasSubDirs()) )
+                    zip.PutNextDirEntry(fileName.GetFullPath().Mid(lLen)); // TODO , fileName.GetModificationTime());
+            }
+            else
+            {
+                BFSystem::Fatal(wxString::Format(_("no file AND no dir: %s"), arrEntries[i]), "BFCore::CreateArchive()");
+
+                if (pProgress != NULL)
+                    pProgress->DoEnd();
+
+                return false;
+            }
+        }
+
+        // progress
+        if (pProgress != NULL)
+            pProgress->IncrementActualWithMessage(arrEntries[i]);
+
+        if (pIn != NULL)
+        {
+            delete pIn;
+            pIn = NULL;
+        }
+    }   // for()
+
+    // close the zip-file
+    zip.Close();
+    out.Close();
+
+    if (bWhileBackup_)
+        BFSystem::Backup(wxString::Format(_("%s compressed to %s"), strSource, strArchiveName));
+
+    // stop ?
+    if ( BFCore::IsStop() )
+        return false;
+
+    return true;
+}
+
+/*
 bool BFCore::CreateZipFromDir (const wxString& strZipName,
                                const wxString& strSourceDir,
                                wxArrayString* pExcludeListing,
                                bool bVerify,
-                               ProgressWithMessage* pProgress /*= NULL*/)
+                               ProgressWithMessage* pProgress /*= NULL*)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -433,7 +534,7 @@ bool BFCore::CreateZipFromDir (const wxString& strZipName,
     }
 
     return true;
-}
+}*/
 
 
 bool BFCore::VerifyZip (const wxString& strZipFileName, wxArrayString& arrFiles, ProgressWithMessage* pProgress /*= NULL*/)
@@ -917,12 +1018,12 @@ long BFCore::GetDirFileCount(const wxString& strDir,
     return true;
 }
 
-
+/*
 bool BFCore::CopyDir (const wxString&       strSourceDir,
                       const wxString&       strDestinationDir,
                       bool                  bVerify,
-                      bool                  bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*/,
-                      ProgressWithMessage*  pProgress /*= NULL*/)
+                      bool                  bVerifyContent /*= BF_VERIFY_CONTENT_DEFAULT*,
+                      ProgressWithMessage*  pProgress /*= NULL*)
 {
     // stop ?
     if ( BFCore::IsStop() )
@@ -990,7 +1091,7 @@ bool BFCore::CopyDir (const wxString&       strSourceDir,
     }
 
     return true;
-}
+}*/
 
 
 /*static*/ bool BFCore::HasFileAttribute_ReadOnly (const wxString& strFilename)

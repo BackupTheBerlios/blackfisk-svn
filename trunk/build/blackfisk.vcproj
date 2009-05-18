@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug Dynamic|Win32"
-			OutputDirectory=".out\$(ConfigurationName)"
+			OutputDirectory="..\"
 			IntermediateDirectory=".out\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw29ud_adv.lib wxmsw29ud_core.lib wxbase29ud.lib wxbase29ud_net.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib"
-				OutputFile="..\$(ProjectName)_$(ConfigurationName)_msvc.exe"
+				OutputFile="$(OutDir)$(ProjectName)_$(ConfigurationName)_msvc.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_dll&quot;"
 				GenerateDebugInformation="true"
@@ -91,13 +91,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Delete &quot;..\$(TargetName).exp&quot;, &quot;..\$(TargetName).ilk&quot; and &quot;..\$(TargetName).lib&quot;."
-				CommandLine="del &quot;..\$(TargetName).exp&quot;"
+				Description="Delete &quot;..\$(TargetName).ilk&quot;."
+				CommandLine="del &quot;..\$(TargetName).ilk&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release Static|Win32"
-			OutputDirectory=".out\$(ConfigurationName)"
+			OutputDirectory="..\"
 			IntermediateDirectory=".out\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw29u_adv.lib wxmsw29u_core.lib wxbase29u.lib wxbase29u_net.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib wininet.lib"
-				OutputFile="..\$(ProjectName)_$(ConfigurationName)_msvc.exe"
+				OutputFile="$(OutDir)$(ProjectName)_$(ConfigurationName)_msvc.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateDebugInformation="false"
@@ -174,7 +174,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 		</Configuration>
@@ -591,6 +590,42 @@
 			</File>
 			<File
 				RelativePath="..\third-party\wxSerialize\src\wxSerialize.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Doc"
+			>
+			<File
+				RelativePath="..\CHANGELOG"
+				>
+			</File>
+			<File
+				RelativePath="..\CREDITS"
+				>
+			</File>
+			<File
+				RelativePath="..\HISTORY"
+				>
+			</File>
+			<File
+				RelativePath="..\INSTALL"
+				>
+			</File>
+			<File
+				RelativePath="..\LICENSE"
+				>
+			</File>
+			<File
+				RelativePath="..\README"
+				>
+			</File>
+			<File
+				RelativePath=".\README"
+				>
+			</File>
+			<File
+				RelativePath="..\TODO"
 				>
 			</File>
 		</Filter>
