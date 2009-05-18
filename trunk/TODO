@@ -1,9 +1,3 @@
-- new Backup Engine (BFProject, BFBackup, BFTask, BFOperation) is full implemented now (it is Beta)
-- outcommented a lot of code of the old Backup Engine
-- FIXED: Microsoft Visual C++ 2008 Express Edition does work now
-
-- BUG?: "default project settings" are used for new projects?
-
 - BUG: modify destination on volumes cause in crash!
 -    : "add as destination directory" (dir-ctrl) crashes
 -    : PopupMenu() used with wxMenu on stack or heap? (causes in crash with MSVC but not with MinGw)

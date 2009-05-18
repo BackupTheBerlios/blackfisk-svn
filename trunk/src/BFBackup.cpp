@@ -68,6 +68,8 @@ BFBackup::BFBackup (BFProject* pProject)
 void BFBackup::Reset ()
 {
     pProject_->Reset();
+	pProject_->GetSettings() = BFSettings::Instance().GetDefaultProjectSettings();
+
     ClearOperationVector();
     strCurrentFilename_ = wxEmptyString;
     bStopBackup_        = false;
