@@ -30,6 +30,7 @@
 #include <wx/protocol/ftp.h>
 #include <wx/snglinst.h>
 #include <wx/msw/registry.h>
+#include <wx/mimetype.h>
 
 #include "blackfisk.h"
 #include "BFMainFrame.h"
@@ -210,6 +211,65 @@ void BFApp::DisplayUsage ()
     out->Printf("  -h|--help                Display this text.");
 }
 
+void BFApp::CheckFileTypeRegistration ()
+{
+	//
+	bool bDoRegister = true;
+
+	// the mime types manager
+	wxMimeTypesManager mgr;
+
+	// get our file type
+	wxFileType* pFileType = mgr.GetFileTypeFromExtension (BF_PROJECT_EXTENSION);
+
+	// is there still a registration?
+	if ( pFileType )
+	{		
+		wxString strCmd = pFileType->GetOpenCommand(wxString("test.") + BF_PROJECT_EXTENSION);
+
+		if ( strCmd == BFEnvironment::GetDocumentOpenCommand() )
+		{
+			bDoRegister = false;
+		}
+		else
+		{
+			BFSystem::Log(wxString::Format
+			(
+				_("Documenttype \"%s\" is not registered for me.\nCurrent registration: \"%s\"\nModify registration to myself."),
+				BF_PROJECT_EXTENSION,
+				strCmd
+			));
+		}
+
+		delete pFileType;
+	}
+	else
+	{
+		BFSystem::Log(wxString::Format(_("No documenttype registration for %s found."), BF_PROJECT_EXTENSION));
+	}
+
+	if ( bDoRegister )
+	{
+        static const wxFileTypeInfo fallbacks[] =
+        {
+            wxFileTypeInfo(_("document/bfp"),
+							BFEnvironment::GetDocumentOpenCommand(),
+                           "xxx",
+                           _("Blackfisk Backup Project"),
+						   "bfp", wxNullPtr, wxNullPtr),
+            wxFileTypeInfo()
+        };
+
+		BFSystem::Log(wxString::Format
+		(
+			_("Register documenttype \"%s\" for \"%s\""),
+			BF_PROJECT_EXTENSION,
+			BFEnvironment::GetDocumentOpenCommand()
+		));
+        mgr.AddFallbacks(fallbacks);
+	}
+}
+
 bool BFApp::OnInit()
 {
     // check if another instance is running
@@ -227,7 +287,7 @@ bool BFApp::OnInit()
     }
 
     //
-    BFEnvironment::RememberApplicationDirectory(argv);
+    BFEnvironment::RememberApplicationDirectoryAndName(argv);
 
     //
     pLog_ = new BFLog();
@@ -265,13 +325,16 @@ bool BFApp::OnInit()
     ReadSettings();
 
     //
-    pLog_->SetMaxSize(BFSettings::Instance().GetMaxLogFileSize());
+    pLog_->SetMaxSizeInB(BFSettings::Instance().GetMaxLogFileSizeInKB() * 1024);
     pLog_->CareSize();
 
     // init locals
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
+
+	// check file registration
+	CheckFileTypeRegistration ();
 
     // check the scheduler
     if ( BFSettings::Instance().GetScheduler() == 1 )
@@ -523,3 +586,5 @@ void BFApp::RemoveSchedulerFromAutostart ()
     wxRegKey key(BF_REGKEY_AUTOSTART);
     key.DeleteValue(BF_REGKEY_VALUE);
 }
+
+
