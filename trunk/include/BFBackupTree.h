@@ -177,7 +177,7 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         virtual ~BFBackupTree ();
 
         ///
-        static wxMenu& GenerateBackupMenu (wxMenu& menu, bool bOnDir, bool bBackup = true);
+        static wxMenu* GenerateBackupMenu (wxMenu*& pMenu, bool bOnDir, bool bBackup = true);
 
         ///
         void Init ();

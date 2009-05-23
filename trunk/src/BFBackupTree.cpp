@@ -309,8 +309,12 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
 }
 
 
-/*static*/ wxMenu& BFBackupTree::GenerateBackupMenu (wxMenu& menu, bool bOnDir, bool bBackup /*= true*/)
+/*static*/ wxMenu* BFBackupTree::GenerateBackupMenu (wxMenu*& pMenu, bool bOnDir, bool bBackup /*= true*/)
 {
+	// check parameter
+	if ( pMenu == NULL )
+		pMenu = new wxMenu;
+
     wxMenuItem *pItem = NULL;
     int id;
 
@@ -323,9 +327,9 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
         else
             id = BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR;
 
-        pItem = new wxMenuItem(&menu, id, _("copy directory"));
+        pItem = new wxMenuItem(pMenu, id, _("copy directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
-        menu.Append(pItem);
+        pMenu->Append(pItem);
 
         // ** backup sync dir **
         if (bBackup)
@@ -333,9 +337,9 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
         else
             id = BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR;
 
-        pItem = new wxMenuItem(&menu, id, _("synchronise directory"));
+        pItem = new wxMenuItem(pMenu, id, _("synchronise directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
-        menu.Append(pItem);
+        pMenu->Append(pItem);
 
         // ** backup archive dir **
         if (bBackup)
@@ -343,25 +347,27 @@ void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
         else
             id = BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR;
 
-        pItem = new wxMenuItem(&menu, id, _("archive/compress directory"));
+        pItem = new wxMenuItem(pMenu, id, _("archive/compress directory"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
-        menu.Append(pItem);
+        pMenu->Append(pItem);
     }
     else
     {
         // ** backup file copy **
-        pItem = new wxMenuItem(&menu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
+        pItem = new wxMenuItem(pMenu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
         pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
-        menu.Append(pItem);
+        pMenu->Append(pItem);
     }
 
-    return menu;
+    return pMenu;
 }
 
 void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 {
     wxPoint         point   (rEvent.GetPoint());
-    wxMenu          menu, menu_backup, menu_type;
+    wxMenu          menu;
+	wxMenu*			pMenu_backup = NULL;
+	wxMenu*			pMenu_type = NULL;
     wxString        strLabel_ModifyTaskType(_("modify all sub-tasks to ..."));
     wxString        strLabel_DeleteTask(_("delete task"));
     wxString        strLabel_CreateDest(_("create destination directory"));
@@ -390,8 +396,8 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
         // ** modify types **
         if ( vecLastChildTasks_.size() > 0)
         {
-            BFBackupTree::GenerateBackupMenu(menu_type, true, false);
-            menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+            BFBackupTree::GenerateBackupMenu(pMenu_type, true, false);
+            menu.AppendSubMenu(pMenu_type, strLabel_ModifyTaskType);
         }
 
         // separator
@@ -399,11 +405,11 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
 
         // ** backup **
         if (pTask->GetType() == TaskFILECOPY)
-            BFBackupTree::GenerateBackupMenu(menu_backup, false);
+            BFBackupTree::GenerateBackupMenu(pMenu_backup, false);
         else
-            BFBackupTree::GenerateBackupMenu(menu_backup, true);
+            BFBackupTree::GenerateBackupMenu(pMenu_backup, true);
 
-        menu.AppendSubMenu(&menu_backup, strLabel_Backup);
+        menu.AppendSubMenu(pMenu_backup, strLabel_Backup);
 
         // separator
         menu.AppendSeparator();
@@ -426,8 +432,8 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
             // ** modify types **
             if ( vecLastChildTasks_.size() > 0)
             {
-                BFBackupTree::GenerateBackupMenu(menu_type, true, false);
-                menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+                BFBackupTree::GenerateBackupMenu(pMenu_type, true, false);
+                menu.AppendSubMenu(pMenu_type, strLabel_ModifyTaskType);
             }
 
             menu.AppendSeparator();
@@ -449,13 +455,13 @@ void BFBackupTree::OnItemMenu(wxTreeEvent& rEvent)
             // ** modify types **
             if ( vecLastChildTasks_.size() > 0)
             {
-                BFBackupTree::GenerateBackupMenu(menu_type, true, false);
-                menu.AppendSubMenu(&menu_type, strLabel_ModifyTaskType);
+                BFBackupTree::GenerateBackupMenu(pMenu_type, true, false);
+                menu.AppendSubMenu(pMenu_type, strLabel_ModifyTaskType);
             }
 
             menu.AppendSeparator();
-            BFBackupTree::GenerateBackupMenu(menu_backup, true);
-            menu.AppendSubMenu(&menu_backup, strLabel_Backup);
+            BFBackupTree::GenerateBackupMenu(pMenu_backup, true);
+            menu.AppendSubMenu(pMenu_backup, strLabel_Backup);
         }
     }
 
@@ -519,15 +525,15 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     if (filenames.Count() == 0)
         return false;
 
-    wxMenu                  menu;
+    wxMenu*					pMenu;
     wxString                str;
 
     if ( wxFile::Exists(filenames[0]) )
         // ** copy file **
-        BFBackupTree::GenerateBackupMenu(menu, false);
+        BFBackupTree::GenerateBackupMenu(pMenu, false);
     else
         // ** directory (existing and unexisting/created while backup) **
-        BFBackupTree::GenerateBackupMenu(menu, true);
+        BFBackupTree::GenerateBackupMenu(pMenu, true);
 
     // remember the filename for use in other methodes
     SetDropedFilename(filenames[0]);
@@ -544,7 +550,7 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
         strCurrentDestination_ = pItemData->GetPath();
 
     // show the menu
-    PopupMenu(&menu, wxPoint(x, y));
+    PopupMenu(pMenu, wxPoint(x, y));
 
     return true;
 }

@@ -553,7 +553,7 @@ void BFSettingsDlg::GetData ()
     pCheckFiles_->SetValue(rS.GetWithFiles());
     pCheckHiddenFiles_->SetValue(rS.GetShowHiddenFiles());
     pCheckSwitchTrees_->SetValue(rS.GetSwitchMainCtrls());
-    pSpinLogSize_->SetValue(rS.GetMaxLogFileSize());
+    pSpinLogSize_->SetValue(rS.GetMaxLogFileSizeInKB());
     pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
     if (rS.GetDaysTillNextCheck() == 0)
     {
@@ -613,7 +613,7 @@ void BFSettingsDlg::SetData ()
     rS.SetWithFiles(pCheckFiles_->GetValue());
     rS.SetShowHiddenFiles(pCheckHiddenFiles_->GetValue());
     rS.SetSwitchMainCtrls(pCheckSwitchTrees_->GetValue());
-    rS.SetMaxLogFileSize(pSpinLogSize_->GetValue());
+    rS.SetMaxLogFileSizeInKB(pSpinLogSize_->GetValue());
     pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());
     if (pCheckNewVersion_->GetValue())
     {

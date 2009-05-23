@@ -1,8 +1,8 @@
-- BUG: modify destination on volumes cause in crash!
--    : "add as destination directory" (dir-ctrl) crashes
--    : PopupMenu() used with wxMenu on stack or heap? (causes in crash with MSVC but not with MinGw)
+- BUGFIX: incorrect calculation of max-log file size
+- BUGFIX: using context menus cause in crash
 
 - register BFP-Files with wxMimeTypesManager::AddFallback
+
 - maybe kill Progress::bDeadCountMode_ & all affected members?
 
 - fix wxSerialize compiler warnings

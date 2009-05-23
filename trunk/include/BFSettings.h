@@ -49,7 +49,7 @@ class BFSettings
         bool                bWithFiles_;
         /** max size of the application logfile in KB
             size does not matter if it is '0' */
-        wxUint32            lMaxLogFileSize_;
+        wxUint32            lMaxLogFileSizeKB_;
         /** open the last opened project on start */
         bool                bOpenLastProject_;
         /** last opened projecte */
@@ -125,9 +125,9 @@ class BFSettings
         ///
         void SetWithFiles (bool bWithFiles);
         /// return the maximum size of a log file in kilobyte
-        wxUint32 GetMaxLogFileSize ();
+        wxUint32 GetMaxLogFileSizeInKB ();
         ///
-        void SetMaxLogFileSize (wxUint32 lSizeInKiloByte);
+        void SetMaxLogFileSizeInKB (wxUint32 lSizeInKiloByte);
         ///
         const wxString& GetLastProject ();
         ///

@@ -50,7 +50,7 @@ void BFSettings::InitDefaultValues()
 {
     bFillBlackfiskPlaceholders_     = false;
     bWithFiles_                     = false;
-    lMaxLogFileSize_                = 1024;
+    lMaxLogFileSizeKB_				= 1024;
     bOpenLastProject_               = false;
     verboseLog_                     = MsgINFO;
     lang_                           = wxLANGUAGE_DEFAULT;
@@ -99,17 +99,17 @@ void BFSettings::SetWithFiles (bool bWithFiles)
     bWithFiles_ = bWithFiles;
 }
 
-wxUint32 BFSettings::GetMaxLogFileSize ()
+wxUint32 BFSettings::GetMaxLogFileSizeInKB ()
 {
-    return lMaxLogFileSize_;
+    return lMaxLogFileSizeKB_;
 }
 
-void BFSettings::SetMaxLogFileSize (wxUint32 lSizeInKiloByte)
+void BFSettings::SetMaxLogFileSizeInKB (wxUint32 lSizeInKiloByte)
 {
     if (lSizeInKiloByte < 0)
-        lMaxLogFileSize_ = 0;
+        lMaxLogFileSizeKB_ = 0;
     else
-        lMaxLogFileSize_ = lSizeInKiloByte;
+        lMaxLogFileSizeKB_ = lSizeInKiloByte;
 }
 
 const wxString& BFSettings::GetLastProject ()
@@ -300,7 +300,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         defaultPrj_.Serialize(rA);
         rA << bFillBlackfiskPlaceholders_;
         rA << bWithFiles_;
-        rA << lMaxLogFileSize_;
+        rA << lMaxLogFileSizeKB_;
         rA << strLastProject_;
         rA << bOpenLastProject_;
         rA << (int)verboseLog_;
@@ -324,7 +324,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         defaultPrj_.Serialize(rA);
         rA >> bFillBlackfiskPlaceholders_;
         rA >> bWithFiles_;
-        rA >> (wxUint32&)lMaxLogFileSize_;
+        rA >> (wxUint32&)lMaxLogFileSizeKB_;
         rA >> strLastProject_;
         rA >> bOpenLastProject_;
         rA >> (int&)verboseLog_;

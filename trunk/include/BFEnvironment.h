@@ -34,8 +34,11 @@ class BFEnvironment
         /// ctor
         BFEnvironment ();
 
-        ///
+        /// the path to the binary
         static wxString     strApplicationDir_;
+		/// the file name of the binary
+		static wxString		strApplicationName_;
+
         /** If 'true' the current backup project is opened
             with the option '--run'. Normaly it is done by
             schedulers. */
@@ -46,10 +49,16 @@ class BFEnvironment
         virtual ~BFEnvironment ();
 
         ///
-        static void RememberApplicationDirectory (const wxCmdLineArgsArray& argv);
+        static void RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv);
 
-        ///
+        /// Please see 'strApplicationDir_' for more details.
         static const wxString& GetApplicationDirectory ();
+		/// Please see 'strApplicationName_' for more details.
+		static const wxString& GetApplicationName ();
+		/// Please see 'strApplicationDir_' and 'strApplicationName_' for more details.
+		static wxString GetApplicationFullName ();
+		///
+		static wxString GetDocumentOpenCommand ();
         ///
         static const wxString GetLogFileName ();
         ///

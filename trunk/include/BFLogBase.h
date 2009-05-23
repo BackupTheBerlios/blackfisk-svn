@@ -34,7 +34,7 @@ class BFLogBase : public Observer
         /** max size of a file in bytes
             it is handled in CareSize()
             set it to '0' if the size does not matter */
-        long        lMaxSize_;
+        long        lMaxSizeInB_;
 
     protected:
         /// the name of the logfile
@@ -54,9 +54,9 @@ class BFLogBase : public Observer
         void CareSize ();
 
         /// return the maximum size in bytes
-        long GetMaxSize ();
+        long GetMaxSizeInB ();
         ///
-        void SetMaxSize (long lMaxSizeInBytes);
+        void SetMaxSizeInB (long lMaxSizeInBytes);
 
 };    // class BFLogBase
 

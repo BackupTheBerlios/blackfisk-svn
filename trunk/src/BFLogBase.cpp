@@ -26,7 +26,7 @@
 
 BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0*/ )
      : Observer(&(BFSystem::Instance())),
-       lMaxSize_(lMaxSizeInBytes),
+       lMaxSizeInB_(lMaxSizeInBytes),
        strLogFileName_(strLogFileName),
        fileLog_(strLogFileName, wxFile::write_append)
 {
@@ -36,27 +36,27 @@ BFLogBase::BFLogBase (const wxString& strLogFileName, long lMaxSizeInBytes /*= 0
 {
 }
 
-long BFLogBase::GetMaxSize ()
+long BFLogBase::GetMaxSizeInB ()
 {
-    return lMaxSize_;
+    return lMaxSizeInB_;
 }
 
-void BFLogBase::SetMaxSize (long lMaxSizeInBytes)
+void BFLogBase::SetMaxSizeInB (long lMaxSizeInBytes)
 {
-    lMaxSize_ = lMaxSizeInBytes;
+    lMaxSizeInB_ = lMaxSizeInBytes;
 }
 
 void BFLogBase::CareSize ()
 {
     // the size does not matter
-    if (GetMaxSize() <= 0)
+    if (GetMaxSizeInB() <= 0)
         return;
 
     if ( !(fileLog_.IsOpened()) )
         return;
 
     // check log-file size
-    if (fileLog_.Length() > GetMaxSize())
+    if (fileLog_.Length() > GetMaxSizeInB())
     {
         // close the file
         fileLog_.Close();

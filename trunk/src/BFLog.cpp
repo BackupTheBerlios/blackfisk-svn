@@ -27,7 +27,7 @@
 
 BFLog::BFLog ()
      : BFLogBase(BFEnvironment::GetLogFileName(),
-                 BFSettings::Instance().GetMaxLogFileSize()*1024)
+                 BFSettings::Instance().GetMaxLogFileSizeInKB()*1024)
 {
     fileLog_.Write("\n");
 }

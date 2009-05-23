@@ -146,7 +146,8 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     pDirCtrl_->GetTreeCtrl()->SelectItem(event.GetItem());
 
     // create a menu object
-    wxMenu menu, menu_backup;
+    wxMenu menu;
+	wxMenu* pMenu_backup = NULL;
 
     // get selected item in the dir control
     wxDirItemData* pDirItem = dynamic_cast<wxDirItemData*>(pDirCtrl_->GetTreeCtrl()->GetItemData(event.GetItem()));
@@ -154,8 +155,8 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     // check if it is a dir
     if ( pDirItem != NULL && pDirItem->m_isDir )
     {
-        BFBackupTree::GenerateBackupMenu(menu_backup, true);
-        menu.AppendSubMenu(&menu_backup, _("backup"));
+        BFBackupTree::GenerateBackupMenu(pMenu_backup, true);
+        menu.AppendSubMenu(pMenu_backup, _("backup"));
         menu.AppendSeparator();
         // ** add destination **
         menu.Append(BFDIRCTRL_ID_ADDDESTINATION, _("add as destination directory"));
@@ -164,8 +165,8 @@ void BFDirCtrl::OnItemMenu (wxTreeEvent& event)
     }
     else
     {
-        BFBackupTree::GenerateBackupMenu(menu_backup, false);
-        menu.AppendSubMenu(&menu_backup, _("backup"));
+        BFBackupTree::GenerateBackupMenu(pMenu_backup, false);
+        menu.AppendSubMenu(pMenu_backup, _("backup"));
     }
 
     // popup the menu

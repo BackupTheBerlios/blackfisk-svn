@@ -26,6 +26,7 @@
 #include <wx/filefn.h>
 
 /*static*/ wxString BFEnvironment::strApplicationDir_   = wxEmptyString;
+/*static*/ wxString BFEnvironment::strApplicationName_	= wxEmptyString;
 /*static*/ bool     BFEnvironment::bProjectScheduled_   = false;
 
 BFEnvironment::BFEnvironment ()
@@ -38,23 +39,40 @@ BFEnvironment::BFEnvironment ()
 }
 
 
-/*static*/ void BFEnvironment::RememberApplicationDirectory (const wxCmdLineArgsArray& argv)
+/*static*/ void BFEnvironment::RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv)
 {
-#ifdef _DEBUG
+/*XXX #ifdef _DEBUG
     // this is needed because of mysterious debuger internals
     strApplicationDir_ = "D:\\Garage\\projekte\\blackfisk\\trunk";
     return;
-#endif
+#endif*/
 
     strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
 
     if (strApplicationDir_.IsEmpty())
         strApplicationDir_ = wxGetCwd();
+
+	strApplicationName_ = argv[0].AfterLast(wxFILE_SEP_PATH);
 }
 
 /*static*/ const wxString& BFEnvironment::GetApplicationDirectory ()
 {
     return strApplicationDir_;
+}
+
+/*static*/ const wxString& BFEnvironment::GetApplicationName ()
+{
+    return strApplicationName_;
+}
+
+/*static*/ wxString BFEnvironment::GetApplicationFullName ()
+{
+    return GetApplicationDirectory() + wxFILE_SEP_PATH + GetApplicationName();
+}
+
+/*static*/ wxString BFEnvironment::GetDocumentOpenCommand ()
+{
+	return GetApplicationFullName() + " %s";
 }
 
 /*static*/ const wxString BFEnvironment::GetLogFileName ()
