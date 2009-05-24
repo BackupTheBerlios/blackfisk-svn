@@ -525,7 +525,7 @@ bool BFBackupTree::OnDropFiles (wxCoord x, wxCoord y, const wxArrayString& filen
     if (filenames.Count() == 0)
         return false;
 
-    wxMenu*					pMenu;
+    wxMenu*					pMenu = NULL;
     wxString                str;
 
     if ( wxFile::Exists(filenames[0]) )

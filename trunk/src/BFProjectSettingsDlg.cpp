@@ -115,7 +115,10 @@ void BFProjectSettingsDlg::OnButton_Ok (wxCommandEvent& rEvent)
     SetData();
 
 	if ( BFProject::Instance().IsModified() && BFSettings::Instance().GetAutosaveProjects() )
+	{
+		BFSystem::Log(_("Autosave current project..."));
 		wxGetApp().SaveCurrentProject();
+	}
 
     Close();
 }

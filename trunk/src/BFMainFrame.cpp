@@ -53,7 +53,7 @@
 #include "BFBitmapButton.h"
 #include "BFProjectPlannerDlg.h"
 #include "BFEnvironment.h"
-
+#include "BFProject.h"
 
 BEGIN_EVENT_TABLE(BFMainFrame, wxFrame)
     EVT_CLOSE   (BFMainFrame::OnClose)
@@ -292,6 +292,7 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
         // ask for save
 		if ( BFSettings::Instance().GetAutosaveProjects() )
 		{
+			BFSystem::Log(_("Autosave current project..."));
 			iAnswer = wxID_YES;
 		}
 		else
@@ -513,6 +514,7 @@ bool BFMainFrame::AskModification ()
         // ask for save
 		if ( BFSettings::Instance().GetAutosaveProjects() )
 		{
+			BFSystem::Log(_("Autosave current project..."));
 			iAnswer = wxID_YES;
 		}
 		else
@@ -583,6 +585,9 @@ bool BFMainFrame::AskSaveProject (wxString& strProject)
     if (dlg.ShowModal() == wxID_OK)
     {
         strProject = dlg.GetPath();
+
+		BFProject::Instance().GetSettings().SetBackupLogLocation( strProject.BeforeLast(wxFILE_SEP_PATH) );
+
         return true;
     }
 
@@ -605,14 +610,8 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-	wxArrayString arr;
-	wxProcess* pProcess = new wxProcess(wxPROCESS_REDIRECT);
-	BFSound::Warning();
-	BFSound::Warning();
-	//wxExecute("C:\\Programme\\wxPTB\\wxPTB -o D:\\ptb.sig", arr, wxEXEC_ASYNC | wxEXEC_NODISABLE);
-	wxExecute("C:\\Programme\\wxPTB\\wxPTB -o D:\\ptb.sig", wxEXEC_ASYNC | wxEXEC_NOHIDE, pProcess);
-	BFSound::Finish();
-	pProcess->Detach();
+	BFSystem::Fatal(wxGetCwd());
+	BFSystem::Log("LOG ME");
 }
 
 #endif
@@ -627,6 +626,7 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
         // ask for save
 		if ( BFSettings::Instance().GetAutosaveProjects() )
 		{
+			BFSystem::Log(_("Autosave current project..."));
 			iAnswer = wxID_YES;
 		}
 		else

@@ -1,61 +1,54 @@
-- OUTCOMMENTED Progress::bDeadCountMode_ & all affected members
-- ADD global setting: Autosave Projects
-  + INCREMENTE settings version to 1050
-  + ADD BFSettings::bAutosaveProject_
-  + IMPROVED BFSettingsDlg for it
-  + IMPLEMENTED autosave behaviour on closing and running projects and closing project settings
-
+- autosaveing a project is logged
+- backup-log location is set correct on the first save of a project
 
 - register BFP-Files with wxMimeTypesManager::AddFallback
-- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 
 - tooltip with task-infos on mouse-over on a backup-task
 - tooltips on BFHyperlinkCtrl with URL
 - remove verify-flag on sync-tasks?
 
 
-
 - Drag&Drop source to an empty project open a task-dialog with an empty destination
   -> "select destination dialog" should open automaticly in that case
 
-0.0.1
+0.0.2
 ~~~~~
 - Backup-LOG: Zusammenfassung (Zählung) der copy, delete, create aktionen (hauptsächlich bei sync)
 - improve BFBackupInfoCtrl with easier readable messages (icons, colors)
   maybe with wxListBox, wxListCtrl or wxGrid
 - log files as parseable (for icons) text-files and/or standard conform html-files or pdf
-
-0.0.2
-~~~~~
-- WebUpdater
 - changing the destination of a sync-task should move the exsiting destination, too (ask the user)
 - don't make a complete rebuild of BFBackupCtrl if just a new task is added
-- using commandline without gui (controlable by things like cronjob)
-- new advanced-option: ask-on-message (true/false) while autorun (non-gui)
-- remember last concret backup files and delete them automaticly (by count, by timespan, by size)
-- auto-update: run tasks different times (e.g. TaskA each day, TaskB just each week)
-- BUG: freez on not enough space
 - check for enough free space on destination drive
-- make date and time format customizable
++ beautyize and ergonomize the dialogs
 
 0.0.3
 ~~~~~
+- using commandline without gui (controlable by things like cronjob)
+- new advanced-option: ask-on-message (true/false) while autorun (non-gui)
+- remember last concret backup files and delete them automaticly (by count, by timespan, by size)
+- auto-backup: run tasks different times (e.g. TaskA each day, TaskB just each week)
+- make date and time format customizable
+- backup to password-protected-samba
+- backup to ftp
+
+
+0.0.4
+~~~~~
 - (???) correct sorting of dirs and tasks (first sub-dirs and then tasks) when DnD a task to a new destination
 - (maybe) improved exclude-control for directory-tasks (wxVirtualDirTreeCtrl from JBode; with filters: look on "abakt")
-- help: tutorials/howtos with wink
-- full customizable keybord-shortcuts based on the menus
 - size informations about backuped files, etc
 
 0.0.4 and later
 ~~~~~
+- help: tutorials/howtos with wink
+- full customizable keybord-shortcuts based on the menus
+- WebUpdater
 - more translations
-- backup to password-protected-samba
 
-- backup to ftp
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
 
 + look on "abakt" for more ideas
-+ beautyize the dialogs
 + TaskPlaner: schtasks
 + TaskScheduler: <http://msdn.microsoft.com/en-us/library/aa446861(VS.85).aspx>
 + installer: <http://nsis.sourceforge.net/Main_Page>
