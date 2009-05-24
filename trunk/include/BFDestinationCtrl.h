@@ -51,6 +51,9 @@ class BFDestinationCtrl : public wxBoxSizer
         /// virtual destructor
         virtual ~BFDestinationCtrl ();
 
+		///
+		void OpenDirPicker ();
+
         ///
         wxString GetPath ();
         ///

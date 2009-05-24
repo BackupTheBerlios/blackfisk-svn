@@ -50,7 +50,7 @@ BFDestinationCtrl::BFDestinationCtrl (wxWindow*         pParent,
                         pParent,
                         wxID_ANY,
                         wxEmptyString,
-                        _("select a destination folder"),
+                        _("Please select a destination folder..."),
                         wxDefaultPosition,
                         wxDefaultSize,
                         wxDIRP_USE_TEXTCTRL
@@ -76,6 +76,14 @@ BFDestinationCtrl::BFDestinationCtrl (wxWindow*         pParent,
 //
 /*virtual*/ BFDestinationCtrl::~BFDestinationCtrl ()
 {
+}
+
+void BFDestinationCtrl::OpenDirPicker ()
+{
+	wxGenericFileDirButton* pPicker = dynamic_cast<wxGenericFileDirButton*>(pPickerCtrl_->GetPickerCtrl());
+	
+	if (pPicker)
+		pPicker->OnButtonClick(wxCommandEvent());
 }
 
 wxString BFDestinationCtrl::GetPath ()

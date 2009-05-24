@@ -357,7 +357,14 @@ bool BFApp::OnInit()
             strCmdOpen_ = BFSettings::Instance().GetLastProject();
 
     if ( !(strCmdOpen_.IsEmpty()) )
-        OpenProject(strCmdOpen_);
+	{
+		// open the last project
+		if ( OpenProject(strCmdOpen_) == false )
+		{
+			// if there is an error
+			BFSettings::Instance().SetLastProject(wxEmptyString);
+		}
+	}
 
     /* init the main frame
        'BFApp::spMainFrame_' is set by the ctor of BFMainFrame itself */

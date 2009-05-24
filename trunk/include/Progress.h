@@ -40,11 +40,6 @@ class Progress : public Subject
             see BFSynchroniseDirTraverser::OnDir() for an example how to use it */
 		bool            bLocked_;
 
-		/** */
-		//bool            bDeadCountMode_;
-		/** */
-		//long            deadcounts_;
-
 	public:
         ///
 		Progress();

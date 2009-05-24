@@ -1,18 +1,13 @@
-- autosaveing a project is logged
-- backup-log location is set correct on the first save of a project
+- KILLED outcommented code for class Progress
+- ADD void BFDestinationCtrl::OpenDirPicker() and use it with BFTaskDlg
 
 - register BFP-Files with wxMimeTypesManager::AddFallback
 
+0.0.2
+~~~~~
 - tooltip with task-infos on mouse-over on a backup-task
 - tooltips on BFHyperlinkCtrl with URL
 - remove verify-flag on sync-tasks?
-
-
-- Drag&Drop source to an empty project open a task-dialog with an empty destination
-  -> "select destination dialog" should open automaticly in that case
-
-0.0.2
-~~~~~
 - Backup-LOG: Zusammenfassung (Zählung) der copy, delete, create aktionen (hauptsächlich bei sync)
 - improve BFBackupInfoCtrl with easier readable messages (icons, colors)
   maybe with wxListBox, wxListCtrl or wxGrid

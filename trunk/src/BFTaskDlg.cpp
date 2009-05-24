@@ -95,6 +95,11 @@ BFTaskDlg::BFTaskDlg (wxWindow* pParent,
        so we need to simulate a modal dialog */
 
     Fit();
+
+	/* If there is no destination open the
+	   ask-for-destination dialog automaticly. */
+	if ( pDestCtrl_->GetPath().Len() == 0 )
+		pDestCtrl_->OpenDirPicker();
 }
 
 /*virtual*/ BFTaskDlg::~BFTaskDlg ()
