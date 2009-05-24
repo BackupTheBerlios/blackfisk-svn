@@ -213,61 +213,24 @@ void BFApp::DisplayUsage ()
 
 void BFApp::CheckFileTypeRegistration ()
 {
-	//
-	bool bDoRegister = true;
-
 	// the mime types manager
 	wxMimeTypesManager mgr;
 
-	// get our file type
-	wxFileType* pFileType = mgr.GetFileTypeFromExtension (BF_PROJECT_EXTENSION);
+	wxArrayString arrString;
+	// mime
+	arrString.Add(wxString("document/") + BF_PROJECT_EXTENSION);
+	// open command
+	arrString.Add(BFEnvironment::GetDocumentOpenCommand());
+	// print command
+	arrString.Add(wxEmptyString);
+	// description
+	arrString.Add("Blackfisk Backup Project");
+	// extension
+	arrString.Add(BF_PROJECT_EXTENSION);
 
-	// is there still a registration?
-	if ( pFileType )
-	{		
-		wxString strCmd = pFileType->GetOpenCommand(wxString("test.") + BF_PROJECT_EXTENSION);
+	wxFileTypeInfo fti(arrString);
 
-		if ( strCmd == BFEnvironment::GetDocumentOpenCommand() )
-		{
-			bDoRegister = false;
-		}
-		else
-		{
-			BFSystem::Log(wxString::Format
-			(
-				_("Documenttype \"%s\" is not registered for me.\nCurrent registration: \"%s\"\nModify registration to myself."),
-				BF_PROJECT_EXTENSION,
-				strCmd
-			));
-		}
-
-		delete pFileType;
-	}
-	else
-	{
-		BFSystem::Log(wxString::Format(_("No documenttype registration for %s found."), BF_PROJECT_EXTENSION));
-	}
-
-	if ( bDoRegister )
-	{
-        static const wxFileTypeInfo fallbacks[] =
-        {
-            wxFileTypeInfo(_("document/bfp"),
-							BFEnvironment::GetDocumentOpenCommand(),
-                           "xxx",
-                           _("Blackfisk Backup Project"),
-						   "bfp", wxNullPtr, wxNullPtr),
-            wxFileTypeInfo()
-        };
-
-		BFSystem::Log(wxString::Format
-		(
-			_("Register documenttype \"%s\" for \"%s\""),
-			BF_PROJECT_EXTENSION,
-			BFEnvironment::GetDocumentOpenCommand()
-		));
-        mgr.AddFallbacks(fallbacks);
-	}
+	mgr.Associate(fti);
 }
 
 bool BFApp::OnInit()

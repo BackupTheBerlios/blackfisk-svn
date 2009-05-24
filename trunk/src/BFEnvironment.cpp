@@ -72,7 +72,7 @@ BFEnvironment::BFEnvironment ()
 
 /*static*/ wxString BFEnvironment::GetDocumentOpenCommand ()
 {
-	return GetApplicationFullName() + " %s";
+	return GetApplicationFullName() + " %1";
 }
 
 /*static*/ const wxString BFEnvironment::GetLogFileName ()

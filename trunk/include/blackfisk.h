@@ -25,7 +25,7 @@
 
 #define BF_PRGNAME                  "blackfisk"
 #define BF_VERSION_MAJOR            0
-#define BF_VERSION_MINOR            0
+#define BF_VERSION_MINOR            1
 #define BF_VERSION_RELEASE          0
 #define BF_VERSION_EXTENSION        "alpha" // "snapshot 2008-12-02 (rev133)"
 #define BF_AUTHOR                   "Christian Buhtz"

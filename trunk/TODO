@@ -1,8 +1,3 @@
-- KILLED outcommented code for class Progress
-- ADD void BFDestinationCtrl::OpenDirPicker() and use it with BFTaskDlg
-
-- register BFP-Files with wxMimeTypesManager::AddFallback
-
 0.0.2
 ~~~~~
 - tooltip with task-infos on mouse-over on a backup-task

@@ -108,7 +108,7 @@ END_EVENT_TABLE()
        early while creation time of the BFMainFrame object */
     wxGetApp().SetMainFrame(this);
 
-    // set the window icon XXX
+    // set the window icon
     SetIcon(BFIconTable::GetMainFrameIcon());
 
     // set as top window
