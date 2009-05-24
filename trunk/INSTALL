@@ -28,17 +28,19 @@ FILE & DIRECTORY LISTING
  sound/         - sound files for event-notification
 
  -- (extra files and directories in the source package) --
- include/       - blackfisk header files
- src/           - blackfisk source files
- graphic/src    - SVG source files for graphic stuff
- third-party/   - 3rd-party components like wxSerialize
-                  Please see the doc-files in the related directory
-                  for more detailes.
- local/         - GNU gettext based language files (*.po)
- BUILD          - informations how to build blackfisk
- TODO           - This is just a little TODO list for blackfisk.
-                  Please use the bugtracking-system on BerliOS instead
-                  of this file.
- BF.workspace   - workspace file for the IDE Code::Blocks
- blackfisk.cbp  - project file for the IDE Code::Blocks
- blackfisk.rc	- resource file for blackfisk
+ build/					- build environment
+ build/README			- informations how to build blackfisk
+ build/BF.workspace		- workspace file for the IDE Code::Blocks
+ build/blackfisk.cbp	- project file for the IDE Code::Blocks
+ build/blackfisk.sln	- Microsoft Visual C++ Express Edition Solution file
+ build/blackfisk.vcproj	- Microsoft Visual C++ Express Edition Project file
+ include/				- header files
+ src/					- source files
+ graphic/src			- SVG source files for graphic stuff
+ third-party/			- 3rd-party components like wxSerialize
+						  Please see the doc-files in the related directory
+						  for more detailes.
+ local/*.po				- GNU gettext based language files (*.po)
+ TODO					- This is just a little TODO list for blackfisk.
+						  Please use the bugtracking-system on BerliOS instead
+						  of this file.
