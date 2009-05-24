@@ -66,7 +66,7 @@
 			<Add option="-Wall" />
 			<Add option="-DwxUSE_UNICODE" />
 			<Add directory="$(#wx)\include" />
-			<Add directory="..\third-party\wxSerialize\include\wx" />
+			<Add directory="..\third-party\wxserialize-1.23\include\wx" />
 			<Add directory="..\include" />
 		</Compiler>
 		<Unit filename="..\CHANGELOG">
@@ -391,10 +391,10 @@
 		<Unit filename="..\src\blackfisk.cpp">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
-		<Unit filename="..\third-party\wxSerialize\include\wx\wxSerialize.h">
+		<Unit filename="..\third-party\wxserialize-1.23\include\wx\wxSerialize.h">
 			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
-		<Unit filename="..\third-party\wxSerialize\src\wxSerialize.cpp">
+		<Unit filename="..\third-party\wxserialize-1.23\src\wxSerialize.cpp">
 			<Option virtualFolder="AppLayer\wxSerialize\" />
 		</Unit>
 		<Extensions>

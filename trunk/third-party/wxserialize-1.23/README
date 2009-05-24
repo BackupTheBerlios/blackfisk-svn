@@ -1,3 +1,4 @@
+
 Welcome to wxSerialize - This class provides serialization for wxWidgets with the following features:
 
     - wxInputStream / wxOutputStream serializing (so practically to all wxWidgets streams)
@@ -13,6 +14,17 @@ Welcome to wxSerialize - This class provides serialization for wxWidgets with th
 
 CHANGELOG:
 ----------
+v1.23:
+    - Fixed CMake problems, now compiles on Linux again
+    - Fixed ConvertToIeeeExtended compiler errors for wxWidgets 2.8.x
+    - Applied a patch from Christian Buthz with the following:
+      - Initializer list in c'tors match the definition list in the headers
+      - int is changed to size_t in cases where there were count loops needed
+      - WXSERIALIZE_RELEASE_VERSION added as minimal version (will be incremented
+        on every release)
+      - Fixed a bug in bool wxSerialize::Write(const wxMemoryBuffer &buffer) (also reported by 
+        Malcolm Nealon)
+
 v1.2:
     - Documentation is fixed, and elaborated on EnterObject / LeaveObject
     - IntInt serialization (wxPoint, wSize) is added (contribution from Christian Buhtz)
@@ -52,11 +64,7 @@ INFO:
 HOW TO BUILD
 ------------
 
-1.1 CODE::BLOCKS
-----------------
-    With Code::Blocks, see "projects/codeblocks" for the project
-
-1.2 CMAKE
+1.1 CMAKE
 ---------
     CMake is used as primary make generator. I urge you to download CMake, available for all platforms where wxWidgets works on.
     
@@ -80,9 +88,7 @@ HOW TO BUILD
         4) If all went well, use make to build 
         
     WINDOWS types ONLY:
-    
-        3) Check CMakeLists.txt in the main archive dir, and make sure your config matches the one in CMakeLists.txt like
-           UNICODE, UNIVERSAL, SHARED, MONOLITHIC, etc.
+ 
         3) Start CMakeSetup.exe, fill in the following dirs;
         
             Where is the sourcecode; 	 {the path where source is unzipped}
@@ -95,6 +101,11 @@ HOW TO BUILD
         4) Press Configure until the OK button shows. Press the OK button and you will have a number of IDE files
         in your build dir you selected. From there you can build the wxminiparser in your favorite IDE.
 	   
-1.3 SINGLE
+1.2 SINGLE
 ----------
     wxSerialize is a single header and single cpp file. This means just adding these will work in your current project and is the preferred method.
+    
+    
+======================================================================================================================================
+Revision of this README: $Rev$
+    

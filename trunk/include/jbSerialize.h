@@ -26,7 +26,7 @@
 #ifndef JBSERIALIZE_H
 #define JBSERIALIZE_H
 
-#include "../third-party/wxSerialize/include/wx/wxSerialize.h"
+#include "../third-party/wxserialize-1.23/include/wx/wxSerialize.h"
 
 typedef wxSerialize jbSerialize;
 

@@ -1,5 +1,5 @@
-- BUGFIX: incorrect calculation of max-log file size
-- BUGFIX: using context menus cause in crash
+- UPDATE: wxSerialize to version 1.2.3
+- KILLED: some outcommented code
 
 - register BFP-Files with wxMimeTypesManager::AddFallback
 
@@ -55,6 +55,7 @@
 ~~~~~
 - more translations
 - backup to password-protected-samba
+
 - backup to ftp
 - supported operating systems: Win32, MAC OS X, linux/unix (debian), ReactOS, Zeta
 

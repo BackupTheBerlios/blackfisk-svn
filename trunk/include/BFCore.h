@@ -134,13 +134,6 @@ class BFCore
                               bool bVerify = false,
                               bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT);
 
-        /* synchroinze two directories *
-        bool Synchronise (const wxString& strOriginal,
-                          const wxString& strToSynchronise,
-                          bool bVerify,
-                          bool bVerifyContent,
-                          bool bRealSync = true,
-                          ProgressWithMessage* pProgress = NULL);*/
 
         ///
         static bool HasFileAttribute_ReadOnly (const wxString& strFilename);
@@ -186,23 +179,6 @@ class BFCore
         /** create a path
             there could be more than one new directories in the path */
         static bool CreatePath (const wxString& strPath);
-
-        /* copy a directory *
-        bool CopyDir (const wxString& strSourceDir,
-                      const wxString& strDestinationDir,
-                      bool bVerify,
-                      bool bVerifyContent = BF_VERIFY_CONTENT_DEFAULT,
-                      ProgressWithMessage* pProgress = NULL);*/
-
-
-        /** create a zipfile ('pstrZipName') from a directory ('pstrSourceDir')
-            files and directories that should not be zipped can be specified in 'pExcludeListing'
-            'pExcludeListing' and 'pProgress' can be NULL*
-        bool CreateZipFromDir (const wxString& strZipName,
-                               const wxString& strSourceDir,
-                               wxArrayString* pExcludeListing,
-                               bool bVerify,
-                               ProgressWithMessage* pProgress = NULL);*/
 
 		/** Create a ZIP-archive ('strArchiveName'). The entries are in 'arrEntries' and can be
 			files and directories.
@@ -278,6 +254,6 @@ class BFCore
 
         /// compare the content of to files
         static bool VerifyFileContents (wxFile& f1, wxFile& f2);
-};    // class BFCore
+};
 
 #endif    // BFCORE_H

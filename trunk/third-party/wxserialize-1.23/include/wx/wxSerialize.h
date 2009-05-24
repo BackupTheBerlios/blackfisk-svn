@@ -1,13 +1,9 @@
 //---------------------------------------------------------------------------
-// $RCSfile: wxSerialize.h $
-// $Source: include/wx/wxSerialize.h $
-// $Revision: 1.16 $
-// $Date: 7-sep-2007 11:29:08 $
-//---------------------------------------------------------------------------
-// Author:      Jorgen Bodde
+// Author(s):   Jorgen Bodde
 //              Christian Buhtz
-// Copyright:   (c) Jorgen Bodde <jorgb@xs4all.nl>
+// Copyright:   (c) Jorgen Bodde
 // License:     see LICENSE for details
+// Revision:    $Rev: 15 $
 //---------------------------------------------------------------------------
 
 #ifndef _WXSERIALIZE_H_
@@ -21,7 +17,7 @@
 
 #define WXSERIALIZE_MAJOR_VERSION 1
 #define WXSERIALIZE_MINOR_VERSION 2
-#define WXSERIALIZE_RELEASE_VERSION 2
+#define WXSERIALIZE_RELEASE_VERSION 3           // increment this on every release!
 
 /** \author Jorgen Bodde
     \mainpage
@@ -183,7 +179,7 @@
 	be binary incompatibility with older streams:
 
 	\code
-	wxFileOutputStream file("somefile.dat");
+	wxFileOutputStream file("somefile.dat");	
 	wxSerialize a(file, 1001);   // latest version is 1001 (was 1000)
 
 	m_ourClass->Serialize(a);
@@ -287,7 +283,7 @@
 	the data being written will destroy newer information in the serializing stream. The newer release of your
 	application can still read this stream, but newer data is defaulted again.
 
-    Also another caveat is that when you replace data being read back it will not work, not with EnterObject() /
+    Also another caveat is that when you replace data being read back it will not work, not with EnterObject() / 
     LeaveObject() but also not with a versioned stream. Consider this example:
 
 	\code
@@ -298,7 +294,7 @@
 		{
 			// simply write all
 			a << m_name << m_address << m_age;
-			a << m_siblings;
+			a << m_siblings; 
             //a << m_monthlyPay << m_healthInsurance;
             // REPLACED NOW with:
             a << m_surName << m_middleName;
@@ -309,14 +305,14 @@
 			a >> m_siblings;
 			// WON'T WORK! In older versions the two vars m_monthlypay and m_healthInsurance
             // were stored here, instead we read back this. If the stream we read back do not
-            // contain these new replaced variables yet, we are hitting an error state.
+            // contain these new replaced variables yet, we are hitting an error state. 
             a >> m_surName >> m_middleName;
 		}
 		a.LeaveObject();
 
 		return a.IsOk();
 	}
-	\endcode
+	\endcode 
 
 	\subsection archive_status wxSerializeStatus Helper Class
 
@@ -552,8 +548,8 @@ public:
 
     /** In reading mode, it returns true when the stream we are reading from returns true on Eof().
         It means that it returns true AFTER an attempt has been made to read past the end of the stream.
-        In writing mode Eof() returns always false. When the stream is closed, true is always returned,
-        we can't read or write anymore in that case anyway. Reading more from a stream that is at it's
+        In writing mode Eof() returns always false. When the stream is closed, true is always returned, 
+        we can't read or write anymore in that case anyway. Reading more from a stream that is at it's 
         end will produce errors.
 	*/
     bool Eof();
@@ -1322,7 +1318,7 @@ public:
 		false when it's not.
 
         The wxDateTime is saved in a cross platform compatible mode (e.g. the number of ticks). Please be aware that no
-        timezone information or daylight saving information is stored. So if the date read back on a different PC is
+        timezone information or daylight saving information is stored. So if the date read back on a different PC is 
         mis interpreted because the PC is in a different time zone you must find other means of syncing them.
     */
     bool WriteDateTime(const wxDateTime& value);

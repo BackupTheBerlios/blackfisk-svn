@@ -1,13 +1,9 @@
 //---------------------------------------------------------------------------
-// $RCSfile: wxSerialize.cpp $
-// $Source: src/wxSerialize.cpp $
-// $Revision: 1.16 $
-// $Date: 7-sep-2007 11:29:08 $
-//---------------------------------------------------------------------------
 // Author:      Jorgen Bodde
 //              Christian Buhtz
 // Copyright:   (c) Jorgen Bodde
 // License:     see LICENSE for details
+// Revision:    $Rev: 15 $
 //---------------------------------------------------------------------------
 
 #undef wxUSE_APPLE_IEEE
@@ -780,7 +776,7 @@ wxDateTime wxSerialize::LoadDateTime()
         wxUint8 sec = LoadUint8();
         // load millisecs
         wxUint16 msec = LoadUint16();
-
+        
         dt = wxDateTime(day, (wxDateTime::Month)month, year, hour, min, sec, msec);
 	}
 
@@ -911,7 +907,7 @@ bool wxSerialize::WriteIntInt(int value1, int value2)
 bool wxSerialize::Write(const wxMemoryBuffer &buffer)
 {
 	wxUint32 size = 0;
-
+    
     if(CanStore())
 	{
 		// save header to the stream
@@ -920,7 +916,7 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
         // save the record count
         size = buffer.GetDataLen();
         SaveUint32(size);
-
+        
         // write data if there is any
         if(size > 0)
             m_odstr.Write(buffer.GetData(), size);
@@ -929,8 +925,10 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
     return IsOk();
 }
 
+#if wxUSE_APPLE_IEEE
 // Must be at global scope for VC++ 5 (ripped from wxDataInputStream)
-extern "C" wxFloat64 wxConvertFromIeeeExtended(const wxInt8 *bytes);
+extern "C" wxFloat64 ConvertFromIeeeExtended(const wxInt8 *bytes);
+#endif
 
 wxFloat64 wxSerialize::LoadDouble()
 {
@@ -943,7 +941,7 @@ wxFloat64 wxSerialize::LoadDouble()
 		wxInt8 buf[10];
 
 		m_idstr.Read((void *)buf, 10);
-		value = wxConvertFromIeeeExtended(buf);
+		value = ConvertFromIeeeExtended(buf);
 #else
 		#pragma warning "wxSerialize::LoadDouble() not using IeeeExtended - will not work!"
 #endif
@@ -990,8 +988,10 @@ bool wxSerialize::WriteBool(bool value)
     return IsOk();
 }
 
+#if wxUSE_APPLE_IEEE
 // Must be at global scope for VC++ 5
-extern "C" void wxConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
+extern "C" void ConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
+#endif
 
 bool wxSerialize::WriteDouble(wxFloat64 value)
 {
@@ -1002,7 +1002,7 @@ bool wxSerialize::WriteDouble(wxFloat64 value)
 		wxInt8 buf[10];
 
 #if wxUSE_APPLE_IEEE
-		wxConvertToIeeeExtended(value, buf);
+		ConvertToIeeeExtended(value, buf);
 #else
 	#if !defined(__VMS__) && !defined(__GNUG__)
 		#pragma warning "wxSerialize::WriteDouble() not using IeeeExtended - will not work!"
@@ -1049,7 +1049,7 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		// write header
 		SaveChar(wxSERIALIZE_HDR_DATETIME);
 
-        // decompose
+        // decompose		
 		wxUint8 day = value.GetDay();
 		wxUint8 month = value.GetMonth();
 		wxUint16 year =  value.GetYear();
@@ -1057,7 +1057,7 @@ bool wxSerialize::WriteDateTime(const wxDateTime& value)
 		wxUint8 min = value.GetMinute();
 		wxUint8 sec = value.GetSecond();
 		wxUint16 msec    = value.GetMillisecond();
-
+		
 		// serialize
 		SaveChar(day);
 		SaveChar(month);
