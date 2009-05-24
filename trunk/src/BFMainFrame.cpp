@@ -290,7 +290,14 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
-        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
+		if ( BFSettings::Instance().GetAutosaveProjects() )
+		{
+			iAnswer = wxID_YES;
+		}
+		else
+		{
+			iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
+		}
 
         // cancel/abort
         if (iAnswer == wxID_CANCEL)
@@ -497,12 +504,21 @@ void BFMainFrame::RememberThread (wxThread* pThread)
 }
 
 bool BFMainFrame::AskModification ()
-{
+{	
     // check for a modified project
     if (BFBackup::Instance().IsProjectModified())
     {
+		int iAnswer = wxID_YES;
+
         // ask for save
-        int iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
+		if ( BFSettings::Instance().GetAutosaveProjects() )
+		{
+			iAnswer = wxID_YES;
+		}
+		else
+		{
+			iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it?"));
+		}
 
         // cancel/abort
         if (iAnswer == wxID_CANCEL)
@@ -609,7 +625,14 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
     if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
-        iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it before running the backup?"));
+		if ( BFSettings::Instance().GetAutosaveProjects() )
+		{
+			iAnswer = wxID_YES;
+		}
+		else
+		{
+			iAnswer = QuestionYesNoCancel(_("The current project is modified!\nSave it before running the backup?"));
+		}
 
         // save
         if (iAnswer == wxID_YES)

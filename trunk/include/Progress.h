@@ -41,9 +41,9 @@ class Progress : public Subject
 		bool            bLocked_;
 
 		/** */
-		bool            bDeadCountMode_;
+		//bool            bDeadCountMode_;
 		/** */
-		long            deadcounts_;
+		//long            deadcounts_;
 
 	public:
         ///
@@ -52,7 +52,7 @@ class Progress : public Subject
 		virtual ~Progress();
 
         ///
-        void SetDeadCountMode (bool bOn);
+        //void SetDeadCountMode (bool bOn);
 
         /** lock the progress object
             please see the member 'bLocked_' for more detailes */

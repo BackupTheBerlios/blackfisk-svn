@@ -42,6 +42,8 @@ class BFSettingsDlg : public wxDialog
         // --- GENERALE PAGE ---
         ///
         wxCheckBox*             pCheckOpenLast_;
+		///
+		wxCheckBox*				pCheckAutosaveProjects_;
         ///
         wxComboBox*             pComboLanguage_;
         ///

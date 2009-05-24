@@ -31,7 +31,8 @@
 #include "BFHelpCtrl.h"
 #include "BFBitmapButton.h"
 #include "BFIconTable.h"
-
+#include "BFApp.h"
+#include "BFSettings.h"
 
 BEGIN_EVENT_TABLE(BFProjectSettingsDlg, wxDialog)
   EVT_CLOSE     (                               BFProjectSettingsDlg::OnClose)
@@ -112,6 +113,10 @@ void BFProjectSettingsDlg::OnClose (wxCloseEvent& event)
 void BFProjectSettingsDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
     SetData();
+
+	if ( BFProject::Instance().IsModified() && BFSettings::Instance().GetAutosaveProjects() )
+		wxGetApp().SaveCurrentProject();
+
     Close();
 }
 

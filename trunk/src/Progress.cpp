@@ -31,9 +31,9 @@ Progress::Progress()
         : lBEGIN_(0),
           end_(100),
           actual_(0),
-          bLocked_(false),
-          bDeadCountMode_(false),
-          deadcounts_(0)
+          bLocked_(false)//,
+          //bDeadCountMode_(false),
+          //deadcounts_(0)
 {
 }
 
@@ -41,11 +41,11 @@ Progress::Progress()
 /*virtual*/ Progress::~Progress()
 {
 }
-
+/*
 void Progress::SetDeadCountMode (bool bOn)
 {
     bDeadCountMode_ = bOn;
-}
+}*/
 
 void Progress::Lock ()
 {
@@ -83,26 +83,26 @@ bool Progress::SetActual (long actual)
 }
 
 /*virtual*/ bool Progress::IncrementActual ()
-{
+{/*
     if (bDeadCountMode_)
-    /* DEAD COUNT MODE */
+    /* DEAD COUNT MODE *
     {
         ++deadcounts_;
     }
     else
-    /* NORMALE MODE */
+    /* NORMALE MODE *
     {
         /* don't increment the normale count before
-           deadcounts_ is still 0 */
+           deadcounts_ is still 0 *
         if (deadcounts_ > 0)
         {
             // decrement the deadcounts
             --deadcounts_;
             /* we need to return false to show the caller
-               that no observer is broadcasted */
+               that no observer is broadcasted *
             return false;
         }
-    }
+    }*/
 
     // temporary unlock because SetActual()
     // won't work if the progress object is locked

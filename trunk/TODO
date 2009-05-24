@@ -1,26 +1,22 @@
-- UPDATE: wxSerialize to version 1.2.3
-- KILLED: some outcommented code
+- OUTCOMMENTED Progress::bDeadCountMode_ & all affected members
+- ADD global setting: Autosave Projects
+  + INCREMENTE settings version to 1050
+  + ADD BFSettings::bAutosaveProject_
+  + IMPROVED BFSettingsDlg for it
+  + IMPLEMENTED autosave behaviour on closing and running projects and closing project settings
+
 
 - register BFP-Files with wxMimeTypesManager::AddFallback
-
-- maybe kill Progress::bDeadCountMode_ & all affected members?
-
-- fix wxSerialize compiler warnings
+- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 
 - tooltip with task-infos on mouse-over on a backup-task
 - tooltips on BFHyperlinkCtrl with URL
-
 - remove verify-flag on sync-tasks?
 
-- auto-save-project option
+
 
 - Drag&Drop source to an empty project open a task-dialog with an empty destination
   -> "select destination dialog" should open automaticly in that case
-
-- BIG TEST: Check what kind of messages arrive while a backup
-  in the log-files (app, project, task), in the while-backup-log-window, in the
-  backup-progress-with-message-control and anywhere
-  test ALL different verbose levels!
 
 0.0.1
 ~~~~~
@@ -28,7 +24,6 @@
 - improve BFBackupInfoCtrl with easier readable messages (icons, colors)
   maybe with wxListBox, wxListCtrl or wxGrid
 - log files as parseable (for icons) text-files and/or standard conform html-files or pdf
-- BUG: wxGenericDirCtrl change the working dir (look at wxDD_CHANGE_DIR)
 
 0.0.2
 ~~~~~

@@ -52,6 +52,7 @@ void BFSettings::InitDefaultValues()
     bWithFiles_                     = false;
     lMaxLogFileSizeKB_				= 1024;
     bOpenLastProject_               = false;
+	bAutosaveProject_				= true;
     verboseLog_                     = MsgINFO;
     lang_                           = wxLANGUAGE_DEFAULT;
     sizeMainWindow_                 = wxDefaultSize;
@@ -130,6 +131,16 @@ void BFSettings::SetOpenLastProject (bool bOpen)
 bool BFSettings::GetOpenLastProject ()
 {
     return bOpenLastProject_;
+}
+
+void BFSettings::SetAutosaveProjects (bool bAutosave)
+{
+	bAutosaveProject_ = bAutosave;
+}
+
+bool BFSettings::GetAutosaveProjects ()
+{
+	return bAutosaveProject_;
 }
 
 void BFSettings::SetVerboseLevelLog (BFMessageType lvl)
@@ -317,6 +328,7 @@ bool BFSettings::Serialize (jbSerialize& rA)
         rA << strCrontab_;
         rA << iSound_;
         rA << iBeep_;
+		rA << bAutosaveProject_;
     }
     else
     // ** serialize FROM file **
@@ -385,6 +397,16 @@ bool BFSettings::Serialize (jbSerialize& rA)
             rA >> iSound_;
             rA >> iBeep_;
         }
+
+		// options added in version 1050
+		if (rA.GetVersion() < 1050)
+		{
+			bAutosaveProject_ = true;
+		}
+		else
+		{
+			rA >> bAutosaveProject_;
+		}
     }
 
     rA.LeaveObject();

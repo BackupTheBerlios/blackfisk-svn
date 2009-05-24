@@ -179,6 +179,10 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     pCheckOpenLast_ = new wxCheckBox(pPage, wxID_ANY, _("open the last project on startup"));
     pHelpCtrl->Connect(pCheckOpenLast_, _("Open the last opened project automaticly on startup."));
 
+	// autosave projects
+	pCheckAutosaveProjects_ = new wxCheckBox(pPage, wxID_ANY, _("autosave projects if modified"));
+	pHelpCtrl->Connect(pCheckAutosaveProjects_, _("If a project is modified save it automaticly before closing it and before running the backup."));
+
     // check for new version?
     pCheckNewVersion_ = new wxCheckBox(pPage, BF_SETTINGSDLG_ID_CHECK_NEWVERSION, _("check for updates ..."));
     pHelpCtrl->Connect(pCheckNewVersion_, _("Check if a newer version of blackfisk is available. A connection to the internet is needed for this."));
@@ -207,7 +211,8 @@ wxWindow* BFSettingsDlg::CreatePage_General (wxTreebook* pBook)
     pSBSizer_Version->Add(pCheckNewVersion_,    wxSizerFlags(0).Border());
     pSBSizer_Version->Add(pBSizer_Days,         wxSizerFlags(0).Border());
     pSBSizer_Language->Add(pComboLanguage_, wxSizerFlags(0).Border());
-    pSBSizer_LastPrj->Add(pCheckOpenLast_,  wxSizerFlags(0).Border());
+    pSBSizer_LastPrj->Add(pCheckOpenLast_,			wxSizerFlags(0).Border());
+	pSBSizer_LastPrj->Add(pCheckAutosaveProjects_,	wxSizerFlags(0).Border());
 
     pGBSizer->Add(pSBSizer_Language,    wxGBPosition(0, 0), wxGBSpan(1, 2), wxEXPAND);
     pGBSizer->Add(pSBSizer_Version,     wxGBPosition(1, 0), wxGBSpan(1, 2), wxEXPAND);
@@ -547,23 +552,24 @@ void BFSettingsDlg::GetData ()
             break;
         }
     }
-    pComboLanguage_->SetSelection(iLangSel);
-    pCheckOpenLast_->SetValue(rS.GetOpenLastProject());
-    pCheckMacro_->SetValue(rS.GetFillBlackfiskPlaceholders());
-    pCheckFiles_->SetValue(rS.GetWithFiles());
-    pCheckHiddenFiles_->SetValue(rS.GetShowHiddenFiles());
-    pCheckSwitchTrees_->SetValue(rS.GetSwitchMainCtrls());
-    pSpinLogSize_->SetValue(rS.GetMaxLogFileSizeInKB());
-    pPrjCtrl_->GetData(rS.GetDefaultProjectSettings());
+    pComboLanguage_			->SetSelection(iLangSel);
+    pCheckOpenLast_			->SetValue(rS.GetOpenLastProject());
+	pCheckAutosaveProjects_	->SetValue(rS.GetAutosaveProjects());
+    pCheckMacro_			->SetValue(rS.GetFillBlackfiskPlaceholders());
+    pCheckFiles_			->SetValue(rS.GetWithFiles());
+    pCheckHiddenFiles_		->SetValue(rS.GetShowHiddenFiles());
+    pCheckSwitchTrees_		->SetValue(rS.GetSwitchMainCtrls());
+    pSpinLogSize_			->SetValue(rS.GetMaxLogFileSizeInKB());
+    pPrjCtrl_				->GetData(rS.GetDefaultProjectSettings());
     if (rS.GetDaysTillNextCheck() == 0)
     {
-        pCheckNewVersion_->SetValue(false);
+        pCheckNewVersion_	->SetValue(false);
     }
     else
     {
-        pCheckNewVersion_->SetValue(true);
+        pCheckNewVersion_	->SetValue(true);
     }
-    pSpinDaysNewVersion_->SetValue(rS.GetDaysTillNextCheck());
+    pSpinDaysNewVersion_	->SetValue(rS.GetDaysTillNextCheck());
     On_NewVersion();
 
     switch (rS.GetVerboseLevelLog())
@@ -596,32 +602,33 @@ void BFSettingsDlg::GetData ()
             break;
     };
 
-    pRadioScheduler_->SetSelection(rS.GetScheduler());
-    pTextCrontab_->SetValue(rS.GetCrontab());
+    pRadioScheduler_	->SetSelection(rS.GetScheduler());
+    pTextCrontab_		->SetValue(rS.GetCrontab());
 
-    pRadioSound_->SetSelection(rS.GetSoundBehaviour());
-    pRadioBeep_->SetSelection(rS.GetBeepBehaviour());
+    pRadioSound_		->SetSelection(rS.GetSoundBehaviour());
+    pRadioBeep_			->SetSelection(rS.GetBeepBehaviour());
 }
 
 void BFSettingsDlg::SetData ()
 {
     BFSettings& rS = BFSettings::Instance();
 
-    rS.SetLanguage(BFSettings::langIds_[pComboLanguage_->GetSelection()]);
-    rS.SetOpenLastProject(pCheckOpenLast_->GetValue());
-    rS.SetFillBlackfiskPlaceholders(pCheckMacro_->GetValue());
-    rS.SetWithFiles(pCheckFiles_->GetValue());
-    rS.SetShowHiddenFiles(pCheckHiddenFiles_->GetValue());
-    rS.SetSwitchMainCtrls(pCheckSwitchTrees_->GetValue());
-    rS.SetMaxLogFileSizeInKB(pSpinLogSize_->GetValue());
-    pPrjCtrl_->SetData(rS.GetDefaultProjectSettings());
+    rS.SetLanguage					(BFSettings::langIds_[pComboLanguage_->GetSelection()]);
+    rS.SetOpenLastProject			(pCheckOpenLast_->GetValue());
+	rS.SetAutosaveProjects			(pCheckAutosaveProjects_->GetValue());
+    rS.SetFillBlackfiskPlaceholders	(pCheckMacro_->GetValue());
+    rS.SetWithFiles					(pCheckFiles_->GetValue());
+    rS.SetShowHiddenFiles			(pCheckHiddenFiles_->GetValue());
+    rS.SetSwitchMainCtrls			(pCheckSwitchTrees_->GetValue());
+    rS.SetMaxLogFileSizeInKB		(pSpinLogSize_->GetValue());
+    pPrjCtrl_->SetData				(rS.GetDefaultProjectSettings());
     if (pCheckNewVersion_->GetValue())
     {
-        rS.SetDaysTillNextCheck(pSpinDaysNewVersion_->GetValue());
+        rS.SetDaysTillNextCheck		(pSpinDaysNewVersion_->GetValue());
     }
     else
     {
-        rS.SetDaysTillNextCheck(0);
+        rS.SetDaysTillNextCheck		(0);
     }
 
     switch (pComboVerboseLog_->GetSelection())
@@ -652,8 +659,8 @@ void BFSettingsDlg::SetData ()
             break;
     };
 
-    rS.SetScheduler(pRadioScheduler_->GetSelection());
-    rS.SetCrontab(pTextCrontab_->GetValue());
+    rS.SetScheduler		(pRadioScheduler_->GetSelection());
+    rS.SetCrontab		(pTextCrontab_->GetValue());
 
     // menu project planer
     if ( rS.GetScheduler() == 0 )
@@ -690,7 +697,7 @@ void BFSettingsDlg::SetData ()
         }
     }
 
-    rS.SetSoundBehaviour(pRadioSound_->GetSelection());
-    rS.SetBeepBehaviour(pRadioBeep_->GetSelection());
+    rS.SetSoundBehaviour	(pRadioSound_->GetSelection());
+    rS.SetBeepBehaviour		(pRadioBeep_->GetSelection());
 }
 

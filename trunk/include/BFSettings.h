@@ -52,6 +52,8 @@ class BFSettings
         wxUint32            lMaxLogFileSizeKB_;
         /** open the last opened project on start */
         bool                bOpenLastProject_;
+		/** save the projects automaticly without asking */
+		bool				bAutosaveProject_;
         /** last opened projecte */
         wxString            strLastProject_;
         /** verbose level for the application log file*/
@@ -132,6 +134,10 @@ class BFSettings
         const wxString& GetLastProject ();
         ///
         void SetLastProject (const wxString& strFilename);
+		///
+		bool GetAutosaveProjects ();
+		///
+		void SetAutosaveProjects (bool bAutosave);
         ///
         void SetOpenLastProject (bool bOpen);
         ///
