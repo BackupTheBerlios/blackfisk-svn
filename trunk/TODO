@@ -1,8 +1,11 @@
 add the next official wxCron!
-
+double click on destination open "modify destination" dialog
 - add wxCron to the docs
+
 0.0.2
 ~~~~~
+- HANDLE: a backup job couldn't be executed (because of another instance, errors, etc)
+  and need to rerun after some minutes(?)
 - tooltip with task-infos on mouse-over on a backup-task
 - tooltips on BFHyperlinkCtrl with URL
 - remove verify-flag on sync-tasks?

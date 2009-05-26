@@ -60,12 +60,23 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
 
 /*static*/ wxString BFApp::GetFullApplicationName ()
 {
+#ifndef _DEBUG
+	/* RELEASE */
     return wxString::Format("%s %d.%d.%d %s",
                                BF_PRGNAME,
                                BF_VERSION_MAJOR,
                                BF_VERSION_MINOR,
                                BF_VERSION_RELEASE,
                                BF_VERSION_EXTENSION);
+#else
+	/* DEBUG */
+    return wxString::Format("%s %d.%d.%d %s DEBUG BUILD",
+                               BF_PRGNAME,
+                               BF_VERSION_MAJOR,
+                               BF_VERSION_MINOR,
+                               BF_VERSION_RELEASE,
+                               BF_VERSION_EXTENSION);
+#endif
 }
 
 /*static*/ wxString BFApp::GetVersion ()
