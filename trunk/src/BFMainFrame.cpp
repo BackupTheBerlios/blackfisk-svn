@@ -290,7 +290,8 @@ void BFMainFrame::OnClose (wxCloseEvent& event)
     if (BFBackup::Instance().IsProjectModified())
     {
         // ask for save
-		if ( BFSettings::Instance().GetAutosaveProjects() )
+		if ( BFSettings::Instance().GetAutosaveProjects()
+			&& wxGetApp().GetCurrentProjectFilename().Len() > 0 )
 		{
 			BFSystem::Log(_("Autosave current project..."));
 			iAnswer = wxID_YES;

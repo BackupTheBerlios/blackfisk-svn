@@ -34,6 +34,7 @@
 #include "BFApp.h"
 #include "BFSettings.h"
 
+
 BEGIN_EVENT_TABLE(BFProjectSettingsDlg, wxDialog)
   EVT_CLOSE     (                               BFProjectSettingsDlg::OnClose)
   EVT_BUTTON    (BFPRJSETDLG_ID_BUTTONOK,       BFProjectSettingsDlg::OnButton_Ok)
@@ -114,7 +115,9 @@ void BFProjectSettingsDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
     SetData();
 
-	if ( BFProject::Instance().IsModified() && BFSettings::Instance().GetAutosaveProjects() )
+	if ( BFProject::Instance().IsModified()
+		&& BFSettings::Instance().GetAutosaveProjects()
+		&& wxGetApp().GetCurrentProjectFilename().Len() > 0 )
 	{
 		BFSystem::Log(_("Autosave current project..."));
 		wxGetApp().SaveCurrentProject();
