@@ -155,8 +155,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
             Ff 'bGoDeep' is true all child-items of 'idParent' in all layers will be searched. */
         VectorTreeItemId GetTaskItems (wxTreeItemId idParent, bool bGoDeep = true);
 
-        /// open the TaskDialog for the Task specified by 'id'
-        void ShowTaskSettings (wxTreeItemId id);
+        /// open the TaskDialog for specified task
+        void ShowTaskSettings (BFTask* pTask);
 
         /** check all placeholders in the tree-ctrl and
             fill them with data if needed. */

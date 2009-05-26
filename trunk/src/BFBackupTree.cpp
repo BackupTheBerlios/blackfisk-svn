@@ -288,22 +288,28 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
     // remember this itemId
     lastItemId_ = rEvent.GetItem();
 
-    // root?
-    if (lastItemId_ == GetRootItem())
+	//
+	BFTask* pTask = GetTaskByItem(lastItemId_);
+
+	// task?
+	if ( pTask )
+	{
+		ShowTaskSettings (pTask);
+	}
+	// root item?
+	else if (lastItemId_ == GetRootItem())
     {
         BFMainFrame::Instance()->OpenProjectSettings();
     }
+	// destination?
     else
     {
-        ShowTaskSettings (lastItemId_);
+        OnModifyDestination(wxCommandEvent());
     }
 }
 
-void BFBackupTree::ShowTaskSettings (wxTreeItemId id)
+void BFBackupTree::ShowTaskSettings (BFTask* pTask)
 {
-    // get the task object from the data layer
-    BFTask* pTask = GetTaskByItem(id);
-
     if (pTask != NULL)
         BFTaskDlg::Show (pTask);
 }
@@ -707,7 +713,7 @@ void BFBackupTree::OnModifyDestination (wxCommandEvent& rEvent)
 
 void BFBackupTree::OnTaskSettings (wxCommandEvent& rEvent)
 {
-    ShowTaskSettings(lastItemId_);
+    ShowTaskSettings(GetTaskByItem(lastItemId_));
 }
 
 
