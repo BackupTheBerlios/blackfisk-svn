@@ -36,7 +36,7 @@
 #include "BFTaskDlg.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
-#include "BFTipWindow.h"
+//#include "BFTipWindow.h"
 
 #define BF_BACKUPTREE_PLACEHOLDER_MASK  "*<*>*"
 #define BF_BACKUPTREE_FILLED_DATE_MASK  wxString::Format("*%s*", BFCore::Instance().GetDateString_Old())
@@ -66,7 +66,7 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR,    BFBackupTree::OnModifyTaskType)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR,    BFBackupTree::OnModifyTaskType)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR, BFBackupTree::OnModifyTaskType)
-	EVT_MOTION					(										BFBackupTree::OnMouseMotion)
+	//EVT_MOTION					(										BFBackupTree::OnMouseMotion)
 END_EVENT_TABLE()
 
 
@@ -1368,7 +1368,7 @@ void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 }
 
 
-// XXX
+/* XXX
 #include "BFSound.h"
 
 void BFBackupTree::OnMouseMotion (wxMouseEvent& rEvent)
@@ -1389,7 +1389,7 @@ void BFBackupTree::OnMouseMotion (wxMouseEvent& rEvent)
 		if ( id.IsOk() && !(iFlags & wxTREE_HITTEST_ONITEMRIGHT) )
 			BFTipWindow::CreateTipWindow(this, "TIP\nTIP2");
 	}
-}
+}*/
 
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxString& strPath /*= wxEmptyString*/)
                 : oid_(oid),

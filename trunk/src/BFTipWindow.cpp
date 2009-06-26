@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ***/
+ ***
 
 
 #include "BFTipWindow.h"
@@ -34,9 +34,9 @@
 /*
 BEGIN_EVENT_TABLE(BFTipWindow, wxTipWindow)
 	EVT_MOTION	(						BFTipWindow::OnMouseMotion)
-END_EVENT_TABLE()*/
+END_EVENT_TABLE()*
 
-/*static*/ BFTipWindow* BFTipWindow::psInstance_ = NULL;
+/*static* BFTipWindow* BFTipWindow::psInstance_ = NULL;
 
 BFTipWindow::BFTipWindow (wxWindow* pParent, const wxString& strTip)
 		   : wxTipWindow (pParent, strTip),
@@ -69,7 +69,7 @@ BFTipWindow::BFTipWindow ()
 }
 
 
-/*virtual*/ BFTipWindow::~BFTipWindow ()
+/*virtual* BFTipWindow::~BFTipWindow ()
 {
 	psInstance_ = NULL;
 }
@@ -86,26 +86,27 @@ void BFTipWindow::OnTimer_Autopop (wxTimerEvent& rEvent)
 	DeleteTipWindow();
 }*/
 
-/*static*/ void BFTipWindow::CreateTipWindow (wxWindow* pParent, const wxString& strTip)
+/*static* void BFTipWindow::CreateTipWindow (wxWindow* pParent, const wxString& strTip)
 {
 	DeleteTipWindow();
 
 	psInstance_ = new BFTipWindow(pParent, strTip);
 }
 
-/*static*/ void BFTipWindow::DeleteTipWindow ()
+/*static* void BFTipWindow::DeleteTipWindow ()
 {
 	if ( psInstance_ )
 		psInstance_->Destroy();
 }
 
 
-/*static*/ int BFTipWindow::GetInitialTime ()
+/*static* int BFTipWindow::GetInitialTime ()
 {
 	return wxSystemSettings::GetMetric (wxSYS_DCLICK_MSEC);
 }
 
-/*static*/ int BFTipWindow::GetAutopopTime ()
+/*static* int BFTipWindow::GetAutopopTime ()
 {
 	return GetInitialTime() * 10;
 }
+*/

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ***/
+ ***
 
 
 #ifndef BFTIPWINDOW_H
@@ -59,13 +59,13 @@ class BFTipWindow : public wxTipWindow
 
 		/** The amount of time (in miliseconds) a pointer must remain stationary
 			within a tool's bounding rectangle before the ToolTip
-			window appears. */
+			window appears. *
 		static int GetInitialTime ();
 		/** The amount of time (in miliseconds) a ToolTip window remains visible
-			if the pointer is stationary within a tool's bounding rectangle. */
+			if the pointer is stationary within a tool's bounding rectangle. *
 		static int GetAutopopTime ();
 
 	//DECLARE_EVENT_TABLE();
 };
 
-#endif
+#endif*/

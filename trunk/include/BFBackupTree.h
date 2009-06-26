@@ -266,8 +266,7 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         void OnBeginDrag (wxTreeEvent& event);
         ///
         void OnModifyTaskType (wxCommandEvent& rEvent);
-		///
-		void OnMouseMotion (wxMouseEvent& rEvent);
+		//		void OnMouseMotion (wxMouseEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };
