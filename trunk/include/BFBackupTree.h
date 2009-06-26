@@ -92,7 +92,6 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         /// view blackfisk placeholders or fill them with data
         bool                bFillBlackfiskPlaceholders_;
 
-
         /** this private class just wrappes the drop-events from the
             dropTarget to the affeceted treeCtrl
             it is a workaround for a missdesign in wxWidgets */
@@ -267,6 +266,8 @@ class BFBackupTree : public wxTreeCtrl, public Observer
         void OnBeginDrag (wxTreeEvent& event);
         ///
         void OnModifyTaskType (wxCommandEvent& rEvent);
+		///
+		void OnMouseMotion (wxMouseEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };

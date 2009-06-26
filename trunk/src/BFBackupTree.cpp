@@ -36,6 +36,7 @@
 #include "BFTaskDlg.h"
 #include "BFDestinationDlg.h"
 #include "BFSettings.h"
+#include "BFTipWindow.h"
 
 #define BF_BACKUPTREE_PLACEHOLDER_MASK  "*<*>*"
 #define BF_BACKUPTREE_FILLED_DATE_MASK  wxString::Format("*%s*", BFCore::Instance().GetDateString_Old())
@@ -65,6 +66,7 @@ BEGIN_EVENT_TABLE(BFBackupTree, wxTreeCtrl)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR,    BFBackupTree::OnModifyTaskType)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR,    BFBackupTree::OnModifyTaskType)
     EVT_MENU                    (BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR, BFBackupTree::OnModifyTaskType)
+	EVT_MOTION					(										BFBackupTree::OnMouseMotion)
 END_EVENT_TABLE()
 
 
@@ -114,7 +116,7 @@ void BFBackupTree::Init ()
 	else
 		SelectItem(GetRootItem());
 
-    SetToolTip(_("files and directories for the backup"));
+    // XXX SetToolTip(_("files and directories for the backup"));
 
     Thaw();
 }
@@ -304,7 +306,8 @@ void BFBackupTree::OnItemActivated(wxTreeEvent& rEvent)
 	// destination?
     else
     {
-        OnModifyDestination(wxCommandEvent());
+        wxCommandEvent event;
+        OnModifyDestination(event);
     }
 }
 
@@ -1362,6 +1365,30 @@ void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 
     bFillBlackfiskPlaceholders_ = bValue;
     UpdatePlaceholders();
+}
+
+
+// XXX
+#include "BFSound.h"
+
+void BFBackupTree::OnMouseMotion (wxMouseEvent& rEvent)
+{
+	if ( rEvent.Moving() )
+	{
+		BFSound::Info(); // XXX
+
+		// mouse position
+		wxWindowDC dc(this);
+		wxPoint point = rEvent.GetLogicalPosition(dc);
+
+		// get the item id under the mouse
+		int iFlags;
+		wxTreeItemId id = HitTest(point, iFlags);
+
+		// is it an item and not the right blank area
+		if ( id.IsOk() && !(iFlags & wxTREE_HITTEST_ONITEMRIGHT) )
+			BFTipWindow::CreateTipWindow(this, "TIP\nTIP2");
+	}
 }
 
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxString& strPath /*= wxEmptyString*/)

@@ -5,7 +5,7 @@
  * Modified by:
  * Created:     2009-01-22
  *              (based on BFRootTaskApp)
- * Copyright:   (c) 2009 Christian Buhtz <exsudat@gmx.de>
+ * Copyright:   (c) 2009 Christian Buhtz <blackfisk@web.de>
  * Licence:     GNU General Public License (Version 3)
  ***
  * This program is free software: you can redistribute it and/or modify

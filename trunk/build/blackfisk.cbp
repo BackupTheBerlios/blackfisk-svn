@@ -227,6 +227,9 @@
 		<Unit filename="..\include\BFTimeDurationCtrl.h">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
 		</Unit>
+		<Unit filename="..\include\BFTipWindow.h">
+			<Option virtualFolder="PresentationLayer\" />
+		</Unit>
 		<Unit filename="..\include\BFundef.h">
 			<Option virtualFolder="AppLayer\" />
 		</Unit>
@@ -378,6 +381,9 @@
 		</Unit>
 		<Unit filename="..\src\BFTimeDurationCtrl.cpp">
 			<Option virtualFolder="PresentationLayer\Controls\Observers\" />
+		</Unit>
+		<Unit filename="..\src\BFTipWindow.cpp">
+			<Option virtualFolder="PresentationLayer\" />
 		</Unit>
 		<Unit filename="..\src\BFwxLog.cpp">
 			<Option virtualFolder="AppLayer\InfoSystem\" />

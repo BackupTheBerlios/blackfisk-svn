@@ -81,9 +81,12 @@ BFDestinationCtrl::BFDestinationCtrl (wxWindow*         pParent,
 void BFDestinationCtrl::OpenDirPicker ()
 {
 	wxGenericFileDirButton* pPicker = dynamic_cast<wxGenericFileDirButton*>(pPickerCtrl_->GetPickerCtrl());
-	
+
 	if (pPicker)
-		pPicker->OnButtonClick(wxCommandEvent());
+	{
+	    wxCommandEvent event;
+		pPicker->OnButtonClick(event);
+	}
 }
 
 wxString BFDestinationCtrl::GetPath ()
