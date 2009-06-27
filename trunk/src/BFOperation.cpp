@@ -122,13 +122,15 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
         BFCore::Instance().CreatePath(strDestination);
 
     // progress ...
+    rProgress.SetActual ( 0 );
     rProgress.SetLabel ( wxString::Format
     (
         _("synchronise from %s to %s"),
         strSource,
         strDestination
     ) );
-    rProgress.SetMessage ( _("calculating directories and files") );
+    rProgress.SetMessage ( _("calculating directories and files...") );
+	BFSystem::Backup ( _("calculating directories and files...") );
 
     // ** listing source **
     wxArrayString arrExclude = pTask_->GetExclude();
@@ -161,7 +163,6 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     }
 
     // progress ...
-    rProgress.SetActual ( 0 );
     rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
     rProgress.SetLabel ( wxString::Format
     (
@@ -361,13 +362,15 @@ bool BFOperation::RunForDirCopy (ProgressWithMessage& rProgress)
         BFCore::Instance().CreatePath(strDestination);
 
     // progress ...
+	rProgress.SetActual ( 0 );
     rProgress.SetLabel ( wxString::Format
     (
         _("copy directory %s to %s"),
         strSource,
         strDestination
     ) );
-    rProgress.SetMessage ( _("calculating directories and files") );
+    rProgress.SetMessage ( _("calculating directories and files...") );
+	BFSystem::Backup ( _("calculating directories and files...") );
 
     // ** listing source **
     wxArrayString arrExclude = pTask_->GetExclude();
@@ -377,8 +380,7 @@ bool BFOperation::RunForDirCopy (ProgressWithMessage& rProgress)
     if ( BFCore::IsStop() )
         return false;
 
-    // progress ...
-    rProgress.SetActual ( 0 );
+    // progress ...    
     rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
     rProgress.SetLabel ( wxString::Format
     (
@@ -484,6 +486,7 @@ bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
     BFBackup::FillBlackfiskPlaceholders(strDestination);
 
     // progress ...
+	rProgress.SetActual ( 0 );
     rProgress.SetLabel ( wxString::Format
     (
         _("compress directory %s to %s"),
@@ -491,6 +494,7 @@ bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
         strDestination
     ) );
     rProgress.SetMessage ( _("calculating directories and files") );
+	BFSystem::Backup ( _("calculating directories and files...") );
 
     // ** listing source **
     wxArrayString arrExclude = pTask_->GetExclude();
@@ -500,8 +504,7 @@ bool BFOperation::RunForArchive (ProgressWithMessage& rProgress)
     if ( BFCore::IsStop() )
         return false;
 
-	// progress ...
-    rProgress.SetActual ( 0 );
+	// progress ...    
     rProgress.SetRange ( arrSource_.GetCount() + arrDestination_.GetCount() );
 	if ( pTask_->Verify() )
 		rProgress.SetRange( rProgress.GetRange() * 2 );

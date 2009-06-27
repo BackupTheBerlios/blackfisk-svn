@@ -1,7 +1,4 @@
-- BUG: before "calculating directories and files" set the task-progress back to 0 %
-
-- tooltips on BFHyperlinkCtrl with URL
-add the next official wxCron!
+- add the next official wxCron!
 - add wxCron to the docs
 
 0.0.2
@@ -20,6 +17,8 @@ add the next official wxCron!
 - don't make a complete rebuild of BFBackupCtrl if just a new task is added
 - check for enough free space on destination drive
 + beautyize and ergonomize the dialogs
+- tooltips (BFTipWindow) on backup-tree-items
+- tooltips on BFHyperlinkCtrl with URL
 
 0.0.3
 ~~~~~
