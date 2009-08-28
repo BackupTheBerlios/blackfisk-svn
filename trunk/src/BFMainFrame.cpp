@@ -751,3 +751,24 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 
     return str;
 }
+
+
+/*static*/ wxSize BFMainFrame::GetTextSize (const wxString& strText,
+											wxWindow* pWin /*= NULL*/)
+{
+	// check the associated window
+	if ( pWin == NULL )
+		pWin = BFMainFrame::Instance();
+
+    // create device context
+    wxWindowDC* pWindowDC = new wxWindowDC(pWin);
+
+	// get size
+	return pWindowDC->GetTextExtent(strText);
+}
+
+/*static*/ int BFMainFrame::GetTextWidth (const wxString& strText,
+										  wxWindow* pWin /*= NULL*/)
+{
+	return GetTextSize (strText, pWin).GetWidth();
+}

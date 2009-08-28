@@ -1,3 +1,11 @@
+- ADDED: static wxSize BFMainFrame::GetTextSize (const wxString& strText, wxWindow* pWin = NULL);
+		 static int GetTextWidth (const wxString& strText, wxWindow* pWin = NULL);
+
+- BUG: window size and pos is out of the screen
+- BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)
+- BUG: source D:\MUSIC, destination: Z: is sync
+       rename D:\MUSIC\CD_MP3 to D:\MUSIC\_MUSIC
+	   after next sync the destination was empty
 - add the next official wxCron!
 - add wxCron to the docs
 
@@ -40,7 +48,7 @@
 0.0.4 and later
 ~~~~~
 - help: tutorials/howtos with wink
-- full customizable keybord-shortcuts based on the menus
+- full customizable keybord-shortcuts based on the menus (http://wxcode.sourceforge.net/components/keybinder/)
 - WebUpdater
 - more translations
 

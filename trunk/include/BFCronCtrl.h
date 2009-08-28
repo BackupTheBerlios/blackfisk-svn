@@ -28,17 +28,22 @@
 #include <wx/combobox.h>
 #include <wx/radiobut.h>
 
+class BFTimeCtrl;
+
 ///
 class BFCronCtrl : public wxPanel
 {
     private:
         ///
         wxArrayString       arrCrontabline_;
-        ///
+        /// daily, weekly, intervall
         wxComboBox*         pComboType_;
-        ///
-        wxComboBox*         pComboIntervall_;
+		///
+		BFTimeCtrl*			pTimeCtrl_;
+
         /*
+        wxComboBox*         pComboIntervall_;
+        
         wxComboBox*         pComboFixed_;
         ///
         wxRadioButton*      pRadioIntervall_;
@@ -48,7 +53,7 @@ class BFCronCtrl : public wxPanel
         ///
         void CheckRadios ();*/
         ///
-        void FillCombos ();
+        //void FillCombos ();
 
         ///
         void GetData();

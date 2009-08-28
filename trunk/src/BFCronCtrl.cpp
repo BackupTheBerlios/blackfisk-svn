@@ -24,7 +24,8 @@
 #include "BFCronCtrl.h"
 
 #include <wx/sizer.h>
-
+#include <wx/spinctrl.h>
+#include "BFTimeCtrl.h"
 #include "ids.h"
 
 #define BFCRONCTRL_ID_COMBOTYPE                     1 + BF_CRONCTRL_ID_HIGHEST
@@ -40,10 +41,10 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
           : wxPanel(pParent),
             arrCrontabline_(arrCrontabline)
 {
-    wxString choicesType[] = { _("hourly"),
-                               _("daily"),
-                               _("monthly") };
-
+	// * type *
+    wxString choicesType[] = { _("daily"),
+                               _("weekly"),
+                               _("intervall") };
     pComboType_ = new wxComboBox(this,
                                  BFCRONCTRL_ID_COMBOTYPE,
                                  "X X X",
@@ -52,27 +53,25 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
                                  3,
                                  choicesType,
                                  wxCB_READONLY);
-    pComboType_->Select(0);
 
-    pComboIntervall_ = new wxComboBox(this,
-                                      BFCRONCTRL_ID_COMBOINTERVALL,
-                                      "11",
-                                      wxDefaultPosition,
-                                      wxDefaultSize,
-                                      0,
-                                      NULL,
-                                      wxCB_READONLY);
+	// * time *
+	pTimeCtrl_ = new BFTimeCtrl(this, wxID_ANY, 7, 38);
+
+	//
+    //pComboType_->Select(0);
 
     // sizer and arrange
-    wxBoxSizer*         pSizerV = new wxBoxSizer(wxVERTICAL);
-    wxFlexGridSizer*    pSizerFG = new wxFlexGridSizer(1, 25, 5);
-    wxStaticBoxSizer*   pSizerSB = new wxStaticBoxSizer(wxVERTICAL, this);
-    pSizerFG->Add ( pComboIntervall_,   wxSizerFlags(0).Expand() );
-    pSizerSB->Add ( pSizerFG,   wxSizerFlags(0).Border(wxTOP | wxBOTTOM, 15) );
-    pSizerV->Add ( pComboType_, wxSizerFlags(0).Center().DoubleBorder() );
-    pSizerV->Add ( pSizerSB,    wxSizerFlags(0).Center().Border() );
-    SetSizer(pSizerV);
+    //wxBoxSizer*         pSizerV = new wxBoxSizer(wxVERTICAL);
+    //wxFlexGridSizer*    pSizerFG = new wxFlexGridSizer(1, 25, 5);
+    wxStaticBoxSizer*	pSizerSB = new wxStaticBoxSizer(wxHORIZONTAL, this);
+    //pSizerFG->Add ( pComboIntervall_,   wxSizerFlags(0).Expand() );
+    //pSizerSB->Add ( pSizerFG,   wxSizerFlags(0).Border(wxTOP | wxBOTTOM, 15) );
+    pSizerSB->Add ( pComboType_,	wxSizerFlags(0).Center().DoubleBorder() );
+	pSizerSB->Add ( pTimeCtrl_,		wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
+    //pSizerV->Add ( pSizerSB,    wxSizerFlags(0).Center().Border() );
+    SetSizer(pSizerSB);
 
+	//pTxtCtrl->SetMaxSize( wxSize(15, -1) );
     // init
     //CheckRadios();
     GetData();
@@ -85,6 +84,9 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 
 void BFCronCtrl::GetData()
 {
+	// XXX
+	return;
+
     int iType = 0;
     long lVal = 0;
 
@@ -97,25 +99,26 @@ void BFCronCtrl::GetData()
 
     arrCrontabline_[iType].Mid(2).ToLong(&lVal);
     pComboType_->Select(iType);
-    FillCombos();
+    //FillCombos();
 
-    if ( (lVal-1) > (long)pComboIntervall_->GetCount() )
+    /*if ( (lVal-1) > (long)pComboIntervall_->GetCount() )
         return;
 
-    pComboIntervall_->SetSelection(lVal-1);
+    pComboIntervall_->SetSelection(lVal-1);*/
 }
 
 
 void BFCronCtrl::SetData ()
 {
+	// XXX
     arrCrontabline_[0] = arrCrontabline_[1] = arrCrontabline_[2] = "*";
 
-    wxString str = wxString::Format("*/%d", pComboIntervall_->GetSelection()+1);
+	wxString str;
+    //wxString str = wxString::Format("*/%d", pComboIntervall_->GetSelection()+1);
 
     switch (pComboType_->GetSelection())
     {
-        case 0:
-            arrCrontabline_[0] = str;
+        case 0:            arrCrontabline_[0] = str;
             break;
 
         case 1:
@@ -173,9 +176,11 @@ bool /*static*/ BFCronCtrl::IsCrontablineUsable (const wxArrayString& arr)
 
 void BFCronCtrl::OnCombo (wxCommandEvent& rEvent)
 {
-    FillCombos();
-}
+	// XXX
 
+    //FillCombos();
+}
+/*
 void BFCronCtrl::FillCombos ()
 {
     wxArrayString arrIntervall;
@@ -265,10 +270,7 @@ void BFCronCtrl::FillCombos ()
     }
 
     // set the combos
-    /*pComboFixed_->Clear();
-    pComboFixed_->Append(arrFixed);
-    pComboFixed_->Select(0);*/
     pComboIntervall_->Clear();
     pComboIntervall_->Append(arrIntervall);
     pComboIntervall_->Select(0);
-}
+}*/

@@ -177,6 +177,13 @@ class BFMainFrame : public wxFrame
             It will insert new-line characters in the string. */
         wxString& Wrap (wxString& str, int iWidthInPixel);
 
+		/** Calculate the size of the string 'strText' in pixel and return it.
+			The calculated size depend on the used wxWindow specified by 'pWin'.
+			If 'pWin' NULL then the current wxMainFramee is used. */
+		static wxSize GetTextSize (const wxString& strText, wxWindow* pWin = NULL);
+		/// Please see 'wxSize GetTextSize (const wxString& strText, wxWindow* pWin = NULL);' for more detailes.
+		static int GetTextWidth (const wxString& strText, wxWindow* pWin = NULL);
+
     DECLARE_EVENT_TABLE();
 };    // class BFMainFrame
 
