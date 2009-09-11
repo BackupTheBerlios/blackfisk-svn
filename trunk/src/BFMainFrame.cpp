@@ -30,6 +30,7 @@
 #include <wx/tooltip.h>
 #include <wx/aboutdlg.h>
 #include <wx/toolbar.h>
+#include <wx/display.h>
 
 #include "blackfisk.h"
 #include "BFApp.h"
@@ -205,6 +206,36 @@ END_EVENT_TABLE()
     // background color
     SetBackgroundColour(menuBar->GetBackgroundColour());
 
+	/* XXX
+	BFSystem::Info( wxString::Format("before modification\n\npos: %d X %d\nsize: %d X %d\nmaximazied: %d\ndefault pos: %d X %d",
+									 BFSettings::Instance().GetMainWindowPosition().x,
+									 BFSettings::Instance().GetMainWindowPosition().y,
+									 BFSettings::Instance().GetMainWindowSize().GetWidth(),
+									 BFSettings::Instance().GetMainWindowSize().GetHeight(),
+									 (int)BFSettings::Instance().GetMainWindowMaximized(),
+									 wxDefaultPosition.x,
+									 wxDefaultPosition.y) );
+
+	/* check position and size for the current screen
+	wxRect recDisplay = wxDisplay().GetClientArea();
+
+	if ( recDisplay.Contains( BFSettings::Instance().GetMainWindowPosition() ) == false )
+		BFSettings::Instance().SetMainWindowPosition( wxPoint(1, 1) );
+
+	if ( BFSettings::Instance().GetMainWindowSize().GetWidth() > recDisplay.GetSize().GetWidth()
+	  || BFSettings::Instance().GetMainWindowSize().GetHeight() > recDisplay.GetSize().GetHeight() )
+		BFSettings::Instance().SetMainWindowSize(wxDefaultSize);
+
+	// XXX
+	BFSystem::Info( wxString::Format("after correction\n\npos: %d X %d\nsize: %d X %d\nmaximazied: %d\ndefault pos: %d X %d",
+									 BFSettings::Instance().GetMainWindowPosition().x,
+									 BFSettings::Instance().GetMainWindowPosition().y,
+									 BFSettings::Instance().GetMainWindowSize().GetWidth(),
+									 BFSettings::Instance().GetMainWindowSize().GetHeight(),
+									 (int)BFSettings::Instance().GetMainWindowMaximized(),
+									 wxDefaultPosition.x,
+									 wxDefaultPosition.y) );*/
+
     // window position
     Move(BFSettings::Instance().GetMainWindowPosition());
 
@@ -258,7 +289,7 @@ END_EVENT_TABLE()
     }
 
 #ifdef _DEBUG
-    //Test();
+	OnTest(wxCommandEvent());
 #endif
 }
 
@@ -606,13 +637,10 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 }
 
 #ifdef _DEBUG
-#include "BFSound.h"
-#include <wx/process.h>
 
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-	BFSystem::Fatal(wxGetCwd());
-	BFSystem::Log("LOG ME");
+	OpenProjectPlanner();
 }
 
 #endif

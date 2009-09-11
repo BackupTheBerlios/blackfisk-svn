@@ -26,7 +26,9 @@
 
 #include <wx/panel.h>
 #include <wx/combobox.h>
+#include <wx/spinctrl.h>
 #include <wx/radiobut.h>
+#include <wx/sizer.h>
 
 class BFTimeCtrl;
 
@@ -36,24 +38,35 @@ class BFCronCtrl : public wxPanel
     private:
         ///
         wxArrayString       arrCrontabline_;
-        /// daily, weekly, intervall
-        wxComboBox*         pComboType_;
+
 		///
-		BFTimeCtrl*			pTimeCtrl_;
+        wxRadioButton*		pRadioDaily_;
+		///
+		wxRadioButton*		pRadioWeekly_;
+		///
+		wxRadioButton*		pRadioIntervall_;
 
-        /*
-        wxComboBox*         pComboIntervall_;
-        
-        wxComboBox*         pComboFixed_;
-        ///
-        wxRadioButton*      pRadioIntervall_;
-        ///
-        wxRadioButton*      pRadioFixed_;
+		///
+		wxPanel*			pPanelDaily_;
+		///
+		wxPanel*			pPanelWeekly_;
+		///
+		wxPanel*			pPanelIntervall_;
 
-        ///
-        void CheckRadios ();*/
-        ///
-        //void FillCombos ();
+		/// DAILY: clock
+		BFTimeCtrl*			pDTimeCtrl_;
+
+		/// WEEKLY: clock
+		BFTimeCtrl*			pWTimeCtrl_;
+		/// WEEKLY: weekdays
+		wxComboBox*			pWComboDay_;
+
+		/// INTERVALL: days
+		wxSpinCtrl*			pISpinDays_;
+		/// INTERVALL: hours
+		wxSpinCtrl*			pISpinHours_;
+		/// INTERVALL: minutes
+		wxSpinCtrl*			pISpinMinutes_;
 
         ///
         void GetData();
@@ -71,9 +84,12 @@ class BFCronCtrl : public wxPanel
         ///
         bool static IsCrontablineUsable (const wxArrayString& arr);
 
-        //        void OnRadioButton (wxCommandEvent& rEvent);
         ///
-        void OnCombo (wxCommandEvent& rEvent);
+        void OnRadio_D (wxCommandEvent& rEvent);
+        ///
+        void OnRadio_W (wxCommandEvent& rEvent);
+        ///
+        void OnRadio_I (wxCommandEvent& rEvent);
 
         ///
         wxString GetCrontabline ();

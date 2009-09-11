@@ -100,12 +100,12 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-    pDlgSizer->Add (pButtonSchedule_,   wxSizerFlags(0).Center().Border());
+	pDlgSizer->Add (pButtonSchedule_,   wxSizerFlags(0).Center().DoubleBorder());
     if (pCronCtrl_)
         pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
     else
         pDlgSizer->Add(pStatic,          wxSizerFlags(0).DoubleBorder());
-    pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center());
+	pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center().Border(wxALL, 10));
     SetSizerAndFit(pDlgSizer);
     CenterOnParent();
     ShowModal();

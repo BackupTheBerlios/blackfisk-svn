@@ -455,10 +455,6 @@ bool BFApp::ResetProject ()
 #ifdef _DEBUG
 void BFApp::Test ()
 {
-    BFSystem::Info("Info");
-    BFSystem::Warning("Warning");
-    BFSystem::Error("Error");
-    BFSystem::Fatal("Fatal");
 }
 #endif
 

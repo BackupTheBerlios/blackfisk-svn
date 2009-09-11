@@ -1,7 +1,3 @@
-- ADDED: static wxSize BFMainFrame::GetTextSize (const wxString& strText, wxWindow* pWin = NULL);
-		 static int GetTextWidth (const wxString& strText, wxWindow* pWin = NULL);
-
-- BUG: window size and pos is out of the screen
 - BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)
 - BUG: source D:\MUSIC, destination: Z: is sync
        rename D:\MUSIC\CD_MP3 to D:\MUSIC\_MUSIC
