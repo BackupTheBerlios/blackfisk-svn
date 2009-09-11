@@ -433,6 +433,11 @@ void BFBackup::ModifyDestination (const wxString& strOldDestination,
             // replace old with new destination
             strCurrDest.Replace(strOldDestination, strNewDestination);
 
+			while ( strCurrDest.EndsWith(wxFILE_SEP_PATH) )
+				strCurrDest.RemoveLast(1);
+
+			strCurrDest << wxFILE_SEP_PATH;
+
             // set destination to the task
             (*it)->SetDestination(strCurrDest);
             // remember to mark the project as modified
