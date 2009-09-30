@@ -49,9 +49,6 @@ BFTimeCtrl::TextCtrl::TextCtrl (wxWindow* pParent, BFTimeCtrl* pTimeCtrl,
 {
 	pTimeCtrl_	= pTimeCtrl;
 	strBuffer_	= wxEmptyString;
-
-	//DoMoveWindow(GetPosition().x, GetPosition().y, 100, GetSize().GetHeight());
-
 }
 
 /*virtual*/ BFTimeCtrl::TextCtrl::~TextCtrl()
@@ -312,6 +309,34 @@ wxString BFTimeCtrl::GetValue() const
 	return pTextCtrl_->GetValue();
 }
 
+wxString BFTimeCtrl::GetValue (int& rHour, int& rMinute) const
+{
+	wxString str = GetValue();
+	long lHour, lMinute;
+
+	str.Before(':').ToLong(&lHour);
+	str.After(':').ToLong(&lMinute);
+
+	rHour = (int)lHour;
+	rMinute = (int)lMinute;
+
+	return str;
+}
+
+bool BFTimeCtrl::SetValue (int iHour, int iMinute)
+{
+	// hour valid?
+	if ( iHour < 0 || iHour > 23 )
+		return false;
+
+	// minute valid?
+	if ( iMinute < 0 || iMinute > 59 )
+		return false;
+
+	pTextCtrl_->SetValue( wxString::Format("%.2d:%.2d", iHour, iMinute) );
+
+	return true;
+}
 
 const BFTimeCtrl::TextCtrl* BFTimeCtrl::GetTextControl ()
 {

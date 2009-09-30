@@ -176,25 +176,49 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 {
 }
 
+
+bool BFCronCtrl::IsCrontablineDaily ()
+{
+	// positive example: "45 12 * * * command"
+
+	// minute and hour fields without '*' and '/'
+	if ( arrCrontabline_[0].Find('*') != wxNOT_FOUND
+	  || arrCrontabline_[0].Find('/') != wxNOT_FOUND
+	  || arrCrontabline_[1].Find('*') != wxNOT_FOUND
+	  || arrCrontabline_[1].Find('/') != wxNOT_FOUND )
+	  return false;
+
+	// week, day and month are '*'
+	if ( arrCrontabline_[2] != "*"
+	  || arrCrontabline_[3] != "*"
+	  || arrCrontabline_[4] != "*" )
+	  return false;
+
+	return true;
+}
+
+
+void BFCronCtrl::GetData_Time()
+{
+	long lHour, lMinute;
+	
+	arrCrontabline_[1].ToLong(&lHour);
+	arrCrontabline_[0].ToLong(&lMinute);
+
+	pDTimeCtrl_->SetValue((int)lHour, (int)lMinute);
+}
+
 void BFCronCtrl::GetData()
 {
 	//
     BFBackup::ParseCrontabline(strCrontabline_, arrCrontabline_);
 
 	// * DAILY * time
-	if ( false )
+	if ( IsCrontablineDaily() )
 	{
-    int iType = 0;
-    long lVal = 0;
-
-    if ( arrCrontabline_[0].StartsWith("*/") )
-        iType = 0;
-    else if ( arrCrontabline_[1].StartsWith("*/") )
-        iType = 1;
-    else if ( arrCrontabline_[2].StartsWith("*/") )
-        iType = 2;
-
-    arrCrontabline_[iType].Mid(2).ToLong(&lVal);
+		pRadioDaily_->SetValue(true);
+		OnRadio_D(wxCommandEvent());
+		GetData_Time();
 		return;
 	}
 
@@ -218,13 +242,14 @@ void BFCronCtrl::GetData()
 
 	if ( BFMainFrame::QuestionYesNo ( strQuestion ) )
 	{
-		// XXX
-		BFSystem::Fatal ( wxString::Format("before Replace\n\ncrontab: %s\nGetCrontabline: %s\nBF_CRONTABLINE_DEFAULT: %s", BFSettings::Instance().GetCrontab(), BFBackup::Instance().GetCrontabline(), BF_CRONTABLINE_DEFAULT));
 		// yes
 		BFCore::Instance().ReplaceLineInFile
 		(
+			// filename
 			BFSettings::Instance().GetCrontab(),
+			// old
 			BFBackup::Instance().GetCrontabline(),
+			// new
 			BFBackup::Instance().GetCrontablineDefault()
 		);
 
@@ -244,29 +269,37 @@ void BFCronCtrl::GetData()
 
 void BFCronCtrl::SetData ()
 {
-	// XXX
-    arrCrontabline_[0] = arrCrontabline_[1] = arrCrontabline_[2] = "*";
+	// * DAILY *
+	if ( pRadioDaily_->GetValue() )
+	{
+		int iHour, iMinute;
+		pDTimeCtrl_->GetValue(iHour, iMinute);
+		
+		arrCrontabline_[1] = wxString::Format("%d", iHour);
+		arrCrontabline_[0] = wxString::Format("%d", iMinute);
+		arrCrontabline_[2] = '*';
+		arrCrontabline_[3] = '*';
+		arrCrontabline_[4] = '*';
+	}
 
-	wxString str;
-    //wxString str = wxString::Format("*/%d", pComboIntervall_->GetSelection()+1);
+	// * WEEKLY *
+	if ( pRadioWeekly_->GetValue() )
+	{
+	}
 
-/*    switch (pComboType_->GetSelection())
-    {
-        case 0:
-			arrCrontabline_[0] = str;
-            break;
+	// * INTERAVALL *
+	if ( pRadioIntervall_->GetValue() )
+	{
+	}
 
-        case 1:
-            arrCrontabline_[0] = "0";
-            arrCrontabline_[1] = str;
-            break;
-
-        case 2:
-            arrCrontabline_[0] = "0";
-            arrCrontabline_[1] = "0";
-            arrCrontabline_[2] = str;
-            break;
-    }*/
+	// create new crontab line
+	strCrontabline_ = wxString::Format("%s %s %s %s %s %s",
+									   arrCrontabline_[0],
+									   arrCrontabline_[1],
+									   arrCrontabline_[2],
+									   arrCrontabline_[3],
+									   arrCrontabline_[4],
+									   arrCrontabline_[5] );
 }
 
 wxString BFCronCtrl::GetCrontabline ()
@@ -325,98 +358,3 @@ void BFCronCtrl::OnCombo_I (wxCommandEvent& rEvent)
 void BFCronCtrl::OnCombo_W (wxCommandEvent& rEvent)
 {
 }
-
-/*
-void BFCronCtrl::FillCombos ()
-{
-    wxArrayString arrIntervall;
-    //wxArrayString arrFixed;
-    wxString      str;
-
-    // hourly
-    if (pComboType_->GetSelection() == 0)
-    {
-        for (long i = 1; i < 60; ++i)
-        {
-            switch (i)
-            {
-                case 1:
-                    str = _("st");
-                    break;
-
-                case 2:
-                    str = _("nd");
-                    break;
-
-                case 3:
-                    str = _("rd");
-                    break;
-
-                default:
-                    str = _("th");
-            }
-
-            arrIntervall.Add(wxString::Format(_("every %d minutes"), i));
-            //arrFixed.Add(wxString::Format(_("each %d%s minute"), i, str));
-        }
-    }
-    // daily
-    else if (pComboType_->GetSelection() == 1)
-    {
-        for (long i = 1; i < 24; ++i)
-        {
-            switch (i)
-            {
-                case 1:
-                    str = _("st");
-                    break;
-
-                case 2:
-                    str = _("nd");
-                    break;
-
-                case 3:
-                    str = _("rd");
-                    break;
-
-                default:
-                    str = _("th");
-            }
-
-            arrIntervall.Add(wxString::Format(_("every %d hours"), i));
-            //arrFixed.Add(wxString::Format(_("each %d%s hour"), i, str));
-        }
-    }
-    // monthly
-    else if (pComboType_->GetSelection() == 2)
-    {
-        for (long i = 1; i < 31; ++i)
-        {
-            switch (i)
-            {
-                case 1:
-                    str = _("st");
-                    break;
-
-                case 2:
-                    str = _("nd");
-                    break;
-
-                case 3:
-                    str = _("rd");
-                    break;
-
-                default:
-                    str = _("th");
-            }
-
-            arrIntervall.Add(wxString::Format(_("every %d days"), i));
-            //arrFixed.Add(wxString::Format(_("each %d%s day"), i, str));
-        }
-    }
-
-    // set the combos
-    pComboIntervall_->Clear();
-    pComboIntervall_->Append(arrIntervall);
-    pComboIntervall_->Select(0);
-}*/

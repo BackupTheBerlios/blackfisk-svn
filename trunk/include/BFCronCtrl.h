@@ -73,13 +73,19 @@ class BFCronCtrl : public wxPanel
 		/// INTERVALL: minutes
 		wxSpinCtrl*			pISpinMinutes_;*/
 
-        ///
+        /** Read data from the crontab and display it in the dialog. */
         void GetData();
-        ///
-        void SetData ();
+		///
+		void GetData_Time();
+
+		///
+		bool IsCrontablineDaily ();
 
     public:
-        /// ctor
+        /** Read data from the dialog and create a crontab of it. */
+        void SetData ();
+
+		/// ctor
         BFCronCtrl (wxWindow* pParent,
                     const wxString& strCrontabline);
 

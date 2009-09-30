@@ -106,6 +106,8 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
     if (pCronCtrl_)
     {
+		pCronCtrl_->SetData();
+
         if ( pButtonSchedule_->GetValue() )
         {
             wxString strOld = BFBackup::Instance().GetCrontabline();

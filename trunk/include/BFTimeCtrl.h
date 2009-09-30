@@ -178,13 +178,16 @@ class BFTimeCtrl : public wxBoxSizer
 		 * @param type
 		 */
 		void UpdateTextCtrl (bool bPositiv);
-		
-		/**
-		 * This function returns the value of the time control.
-		 *
-		 * @return Time, const wxString&
-		 */
+
+		///
 		wxString GetValue () const;
+		///
+		wxString GetValue (int& rHour, int& rMinute) const;
+
+		/** Set the time for the control.
+			The return value is false if the time is not valid
+			otherwise it returns true. */
+		bool SetValue (int iHour, int Minute);
 
 		///
 		const TextCtrl* GetTextControl ();

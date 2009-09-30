@@ -633,11 +633,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\README"
+				RelativePath=".\README"
 				>
 			</File>
 			<File
-				RelativePath=".\README"
+				RelativePath="..\README"
 				>
 			</File>
 			<File
