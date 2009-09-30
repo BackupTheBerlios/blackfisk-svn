@@ -187,6 +187,10 @@ class BFBackup
         /** search for blackfisk-specific placeholders in 'rStr'
             and replace them with the needed value */
         static wxString& FillBlackfiskPlaceholders (wxString& rStr);
+
+		/** Create a full crontab line/entry with BF_CRONTABLINE_DEFAULT,
+			the current binary and the current projectfile. */
+		wxString GetCrontablineDefault ();
 };
 
 #endif    // BFBACKUP_H

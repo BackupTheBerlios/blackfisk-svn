@@ -56,26 +56,9 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
 
     // get crontabline
     wxString        strCrontabLine = BFBackup::Instance().GetCrontabline();
-    wxArrayString   arr;
-    BFBackup::ParseCrontabline(strCrontabLine, arr);
 
-    wxStaticText* pStatic = NULL;
-
-    // check crontabline
-    if ( BFCronCtrl::IsCrontablineUsable(arr) )
-    {
-        // cron ctrl
-        pCronCtrl_ = new BFCronCtrl(this, arr);
-    }
-    else
-    {
-        wxString str = _("Error: The given crontab line is not editable for the project planer.\n" \
-                         "Maybe the crontab line was edited directly or by another application.\n" \
-                         "\nThis is the line:\n");
-        str = str + wxJoin(arr, ' ');
-
-        pStatic = new wxStaticText(this, wxID_ANY, str);
-    }
+	// cron ctrl
+	pCronCtrl_ = new BFCronCtrl(this, strCrontabLine);
 
     // schedule button
     pButtonSchedule_ = new wxToggleButton(this,
@@ -101,10 +84,7 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
 	pDlgSizer->Add (pButtonSchedule_,   wxSizerFlags(0).Center().DoubleBorder());
-    if (pCronCtrl_)
-        pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
-    else
-        pDlgSizer->Add(pStatic,          wxSizerFlags(0).DoubleBorder());
+	pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
 	pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center().Border(wxALL, 10));
     SetSizerAndFit(pDlgSizer);
     CenterOnParent();

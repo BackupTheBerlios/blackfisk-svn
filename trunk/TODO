@@ -1,3 +1,13 @@
+==daily==
+N N * * *
+
+==weekly==
+N N * * N
+
+==intervall==
+
+
+- BUG: start backup without any tasks (fresh project) cause in crash
 - BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)
 - BUG: source D:\MUSIC, destination: Z: is sync
        rename D:\MUSIC\CD_MP3 to D:\MUSIC\_MUSIC

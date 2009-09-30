@@ -115,9 +115,6 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
                                 const wxString& strOld,
                                 const wxString& strNew)
 {
-	// XXX
-	BFSystem::Fatal(wxString::Format("IN BFCore::ReplaceLineInFile()\nstrFilename: %s\nstrOld: %s\nstrNew: %s"));
-
     wxTextFile file(strFilename);
     bool rc = false;
 

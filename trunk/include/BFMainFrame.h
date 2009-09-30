@@ -184,6 +184,9 @@ class BFMainFrame : public wxFrame
 		/// Please see 'wxSize GetTextSize (const wxString& strText, wxWindow* pWin = NULL);' for more detailes.
 		static int GetTextWidth (const wxString& strText, wxWindow* pWin = NULL);
 
+		/** */
+		static void SetFontBold (wxWindow* pWindow, bool bBold = true);
+
     DECLARE_EVENT_TABLE();
 };    // class BFMainFrame
 

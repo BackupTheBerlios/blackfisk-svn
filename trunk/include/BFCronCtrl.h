@@ -36,6 +36,8 @@ class BFTimeCtrl;
 class BFCronCtrl : public wxPanel
 {
     private:
+		///
+		wxString			strCrontabline_;
         ///
         wxArrayString       arrCrontabline_;
 
@@ -61,12 +63,15 @@ class BFCronCtrl : public wxPanel
 		/// WEEKLY: weekdays
 		wxComboBox*			pWComboDay_;
 
-		/// INTERVALL: days
-		wxSpinCtrl*			pISpinDays_;
-		/// INTERVALL: hours
+		/// INTERVALL: spin
+		wxSpinCtrl*			pISpin_;
+		/// INTERVALL: type
+		wxComboBox*			pICombo_;
+
+		/** INTERVALL: hours
 		wxSpinCtrl*			pISpinHours_;
 		/// INTERVALL: minutes
-		wxSpinCtrl*			pISpinMinutes_;
+		wxSpinCtrl*			pISpinMinutes_;*/
 
         ///
         void GetData();
@@ -76,13 +81,10 @@ class BFCronCtrl : public wxPanel
     public:
         /// ctor
         BFCronCtrl (wxWindow* pParent,
-                    const wxArrayString& arrCrontabline);
+                    const wxString& strCrontabline);
 
         /// virtual dtor
         virtual ~BFCronCtrl ();
-
-        ///
-        bool static IsCrontablineUsable (const wxArrayString& arr);
 
         ///
         void OnRadio_D (wxCommandEvent& rEvent);
@@ -90,6 +92,11 @@ class BFCronCtrl : public wxPanel
         void OnRadio_W (wxCommandEvent& rEvent);
         ///
         void OnRadio_I (wxCommandEvent& rEvent);
+
+		///
+		void OnCombo_I (wxCommandEvent& rEvent);
+		///
+		void OnCombo_W (wxCommandEvent& rEvent);
 
         ///
         wxString GetCrontabline ();

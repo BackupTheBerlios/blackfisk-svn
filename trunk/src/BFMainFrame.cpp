@@ -805,3 +805,19 @@ wxString& BFMainFrame::Wrap (wxString& str, int iWidthInPixel)
 {
 	return GetTextSize (strText, pWin).GetWidth();
 }
+
+
+/*static*/ void BFMainFrame::SetFontBold (wxWindow* pWindow, bool bBold /*= true*/)
+{
+	if (pWindow == NULL)
+		return;
+
+	wxFont font = pWindow->GetFont();
+
+	if ( bBold )
+		font.SetWeight(wxFONTWEIGHT_BOLD);
+	else
+		font.SetWeight(wxFONTWEIGHT_NORMAL);
+
+	pWindow->SetFont(font);
+}

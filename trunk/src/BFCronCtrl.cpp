@@ -28,28 +28,39 @@
 #include <wx/spinctrl.h>
 #include <wx/statline.h>
 #include "BFTimeCtrl.h"
+#include "BFSettings.h"
 #include "BFMainFrame.h"
+#include "BFBackup.h"
+#include "BFCore.h"
 #include "ids.h"
+#include "blackfisk.h"
 
-#define BFCRONCTRL_ID_RADIO_D	1 + BF_CRONCTRL_ID_HIGHEST
-#define BFCRONCTRL_ID_RADIO_W	2 + BF_CRONCTRL_ID_HIGHEST
-#define BFCRONCTRL_ID_RADIO_I	3 + BF_CRONCTRL_ID_HIGHEST
+//XXX
+#include "BFSystem.h"
+
+#define BFCRONCTRL_ID_RADIO_D		1 + BF_CRONCTRL_ID_HIGHEST
+#define BFCRONCTRL_ID_RADIO_W		2 + BF_CRONCTRL_ID_HIGHEST
+#define BFCRONCTRL_ID_RADIO_I		3 + BF_CRONCTRL_ID_HIGHEST
+#define BFCRONCTRL_ID_COMBO_W		4 + BF_CRONCTRL_ID_HIGHEST
+#define BFCRONCTRL_ID_COMBO_I		5 + BF_CRONCTRL_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFCronCtrl, wxPanel)
-	EVT_RADIOBOX ( BFCRONCTRL_ID_RADIO_D,		BFCronCtrl::OnRadio_D)
-	EVT_RADIOBOX ( BFCRONCTRL_ID_RADIO_W,		BFCronCtrl::OnRadio_W)
-	EVT_RADIOBOX ( BFCRONCTRL_ID_RADIO_I,		BFCronCtrl::OnRadio_I)
+	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_D,		BFCronCtrl::OnRadio_D)
+	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_W,		BFCronCtrl::OnRadio_W)
+	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_I,		BFCronCtrl::OnRadio_I)
+	EVT_COMBOBOX	( BFCRONCTRL_ID_COMBO_W,		BFCronCtrl::OnCombo_W)
+	EVT_COMBOBOX	( BFCRONCTRL_ID_COMBO_I,		BFCronCtrl::OnCombo_I)
 END_EVENT_TABLE()
 
 BFCronCtrl::BFCronCtrl (wxWindow* pParent,
-                        const wxArrayString& arrCrontabline)
+                        const wxString& strCrontabline)
           : wxPanel(pParent),
-            arrCrontabline_(arrCrontabline)
+            strCrontabline_(strCrontabline)
 {
 	// * type *
-	pRadioDaily_		= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_D, _("daily"));
-	pRadioWeekly_		= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_W, _("weekly"));
-	pRadioIntervall_	= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_I, _("intervall"));
+	pRadioDaily_		= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_D, _("daily   "));
+	pRadioWeekly_		= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_W, _("weekly   "));
+	pRadioIntervall_	= new wxRadioButton(this, BFCRONCTRL_ID_RADIO_I, _("intervall   "));
 
 	// panels
 	pPanelDaily_ = new wxPanel(this);
@@ -68,7 +79,7 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 							  _("Saturday"),
 							  _("Sunday")};
 	pWComboDay_ = new wxComboBox(pPanelWeekly_,
-			 					 wxID_ANY,
+			 					 BFCRONCTRL_ID_COMBO_W,
 			 					 "X X X",
 								 wxDefaultPosition,
 								 wxDefaultSize,
@@ -80,15 +91,10 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 
 
 	// * INTERVALL *
-	pISpinDays_ = new wxSpinCtrl(pPanelIntervall_,
-								wxID_ANY,
-								wxEmptyString,
-								wxDefaultPosition,
-								wxDefaultSize,
-								wxSP_ARROW_KEYS,
-								0,
-								30);
-	pISpinHours_ = new wxSpinCtrl(pPanelIntervall_,
+	pISpin_ = new wxSpinCtrl(pPanelIntervall_,
+							 wxID_ANY,
+							 "0000");
+	/*pISpinHours_ = new wxSpinCtrl(pPanelIntervall_,
 								 wxID_ANY,
 								 wxEmptyString,
 								 wxDefaultPosition,
@@ -103,11 +109,21 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 								   wxDefaultSize,
 								   wxSP_ARROW_KEYS,
 								   0,
-								   59);
-	int iWidth = BFMainFrame::GetTextWidth("0000000", pISpinDays_);
-	pISpinDays_->SetSize(wxSize(iWidth, -1));
-	pISpinHours_->SetSize(wxSize(iWidth, -1));
-	pISpinMinutes_->SetSize(wxSize(iWidth, -1));
+								   59);*/
+	int iWidth = BFMainFrame::GetTextWidth("0000000000", pISpin_);
+	pISpin_->SetSize(wxSize(iWidth, -1));
+	/*pISpinHours_->SetSize(wxSize(iWidth, -1));
+	pISpinMinutes_->SetSize(wxSize(iWidth, -1));*/
+
+	wxString choicesIntervall[] = { _("days"), _("hours"), _("minutes") };
+	pICombo_ = new wxComboBox (pPanelIntervall_,
+							   BFCRONCTRL_ID_COMBO_I,
+							   "X X X",
+							   wxDefaultPosition,
+							   wxDefaultSize,
+							   3,
+							   choicesIntervall,
+							   wxCB_READONLY);
 
 	// ** sizer and arrange **
 	wxBoxSizer* pSizerD = new wxBoxSizer(wxHORIZONTAL);
@@ -124,15 +140,16 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 
 	wxBoxSizer* pSizerI = new wxBoxSizer(wxHORIZONTAL);
 	pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("all ")),		wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
-	pSizerI->Add ( pISpinDays_,		wxSizerFlags(0).FixedMinSize() );
-	pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("days ")),	wxSizerFlags(0).Border(wxLEFT).Align(wxALIGN_CENTER_VERTICAL) );
+	pSizerI->Add ( pISpin_,		wxSizerFlags(0).FixedMinSize() );
+	/*pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("days ")),	wxSizerFlags(0).Border(wxLEFT).Align(wxALIGN_CENTER_VERTICAL) );
 	pSizerI->AddStretchSpacer(2);
 	pSizerI->Add ( pISpinHours_,		wxSizerFlags(0).FixedMinSize() );
 	pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("hours ")),	wxSizerFlags(0).Border(wxLEFT).Align(wxALIGN_CENTER_VERTICAL) );
 	pSizerI->AddStretchSpacer(2);
 	pSizerI->Add ( pISpinMinutes_,	wxSizerFlags(0).FixedMinSize() );
-	pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("minutes ")), wxSizerFlags(0).Border(wxLEFT).Align(wxALIGN_CENTER_VERTICAL) );
-	pSizerI->AddStretchSpacer(2);
+	pSizerI->Add ( new wxStaticText(pPanelIntervall_, wxID_ANY, _("minutes ")), wxSizerFlags(0).Border(wxLEFT).Align(wxALIGN_CENTER_VERTICAL) );*/
+	pSizerI->AddStretchSpacer(1);
+	pSizerI->Add ( pICombo_,			wxSizerFlags(0) );
 	pPanelIntervall_->SetSizer(pSizerI);
 	
 	wxGridBagSizer* pGBSizer = new wxGridBagSizer ();
@@ -161,9 +178,12 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 
 void BFCronCtrl::GetData()
 {
-	// XXX
-	return;
+	//
+    BFBackup::ParseCrontabline(strCrontabline_, arrCrontabline_);
 
+	// * DAILY * time
+	if ( false )
+	{
     int iType = 0;
     long lVal = 0;
 
@@ -175,13 +195,50 @@ void BFCronCtrl::GetData()
         iType = 2;
 
     arrCrontabline_[iType].Mid(2).ToLong(&lVal);
-    //pComboType_->Select(iType);
-    //FillCombos();
+		return;
+	}
 
-    /*if ( (lVal-1) > (long)pComboIntervall_->GetCount() )
-        return;
+	// * WEEKLY * weekday + time
 
-    pComboIntervall_->SetSelection(lVal-1);*/
+	// * INTERVALL * days, hours, minutes
+
+	// * nothing fit *
+	wxString strQuestion = wxString::Format
+	(
+		_("The current crontab entry is to complex.\n" \
+		  "(%s)\n" \
+		  "\nIt is not possible to modify it with blackfisk!\n" \
+		  "\nIt can be modified manualy in the crontab file.\n" \
+		  "(%s)\n" \
+		  "\nOr you can reset the crontab entry.\n" \
+		  "\nShould the crontab entry be reset?"),
+		GetCrontabline(),
+		BFSettings::Instance().GetCrontab()
+	);
+
+	if ( BFMainFrame::QuestionYesNo ( strQuestion ) )
+	{
+		// XXX
+		BFSystem::Fatal ( wxString::Format("before Replace\n\ncrontab: %s\nGetCrontabline: %s\nBF_CRONTABLINE_DEFAULT: %s", BFSettings::Instance().GetCrontab(), BFBackup::Instance().GetCrontabline(), BF_CRONTABLINE_DEFAULT));
+		// yes
+		BFCore::Instance().ReplaceLineInFile
+		(
+			BFSettings::Instance().GetCrontab(),
+			BFBackup::Instance().GetCrontabline(),
+			BFBackup::Instance().GetCrontablineDefault()
+		);
+
+		strCrontabline_ = BFBackup::Instance().GetCrontabline();
+
+		// XXX
+		BFSystem::Fatal ( wxString::Format("after Repalce\n\nstrCrontabline_: %s", strCrontabline_) );
+		GetData();
+	}
+	else
+	{
+		// no
+		GetParent()->Close();
+	}
 }
 
 
@@ -214,66 +271,60 @@ void BFCronCtrl::SetData ()
 
 wxString BFCronCtrl::GetCrontabline ()
 {
-    SetData();
+    // XXX needed? SetData();
 
-    return wxString::Format("%s %s %s %s %s %s",
-                            arrCrontabline_[0],
-                            arrCrontabline_[1],
-                            arrCrontabline_[2],
-                            arrCrontabline_[3],
-                            arrCrontabline_[4],
-                            arrCrontabline_[5]);
-}
-
-
-bool /*static*/ BFCronCtrl::IsCrontablineUsable (const wxArrayString& arr)
-{
-    // enough arguments?
-    if (arr.GetCount() < 5)
-        return false;
-
-    // month and weekday
-    if (arr[3] != "*" || arr[4] != "*")
-        return false;
-
-    // minute
-    if ( arr[0].StartsWith("*/") && arr[1] != "*" && arr[2] != "*")
-        return false;
-
-    // hour
-    if ( arr[1].StartsWith("*/") && arr[0] != "0" && arr[2] != "*")
-        return false;
-
-    // day
-    if ( arr[2].StartsWith("*/") && arr[1] != "0" && arr[0] != "0")
-        return false;
-
-    // no error detected
-    return true;
+    return strCrontabline_;
 }
 
 
 void BFCronCtrl::OnRadio_D (wxCommandEvent& rEvent)
 {
 	pRadioDaily_->SetValue(true);
+	BFMainFrame::SetFontBold(pRadioDaily_);
+	pPanelDaily_->Enable();
 	pRadioWeekly_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioWeekly_, false);
+	pPanelWeekly_->Disable();
 	pRadioIntervall_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioIntervall_, false);
+	pPanelIntervall_->Disable();
 }
 
 void BFCronCtrl::OnRadio_W (wxCommandEvent& rEvent)
 {
 	pRadioDaily_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioDaily_, false);
+	pPanelDaily_->Disable();
 	pRadioWeekly_->SetValue(true);
+	BFMainFrame::SetFontBold(pRadioWeekly_);
+	pPanelWeekly_->Enable();
 	pRadioIntervall_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioIntervall_, false);
+	pPanelIntervall_->Disable();
 }
 
 void BFCronCtrl::OnRadio_I (wxCommandEvent& rEvent)
 {
 	pRadioDaily_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioDaily_, false);
+	pPanelDaily_->Disable();
 	pRadioWeekly_->SetValue(false);
+	BFMainFrame::SetFontBold(pRadioWeekly_, false);
+	pPanelWeekly_->Disable();
 	pRadioIntervall_->SetValue(true);
+	BFMainFrame::SetFontBold(pRadioIntervall_);
+	pPanelIntervall_->Enable();
 }
 
+
+void BFCronCtrl::OnCombo_I (wxCommandEvent& rEvent)
+{
+}
+
+
+void BFCronCtrl::OnCombo_W (wxCommandEvent& rEvent)
+{
+}
 
 /*
 void BFCronCtrl::FillCombos ()

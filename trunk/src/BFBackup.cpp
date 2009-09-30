@@ -572,11 +572,8 @@ wxString BFBackup::GetCrontabline ()
         arr.Clear();
 
     // default?
-    if (arr.IsEmpty())
-        ParseCrontabline(wxString::Format(BF_CRONTABLINE_DEFAULT,
-                                          wxTheApp->argv[0],
-                                          BFBackup::Instance().GetCurrentFilename()),
-                         arr);
+    if ( arr.IsEmpty() )
+		ParseCrontabline ( BFBackup::Instance().GetCrontablineDefault(), arr );
 
     return arr;
 }
@@ -590,4 +587,12 @@ wxString BFBackup::GetCrontabline ()
     rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
 
     return rStr;
+}
+
+
+wxString BFBackup::GetCrontablineDefault ()
+{
+	return wxString::Format( BF_CRONTABLINE_DEFAULT,
+							 wxTheApp->argv[0],
+							 GetCurrentFilename() );
 }
