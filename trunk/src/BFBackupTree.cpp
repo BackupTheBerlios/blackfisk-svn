@@ -1368,29 +1368,6 @@ void BFBackupTree::SetFillBlackfiskPlaceholders(bool bValue)
 }
 
 
-/* XXX
-#include "BFSound.h"
-
-void BFBackupTree::OnMouseMotion (wxMouseEvent& rEvent)
-{
-	if ( rEvent.Moving() )
-	{
-		BFSound::Info(); // XXX
-
-		// mouse position
-		wxWindowDC dc(this);
-		wxPoint point = rEvent.GetLogicalPosition(dc);
-
-		// get the item id under the mouse
-		int iFlags;
-		wxTreeItemId id = HitTest(point, iFlags);
-
-		// is it an item and not the right blank area
-		if ( id.IsOk() && !(iFlags & wxTREE_HITTEST_ONITEMRIGHT) )
-			BFTipWindow::CreateTipWindow(this, "TIP\nTIP2");
-	}
-}*/
-
 BFBackupTreeItemData::BFBackupTreeItemData (BFoid oid, const wxString& strPath /*= wxEmptyString*/)
                 : oid_(oid),
                   strPath_(strPath)

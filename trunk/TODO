@@ -1,13 +1,7 @@
-==daily==
-N N * * *
-
-==weekly==
-N N * * N
-
-==intervall==
-* * */3 * * (days)
-* */3 * * * (hours)
-*/3 * * * * (minutes)
+- BUG?:
+  MUSIC project in crontab is configured to run with DebugBlackfisk
+  open the project with ReleaseBlackfisk it can find the crontab entry and modify the values
+  but the binary in crontab isn't changed
 
 - BUG: start backup without any tasks (fresh project) cause in crash
 - BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)

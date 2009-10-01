@@ -206,36 +206,6 @@ END_EVENT_TABLE()
     // background color
     SetBackgroundColour(menuBar->GetBackgroundColour());
 
-	/* XXX
-	BFSystem::Info( wxString::Format("before modification\n\npos: %d X %d\nsize: %d X %d\nmaximazied: %d\ndefault pos: %d X %d",
-									 BFSettings::Instance().GetMainWindowPosition().x,
-									 BFSettings::Instance().GetMainWindowPosition().y,
-									 BFSettings::Instance().GetMainWindowSize().GetWidth(),
-									 BFSettings::Instance().GetMainWindowSize().GetHeight(),
-									 (int)BFSettings::Instance().GetMainWindowMaximized(),
-									 wxDefaultPosition.x,
-									 wxDefaultPosition.y) );
-
-	/* check position and size for the current screen
-	wxRect recDisplay = wxDisplay().GetClientArea();
-
-	if ( recDisplay.Contains( BFSettings::Instance().GetMainWindowPosition() ) == false )
-		BFSettings::Instance().SetMainWindowPosition( wxPoint(1, 1) );
-
-	if ( BFSettings::Instance().GetMainWindowSize().GetWidth() > recDisplay.GetSize().GetWidth()
-	  || BFSettings::Instance().GetMainWindowSize().GetHeight() > recDisplay.GetSize().GetHeight() )
-		BFSettings::Instance().SetMainWindowSize(wxDefaultSize);
-
-	// XXX
-	BFSystem::Info( wxString::Format("after correction\n\npos: %d X %d\nsize: %d X %d\nmaximazied: %d\ndefault pos: %d X %d",
-									 BFSettings::Instance().GetMainWindowPosition().x,
-									 BFSettings::Instance().GetMainWindowPosition().y,
-									 BFSettings::Instance().GetMainWindowSize().GetWidth(),
-									 BFSettings::Instance().GetMainWindowSize().GetHeight(),
-									 (int)BFSettings::Instance().GetMainWindowMaximized(),
-									 wxDefaultPosition.x,
-									 wxDefaultPosition.y) );*/
-
     // window position
     Move(BFSettings::Instance().GetMainWindowPosition());
 

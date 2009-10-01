@@ -107,11 +107,6 @@ class BFCronCtrl : public wxPanel
         ///
         void OnRadio_I (wxCommandEvent& rEvent);
 
-		/**
-		void OnCombo_I (wxCommandEvent& rEvent);
-		///
-		void OnCombo_W (wxCommandEvent& rEvent);*/
-
         ///
         wxString GetCrontabline ();
 

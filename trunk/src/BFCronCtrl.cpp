@@ -48,8 +48,6 @@ BEGIN_EVENT_TABLE(BFCronCtrl, wxPanel)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_D,		BFCronCtrl::OnRadio_D)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_W,		BFCronCtrl::OnRadio_W)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_I,		BFCronCtrl::OnRadio_I)
-	//EVT_COMBOBOX	( BFCRONCTRL_ID_COMBO_W,		BFCronCtrl::OnCombo_W)
-	//EVT_COMBOBOX	( BFCRONCTRL_ID_COMBO_I,		BFCronCtrl::OnCombo_I)
 END_EVENT_TABLE()
 
 BFCronCtrl::BFCronCtrl (wxWindow* pParent,
@@ -200,20 +198,20 @@ bool BFCronCtrl::IsCrontablineWeekly ()
 bool BFCronCtrl::IsCrontablineIntervall ()
 {
 	// positiv examples:
-	// * * */3 * * (days)
-	// * */3 * * * (hours)
+	// 0 0 */3 * * (days)
+	// 0 */3 * * * (hours)
 	// */3 * * * * (minutes)
 
 	// invervall in days
-	if ( arrCrontabline_[0].Find('*') != wxNOT_FOUND
-	  || arrCrontabline_[1].Find('*') != wxNOT_FOUND
+	if ( arrCrontabline_[0].Find('0') != wxNOT_FOUND
+	  || arrCrontabline_[1].Find('0') != wxNOT_FOUND
 	  || arrCrontabline_[2].Find("*/") != wxNOT_FOUND
 	  || arrCrontabline_[3].Find('*') != wxNOT_FOUND
 	  || arrCrontabline_[4].Find('*') != wxNOT_FOUND )
 	  return true;
 
 	// invervall in hours
-	if ( arrCrontabline_[0].Find('*') != wxNOT_FOUND
+	if ( arrCrontabline_[0].Find('0') != wxNOT_FOUND
 	  || arrCrontabline_[1].Find("*/") != wxNOT_FOUND
 	  || arrCrontabline_[2].Find('*') != wxNOT_FOUND
 	  || arrCrontabline_[3].Find('*') != wxNOT_FOUND
@@ -357,8 +355,6 @@ void BFCronCtrl::GetData()
 
 		strCrontabline_ = BFBackup::Instance().GetCrontabline();
 
-		// XXX
-		BFSystem::Fatal ( wxString::Format("after Repalce\n\nstrCrontabline_: %s", strCrontabline_) );
 		GetData();
 	}
 	else
@@ -406,14 +402,14 @@ void BFCronCtrl::SetData ()
 		{
 			// days
 			case 0:
-				arrCrontabline_[0] = '*';
-				arrCrontabline_[1] = '*';
+				arrCrontabline_[0] = '0';
+				arrCrontabline_[1] = '0';
 				arrCrontabline_[2] = strVal;
 				break;
 
 			// hours
 			case 1:
-				arrCrontabline_[0] = '*';
+				arrCrontabline_[0] = '0';
 				arrCrontabline_[1] = strVal;
 				arrCrontabline_[2] = '*';
 				break;
@@ -486,13 +482,3 @@ void BFCronCtrl::OnRadio_I (wxCommandEvent& rEvent)
 	BFMainFrame::SetFontBold(pRadioIntervall_);
 	pPanelIntervall_->Enable();
 }
-
-/*
-void BFCronCtrl::OnCombo_I (wxCommandEvent& rEvent)
-{
-}
-
-
-void BFCronCtrl::OnCombo_W (wxCommandEvent& rEvent)
-{
-}*/
