@@ -76,10 +76,18 @@ class BFCronCtrl : public wxPanel
         /** Read data from the crontab and display it in the dialog. */
         void GetData();
 		///
-		void GetData_Time();
+		void GetData_Daily();
+		///
+		void GetData_Weekly();
+		///
+		void GetData_Intervall();
 
 		///
 		bool IsCrontablineDaily ();
+		///
+		bool IsCrontablineWeekly ();
+		///
+		bool IsCrontablineIntervall ();
 
     public:
         /** Read data from the dialog and create a crontab of it. */
@@ -99,10 +107,10 @@ class BFCronCtrl : public wxPanel
         ///
         void OnRadio_I (wxCommandEvent& rEvent);
 
-		///
+		/**
 		void OnCombo_I (wxCommandEvent& rEvent);
 		///
-		void OnCombo_W (wxCommandEvent& rEvent);
+		void OnCombo_W (wxCommandEvent& rEvent);*/
 
         ///
         wxString GetCrontabline ();

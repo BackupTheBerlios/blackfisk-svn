@@ -5,7 +5,9 @@ N N * * *
 N N * * N
 
 ==intervall==
-
+* * */3 * * (days)
+* */3 * * * (hours)
+*/3 * * * * (minutes)
 
 - BUG: start backup without any tasks (fresh project) cause in crash
 - BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)
