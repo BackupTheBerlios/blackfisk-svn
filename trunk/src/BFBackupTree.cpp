@@ -116,8 +116,6 @@ void BFBackupTree::Init ()
 	else
 		SelectItem(GetRootItem());
 
-    // XXX SetToolTip(_("files and directories for the backup"));
-
     Thaw();
 }
 

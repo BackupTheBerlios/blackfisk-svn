@@ -80,6 +80,9 @@ class BFProjectSettings
         ///
         void SetBackupLogLocation (const wxString& strFile);
 
+		///
+		wxString GetDefaultBackupLogLocation ();
+
         ///
         bool Serialize (jbSerialize& rA);
 };    // class BFProjectSettings

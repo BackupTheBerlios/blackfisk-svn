@@ -140,7 +140,7 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     if ( BFCore::IsStop() )
         return false;
 
-    // check for deletable files ...
+    // check for deletable files/dirs (store it in 'arrDestination_') ...
     if ( pTask_->GetRealSync() )
     {
         // get destination listing
@@ -152,8 +152,10 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
 
         // cut destination and source string from the listings
         wxArrayString arrSourceTemp = arrSource_;
-        wxString strDestinationCommunity    = BFApp::CutCommunity (arrDestination_);
-        wxString strSourceCommunity         = BFApp::CutCommunity (arrSourceTemp);
+		wxString strDestinationCommunity    = strDestination;
+		wxString strSourceCommunity         = strSource;
+		BFApp::Cut(arrDestination_, strDestination);
+		BFApp::Cut(arrSourceTemp, strSource);
 
         // remove in-source-existing-files from the destination listing
         BFApp::Remove (arrDestination_, arrSourceTemp);
@@ -265,7 +267,7 @@ bool BFOperation::RunForDirSync (ProgressWithMessage& rProgress)
     if ( BFCore::IsStop() )
         return false;
 
-    // check for deletable files ...
+    // check for deletable files/dirs (stored in 'arrDestination_') ...
     if ( arrDestination_.GetCount() > 0 )
     {
         // progress ...

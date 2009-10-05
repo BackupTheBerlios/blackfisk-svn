@@ -82,6 +82,11 @@ BF_StopLevel BFProjectSettings::GetStopLevelOnWarning ()
     return iStopLevelOnWarning_;
 }
 
+wxString BFProjectSettings::GetDefaultBackupLogLocation ()
+{
+	return BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
+}
+
 wxString BFProjectSettings::GetBackupLogLocation ()
 {
     wxString strReturn = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
@@ -91,8 +96,7 @@ wxString BFProjectSettings::GetBackupLogLocation ()
         strReturn = BFApp::ExtractCommunity(BFProject::Instance().GetAllDestinations());
 
         if (strReturn.IsEmpty())
-            if (BFProject::Instance().GetAllDestinations().GetCount() > 0)
-                strReturn = BFProject::Instance().GetAllDestinations()[0];
+			strReturn = GetDefaultBackupLogLocation();
     }
     else
     {

@@ -140,6 +140,9 @@ class BFProject : public Subject
         /// Return the destinations of each task as a string array.
         wxArrayString GetAllDestinations ();
 
+		/// Return the sources of each task as a string array.
+        wxArrayString GetAllSources ();
+
         /** Return the position in the task-vector of the last BFTask
             with the specified destination.
             Return -1 if nothing is found. */
@@ -154,6 +157,8 @@ class BFProject : public Subject
         ///
         static wxString GetArchiveExtension(BFArchiveFormat format);
 
+		///
+		wxString GetDefaultProjectLocation ();
 };
 
 #endif    // BFPROJECT_H

@@ -529,7 +529,8 @@ wxString BFBackup::GetCrontabline ()
         if ( strLine.StartsWith("#") )
             continue;
 
-        if ( strLine.Find(strCurrentFilename_) != wxNOT_FOUND )
+        if ( strLine.Find(strCurrentFilename_) != wxNOT_FOUND
+		  && strLine.Find(wxTheApp->argv[0]) != wxNOT_FOUND )
             return strLine;
     }
 

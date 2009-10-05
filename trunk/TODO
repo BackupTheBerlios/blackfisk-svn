@@ -1,16 +1,8 @@
-- BUG?:
-  MUSIC project in crontab is configured to run with DebugBlackfisk
-  open the project with ReleaseBlackfisk it can find the crontab entry and modify the values
-  but the binary in crontab isn't changed
-
-- BUG: start backup without any tasks (fresh project) cause in crash
-- BUG: on autorun with error the crontab-entry is set back to * * * * * (why?`)
-- BUG: source D:\MUSIC, destination: Z: is sync
-       rename D:\MUSIC\CD_MP3 to D:\MUSIC\_MUSIC
-	   after next sync the destination was empty
 - add the next official wxCron!
 - add wxCron to the docs
-
+- (not reproducable BUG): on autorun with error the crontab-entry is set back to * * * * * (why?`)
+- wxSerialize: change ConvertFromIeeeExtended() to wxConvertFromIeeeExtended() because of deprecated status
+  (in wx since rev48084 (Aug 2007))
 0.0.2
 ~~~~~
 - IMPROVE BFCronCtrl! (export it then to wxCron itself)

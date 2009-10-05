@@ -25,6 +25,7 @@
 
 #include <wx/tokenzr.h>
 
+#include "BFApp.h"
 #include "blackfisk.h"
 
 #define BFPROJECT_DEFAULT_NAME _("unnamed backup")
@@ -416,6 +417,21 @@ wxArrayString BFProject::GetAllDestinations ()
     return arr;
 }
 
+wxArrayString BFProject::GetAllSources ()
+{
+    wxArrayString arr;
+
+    // iterate throug the tasks
+    BFTaskVectorIt itVec;
+
+    for (itVec = vecTasks_.begin();
+         itVec != vecTasks_.end();
+         ++itVec)
+        arr.Add((*itVec)->GetSource());
+
+    return arr;
+}
+
 /*static*/ wxString BFProject::GetTypeDescription (BFTaskType type, BFArchiveFormat format /* = CompressNOTUSED*/)
 {
     wxString strDesc;
@@ -456,4 +472,9 @@ wxArrayString BFProject::GetAllDestinations ()
     }
 
     return "unknown";
+}
+
+wxString BFProject::GetDefaultProjectLocation ()
+{
+	return BFApp::ExtractCommunity(GetAllSources());
 }

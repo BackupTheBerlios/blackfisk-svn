@@ -133,6 +133,8 @@ class BFApp : public wxApp
             "file2.dat"
             Return value: "C:\Programme\" */
         static wxString CutCommunity (wxArrayString& rStrings);
+		/** Cut 'strToCut' from each element in 'rStrings' if it is found. */
+		static wxArrayString& Cut (wxArrayString& rStrings, const wxString& strToCut);
         /** Removes all items from 'arrOriginal' matching one
             of the values in 'arrToRemove'. It return a reference
             to 'arrOriginal'. */

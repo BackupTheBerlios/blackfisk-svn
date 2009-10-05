@@ -570,7 +570,10 @@ bool BFMainFrame::AskSaveProject (wxString& strProject)
     wxString strFile = BFBackup::Instance().GetCurrentFilename().AfterLast(wxFILE_SEP_PATH);
 
     if (strFile.IsEmpty())
-        strFile = BFBackup::Instance().GetProjectName();
+	{
+		strFile = BFProject::Instance().GetDefaultProjectLocation();
+		strPath = BFProject::Instance().GetSettings().GetBackupLogLocation();
+	}
 
     wxFileDialog dlg
     (
@@ -612,10 +615,10 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
 	// XXX
-	wxString strXXX = BFProject::Instance().GetNextTask(NULL)->GetDestination();
+	/*wxString strXXX = BFProject::Instance().GetNextTask(NULL)->GetDestination();
 	BFSystem::Log(strXXX);
 
-	OpenProjectPlanner();
+	OpenProjectPlanner();*/
 }
 
 #endif
@@ -659,11 +662,18 @@ void BFMainFrame::OnBackup (wxCommandEvent& WXUNUSED(event))
 
     if (iAnswer != wxID_CANCEL)
     {
-        // start the backup
-        if ( BFBackup::Instance().PreBackupCheck() )
-            new BFBackupProgressDlg(this);
-        else
-            BFSystem::Log(_("PreBackup failed. Aborting ..."));
+		if ( BFProject::Instance().GetTaskCount() > 0 )
+		{
+			// start the backup
+			if ( BFBackup::Instance().PreBackupCheck() )
+				new BFBackupProgressDlg(this);
+			else
+				BFSystem::Log(_("PreBackup failed. Aborting ..."));
+		}
+		else
+		{
+			BFSystem::Info(_("There are no backup task specified for this project!"));
+		}
     }
 }
 

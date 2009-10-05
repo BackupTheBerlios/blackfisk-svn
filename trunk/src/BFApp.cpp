@@ -146,6 +146,13 @@ BFMainFrame* BFApp::spMainFrame_ = NULL;
     return strCommunity;
 }
 
+/*static*/ wxArrayString& BFApp::Cut (wxArrayString& rStrings, const wxString& strToCut)
+{
+    for ( size_t i = 0; i < rStrings.GetCount(); ++i )
+		rStrings[i].Replace(strToCut, wxEmptyString);
+
+    return rStrings;
+}
 
 /*static*/ wxArrayString& BFApp::Remove (wxArrayString& arrOriginal, const wxArrayString& arrToRemove)
 {
