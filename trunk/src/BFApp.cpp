@@ -229,6 +229,11 @@ void BFApp::DisplayUsage ()
     out->Printf("  -h|--help                Display this text.");
 }
 
+/*
+XXX
+REMOVED
+This way doesn't work on all windows version.
+An installer should do it.
 void BFApp::CheckFileTypeRegistration ()
 {
 	// the mime types manager
@@ -249,7 +254,7 @@ void BFApp::CheckFileTypeRegistration ()
 	wxFileTypeInfo fti(arrString);
 
 	mgr.Associate(fti);
-}
+}*/
 
 bool BFApp::OnInit()
 {
@@ -313,9 +318,6 @@ bool BFApp::OnInit()
     locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
-
-	// check file registration
-	CheckFileTypeRegistration ();
 
     // check the scheduler
     if ( BFSettings::Instance().GetScheduler() == 1 )

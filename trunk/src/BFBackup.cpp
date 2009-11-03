@@ -416,7 +416,15 @@ void BFBackup::ModifyDestination (const wxString& strOldDestination,
 {
     bool bMod = false;
     wxString strCurrDest;
+	wxString strOldDest = strOldDestination;
+	wxString strNewDest = strNewDestination;
     BFTaskVector vec;
+
+	if ( strOldDest.Last() == wxFILE_SEP_PATH )
+		strOldDest.RemoveLast();
+
+	if ( strNewDest.Last() == wxFILE_SEP_PATH )
+		strNewDest.RemoveLast();
 
     pProject_->GetAllTasks(vec);
 
@@ -428,10 +436,10 @@ void BFBackup::ModifyDestination (const wxString& strOldDestination,
         strCurrDest = (*it)->GetDestination();
 
         // has the destiantion to modify?
-        if (strCurrDest.StartsWith(strOldDestination))
+        if (strCurrDest.StartsWith(strOldDest))
         {
-            // replace old with new destination
-            strCurrDest.Replace(strOldDestination, strNewDestination);
+			// replace old with new destination
+            strCurrDest.Replace(strOldDest, strNewDest);
 
 			while ( strCurrDest.EndsWith(wxFILE_SEP_PATH) )
 				strCurrDest.RemoveLast(1);
