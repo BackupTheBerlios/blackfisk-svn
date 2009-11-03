@@ -1,3 +1,7 @@
+- BUG: watch for "Backup to NAS". While backup a '\' between destination and source is missing.
+- BUG?: create project: backup to dir-A to X:, backup backup to Y:, add a new subobject to dir-A, correct order of tasks?
+- BUG: "modify all sub-task to sync" cause in crash if all task are still in "sync"
+- tell excluded files/dirs while backup in a log
 - add the next official wxCron!
 - add wxCron to the docs
 - (not reproducable BUG): on autorun with error the crontab-entry is set back to * * * * * (why?`)
@@ -5,6 +9,10 @@
   (in wx since rev48084 (Aug 2007))
 0.0.2
 ~~~~~
+- Sync one file!
+- modify verbose level temporary while backup
+- sum errors/warnings/fatals for the hole project in the log!
+- check filesize (>4GB) on FAT32
 - IMPROVE BFCronCtrl! (export it then to wxCron itself)
 - maybe crontab-lines/jobs need to be identified another/smarter way (because of one-time-retry-jobs, ...)
 - make a global job-scheduler-manager-dialog inside Blackfisk

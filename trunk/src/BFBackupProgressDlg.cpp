@@ -56,13 +56,22 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
                               -1,
                               _("Task Progress"))
 {
+	// title
+	SetTitle(wxString::Format(_("Task Progress (%s)"), BFBackup::Instance().GetProjectName()));
+
+	// static variable
     sp_backup_progress_dlg_ = this;
 
+	// minimize main window
     BFMainFrame::Instance()->Iconize();
+
+	// init and show
     Init();
     Show();
     Raise();
     Center();
+
+	// start threading
     pMutex_ = new wxMutex();
     pCondition_ = new wxCondition(*pMutex_);
     BFBackup::Instance().Run_Start();
