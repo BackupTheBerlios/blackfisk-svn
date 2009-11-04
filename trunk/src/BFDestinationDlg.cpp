@@ -98,6 +98,9 @@ void BFDestinationDlg::OnButton_Ok (wxCommandEvent& rEvent)
     // get the backup tree
     BFBackupTree* pBackupTree = BFMainFrame::Instance()->BackupTree();
 
+	// get the path
+	wxString strPath = pDestCtrl_->GetPath();
+
     // add and select the destination dir
     if (action_ == add_destination)
     {

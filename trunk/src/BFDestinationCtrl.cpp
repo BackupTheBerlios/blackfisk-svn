@@ -91,7 +91,7 @@ void BFDestinationCtrl::OpenDirPicker ()
 
 wxString BFDestinationCtrl::GetPath ()
 {
-    return pPickerCtrl_->GetPath();
+	return pPickerCtrl_->GetPath();
 }
 
 void BFDestinationCtrl::SetPath (const wxString& strPath)

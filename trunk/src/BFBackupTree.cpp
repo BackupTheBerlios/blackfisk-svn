@@ -943,7 +943,6 @@ wxTreeItemId BFBackupTree::AddTask (BFoid oid,
 
 void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 {
-    long iCount(0);
     wxString strQuestion;
     wxArrayString arrTasks;
 
@@ -969,32 +968,47 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
             break;
     };  // switch
 
-    // exclude file tasks
-    for (ItVectorTreeItemId it = vecLastChildTasks_.begin();
-         it != vecLastChildTasks_.end();
-         ++it)
+    // exclude tasks from the same type to modify to and from TaskFILECOPY
+
+	ItVectorTreeItemId it = vecLastChildTasks_.begin();
+
+    while (true)
     {
         BFTask* pTask = GetTaskByItem(*it);
 
-        if (pTask)
-        {
-            if (pTask->GetType() == TaskFILECOPY
-             || pTask->GetType() == type)
-            {
-                vecLastChildTasks_.erase(it);
-                --it;
-                ++iCount;
-            }
-            else
-            {
-                arrTasks.Add(wxString::Format("\t\t%s", pTask->GetName()));
-            }
+        if (!pTask)
+		{
+			BFSystem::Fatal(_("No task found related to the tree item."), "BFBackupTree::OnModifyTaskType()");
+			return;
+		}
+
+        if (pTask->GetType() == TaskFILECOPY
+         || pTask->GetType() == type)
+        {	// exclude
+            vecLastChildTasks_.erase(it);
+
+			if (vecLastChildTasks_.size() == 0)
+				break;
+
+			it = vecLastChildTasks_.begin();
+        }
+        else
+        {	// remember this task to modify
+            arrTasks.Add(wxString::Format("\t\t%s", pTask->GetName()));
+
+			if (it == vecLastChildTasks_.end())
+				break;
+			else
+				++it;
         }
     }
 
     // check if there are any tasks
     if (vecLastChildTasks_.empty())
+	{
+		BFSystem::Info(_("No tasks found to change their type."));
         return;
+	}
 
     // build the question
     strQuestion = wxString::Format(_("The type of the following tasks will be changed to \"%s\".\n\n%s\n\nChange the type?"),

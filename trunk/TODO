@@ -1,9 +1,4 @@
-- REMOVED: void BFApp::CheckFileTypeRegistration ()
-- BUGFIX: handling wxFILE_SEP_PATH while "modify destination" (volume)
-
-- BUG: watch for "Backup to NAS". While backup a '\' between destination and source is missing.
 - BUG?: create project: backup to dir-A to X:, backup backup to Y:, add a new subobject to dir-A, correct order of tasks?
-- BUG: "modify all sub-task to sync" cause in crash if all task are still in "sync"
 - add the next official wxCron!
 - add wxCron to the docs
 - (not reproducable BUG): on autorun with error the crontab-entry is set back to * * * * * (why?`)
