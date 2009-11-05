@@ -974,8 +974,14 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 
     while (true)
     {
+		// reached the end?
+		if ( it == vecLastChildTasks_.end() )
+			break;
+
+		// get the related task
         BFTask* pTask = GetTaskByItem(*it);
 
+		//
         if (!pTask)
 		{
 			BFSystem::Fatal(_("No task found related to the tree item."), "BFBackupTree::OnModifyTaskType()");
@@ -993,9 +999,7 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 			it = vecLastChildTasks_.begin();
         }
         else
-        {	// remember this task to modify
-            arrTasks.Add(wxString::Format("\t\t%s", pTask->GetName()));
-
+		{
 			if (it == vecLastChildTasks_.end())
 				break;
 			else
@@ -1008,6 +1012,16 @@ void BFBackupTree::OnModifyTaskType (wxCommandEvent& rEvent)
 	{
 		BFSystem::Info(_("No tasks found to change their type."));
         return;
+	}
+
+	// get the names of the tasks
+	for ( it = vecLastChildTasks_.begin();
+		  it != vecLastChildTasks_.end();
+		  ++it )
+	{
+		BFTask* pTask = GetTaskByItem(*it);
+
+		arrTasks.Add(wxString::Format("\t\t%s", pTask->GetName()));
 	}
 
     // build the question
