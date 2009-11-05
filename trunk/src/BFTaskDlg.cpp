@@ -363,17 +363,40 @@ void BFTaskDlg::GetData ()
 
 bool BFTaskDlg::IsPlausible ()
 {
+	// task name?
     if ( pNameCtrl_->IsEmpty() )
     {
         BFSystem::Info(_("Please insert a task name!"));
         return false;
     }
 
-    if ( pDestCtrl_->GetPath().IsEmpty() )
+	wxString strDest = pDestCtrl_->GetPath();
+
+	// destination?
+	if ( strDest.IsEmpty() )
     {
         BFSystem::Info(_("Please insert a destination!"));
         return false;
     }
+
+	wxString strSrc = pSourceCtrl_->GetValue();
+
+	// destination == source?
+	if ( strDest == strSrc )
+	{
+		BFSystem::Warning(_("The destination is the same as the source.\nThis is a paradoxon and not possible!\nPlease use a different destination path."));
+		return false;
+	}
+
+	// destination inside source?
+	if ( !(strSrc.EndsWith(wxFILE_SEP_PATH)) )
+		strSrc << wxFILE_SEP_PATH;
+
+	if ( strDest.StartsWith(strSrc) )
+	{
+		BFSystem::Warning(_("The destination is inside the source.\nThis is a paradoxon and not possible!\nPlease use a different destination path."));
+		return false;
+	}
 
     return true;
 }
@@ -480,6 +503,8 @@ void BFTaskDlg::SetData ()
     if ( BFProject::Instance().HasTask(pTask_->GetOID()) == false )
     {
         BFProject::Instance().AppendTask(*pTask_);
+		// OnClose() will handle it if the tast wasn't appended because of an error
+
         BFProject::Instance().broadcastObservers();
     }
     else

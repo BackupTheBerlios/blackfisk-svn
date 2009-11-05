@@ -279,11 +279,41 @@ BFProjectSettings& BFProject::GetSettings ()
 long BFProject::FindLastTaskWithDestination(const wxString& strDestination)
 {
     long rc = -1;
+
 	for (BFTaskVector::size_type i = 0;
 		 i != vecTasks_.size();
 		 ++i)
     {
-        if (strDestination == vecTasks_[i]->GetDestination())
+		wxString strD = vecTasks_[i]->GetDestination();
+
+		if ( !(strD.EndsWith(wxFILE_SEP_PATH)) )
+			strD << wxFILE_SEP_PATH;
+
+		if (strDestination == vecTasks_[i]->GetDestination()
+			|| strDestination.StartsWith(strD))
+            rc = i;
+    }
+
+    return rc;
+}
+
+
+long BFProject::FindLastTaskWithSource(const wxString& strSource)
+{
+    long rc = -1;
+	wxString strS;
+
+	for (BFTaskVector::size_type i = 0;
+		 i != vecTasks_.size();
+		 ++i)
+    {
+		strS = vecTasks_[i]->GetSource();
+
+		if ( !(strS.EndsWith(wxFILE_SEP_PATH)) )
+			strS << wxFILE_SEP_PATH;
+
+        if (strSource == vecTasks_[i]->GetSource()
+			|| strSource.StartsWith(strS))
             rc = i;
     }
 
@@ -317,22 +347,57 @@ BFoid BFProject::AppendTask (BFTask& rTask)
     if ( HasTask(rTask.GetOID()) )
         return BFInvalidOID;
 
-    // backup a backup?
-    long idx = FindLastTaskWithDestination(rTask.GetSource());
+    // ## backup a backup ##
 
     /* if the source-dir of rTask created by any other
        task (source == destination_of_other_task), rTask
        should be executed after the source is created by
        the other task(s) */
-    if (idx == -1 || idx == (long)(vecTasks_.size()-1))
-    {
-        vecTasks_.push_back(&rTask);
-    }
-    else
-    {
-        idx++;
-        vecTasks_.insert(vecTasks_.begin()+idx, &rTask);
-    }
+    long idxAfter = FindLastTaskWithDestination(rTask.GetSource());
+
+	/* If the destination-dir of rTask is backuped up by
+	   another task (destination == source of_other_task),
+	   rTask should be executed before its destination is
+	   backedup by the other task(s) */
+	long idxBefore = FindLastTaskWithSource(rTask.GetDestination());
+
+	// check
+	if (idxAfter != -1 && idxBefore != -1 && idxAfter >= idxBefore)
+	{
+		BFSystem::Warning(_("This constellation of nested backup tasks is not possible!\nThe task won't be created."));
+		return BFInvalidOID;
+	}
+
+	// calculating of position needed?
+	if (idxAfter == -1 && idxBefore == -1)
+	{
+		// NO put it at the end
+		vecTasks_.push_back(&rTask);
+	}
+	else
+	{	// YES
+		long idx = idxAfter;
+
+		if ( (idxAfter + 1) == idxBefore )
+		{
+			// between after and before
+			idx = idxBefore;
+		}
+		else
+		{
+			// no after specified
+			if (idx == -1)
+				// before
+				idx = idxBefore;			
+			else
+				// after
+				idx++;
+		}
+
+		/* insert 'rTask' before the element
+		   specified with 'idx' */
+		vecTasks_.insert(vecTasks_.begin()+idx, &rTask);
+	}
 
     SetModified();
 

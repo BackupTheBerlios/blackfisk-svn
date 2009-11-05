@@ -795,7 +795,7 @@ wxTreeItemId BFBackupTree::AddDestination (const wxString& strPath)
         strAdd = strPath.Left(strPath.Find(strCurr) + strCurr.Len());
 
         // ** it is a volume **
-        if (strCurrFilled[1] == _T(':'))
+        if (strCurrFilled.Len() > 1 && strCurrFilled[1] == _T(':'))
         {
             // append the volume item
             idLast = AddVolume(idCurr, strCurr, strAdd);
@@ -1123,7 +1123,9 @@ void BFBackupTree::OnCreateBackup (wxCommandEvent& rEvent)
 
     if ( pTask->IsValid() )
     {
-        BFProject::Instance().AppendTask(*pTask);
+		if ( BFProject::Instance().AppendTask(*pTask) == BFInvalidOID )
+			delete pTask;
+
         BFProject::Instance().broadcastObservers();
     }
     else

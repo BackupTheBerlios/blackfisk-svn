@@ -104,8 +104,10 @@ class BFProject : public Subject
                           BFArchiveFormat archive = CompressNOTUSED);
 
         /** Add an existing task to the project and return its oid.
-            If the object is not plausible or just exists in the project
-            OBInvalidOID returns. */
+            If the task is not plausible or just exists in the project
+            'OBInvalidOID' will be returns.
+			The caller of that methode need to take care of 'rTaks' - maybe
+			delete it. */
         BFoid AppendTask (BFTask& rTask);
         ///
         bool HasTask(BFoid oid);
@@ -143,10 +145,15 @@ class BFProject : public Subject
 		/// Return the sources of each task as a string array.
         wxArrayString GetAllSources ();
 
-        /** Return the position in the task-vector of the last BFTask
-            with the specified destination.
+        /** Return the position in 'vecTasks_' of the last BFTask element
+            which destination is the same or a parent of 'strDestination'.
             Return -1 if nothing is found. */
         long FindLastTaskWithDestination(const wxString& strDestination);
+
+        /** Return the position in 'vecTasks_' of the last BFTask element
+            which source is the same or a parent of 'strSource'.
+            Return -1 if nothing is found. */
+        long FindLastTaskWithSource(const wxString& strSource);
 
         /** Find all tasks with placeholders in its string-members */
         BFTaskVector& FindAllTasksWithPlaceholders (BFTaskVector& rVec);

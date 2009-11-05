@@ -1,4 +1,16 @@
+- ADDED long BFProject::FindLastTaskWithSource(const wxString& strSource)
+- improved the logic in BFProject::AppendTask()
+  + all possible paradoxons (e.g. backup backups in cycles) are caught
+  + i am not sure if I thougt about all possible paradoxons :)
+- improved BFTaskDlg::IsPlausible()
+  + no destination == source
+  + no destination inside source
+
+- dont backup yourself ;)
 - BUG?: create project: backup to dir-A to X:, backup backup to Y:, add a new subobject to dir-A, correct order of tasks?
+
+- backup an archive-task is just copy/sync file
+- BUG: BFHelpCtrl doesn't work on Win7 (it is black)
 - add the next official wxCron!
 - add wxCron to the docs
 - (not reproducable BUG): on autorun with error the crontab-entry is set back to * * * * * (why?`)
