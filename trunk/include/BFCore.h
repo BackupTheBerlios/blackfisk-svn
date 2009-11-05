@@ -254,6 +254,11 @@ class BFCore
 
         /// compare the content of to files
         static bool VerifyFileContents (wxFile& f1, wxFile& f2);
+
+		/** Return 'true' if 'strPath' is valid. It doesn't matter
+			if the path realy exists. Unalowed characters in names
+			of folders are NOT checked. */
+		static bool IsPathValid (const wxString& strPath);
 };
 
 #endif    // BFCORE_H

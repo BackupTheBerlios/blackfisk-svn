@@ -29,6 +29,7 @@
 #include "BFMainFrame.h"
 #include "BFBackupTree.h"
 #include "BFBackup.h"
+#include "BFCore.h"
 
 BEGIN_EVENT_TABLE(BFDestinationDlg, wxDialog)
   EVT_CLOSE   (BFDestinationDlg::OnClose)
@@ -100,6 +101,13 @@ void BFDestinationDlg::OnButton_Ok (wxCommandEvent& rEvent)
 
 	// get the path
 	wxString strPath = pDestCtrl_->GetPath();
+
+	// valid path?
+	if ( (!BFCore::IsPathValid(strPath)) )
+	{
+		BFSystem::Error ( wxString::Format ( _("The path %s is not valid!"), strPath ) );
+		return;
+	}
 
     // add and select the destination dir
     if (action_ == add_destination)

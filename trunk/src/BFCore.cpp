@@ -1242,3 +1242,41 @@ bool BFCore::VerifyFiles(MapStringPair& rMap,
         return true;
     }
 }
+
+
+/*static*/ bool BFCore::IsPathValid (const wxString& strPath)
+{
+	#ifndef __WXMSW__
+		#error "Improve this methode for the current operating system!"
+	#endif
+
+	// to short for a path
+	if ( strPath.Len() < 2 )
+		return false;
+
+	// not between or the same as a/A and z/Z
+	if ( !((strPath[0] >= 'a' && strPath[0] <= 'z') || (strPath[0] >= 'A' && strPath[0] <= 'Z')) )
+		return false;
+
+	// wxFILE_SEP_DSK (':')
+	if ( strPath[1] != wxFILE_SEP_DSK )
+		return false;
+
+	// wxFILE_SEP_PATH ('\\')
+	if ( strPath.Len() == 3
+		&& strPath[2] != wxFILE_SEP_PATH )
+		return false;
+
+	// wxFILE_SEP_PATH
+	wxArrayString arrTkz = wxStringTokenize ( strPath, wxFILE_SEP_PATH );
+
+	for ( size_t i = 0;
+		  i < arrTkz.size();
+		  ++i )
+	{
+		if ( arrTkz[i].IsEmpty() )
+			return false;
+	}
+
+	return true;
+}
