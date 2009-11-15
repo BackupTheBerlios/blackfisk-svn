@@ -410,7 +410,7 @@ bool BFBackup::ReadFromFile (const wxString& strFilename)
 
     return false;
 }
-
+/*
 void BFBackup::ModifyDestination (const wxString& strOldDestination,
                                   const wxString& strNewDestination)
 {
@@ -456,7 +456,7 @@ void BFBackup::ModifyDestination (const wxString& strOldDestination,
     // mark the project modified if needed
     if (bMod)
         pProject_->SetModified();
-}
+}*/
 
 bool BFBackup::PreBackupCheck ()
 {

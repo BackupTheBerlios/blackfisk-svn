@@ -171,6 +171,10 @@ BFApp::BFApp ()
        strCmdOpen_(wxEmptyString),
        bCmdUsage_(false)
 {
+	// XXX
+/*#ifdef _DEBUG
+	_crtBreakAlloc=9392;
+#endif*/
 }
 
 /*virtual*/ BFApp::~BFApp ()
@@ -462,8 +466,26 @@ bool BFApp::ResetProject ()
 }
 
 #ifdef _DEBUG
+#include "BFProject.h"
 void BFApp::Test ()
 {
+	BFTaskVector vec;
+	wxString str;
+
+	BFProject::Instance().GetAllTasks(vec);
+
+	for ( BFTaskVectorIt it = vec.begin();
+		  it != vec.end();
+		  ++it)
+	{
+		str = str + wxString::Format("########\nOID:\t%d\tName:\t%s\nSrc:\t%s\nDest:\t%s\n\n",
+									 (*it)->GetOID(),
+									 (*it)->GetName(),
+									 (*it)->GetSource(),
+									 (*it)->GetDestination());
+	}
+
+	BFSystem::Info(str);
 }
 #endif
 

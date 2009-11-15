@@ -259,7 +259,7 @@ END_EVENT_TABLE()
     }
 
 #ifdef _DEBUG
-	OnTest(wxCommandEvent());
+	//OnTest(wxCommandEvent());
 #endif
 }
 
@@ -610,15 +610,10 @@ void BFMainFrame::OnAbout (wxCommandEvent& WXUNUSED(event))
 }
 
 #ifdef _DEBUG
-#include "BFProject.h"
 
 void BFMainFrame::OnTest (wxCommandEvent& WXUNUSED(event))
 {
-	// XXX
-	/*wxString strXXX = BFProject::Instance().GetNextTask(NULL)->GetDestination();
-	BFSystem::Log(strXXX);
-
-	OpenProjectPlanner();*/
+	wxGetApp().Test();
 }
 
 #endif

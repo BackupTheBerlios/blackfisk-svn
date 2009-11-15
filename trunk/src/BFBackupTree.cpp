@@ -595,12 +595,20 @@ bool BFBackupTree::OnDropTask (wxCoord x, wxCoord y)
         // new path
         wxString strNewPath = pItemData->GetPath() + wxFILE_SEP_PATH + pTask->GetName();
 
+		// set new destination
         pTask->SetDestination(pItemData->GetPath());
 
-        if ( HasChildren(pTask) )
-            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
-
-        BFProject::Instance().SetModified();
+		// set new destination path to the children
+		if ( false == BFProject::Instance().ModifyDestination(strOldPath, strNewPath) )
+		{
+			BFSystem::Error ( wxString::Format (
+			_(
+				"An error occured while modifying the destination path of this task" \
+				"\nor of it's children!" \
+				"\nThe task is still saved but without modifying the destination."
+			)));
+		}
+ 
         BFProject::Instance().broadcastObservers();
     }
 

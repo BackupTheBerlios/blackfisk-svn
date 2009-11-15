@@ -398,6 +398,19 @@ bool BFTaskDlg::IsPlausible ()
 		return false;
 	}
 
+	// dependency paradoxons
+	long idxAfter, idxBefore;
+
+	if ( false == BFProject::Instance().HasNoDependencyParadoxons(strSrc, strDest, idxAfter, idxBefore) )
+	{
+		BFSystem::Error ( wxString::Format
+		(
+			_("There are dependency problems (paradoxons) with other backup tasks" \
+			  "\nif you use this combination of source and destination directory.")
+		));
+		return false;
+	}
+
     return true;
 }
 
@@ -429,16 +442,17 @@ void BFTaskDlg::SetData ()
 
         // does the tree-item related to this task has children (maybe other tasks) ?
         if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
-            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
+            BFProject::Instance().ModifyDestination(strOldPath, strNewPath);
     }
 
-    // source
+    /* source XXX
+	The source controle is disabled. No way to modify it!
     if (pSourceCtrl_->IsModified())
     {
         pTask_->SetSource(pSourceCtrl_->GetValue());
         BFProject::Instance().SetModified();
         pSourceCtrl_->DiscardEdits();
-    }
+    }*/
 
     // destination
     if (pDestCtrl_->GetPath() != pTask_->GetDestination())
@@ -451,14 +465,28 @@ void BFTaskDlg::SetData ()
 
         strOldPath = strOldPath + pTask_->GetName();
 
-        // new path
-        strNewPath = pDestCtrl_->GetPath() + wxFILE_SEP_PATH + pNameCtrl_->GetValue();
+        // create new path
+        strNewPath = pDestCtrl_->GetPath();
+		if ( false == strNewPath.EndsWith(wxFILE_SEP_PATH) )
+			strNewPath = strNewPath + wxFILE_SEP_PATH;
+		strNewPath = strNewPath + pNameCtrl_->GetValue();
 
+		// set new destination to task
         pTask_->SetDestination(pDestCtrl_->GetPath());
 
-        // does the tree-item related to this task has children (maybe other tasks) ?
-        if ( BFMainFrame::Instance()->BackupTree()->HasChildren(pTask_) )
-            BFBackup::Instance().ModifyDestination(strOldPath, strNewPath);
+		// set new destination path to its children
+		if ( false == BFProject::Instance().ModifyDestination(strOldPath, strNewPath) )
+		{
+			BFSystem::Error ( wxString::Format (
+			_(
+				"An error occured while modifying the destination path of this task" \
+				"\nor of it's children!" \
+				"\nThe task is still saved but without the modifying the destination."
+			)));
+
+			// reset the old destination value
+			pTask_->SetDestination(strOldPath.BeforeLast(wxFILE_SEP_PATH));
+		}
 
         BFProject::Instance().SetModified();
     }

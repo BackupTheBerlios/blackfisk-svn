@@ -339,6 +339,33 @@ BFTaskVector& BFProject::FindAllTasksWithPlaceholders (BFTaskVector& rVec)
     return rVec;
 }
 
+
+bool BFProject::HasNoDependencyParadoxons (const wxString& strSrc,
+										   const wxString& strDest,
+										   long& rIdxAfter,
+										   long& rIdxBefore)
+{
+    /* If the specified source-dir 'strSrc' is created by any other
+       task (strSrc == destination_of_other_task), a task with a
+	   source like 'strSrc' should be executed after the source is
+	   created by the other task(s) */
+    rIdxAfter = FindLastTaskWithDestination(strSrc);
+
+	/* If the specified destination-dir 'strDest' is backuped up by
+	   another task (destination == source of_other_task), a task
+	   with a destination like 'strDest' should be executed before
+	   its destination is backedup by the other task(s) */
+	rIdxBefore = FindLastTaskWithSource(strDest);
+
+	// check
+	if ( rIdxAfter != -1
+	  && rIdxBefore != -1
+	  && rIdxAfter >= rIdxBefore)
+		return false;
+
+	return true;
+}
+
 BFoid BFProject::AppendTask (BFTask& rTask)
 {
     if ( !(rTask.IsValid()) )
@@ -349,20 +376,11 @@ BFoid BFProject::AppendTask (BFTask& rTask)
 
     // ## backup a backup ##
 
-    /* if the source-dir of rTask created by any other
-       task (source == destination_of_other_task), rTask
-       should be executed after the source is created by
-       the other task(s) */
-    long idxAfter = FindLastTaskWithDestination(rTask.GetSource());
-
-	/* If the destination-dir of rTask is backuped up by
-	   another task (destination == source of_other_task),
-	   rTask should be executed before its destination is
-	   backedup by the other task(s) */
-	long idxBefore = FindLastTaskWithSource(rTask.GetDestination());
+    long idxAfter;
+	long idxBefore;
 
 	// check
-	if (idxAfter != -1 && idxBefore != -1 && idxAfter >= idxBefore)
+	if ( false == HasNoDependencyParadoxons (rTask.GetSource(), rTask.GetDestination(), idxAfter, idxBefore) )
 	{
 		BFSystem::Warning(_("This constellation of nested backup tasks is not possible!\nThe task won't be created."));
 		return BFInvalidOID;
@@ -453,6 +471,201 @@ BFoid BFProject::CreateOID ()
         return CreateOID();
 
     return oidLast_;
+}
+
+bool BFProject::ModifyDestination (const wxString& strOldDestination,
+                                   const wxString& strNewDestination)
+{
+    wxString strCurrDest;
+	wxString strOldDest = strOldDestination;
+	wxString strNewDest = strNewDestination;
+	BFTaskVector vecModTasks;
+
+	if ( strOldDest.Last() == wxFILE_SEP_PATH )
+		strOldDest.RemoveLast();
+
+	if ( strNewDest.Last() == wxFILE_SEP_PATH )
+		strNewDest.RemoveLast();
+
+
+	// check for tasks to modify
+    for (BFTaskVectorIt it = vecTasks_.begin();
+         it != vecTasks_.end();
+         ++it)
+    {
+        // the destination of the current task
+        strCurrDest = (*it)->GetDestination();
+
+        // has the destiantion to modify?
+        if (strCurrDest.StartsWith(strOldDest))
+			vecModTasks.push_back((*it));
+    }
+
+	// tasks to modify?
+	if ( !(vecModTasks.empty()) )
+	{
+		long idxAfter, idxBefore;
+
+		// iterate over all tasks to modify
+		for (BFTaskVectorIt it = vecModTasks.begin();
+			 it != vecModTasks.end();
+			 ++it)
+		{
+			// the destination of the current task
+			strCurrDest = (*it)->GetDestination();
+
+			// replace old with new destination
+			strCurrDest.Replace(strOldDest, strNewDest);
+
+			while ( strCurrDest.EndsWith(wxFILE_SEP_PATH) )
+				strCurrDest.RemoveLast(1);
+
+			strCurrDest << wxFILE_SEP_PATH;
+
+			// check for dependency paradoxons
+			if ( HasNoDependencyParadoxons ((*it)->GetSource(), strCurrDest, idxAfter, idxBefore) )
+			{
+				// set destination to the task
+				(*it)->SetDestination(strCurrDest);
+
+				// modify position in global vector
+				MoveTaskInVector ((*it), idxAfter, idxBefore);
+			}
+		}
+
+		// mark the project modified if needed
+		SetModified();
+	}
+
+	return true;
+}
+
+
+bool BFProject::HandleNewDestination ( BFTask* pTask, wxString& strNewDestination )
+{
+	if ( !pTask )
+		return false;
+
+	// check if the methode is allowed to be called and run
+	if ( false == pTask->IsWhileSetDestinationCall() )
+	{
+		BFSystem::Fatal
+		(
+			_("This methode is not called by BFTask::SetDestination() !" \
+			  "\nPlease contact the developer!"),
+			"BFProject::HandleNewDestination()"
+		);
+		return false;
+	}
+
+	long idxAfter, idxBefore;
+
+	// check for dependency paradoxons
+	if ( HasNoDependencyParadoxons (pTask->GetSource(), strNewDestination, idxAfter, idxBefore) )
+	{
+		// modify position in global vector
+		MoveTaskInVector (pTask, idxAfter, idxBefore);
+
+		return true;
+	}
+
+	return false;
+}
+
+
+long BFProject::GetVectorPosition (const BFTask* pTask)
+{
+	if (pTask == NULL)
+		return -1;
+
+	long idx = -1;
+
+	for ( BFTaskVectorIt it = vecTasks_.begin();
+		  it != vecTasks_.end();
+		  ++it )
+	{
+		++idx;
+
+		if ( (*it)->GetOID() == pTask->GetOID() )
+			return idx;
+	}
+
+	return -1;
+}
+
+void BFProject::MoveTaskInVector (BFTask* pTask, long idxFrom, long idxTo)
+{
+	// parameter check
+	if ( pTask == NULL
+		|| (idxFrom != -1 && idxTo != -1 && idxFrom >= idxTo) )
+	{
+		BFSystem::Fatal
+		(
+			wxString::Format
+			(
+				_("Not able to move the a task in the vector between 'idxFrom'(%d) and 'idxTo'(%d)!" \
+			      "\nPlease contact the developer."),
+				  idxFrom,
+				  idxTo
+			),
+			"BFProject::MoveTaskInVector()"
+		);
+		return;
+	}
+
+	// realy move?
+	if ( idxFrom == -1 && idxTo == -1 )
+		return;
+
+	// find current position in global task vector
+	long idx = GetVectorPosition (pTask);
+
+	if ( idx == -1 )
+	// the task is new -> don't move just insert
+	{
+		if ( idxFrom != -1 )
+		{
+			vecTasks_.insert(vecTasks_.begin()+idxFrom+1, pTask);
+		}
+
+		if ( idxTo != -1 )
+		{
+			vecTasks_.insert(vecTasks_.begin()+idxTo, pTask);
+		}
+	}
+	// the task is still there -> move
+	else
+	{
+		// find the task in the global vector...
+		for (BFTaskVectorIt it = vecTasks_.begin();
+			 it != vecTasks_.end();
+			 ++it)
+		{
+			if ( pTask->GetOID() == (*it)->GetOID() )
+			{
+				// ...and erase it
+				vecTasks_.erase(it);
+				break;
+			}
+		}
+
+		// move forward
+		if ( idx <= idxFrom )
+		{
+			// recalculate idx because of earsing the element
+			--idxFrom;
+
+			// reinsert it
+			vecTasks_.insert(vecTasks_.begin()+idxFrom+1, pTask);
+		}
+
+		// move backward
+		if ( idx >= idxTo )
+		{
+			// reinsert it
+			vecTasks_.insert(vecTasks_.begin()+idxTo, pTask);
+		}
+	}
 }
 
 

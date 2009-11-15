@@ -56,6 +56,11 @@ class BFTask
             destination directory if they don't exisit in source directory. */
         bool                        bRealSync_;
 
+		/** Indicates that a call of BFTask::SetDestination() is running.
+			It is needed for BFProject::HandleNewDestination().
+			This member is not serialized! */
+		bool						bCallSetDestination_;
+
         ///
         bool SetOID (BFoid oid);
 
@@ -117,7 +122,7 @@ class BFTask
         ///
         void SetSource (const wxString& source);
         ///
-        void SetDestination (const wxString& dest);
+        bool SetDestination (const wxString& dest);
         ///
         void SetName (const wxString& name);
         ///
@@ -135,6 +140,9 @@ class BFTask
             or
             a the object will be serialized(read) from 'rA'. */
         bool Serialize (jbSerialize& rA);
+
+		/** Please see the member 'bCallSetDestination_' for more details. */
+		bool IsWhileSetDestinationCall ();
 };
 
 

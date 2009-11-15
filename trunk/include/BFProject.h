@@ -63,6 +63,14 @@ class BFProject : public Subject
             ATTENTION: it does not check if the project is saved !*/
         void ClearTaskVector ();
 
+		/** Return the position of 'pTask' in the vector 'vecTasks_'.
+			Return '-1' if nothing was found. */
+		long BFProject::GetVectorPosition (const BFTask* pTask);
+
+		/** Move the position of 'pTask' in the vector 'vecTasks_' between
+			'idxFrom' and 'idxTo'. */
+		void MoveTaskInVector (BFTask* pTask, long idxFrom, long idxTo);
+
     public:
         ///
         static BFProject& Instance ();
@@ -130,6 +138,35 @@ class BFProject : public Subject
             Return -1 if nothing is found. */
         long FindTask (BFTask* pTask);
 
+		/** This methode check the dependencies of a hypothetic backup
+			task in the case of its source 'strSrc' and destination
+			'strDest' directories.
+			For example if the source directory ('strSrc') is the
+			destination directory of another task, the other task
+			should be executed before.
+			Or if the destination directory ('strDest') is the source
+			directory of another task, the other task should be executed
+			after.
+			If such dependencies cause in a paradoxon the methode will
+			return 'false'. Otherwise it will return 'true'.
+			The parameter 'rIdxAfter' is the position (in the task vector)
+			after that such a task should be added.
+			The parameter 'rIdxBefore' is the position (in the task vector)
+			before that such a task should be added. */
+		bool HasNoDependencyParadoxons (const wxString& strSrc,
+										const wxString& strDest,
+										long& rIdxAfter,
+										long& rIdxBefore);
+
+		/** This methode check if it is possible to modify the current destination
+			of the task 'pTask' to 'strNewDestination'.
+			If it is not possible 'false' is returned.
+			If it is possible the position of the task in the global task vectore
+			is modified if this is (because of task dependencies) needed and
+			'true' is returned.
+			This methode is called by BFTask::SetDestination(). */
+		bool HandleNewDestination ( BFTask* pTask, wxString& strNewDestination );
+
         ///
         bool IsModified ();
         ///
@@ -144,6 +181,14 @@ class BFProject : public Subject
 
 		/// Return the sources of each task as a string array.
         wxArrayString GetAllSources ();
+
+		/** Modify the destination of all tasks with the destination
+			'strOldDestination' to 'strNewDestination'.
+			Return 'true' if it was successfull.
+			Return 'false' if it wasn't possible (e.g. because
+			of dependencies paradoxons). */
+        bool ModifyDestination (const wxString& strOldDestination,
+                                const wxString& strNewDestination);
 
         /** Return the position in 'vecTasks_' of the last BFTask element
             which destination is the same or a parent of 'strDestination'.

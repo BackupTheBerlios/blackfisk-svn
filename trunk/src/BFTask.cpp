@@ -44,7 +44,8 @@ BFTask::BFTask (BFTaskType type,
             bVerifyContent_(bVerifyContent),
             archiveFormat_(archive),
             arrExclude_(arrExclude),
-            bRealSync_(bRealSync)
+            bRealSync_(bRealSync),
+			bCallSetDestination_(false)
 {
     oid_ = BFProject::Instance().CreateOID();
 }
@@ -55,7 +56,8 @@ BFTask::BFTask ()
         bVerify_(true),
         bVerifyContent_(false),
         archiveFormat_(CompressNOTUSED),
-        bRealSync_(true)
+        bRealSync_(true),
+		bCallSetDestination_(false)
 {
 }
 
@@ -173,12 +175,25 @@ void BFTask::SetSource (const wxString& source)
     strSource_ = source;
 }
 
-void BFTask::SetDestination (const wxString& dest)
+bool BFTask::SetDestination (const wxString& dest)
 {
-    strDestination_ = dest;
+	bCallSetDestination_ = true;
+	wxString strD = dest;
 
     // upper case the drive letter
-    strDestination_.SetChar(0, wxString(strDestination_[0]).MakeUpper()[0]);
+    strD.SetChar(0, wxString(strD[0]).MakeUpper()[0]);
+
+	if ( BFProject::Instance().HandleNewDestination (this, strD ) )
+	{
+		// set destination to the task
+		strDestination_ = strD;
+
+		return true;
+	}
+
+	bCallSetDestination_ = false;
+
+	return false;
 }
 
 void BFTask::SetName (const wxString& name)
@@ -309,7 +324,7 @@ bool BFTask::Serialize (jbSerialize& rA)
 
         SetTaskType(type);
         SetSource(strSource);
-        SetDestination(strDestination);
+		strDestination_ = strDestination;
         SetName(strName);
         SetVerify(bVerify);
         SetVerifyContent(bVerifyContent);
@@ -340,4 +355,9 @@ bool BFTask::Serialize (jbSerialize& rA)
     }
 
     return rc;
+}
+
+bool BFTask::IsWhileSetDestinationCall ()
+{
+	return bCallSetDestination_;
 }
