@@ -27,14 +27,14 @@
 #include "BFEnvironment.h"
 
 
-/*static*/ BFIconTable* BFIconTable::psIconTable_ = NULL;
+/*static*/ BFIconTable BFIconTable::sIconTable_;
 
-/*static*/ BFIconTable* BFIconTable::Instance ()
+/*static*/ BFIconTable& BFIconTable::Instance ()
 {
-    if (psIconTable_ == NULL)
-        psIconTable_ = new BFIconTable();
+    if ( sIconTable_.imgFilesystem_.GetImageCount() == 0 )
+        sIconTable_.Init();
 
-    return psIconTable_;
+    return sIconTable_;
 }
 
 
@@ -45,7 +45,7 @@ BFIconTable::BFIconTable ()
 {
     wxImage::AddHandler(new wxPNGHandler());
     wxImage::AddHandler(new wxICOHandler());
-    Init();
+    //Init();
 }
 
 /*virtual*/ BFIconTable::~BFIconTable ()
@@ -101,30 +101,30 @@ wxImageList* BFIconTable::GetFilesystemImageList ()
 
 /*static*/ wxBitmap BFIconTable::GetBitmap (BFButtonIconId id)
 {
-    return Instance()->imgButtons_.GetBitmap(id);
+    return Instance().imgButtons_.GetBitmap(id);
 }
 
 /*static*/ wxBitmap BFIconTable::GetBitmap (BFMessageIconId id)
 {
-    return Instance()->imgMessage_.GetBitmap(id);
+    return Instance().imgMessage_.GetBitmap(id);
 }
 
 /*static*/ wxBitmap BFIconTable::GetBitmap (BFFilesystemIconId id)
 {
-    return Instance()->imgFilesystem_.GetBitmap(id);
+    return Instance().imgFilesystem_.GetBitmap(id);
 }
 
 /*static*/ wxIcon BFIconTable::GetIcon (BFButtonIconId id)
 {
-    return Instance()->imgButtons_.GetIcon(id);
+    return Instance().imgButtons_.GetIcon(id);
 }
 
 /*static*/ wxIcon BFIconTable::GetIcon (BFMessageIconId id)
 {
-    return Instance()->imgMessage_.GetIcon(id);
+    return Instance().imgMessage_.GetIcon(id);
 }
 
 /*static*/ wxIcon BFIconTable::GetIcon (BFFilesystemIconId id)
 {
-    return Instance()->imgFilesystem_.GetIcon(id);
+    return Instance().imgFilesystem_.GetIcon(id);
 }

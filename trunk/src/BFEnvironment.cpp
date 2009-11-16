@@ -41,12 +41,6 @@ BFEnvironment::BFEnvironment ()
 
 /*static*/ void BFEnvironment::RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv)
 {
-/*XXX #ifdef _DEBUG
-    // this is needed because of mysterious debuger internals
-    strApplicationDir_ = "D:\\Garage\\projekte\\blackfisk\\trunk";
-    return;
-#endif*/
-
     strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
 
     if (strApplicationDir_.IsEmpty())

@@ -55,7 +55,7 @@ BFDestinationDlg::BFDestinationDlg (wxWindow* pParent,
         SetTitle(_("modify a destination"));
 
     // dialog icon
-    SetIcon(BFIconTable::Instance()->GetIcon(BFIconTable::folder));
+    SetIcon(BFIconTable::Instance().GetIcon(BFIconTable::folder));
 
     // destination control
     pDestCtrl_ = new BFDestinationCtrl(this, strPath);
@@ -63,11 +63,11 @@ BFDestinationDlg::BFDestinationDlg (wxWindow* pParent,
     // buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
                                                        BFDESTINATIONDLG_ID_BUTTONOK,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::ok),
                                                        "OK");
     BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
                                                        BFDESTINATIONDLG_ID_BUTTONCANCEL,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::cancel),
                                                        _("Cancel"));
 
     // sizer

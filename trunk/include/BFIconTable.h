@@ -31,7 +31,7 @@ class BFIconTable
 {
     private:
         ///
-        static BFIconTable* psIconTable_;
+        static BFIconTable sIconTable_;
 
         /// filesystem icons for BFBackupTree
         wxImageList     imgFilesystem_;
@@ -51,7 +51,7 @@ class BFIconTable
 
     public:
         ///
-        static BFIconTable* Instance ();
+        static BFIconTable& Instance ();
 
         ///
         enum BFFilesystemIconId

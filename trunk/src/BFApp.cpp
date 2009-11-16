@@ -172,9 +172,9 @@ BFApp::BFApp ()
        bCmdUsage_(false)
 {
 	// XXX
-/*#ifdef _DEBUG
-	_crtBreakAlloc=9392;
-#endif*/
+#ifdef _DEBUG
+	//_crtBreakAlloc=27067;
+#endif
 }
 
 /*virtual*/ BFApp::~BFApp ()
@@ -233,32 +233,6 @@ void BFApp::DisplayUsage ()
     out->Printf("  -h|--help                Display this text.");
 }
 
-/*
-XXX
-REMOVED
-This way doesn't work on all windows version.
-An installer should do it.
-void BFApp::CheckFileTypeRegistration ()
-{
-	// the mime types manager
-	wxMimeTypesManager mgr;
-
-	wxArrayString arrString;
-	// mime
-	arrString.Add(wxString("document/") + BF_PROJECT_EXTENSION);
-	// open command
-	arrString.Add(BFEnvironment::GetDocumentOpenCommand());
-	// print command
-	arrString.Add(wxEmptyString);
-	// description
-	arrString.Add("Blackfisk Backup Project");
-	// extension
-	arrString.Add(BF_PROJECT_EXTENSION);
-
-	wxFileTypeInfo fti(arrString);
-
-	mgr.Associate(fti);
-}*/
 
 bool BFApp::OnInit()
 {

@@ -83,8 +83,6 @@ class BFApp : public wxApp
         ///
         void DisplayUsage ();
 
-		// XXX REMOVED void CheckFileTypeRegistration ();
-
     protected:
         /// reference to the OBCore instance
         BFCore& Core ()

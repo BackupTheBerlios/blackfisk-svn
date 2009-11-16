@@ -35,9 +35,6 @@
 #include "ids.h"
 #include "blackfisk.h"
 
-//XXX
-#include "BFSystem.h"
-
 #define BFCRONCTRL_ID_RADIO_D		1 + BF_CRONCTRL_ID_HIGHEST
 #define BFCRONCTRL_ID_RADIO_W		2 + BF_CRONCTRL_ID_HIGHEST
 #define BFCRONCTRL_ID_RADIO_I		3 + BF_CRONCTRL_ID_HIGHEST
@@ -438,8 +435,6 @@ void BFCronCtrl::SetData ()
 
 wxString BFCronCtrl::GetCrontabline ()
 {
-    // XXX needed? SetData();
-
     return strCrontabline_;
 }
 

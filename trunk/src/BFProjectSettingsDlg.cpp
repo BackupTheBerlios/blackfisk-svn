@@ -67,11 +67,11 @@ BFProjectSettingsDlg::BFProjectSettingsDlg (wxWindow* pParent)
     // button
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
                                                        BFPRJSETDLG_ID_BUTTONOK,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::ok),
                                                        "OK");
     BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
                                                        BFPRJSETDLG_ID_BUTTONCANCEL,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::cancel),
                                                        _("Cancel"));
 
     // sizer

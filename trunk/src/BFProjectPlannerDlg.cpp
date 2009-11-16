@@ -68,11 +68,11 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     // standard buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
                                                        BFPROJECTPLANNERDLG_ID_BUTTONOK,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::ok),
                                                        "OK");
     BFBitmapButton* pButtonCancel = new BFBitmapButton(this,
                                                        BFPROJECTPLANNERDLG_ID_BUTTONCANCEL,
-                                                       BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                                       BFIconTable::Instance().GetBitmap(BFIconTable::cancel),
                                                        _("Cancel"));
 
     // scheduler active?

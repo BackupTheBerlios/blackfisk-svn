@@ -81,7 +81,7 @@ BFBackupTree::BFBackupTree (wxWindow* pParent)
               oidCurrentDrag_(BFInvalidOID),
               bFillBlackfiskPlaceholders_(BFSettings::Instance().GetFillBlackfiskPlaceholders())
 {
-    SetImageList ( BFIconTable::Instance()->GetFilesystemImageList() );
+    SetImageList ( BFIconTable::Instance().GetFilesystemImageList() );
 
     SetDropTarget   ( new BFBackupDropTarget(this) );
 
@@ -335,7 +335,7 @@ void BFBackupTree::ShowTaskSettings (BFTask* pTask)
             id = BFBACKUPCTRL_ID_MODIFY_TO_COPY_DIR;
 
         pItem = new wxMenuItem(pMenu, id, _("copy directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_dircopy));
+        pItem->SetBitmap(BFIconTable::Instance().GetIcon(BFIconTable::task_dircopy));
         pMenu->Append(pItem);
 
         // ** backup sync dir **
@@ -345,7 +345,7 @@ void BFBackupTree::ShowTaskSettings (BFTask* pTask)
             id = BFBACKUPCTRL_ID_MODIFY_TO_SYNC_DIR;
 
         pItem = new wxMenuItem(pMenu, id, _("synchronise directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_sync));
+        pItem->SetBitmap(BFIconTable::Instance().GetIcon(BFIconTable::task_sync));
         pMenu->Append(pItem);
 
         // ** backup archive dir **
@@ -355,14 +355,14 @@ void BFBackupTree::ShowTaskSettings (BFTask* pTask)
             id = BFBACKUPCTRL_ID_MODIFY_TO_ARCHIVE_DIR;
 
         pItem = new wxMenuItem(pMenu, id, _("archive/compress directory"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_zip));
+        pItem->SetBitmap(BFIconTable::Instance().GetIcon(BFIconTable::task_zip));
         pMenu->Append(pItem);
     }
     else
     {
         // ** backup file copy **
         pItem = new wxMenuItem(pMenu, BFBACKUPCTRL_ID_COPY_FILE, _("copy file"));
-        pItem->SetBitmap(BFIconTable::Instance()->GetIcon(BFIconTable::task_filecopy));
+        pItem->SetBitmap(BFIconTable::Instance().GetIcon(BFIconTable::task_filecopy));
         pMenu->Append(pItem);
     }
 

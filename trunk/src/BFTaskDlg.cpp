@@ -243,15 +243,15 @@ wxSizer* BFTaskDlg::CreateButtons ()
 
     pSizer->Add(new BFBitmapButton(this,
                                    BFTASKDLG_ID_BUTTONOK,
-                                   BFIconTable::Instance()->GetBitmap(BFIconTable::ok),
-                                   "OK"),
+                                   BFIconTable::GetBitmap(BFIconTable::ok),
+                                   _("OK")),
                 wxSizerFlags(0));
 
     pSizer->AddSpacer(20);
 
     pSizer->Add(new BFBitmapButton(this,
                                    BFTASKDLG_ID_BUTTONCANCEL,
-                                   BFIconTable::Instance()->GetBitmap(BFIconTable::cancel),
+                                   BFIconTable::GetBitmap(BFIconTable::cancel),
                                    _("Cancel")),
                 wxSizerFlags(0));
 
@@ -338,7 +338,7 @@ void BFTaskDlg::InitTypeCtrl ()
     {
         BFTaskType type = (*it);
         pTypeCtrl_->Append(BFProject::GetTypeDescription(type),
-                           BFIconTable::Instance()->GetBitmap(BFBackupTree::GetTypeIconId(type)));
+                           BFIconTable::Instance().GetBitmap(BFBackupTree::GetTypeIconId(type)));
     }
 
     pTypeCtrl_->Select(0);
@@ -445,14 +445,9 @@ void BFTaskDlg::SetData ()
             BFProject::Instance().ModifyDestination(strOldPath, strNewPath);
     }
 
-    /* source XXX
+    /* source
 	The source controle is disabled. No way to modify it!
-    if (pSourceCtrl_->IsModified())
-    {
-        pTask_->SetSource(pSourceCtrl_->GetValue());
-        BFProject::Instance().SetModified();
-        pSourceCtrl_->DiscardEdits();
-    }*/
+    */
 
     // destination
     if (pDestCtrl_->GetPath() != pTask_->GetDestination())

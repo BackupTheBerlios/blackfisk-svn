@@ -165,10 +165,6 @@ class BFBackup
         ///
         void Reset ();
 
-        /* XXX Modify the destination of a task.
-        void ModifyDestination (const wxString& strOldDestination,
-                                const wxString& strNewDestination);*/
-
         /// check if all sources and backup-volumeas are there
         bool PreBackupCheck ();
 

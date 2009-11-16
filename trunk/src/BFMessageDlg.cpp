@@ -256,19 +256,19 @@ void BFMessageDlg::CreateButtons_BackupQuestion (wxSizer* pSizer)
         case BF_MSGDLG_QUESTION_YESNO:
         case BF_MSGDLG_QUESTION_YESNOCANCEL:
         case BF_MSGDLG_BACKUP_QUESTION:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::question);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::question);
 
         case BF_MSGDLG_INFO:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::info);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::info);
 
         case BF_MSGDLG_WARNING:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::warning);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::warning);
 
         case BF_MSGDLG_ERROR:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::error);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::error);
 
         case BF_MSGDLG_FATAL:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::fatal);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::fatal);
 
         default:
             return wxBitmap();
@@ -306,25 +306,25 @@ const wxBitmap BFMessageDlg::GetButtonBitmap (wxWindowID id)
     switch (id)
     {
         case BF_MSGDLG_ID_OK:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::ok);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::ok);
 
         case BF_MSGDLG_ID_YES:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::yes);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::yes);
 
         case BF_MSGDLG_ID_CANCEL:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::cancel);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::cancel);
 
         case BF_MSGDLG_ID_NO:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::no);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::no);
 
         case BF_MSGDLG_ID_STOPPRJ:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::stop_prj);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::stop_prj);
 
         case BF_MSGDLG_ID_STOPTSK:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::stop_task);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::stop_task);
 
         case BF_MSGDLG_ID_IGNORE:
-            return BFIconTable::Instance()->GetBitmap(BFIconTable::ignore);
+            return BFIconTable::Instance().GetBitmap(BFIconTable::ignore);
 
         default:
             return wxBitmap();
