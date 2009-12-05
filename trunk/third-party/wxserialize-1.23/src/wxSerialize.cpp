@@ -1310,7 +1310,7 @@ int wxSerialize::LogError(int err, int msgcode, const wxString &s1, const wxStri
 
         // log error to user
 		m_errMsg = error;
-		::wxLogError(m_errMsg);
+		wxLogError(m_errMsg);
 	}
 
 	return m_errorCode;

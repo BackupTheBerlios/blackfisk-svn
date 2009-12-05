@@ -59,10 +59,10 @@ BFHelpCtrl::BFHelpCtrl (wxWindow* pParent,
                                   wxID_ANY,
                                   strDefault);
 
-    // colour
+    /* colour XXX 
     wxColour colour = pSubPanel->GetBackgroundColour();
     colour.Set(colour.Red()+35, colour.Green()+35, colour.Blue()+35);
-    pSubPanel->SetBackgroundColour(colour);
+    pSubPanel->SetBackgroundColour(colour);*/
 
     // sizer and arrange
     wxStaticBoxSizer* pSizer = new wxStaticBoxSizer(wxVERTICAL, this);

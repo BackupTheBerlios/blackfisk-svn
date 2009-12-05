@@ -173,7 +173,7 @@ BFApp::BFApp ()
 {
 	// XXX
 #ifdef _DEBUG
-	//_crtBreakAlloc=27067;
+	//_crtBreakAlloc=34742;
 #endif
 }
 
@@ -441,8 +441,29 @@ bool BFApp::ResetProject ()
 
 #ifdef _DEBUG
 #include "BFProject.h"
+#include <wx/stdpaths.h>
 void BFApp::Test ()
 {
+	/*
+	//wxApp::SetAppName("xxxBLACKFISKxxx");
+
+	wxString str;
+	wxStandardPathsBase& rsp = wxStandardPaths::Get();
+
+	str << "\n\nGetAppDocumentsDir()\n" << rsp.GetAppDocumentsDir()
+		<< "\n\nGetConfigDir()\n" << rsp.GetConfigDir()
+		<< "\n\nGetDataDir()\n" << rsp.GetDataDir()
+		<< "\n\nGetDocumentsDir()\n" << rsp.GetDocumentsDir()
+		<< "\n\nGetExecutablePath()\n" << rsp.GetExecutablePath()
+		<< "\n\nGetLocalDataDir()\n" << rsp.GetLocalDataDir()
+		<< "\n\nGetPluginsDir()\n" << rsp.GetPluginsDir()
+		<< "\n\nGetResourcesDir()\n" << rsp.GetResourcesDir()
+		<< "\n\nGetTempDir()\n" << rsp.GetTempDir()
+		<< "\n\nGetUserConfigDir()\n" << rsp.GetUserConfigDir();
+
+	BFSystem::Info(str);*/
+
+	/* ### SHOW TASK DATA LIST ###
 	BFTaskVector vec;
 	wxString str;
 
@@ -459,7 +480,7 @@ void BFApp::Test ()
 									 (*it)->GetDestination());
 	}
 
-	BFSystem::Info(str);
+	BFSystem::Info(str);*/
 }
 #endif
 

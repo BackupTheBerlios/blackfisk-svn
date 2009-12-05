@@ -16,7 +16,7 @@ Please feel free to contact me if you need more informations!
 FILE & DIRECTORY LISTING
 ~~~~~~~~~~~~~~~~~~~~~~~~
  README         - general informations
- INSTALL        - installation instructions (this file)
+ INSTALL_README - installation instructions (this file)
  LICENSE        - license information
  HISTORY        - history of blackfisk development
  CREDITS        - all persons, projects and institutions
@@ -26,6 +26,7 @@ FILE & DIRECTORY LISTING
  graphic/       - icons and other graphic stuff for blackfisk
  local/         - language files (*.mo) for blackfisk
  sound/         - sound files for event-notification
+ wxCron/*		- the scheduler for blackisk
 
  -- (extra files and directories in the source package) --
  build/					- build environment
@@ -41,6 +42,7 @@ FILE & DIRECTORY LISTING
 						  Please see the doc-files in the related directory
 						  for more detailes.
  local/*.po				- GNU gettext based language files (*.po)
+ install/blackfisk.iss	- script (Inno Setup) to create a windows setup package
  TODO					- This is just a little TODO list for blackfisk.
 						  Please use the bugtracking-system on BerliOS instead
 						  of this file.

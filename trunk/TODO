@@ -1,15 +1,12 @@
-
-- backup an archive-task is just copy/sync file
 - BUG: BFHelpCtrl doesn't work on Win7 (it is black)
+- propose correct default path for extern wxCron crontab
 - add the next official wxCron!
 - add wxCron to the docs
-- (not reproducable BUG): on autorun with error the crontab-entry is set back to * * * * * (why?`)
-- wxSerialize: change ConvertFromIeeeExtended() to wxConvertFromIeeeExtended() because of deprecated status
-  (in wx since rev48084 (Aug 2007))
 
 0.0.2
 ~~~~~
 - tell excluded files/dirs while backup in a log
+- backup an archive-task is just copy/sync file
 - Sync one file!
 - modify verbose level temporary while backup
 - sum errors/warnings/fatals for the hole project in the log!
@@ -30,6 +27,8 @@
 + beautyize and ergonomize the dialogs
 - tooltips (BFTipWindow) on backup-tree-items
 - tooltips on BFHyperlinkCtrl with URL
+- wxSerialize: change ConvertFromIeeeExtended() to wxConvertFromIeeeExtended() because of deprecated status
+  (in wx since rev48084 (Aug 2007))
 
 0.0.3
 ~~~~~
