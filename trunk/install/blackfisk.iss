@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{6041C24B-7925-426B-A89F-C3723882F52B}
 AppName=blackfisk
-AppVerName=blackfisk 0.0
+AppVerName=blackfisk 0.0.1 (BETA)
 AppPublisher=Christian Buhtz <blackfisk@web.de>
 AppPublisherURL=http://www.blackfisk.org
 AppSupportURL=http://www.blackfisk.org
@@ -52,46 +52,46 @@ Source: "D:\Garage\projekte\blackfisk\trunk\HISTORY"; DestDir: "{app}"; Flags: i
 Source: "D:\Garage\projekte\blackfisk\trunk\INSTALL_README"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
 Source: "D:\Garage\projekte\blackfisk\trunk\LICENSE"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
 Source: "D:\Garage\projekte\blackfisk\trunk\README"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\error64.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\fatal64.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_closed.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_open.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_virtual_closed.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_virtual_open.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\ignore16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\info64.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo_text.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo_warp.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo128.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\no16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\question64.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\stop_prj16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\stop_task16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_ar.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_dc.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_fc.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_sy.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\warning64.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\graphic\yes16.png"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\locale\de\bf.po"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\sound\error.wav"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\sound\fatal.wav"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\sound\finish.wav"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\sound\info.wav"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\sound\warning.wav"; DestDir: "{app}"; Flags: ignoreversion; Components: Blackfisk
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\CHANGELOG"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\CREDITS"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\crontab"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\HELP"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\HISTORY"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\INSTALL"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\LICENSE"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\README"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\wxCron.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\graphic\wxCron.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
-Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\graphic\wxCron_text.png"; DestDir: "{app}"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\error64.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\fatal64.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_closed.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_open.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_virtual_closed.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\folder_virtual_open.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\ignore16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\info64.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo.ico"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo_text.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo_warp.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\logo128.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\no16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\question64.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\stop_prj16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\stop_task16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_ar.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_dc.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_fc.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\task_sy.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\warning64.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\graphic\yes16.png"; DestDir: "{app}\graphic"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\locale\de\bf.po"; DestDir: "{app}\locale\de"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\sound\error.wav"; DestDir: "{app}\sound"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\sound\fatal.wav"; DestDir: "{app}\sound"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\sound\finish.wav"; DestDir: "{app}\sound"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\sound\info.wav"; DestDir: "{app}\sound"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\sound\warning.wav"; DestDir: "{app}\sound"; Flags: ignoreversion; Components: Blackfisk
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\CHANGELOG"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\CREDITS"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\crontab"; DestDir: "{userappdata}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\HELP"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\HISTORY"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\INSTALL_README"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\LICENSE"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\README"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\wxCron.exe"; DestDir: "{pf}\wxCron"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\graphic\wxCron.ico"; DestDir: "{pf}\wxCron\graphic"; Flags: ignoreversion; Components: wxCron
+Source: "D:\Garage\projekte\blackfisk\trunk\wxCron\graphic\wxCron_text.png"; DestDir: "{pf}\wxCron\graphic"; Flags: ignoreversion; Components: wxCron
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -104,5 +104,9 @@ Filename: "{app}\blackfisk.exe"; Description: "{cm:LaunchProgram,blackfisk}"; Fl
 [Components]
 Name: Blackfisk; Description: Blackfisk; Flags: fixed; Types: full compact custom
 Name: wxCron; Description: wxCron scheduler; Types: full compact custom
+
+
+
+
 
 

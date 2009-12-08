@@ -60,6 +60,8 @@ class BFEnvironment
 		static const wxString& GetApplicationBinary ();
 		/// Please see 'strApplicationDir_' and 'strApplicationBinary_' for more details.
 		static wxString GetApplicationPath ();
+		/// return the complete path of the scheduler binary "wxCron"
+		static wxString GetSchedulerPath();
 		///
 		static wxString GetDocumentOpenCommand ();
         ///

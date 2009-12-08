@@ -72,6 +72,19 @@ BFEnvironment::BFEnvironment ()
     return strApplicationBinary_;
 }
 
+/*static*/ wxString BFEnvironment::GetSchedulerPath()
+{
+	wxString str;
+
+	// XXX
+	// we need something like wxStandardPaths::GetProgramFiles() here
+	// trac ticket #11530 is still open
+	str << wxStandardPaths::Get().GetExecutablePath().BeforeLast(wxFILE_SEP_PATH).BeforeLast(wxFILE_SEP_PATH);
+	str << wxFILE_SEP_PATH << "wxCron" << wxFILE_SEP_PATH << "wxCron.exe";
+
+	return str;
+}
+
 /*static*/ wxString BFEnvironment::GetApplicationPath ()
 {
     return GetApplicationDirectory() + wxFILE_SEP_PATH + GetApplicationBinary();

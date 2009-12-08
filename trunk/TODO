@@ -1,5 +1,4 @@
-- use directories of the system a more portable way (prepare for win7)
-BUGFIX: propose correct default path for extern wxCron crontab
+
 
 0.0.2
 ~~~~~

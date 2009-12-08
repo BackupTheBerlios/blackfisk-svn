@@ -578,7 +578,7 @@ bool BFApp::IsSchedulerInAutostart ()
 void BFApp::SetSchedulerInAutostart ()
 {
     wxRegKey key(BF_REGKEY_AUTOSTART);
-    key.SetValue(BF_REGKEY_VALUE, BFEnvironment::GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "wxCron.exe");
+	key.SetValue(BF_REGKEY_VALUE, BFEnvironment::GetSchedulerPath());
 }
 
 void BFApp::RemoveSchedulerFromAutostart ()
