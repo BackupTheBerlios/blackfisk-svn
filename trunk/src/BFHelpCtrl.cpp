@@ -26,6 +26,7 @@
 #include <wx/cshelp.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
+#include <wx/settings.h>
 
 /*static*/ wxHelpProvider* BFHelpCtrl::spHelpProvider_ = NULL;
 
@@ -59,10 +60,12 @@ BFHelpCtrl::BFHelpCtrl (wxWindow* pParent,
                                   wxID_ANY,
                                   strDefault);
 
-    /* colour XXX 
-    wxColour colour = pSubPanel->GetBackgroundColour();
-    colour.Set(colour.Red()+35, colour.Green()+35, colour.Blue()+35);
-    pSubPanel->SetBackgroundColour(colour);*/
+    /* colour */
+    pSubPanel->SetBackgroundColour
+	(
+		// default background colour of a info box
+		wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK)
+	);
 
     // sizer and arrange
     wxStaticBoxSizer* pSizer = new wxStaticBoxSizer(wxVERTICAL, this);

@@ -26,6 +26,12 @@ Build on Windows with MinGW and Code::Blocks
    static, dynamic) you build wxWidgets.
 8. Just build blackfisk with the menu entry "Build/Build and run".
 
+wxCron - the scheduler
+~~~~~~~~~~~~~~~~~~~~~~
+The scheduler wxCron comes as a binary without sources. If you want to build it
+yourself please the documentation (wxCron\README) to know where to get the
+sources from the internet.
+
 More detailes and help
 ~~~~~~~~~~~~~~~~~~~~~~
 Please feel free to contact me if you need more help to build blackfisk!

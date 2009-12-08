@@ -1,7 +1,4 @@
-- BUG: BFHelpCtrl doesn't work on Win7 (it is black)
 - propose correct default path for extern wxCron crontab
-- add the next official wxCron!
-- add wxCron to the docs
 
 0.0.2
 ~~~~~
