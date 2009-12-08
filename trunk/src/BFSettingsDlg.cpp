@@ -484,20 +484,23 @@ void BFSettingsDlg::OnRadio_Scheduler (wxCommandEvent& rEvent)
 
 void BFSettingsDlg::SetTextCrontab ()
 {
-    switch ( pRadioScheduler_->GetSelection() )
+	switch ( pRadioScheduler_->GetSelection() )
     {
+		// no scheduler
         case 0:
             pTextCrontab_->SetValue("");
             break;
 
+		// wxCron (in-build; default)
         case 1:
             pTextCrontab_->SetValue(BFEnvironment::GetInBuildCrontabFileName());
             break;
 
+		// wxCron (extern)
         case 2:
             wxFileDialog dlg (this,
                               _("Please select the crontab-file."),
-                              "C:\\Programme\\wxCron",
+							  BFEnvironment::GetInBuildCrontabFileName().BeforeLast(wxFILE_SEP_PATH),
                               "crontab",
                               "crontab",
                               wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );

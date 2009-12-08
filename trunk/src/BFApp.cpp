@@ -251,9 +251,6 @@ bool BFApp::OnInit()
     }
 
     //
-    BFEnvironment::RememberApplicationDirectoryAndName(argv);
-
-    //
     pLog_ = new BFLog();
 
     // log target

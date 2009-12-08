@@ -23,11 +23,15 @@
 
 #include "BFEnvironment.h"
 
-#include <wx/filefn.h>
+#include "BFApp.h"
+#include "blackfisk.h"
 
-/*static*/ wxString BFEnvironment::strApplicationDir_   = wxEmptyString;
-/*static*/ wxString BFEnvironment::strApplicationName_	= wxEmptyString;
-/*static*/ bool     BFEnvironment::bProjectScheduled_   = false;
+#include <wx/filefn.h>
+#include <wx/stdpaths.h>
+
+/*static*/ wxString BFEnvironment::strApplicationDir_		= wxEmptyString;
+/*static*/ wxString BFEnvironment::strApplicationBinary_	= wxEmptyString;
+/*static*/ bool     BFEnvironment::bProjectScheduled_		= false;
 
 BFEnvironment::BFEnvironment ()
 {
@@ -39,7 +43,7 @@ BFEnvironment::BFEnvironment ()
 }
 
 
-/*static*/ void BFEnvironment::RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv)
+/*static* void BFEnvironment::RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv)
 {
     strApplicationDir_ = argv[0].BeforeLast(wxFILE_SEP_PATH);
 
@@ -51,85 +55,90 @@ BFEnvironment::BFEnvironment ()
 
 /*static*/ const wxString& BFEnvironment::GetApplicationDirectory ()
 {
+	if ( strApplicationDir_.IsEmpty() )
+		strApplicationDir_ = wxGetApp().argv[0].BeforeLast(wxFILE_SEP_PATH);
+
+    if (strApplicationDir_.IsEmpty())
+		strApplicationDir_ = wxGetCwd();
+
     return strApplicationDir_;
 }
 
-/*static*/ const wxString& BFEnvironment::GetApplicationName ()
+/*static*/ const wxString& BFEnvironment::GetApplicationBinary ()
 {
-    return strApplicationName_;
+	if ( strApplicationBinary_.IsEmpty() )
+		strApplicationBinary_ = wxGetApp().argv[0].AfterLast(wxFILE_SEP_PATH);
+
+    return strApplicationBinary_;
 }
 
-/*static*/ wxString BFEnvironment::GetApplicationFullName ()
+/*static*/ wxString BFEnvironment::GetApplicationPath ()
 {
-    return GetApplicationDirectory() + wxFILE_SEP_PATH + GetApplicationName();
+    return GetApplicationDirectory() + wxFILE_SEP_PATH + GetApplicationBinary();
 }
 
 /*static*/ wxString BFEnvironment::GetDocumentOpenCommand ()
 {
-	return GetApplicationFullName() + " %1";
+	return GetApplicationPath() + " %1";
+}
+
+/*static*/ wxString BFEnvironment::GetUserConfigDir ()
+{
+	wxString str = wxStandardPaths::Get().GetUserConfigDir();
+
+	if ( false == str.EndsWith(wxFILE_SEP_PATH) )
+		str << wxFILE_SEP_PATH;
+
+	str << BF_PRGNAME;
+
+	if ( false == wxDirExists(str) )
+		wxMkDir(str);
+
+	return str;
 }
 
 /*static*/ const wxString BFEnvironment::GetLogFileName ()
 {
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "bf.log";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
+	wxString str = GetUserConfigDir();
 
-    return str;
+	str << wxFILE_SEP_PATH
+		<< "bf.log";
+
+	return str;
 }
 
 /*static*/ const wxString BFEnvironment::GetGraphicDir ()
 {
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "graphic" + wxFILE_SEP_PATH;
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
+	wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "graphic" + wxFILE_SEP_PATH;
 
-    return str;
+	return str;
 }
 
 /*static*/ const wxString BFEnvironment::GetSoundDir ()
 {
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "sound" + wxFILE_SEP_PATH;
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
+	wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "sound" + wxFILE_SEP_PATH;
 
     return str;
 }
 
 /*static*/ const wxString BFEnvironment::GetSettingsFileName ()
 {
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "blackfisk.cfg";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
+	wxString str = GetUserConfigDir();
 
-    return str;
+	str << wxFILE_SEP_PATH
+		<< "blackfisk.cfg";
+
+	return str;
 }
 
 /*static*/ const wxString BFEnvironment::GetInBuildCrontabFileName ()
 {
-    #if defined(__WXMSW__)
-        wxString str = GetApplicationDirectory() + wxFILE_SEP_PATH + "wxCron" + wxFILE_SEP_PATH + "crontab";
-    #elif defined(__UNIX__)
-        #error "UNIX not supported plattform! Please contact the project maintainer for support!"
-    #else
-        #error "Unsupported plattform! Please contact the project maintainer for support!"
-    #endif
+	wxString str = wxStandardPaths::Get().GetUserConfigDir();
+
+	if ( false == str.EndsWith(wxFILE_SEP_PATH) )
+		str << wxFILE_SEP_PATH;
+
+	str << "wxCron" << wxFILE_SEP_PATH << "crontab";
 
     return str;
 }

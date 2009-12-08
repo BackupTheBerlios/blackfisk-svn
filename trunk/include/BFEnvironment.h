@@ -36,27 +36,30 @@ class BFEnvironment
 
         /// the path to the binary
         static wxString     strApplicationDir_;
-		/// the file name of the binary
-		static wxString		strApplicationName_;
+		/// the binary itself
+		static wxString		strApplicationBinary_;
 
         /** If 'true' the current backup project is opened
             with the option '--run'. Normaly it is done by
             schedulers. */
         static bool         bProjectScheduled_;
 
+		/** Return the application config dir for the current user.
+			If it doesn't exists it will create it. */
+		static wxString GetUserConfigDir ();
+
     public:
         /// virtual dtor
         virtual ~BFEnvironment ();
 
-        ///
-        static void RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv);
+        //        static void RememberApplicationDirectoryAndName (const wxCmdLineArgsArray& argv);
 
         /// Please see 'strApplicationDir_' for more details.
         static const wxString& GetApplicationDirectory ();
-		/// Please see 'strApplicationName_' for more details.
-		static const wxString& GetApplicationName ();
-		/// Please see 'strApplicationDir_' and 'strApplicationName_' for more details.
-		static wxString GetApplicationFullName ();
+		/// Please see 'strApplicationBinary_' for more details.
+		static const wxString& GetApplicationBinary ();
+		/// Please see 'strApplicationDir_' and 'strApplicationBinary_' for more details.
+		static wxString GetApplicationPath ();
 		///
 		static wxString GetDocumentOpenCommand ();
         ///
