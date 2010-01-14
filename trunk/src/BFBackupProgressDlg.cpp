@@ -64,6 +64,7 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
 
 	// minimize main window
     BFMainFrame::Instance()->Iconize();
+    BFMainFrame::Instance()->Disable();
 
 	// init and show
     Init();
@@ -80,9 +81,15 @@ BFBackupProgressDlg::BFBackupProgressDlg (wxWindow* pParent)
 void BFBackupProgressDlg::OnClose(wxCloseEvent& rEvent)
 {
     if (BFCore::Instance().IsWhileBackup())
+    {
         rEvent.Veto();
+    }
     else
+    {
+        BFMainFrame::Instance()->Enable();
+        BFMainFrame::Instance()->Raise();
         Destroy();
+    }
 }
 
 void BFBackupProgressDlg::Init ()

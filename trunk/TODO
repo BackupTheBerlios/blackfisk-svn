@@ -1,5 +1,5 @@
-
-
+- implement easier read log-window (icons and colors)
+- implement all-projects-planer dialog
 0.0.2
 ~~~~~
 - tell excluded files/dirs while backup in a log

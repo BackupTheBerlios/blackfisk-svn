@@ -441,6 +441,8 @@ bool BFApp::ResetProject ()
 #include <wx/stdpaths.h>
 void BFApp::Test ()
 {
+	BFSystem::Info(wxStandardPaths::Get().GetSystemAppDir());
+
 	/*
 	//wxApp::SetAppName("xxxBLACKFISKxxx");
 
