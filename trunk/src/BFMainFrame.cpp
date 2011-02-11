@@ -358,6 +358,7 @@ BFBackupTree* BFMainFrame::BackupTree ()
 
 /*virtual*/ BFMainFrame::~BFMainFrame ()
 {
+    int i = 99;
 }
 
 void BFMainFrame::OnDisplayLog (wxCommandEvent& event)
@@ -514,7 +515,8 @@ bool BFMainFrame::AskModification ()
 		int iAnswer = wxID_YES;
 
         // ask for save
-		if ( BFSettings::Instance().GetAutosaveProjects() )
+		if ( BFSettings::Instance().GetAutosaveProjects()
+            && wxGetApp().GetCurrentProjectFilename().Len() > 0 )
 		{
 			BFSystem::Log(_("Autosave current project..."));
 			iAnswer = wxID_YES;
@@ -530,8 +532,21 @@ bool BFMainFrame::AskModification ()
 
         // save
         if (iAnswer == wxID_YES)
-            if (wxGetApp().SaveCurrentProject() == false)
-                return false;
+        {            
+            if ( wxGetApp().GetCurrentProjectFilename().Len() == 0 )
+            {
+                wxString strProject;
+
+                if ( AskSaveProject(strProject) )
+                    return wxGetApp().SaveProject(strProject);
+                else
+                    return false;
+            }
+            else
+            {
+                return wxGetApp().SaveCurrentProject();
+            }
+        }
     }
 
     // wxNO

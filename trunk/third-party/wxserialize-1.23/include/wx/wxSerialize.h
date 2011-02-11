@@ -17,7 +17,7 @@
 
 #define WXSERIALIZE_MAJOR_VERSION 1
 #define WXSERIALIZE_MINOR_VERSION 2
-#define WXSERIALIZE_RELEASE_VERSION 3           // increment this on every release!
+#define WXSERIALIZE_RELEASE_VERSION 4           // increment this on every release!
 
 /** \author Jorgen Bodde
     \mainpage

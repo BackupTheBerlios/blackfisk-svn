@@ -290,7 +290,7 @@ bool BFApp::OnInit()
     pLog_->CareSize();
 
     // init locals
-    locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_CONV_ENCODING);
+    locale_.Init( BFSettings::Instance().GetLanguage(), wxLOCALE_LOAD_DEFAULT );
     locale_.AddCatalogLookupPathPrefix(".\\locale");
     locale_.AddCatalog("bf");
 
@@ -441,7 +441,7 @@ bool BFApp::ResetProject ()
 #include <wx/stdpaths.h>
 void BFApp::Test ()
 {
-	BFSystem::Info(wxStandardPaths::Get().GetSystemAppDir());
+	//BFSystem::Info(wxStandardPaths::Get().GetSystemAppDir());
 
 	/*
 	//wxApp::SetAppName("xxxBLACKFISKxxx");

@@ -80,7 +80,9 @@ BFEnvironment::BFEnvironment ()
 	// we need something like wxStandardPaths::GetProgramFiles() here
 	// trac ticket #11530 is still open
 	//str << wxStandardPaths::Get().GetExecutablePath().BeforeLast(wxFILE_SEP_PATH).BeforeLast(wxFILE_SEP_PATH);
-	str << wxStandardPaths::Get().GetSystemAppDir();
+
+	wxStandardPaths::Get().GetSystemAppDir();
+    str << "C:\\Program Files";
 	str << wxFILE_SEP_PATH << "wxCron" << wxFILE_SEP_PATH << "wxCron.exe";
 
 	return str;

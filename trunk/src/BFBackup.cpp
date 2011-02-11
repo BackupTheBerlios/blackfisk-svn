@@ -390,6 +390,10 @@ bool BFBackup::StoreToFile (const wxString& strFilename)
     {
         strCurrentFilename_ = strFilename;
         pProject_->SetModified(false);
+
+        if (archive.GetVersion() < 1030)
+            pProject_->SetOriginalCrontabLine(GetCrontabline());
+
         return true;
     }
 

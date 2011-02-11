@@ -147,7 +147,9 @@ class BFMainFrame : public wxFrame
         /** ask for the project filename to save and store it in 'strProject' */
         bool AskSaveProject (wxString& strProject);
         /** handle a modified project, ask if it should be saved and does it
-            it return 'false' if the user press the cancel button
+            if the project is new (not stored) it ask for the filename, too
+            it return 'false' if the user press the cancel button, or an error
+            occured while saving a new project
             it return 'true' if the user press yes or no */
         bool AskModification ();
 

@@ -925,10 +925,10 @@ bool wxSerialize::Write(const wxMemoryBuffer &buffer)
     return IsOk();
 }
 
-#if wxUSE_APPLE_IEEE
+/*#if wxUSE_APPLE_IEEE
 // Must be at global scope for VC++ 5 (ripped from wxDataInputStream)
 extern "C" wxFloat64 ConvertFromIeeeExtended(const wxInt8 *bytes);
-#endif
+#endif*/
 
 wxFloat64 wxSerialize::LoadDouble()
 {
@@ -941,7 +941,7 @@ wxFloat64 wxSerialize::LoadDouble()
 		wxInt8 buf[10];
 
 		m_idstr.Read((void *)buf, 10);
-		value = ConvertFromIeeeExtended(buf);
+		value = wxConvertFromIeeeExtended(buf);
 #else
 		#pragma warning "wxSerialize::LoadDouble() not using IeeeExtended - will not work!"
 #endif
@@ -988,10 +988,10 @@ bool wxSerialize::WriteBool(bool value)
     return IsOk();
 }
 
-#if wxUSE_APPLE_IEEE
+/*#if wxUSE_APPLE_IEEE
 // Must be at global scope for VC++ 5
 extern "C" void ConvertToIeeeExtended(wxFloat64, wxInt8 *bytes);
-#endif
+#endif*/
 
 bool wxSerialize::WriteDouble(wxFloat64 value)
 {
@@ -1002,7 +1002,7 @@ bool wxSerialize::WriteDouble(wxFloat64 value)
 		wxInt8 buf[10];
 
 #if wxUSE_APPLE_IEEE
-		ConvertToIeeeExtended(value, buf);
+		wxConvertToIeeeExtended(value, buf);
 #else
 	#if !defined(__VMS__) && !defined(__GNUG__)
 		#pragma warning "wxSerialize::WriteDouble() not using IeeeExtended - will not work!"

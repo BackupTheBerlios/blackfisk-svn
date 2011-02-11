@@ -29,6 +29,7 @@
 #include "BFMainFrame.h"
 
 DEFINE_EVENT_TYPE(BF_EVENT_THREAD_END)
+//wxDEFINE_EVENT(BF_EVENT_THREAD_END, wxCommandEvent);
 
 /*static*/ BFThread_BackupRunner* BFThread_BackupRunner::sp_project_runner_ = NULL;
 

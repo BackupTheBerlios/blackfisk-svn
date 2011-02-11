@@ -40,7 +40,9 @@ BFProject& BFProject::Instance ()
 BFProject::BFProject ()
          : strName_(BFPROJECT_DEFAULT_NAME),
            bModified_(false),
-           oidLast_(BFInvalidOID)
+           oidLast_(BFInvalidOID),
+           lRetryHours_(0),
+           lRetryMinutes_(5)
 {
 }
 
@@ -207,6 +209,11 @@ bool BFProject::Serialize (jbSerialize& rA)
         rA << strName_;
         settings_.Serialize(rA);
         rA << (int)GetTaskCount();
+        rA << strOrgCrontabline_;
+        rA << bInRetryMode_;
+        rA << strRetryCrontabline_;
+        rA << lRetryHours_;
+        rA << lRetryMinutes_;
 
         for (itVec = vecTasks_.begin();
              itVec != vecTasks_.end();
@@ -230,6 +237,36 @@ bool BFProject::Serialize (jbSerialize& rA)
         rA >> strName_;
         settings_.Serialize(rA);
         rA >> iObjCount;
+
+        // implemented at version 1030
+        if (rA.GetVersion() < 1030)
+        {
+            /* strOrgCrontabline_
+               is set in BFBackup::StoreToFile() */
+            bInRetryMode_ = false;
+        }
+        else
+        {
+            rA >> strOrgCrontabline_;
+            rA >> bInRetryMode_;
+        }
+
+        /// implemented at version 1040
+        if (rA.GetVersion() < 1040)
+        {
+            strRetryCrontabline_ = wxEmptyString;
+            lRetryHours_ = 0;
+            lRetryMinutes_ = 5;
+        }
+        else
+        {
+            rA >> strRetryCrontabline_;
+            int i = 0;
+            rA >> i;
+            lRetryHours_ = i;
+            rA >> i;
+            lRetryMinutes_ = i;
+        }
 
         for (int i = 0; i < iObjCount; ++i)
         {
@@ -268,6 +305,28 @@ void BFProject::SetName (const wxString& strName)
 const wxString& BFProject::GetName ()
 {
     return strName_;
+}
+
+
+void BFProject::SetOriginalCrontabLine (const wxString& strOrgLine)
+{
+    strOrgCrontabline_ = strOrgLine;
+}
+
+const wxString& BFProject::GetOriginalCrontabLine ()
+{
+    return strOrgCrontabline_;
+}
+
+
+void BFProject::SetInRetryMode (bool bInRetry)
+{
+    bInRetryMode_ = bInRetry;
+}
+
+bool BFProject::IsInRetryMode ()
+{
+    return bInRetryMode_;
 }
 
 

@@ -1,5 +1,9 @@
+- BUG: open automaticly (zB: wxCron) a none-existing bfp-file cause in start the backup but crash
+- BUG: modify destination from Z: (not exising) to S: (existing) crash
 - implement easier read log-window (icons and colors)
 - implement all-projects-planer dialog
+- if using extern wxCron don't look at "C:\Program Files" search the complete system and offer all found wxCron.exe
+
 0.0.2
 ~~~~~
 - tell excluded files/dirs while backup in a log

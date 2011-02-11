@@ -26,7 +26,6 @@
 
 #include <wx/wx.h>
 
-//#include "BFTaskBase.h"
 #include "BFTask.h"
 #include "ObserverPattern.h"
 #include "BFProjectSettings.h"
@@ -58,6 +57,22 @@ class BFProject : public Subject
 
         /// the last created oid
         BFoid               oidLast_;
+
+        /** Used to identify and remember the original crontabline. */
+        wxString            strOrgCrontabline_;
+        /** Indicate if the project is in "retry mode". It means that
+            the last automaticly run of the backup caused in an error
+            and will no be retried periodicly.
+            If this is 'true' means that the current run is a retry-run.
+            If it succeded the crontab-line have to be restored to
+            its original one.*/
+        bool                bInRetryMode_;
+        /** Used to identify and remember the retry crontabline. */
+        wxString            strRetryCrontabline_;
+        /// next retry: hours (please see 'lRetryMinutes_', too)
+        long                lRetryHours_;
+        /// next retry: minutes (please see 'lRetryHours_', too)
+        long                lRetryMinutes_;
 
         /** it delete all task objects in the task-vector
             ATTENTION: it does not check if the project is saved !*/
@@ -95,6 +110,16 @@ class BFProject : public Subject
         void SetName (const wxString& strName);
         ///
         const wxString& GetName ();
+
+        ///
+        void SetOriginalCrontabLine (const wxString& strOrgLine);
+        ///
+        const wxString& GetOriginalCrontabLine ();
+
+        ///
+        void SetInRetryMode (bool bInRetry);
+        ///
+        bool IsInRetryMode ();
 
         ///
         BFProjectSettings& GetSettings ();

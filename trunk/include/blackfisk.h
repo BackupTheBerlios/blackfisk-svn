@@ -23,7 +23,11 @@
 #ifndef BLACKFISK_H
 #define BLACKFISK_H
 
+#ifndef _DEBUG
 #define BF_PRGNAME                  "blackfisk"
+#else
+#define BF_PRGNAME                  "blackfisk DEBUG"
+#endif
 #define BF_VERSION_MAJOR            0
 #define BF_VERSION_MINOR            0
 #define BF_VERSION_RELEASE          0
@@ -41,7 +45,7 @@
 #define BF_FTP_FILE_VER             "current_version"
 
 #define BF_SETTINGS_CURRENT_VERSION 1050
-#define BF_PROJECT_CURRENT_VERSION  1020
+#define BF_PROJECT_CURRENT_VERSION  1040
 
 #define BF_PROJECT_EXTENSION        ".bfp"
 #define BF_PROJECT_EXTENSION_STRING "Blackfisk project files (*.bfp)|*.bfp"
