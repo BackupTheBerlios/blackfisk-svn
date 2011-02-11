@@ -31,6 +31,7 @@
 #include <wx/sizer.h>
 
 class BFTimeCtrl;
+class wxCheckBox;
 
 ///
 class BFCronCtrl : public wxPanel
@@ -54,6 +55,8 @@ class BFCronCtrl : public wxPanel
 		wxPanel*			pPanelWeekly_;
 		///
 		wxPanel*			pPanelIntervall_;
+        ///
+        wxPanel*            pPanelRetry_;
 
 		/// DAILY: clock
 		BFTimeCtrl*			pDTimeCtrl_;
@@ -68,10 +71,12 @@ class BFCronCtrl : public wxPanel
 		/// INTERVALL: type
 		wxComboBox*			pICombo_;
 
-		/** INTERVALL: hours
-		wxSpinCtrl*			pISpinHours_;
-		/// INTERVALL: minutes
-		wxSpinCtrl*			pISpinMinutes_;*/
+        /// RETRY: check
+        wxCheckBox*         pCheckRetry_;
+        /// RETRY: hours
+        wxSpinCtrl*         pSpinRetryHours_;
+        /// RETRY: minutes
+        wxSpinCtrl*         pSpinRetryMinutes_;
 
         /** Read data from the crontab and display it in the dialog. */
         void GetData();
@@ -106,6 +111,8 @@ class BFCronCtrl : public wxPanel
         void OnRadio_W (wxCommandEvent& rEvent);
         ///
         void OnRadio_I (wxCommandEvent& rEvent);
+        ///
+        void OnCheck_R (wxCommandEvent& rEvent);
 
         ///
         wxString GetCrontabline ();

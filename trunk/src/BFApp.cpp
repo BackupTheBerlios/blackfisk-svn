@@ -339,11 +339,22 @@ bool BFApp::OnInit()
         // start the backup
         if ( BFBackup::Instance().PreBackupCheck() )
         {
+            // if in retrymode
+            // delete retryline
+            // add orgline if not exists
+            // set binretry = false
+
             new BFBackupProgressDlg(BFMainFrame::Instance());
         }
         else
         {
             BFSystem::Warning(_("PreBackupCheck failed. Aborting ..."));
+
+            // create retryline
+            // remember orgline
+            // delete orgline if exists
+            // add retryline if it not even exists
+            // set bInRetry = true
             return false;
         }
     }

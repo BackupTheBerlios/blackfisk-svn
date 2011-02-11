@@ -42,7 +42,7 @@ BFProject::BFProject ()
            bModified_(false),
            oidLast_(BFInvalidOID),
            lRetryHours_(0),
-           lRetryMinutes_(5)
+           lRetryMinutes_(0)
 {
 }
 
@@ -210,7 +210,7 @@ bool BFProject::Serialize (jbSerialize& rA)
         settings_.Serialize(rA);
         rA << (int)GetTaskCount();
         rA << strOrgCrontabline_;
-        rA << bInRetryMode_;
+        rA << bInRetryMode_;        
         rA << strRetryCrontabline_;
         rA << lRetryHours_;
         rA << lRetryMinutes_;
@@ -256,7 +256,7 @@ bool BFProject::Serialize (jbSerialize& rA)
         {
             strRetryCrontabline_ = wxEmptyString;
             lRetryHours_ = 0;
-            lRetryMinutes_ = 5;
+            lRetryMinutes_ = 0;
         }
         else
         {
@@ -329,6 +329,32 @@ bool BFProject::IsInRetryMode ()
     return bInRetryMode_;
 }
 
+void BFProject::SetRetry (long lMinutes, long lHours)
+{
+    if ( lHours < 0 || lMinutes < 0 )
+        return;
+
+    lRetryHours_ = lHours;
+    lRetryMinutes_ = lMinutes;
+}
+
+long BFProject::GetRetryHours ()
+{
+    return lRetryHours_;
+}
+
+long BFProject::GetRetryMinutes ()
+{
+    return lRetryMinutes_;
+}
+
+bool BFProject::IsRetry ()
+{
+    if ( lRetryHours_ > 0 || lRetryMinutes_ > 0 )
+        return true;
+
+    return false;
+}
 
 BFProjectSettings& BFProject::GetSettings ()
 {

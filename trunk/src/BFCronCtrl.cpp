@@ -27,11 +27,13 @@
 #include <wx/gbsizer.h>
 #include <wx/spinctrl.h>
 #include <wx/statline.h>
+#include <wx/checkbox.h>
 #include "BFTimeCtrl.h"
 #include "BFSettings.h"
 #include "BFMainFrame.h"
 #include "BFBackup.h"
 #include "BFCore.h"
+#include "BFProject.h"
 #include "ids.h"
 #include "blackfisk.h"
 
@@ -40,11 +42,13 @@
 #define BFCRONCTRL_ID_RADIO_I		3 + BF_CRONCTRL_ID_HIGHEST
 #define BFCRONCTRL_ID_COMBO_W		4 + BF_CRONCTRL_ID_HIGHEST
 #define BFCRONCTRL_ID_COMBO_I		5 + BF_CRONCTRL_ID_HIGHEST
+#define BFCRONCTRL_ID_CHECK_R       6 + BF_CRONCTRL_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFCronCtrl, wxPanel)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_D,		BFCronCtrl::OnRadio_D)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_W,		BFCronCtrl::OnRadio_W)
 	EVT_RADIOBUTTON ( BFCRONCTRL_ID_RADIO_I,		BFCronCtrl::OnRadio_I)
+    EVT_CHECKBOX    ( BFCRONCTRL_ID_CHECK_R,        BFCronCtrl::OnCheck_R)
 END_EVENT_TABLE()
 
 BFCronCtrl::BFCronCtrl (wxWindow* pParent,
@@ -61,6 +65,7 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 	pPanelDaily_ = new wxPanel(this);
 	pPanelWeekly_ = new wxPanel(this);
 	pPanelIntervall_ = new wxPanel(this);
+    pPanelRetry_ = new wxPanel(this);
 
 	// * DAILY: time *
 	pDTimeCtrl_ = new BFTimeCtrl(pPanelDaily_, wxID_ANY, 7, 38);
@@ -90,8 +95,8 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 	// * INTERVALL *
 	pISpin_ = new wxSpinCtrl(pPanelIntervall_,
 							 wxID_ANY,
-							 "0000");
-	int iWidth = BFMainFrame::GetTextWidth("0000000000", pISpin_);
+							 "0");
+	int iWidth = BFMainFrame::GetTextWidth("000000000", pISpin_);
 	pISpin_->SetSize(wxSize(iWidth, -1));
 
 	wxString choicesIntervall[] = { _("days"), _("hours"), _("minutes") };
@@ -104,6 +109,22 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 							   choicesIntervall,
 							   wxCB_READONLY);
 	pICombo_->SetSelection(0);
+
+    // * RETRY *
+    pCheckRetry_ = new wxCheckBox(this,
+                                  BFCRONCTRL_ID_CHECK_R,
+                                  _("retry the backup if it couldn't start"));
+    pSpinRetryHours_ = new wxSpinCtrl(pPanelRetry_,
+                                      wxID_ANY,
+                                      "0");
+    pSpinRetryHours_->SetRange(0, 24);
+    pSpinRetryMinutes_ = new wxSpinCtrl(pPanelRetry_,
+                                        wxID_ANY,
+                                        "0");
+    pSpinRetryMinutes_->SetRange(0, 59);
+    iWidth = BFMainFrame::GetTextWidth("0000000", pSpinRetryHours_);
+	pSpinRetryHours_->SetSize(wxSize(iWidth, -1));
+    pSpinRetryMinutes_->SetSize(wxSize(iWidth, -1));
 
 	// ** sizer and arrange **
 	wxBoxSizer* pSizerD = new wxBoxSizer(wxHORIZONTAL);
@@ -124,7 +145,7 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 	pSizerI->AddStretchSpacer(1);
 	pSizerI->Add ( pICombo_,			wxSizerFlags(0) );
 	pPanelIntervall_->SetSizer(pSizerI);
-	
+
 	wxGridBagSizer* pGBSizer = new wxGridBagSizer ();
 
 	pGBSizer->Add ( pRadioDaily_,				wxGBPosition(1, 1), wxDefaultSpan, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -137,8 +158,23 @@ BFCronCtrl::BFCronCtrl (wxWindow* pParent,
 	pGBSizer->Add ( pPanelIntervall_,			wxGBPosition(9, 4), wxDefaultSpan, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT );
 	pGBSizer->Add ( new wxPanel(this),			wxGBPosition(10, 0) );
 
-    wxStaticBoxSizer*	pSizerSB = new wxStaticBoxSizer(wxHORIZONTAL, this);
+    wxBoxSizer* pSizerR = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pSizerRspin = new wxBoxSizer(wxHORIZONTAL);
+    pSizerRspin->Add ( pSpinRetryMinutes_,      wxSizerFlags(0).FixedMinSize() );
+    pSizerRspin->Add ( new wxStaticText(pPanelRetry_, wxID_ANY, _(" minutes and ")), wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
+    pSizerRspin->Add ( pSpinRetryHours_,        wxSizerFlags(0).FixedMinSize() );
+    pSizerRspin->Add ( new wxStaticText(pPanelRetry_, wxID_ANY, _(" hours")), wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL) );
+    pSizerR->Add ( new wxStaticText(pPanelRetry_, wxID_ANY, _("try every")), wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border() );
+    pSizerR->AddStretchSpacer(1);
+    pSizerR->Add ( pSizerRspin );
+    pPanelRetry_->SetSizer(pSizerR);
+
+    wxStaticBoxSizer*	pSizerSB = new wxStaticBoxSizer(wxVERTICAL, this);
 	pSizerSB->Add ( pGBSizer );
+    pSizerSB->Add ( new wxStaticLine(this), wxSizerFlags(0).Center().Expand().Border(wxTOP, 25) );
+    pSizerSB->Add ( new wxStaticLine(this), wxSizerFlags(0).Center().Expand().Border(wxBOTTOM, 5) );
+    pSizerSB->Add ( pCheckRetry_, wxSizerFlags(0).Border() );
+    pSizerSB->Add ( pPanelRetry_, wxSizerFlags(0).Border() );
 	SetSizer(pSizerSB);
 
     GetData();
@@ -293,7 +329,21 @@ void BFCronCtrl::GetData_Intervall()
 
 void BFCronCtrl::GetData()
 {
-	//
+    // * RETRY *
+    if ( BFProject::Instance().IsRetry() )
+    {
+        pCheckRetry_->SetValue(true);
+        pSpinRetryHours_->SetValue( BFProject::Instance().GetRetryHours() );
+        pSpinRetryMinutes_->SetValue( BFProject::Instance().GetRetryMinutes() );
+    }
+    else
+    {
+        pCheckRetry_->SetValue(false);
+    }
+
+    OnCheck_R(wxCommandEvent());
+
+    //
     BFBackup::ParseCrontabline(strCrontabline_, arrCrontabline_);
 
 	// * DAILY * time
@@ -431,6 +481,21 @@ void BFCronCtrl::SetData ()
 									   arrCrontabline_[3],
 									   arrCrontabline_[4],
 									   arrCrontabline_[5] );
+
+    // * RETRY *
+    if ( pCheckRetry_->IsChecked() == false )
+    {
+        BFProject::Instance().SetRetry(0, 0);
+    }
+    else
+    {
+        BFProject::Instance().SetRetry
+        (
+            pSpinRetryMinutes_->GetValue(),
+            pSpinRetryHours_->GetValue()
+        );
+    }
+    BFProject::Instance().SetModified();
 }
 
 wxString BFCronCtrl::GetCrontabline ()
@@ -476,4 +541,12 @@ void BFCronCtrl::OnRadio_I (wxCommandEvent& rEvent)
 	pRadioIntervall_->SetValue(true);
 	BFMainFrame::SetFontBold(pRadioIntervall_);
 	pPanelIntervall_->Enable();
+}
+
+void BFCronCtrl::OnCheck_R (wxCommandEvent& rEvent)
+{
+    if ( pCheckRetry_->IsChecked() )
+        pPanelRetry_->Enable();
+    else
+        pPanelRetry_->Disable();
 }

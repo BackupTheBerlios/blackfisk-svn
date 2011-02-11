@@ -31,17 +31,17 @@
 #include "BFSettings.h"
 #include "ids.h"
 
-#include <wx/tglbtn.h>
+#include <wx/checkbox.h>
 
 #define BFPROJECTPLANNERDLG_ID_BUTTONOK          1 + BF_PROJECTPLANNER_ID_HIGHEST
 #define BFPROJECTPLANNERDLG_ID_BUTTONCANCEL      2 + BF_PROJECTPLANNER_ID_HIGHEST
-#define BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE    3 + BF_PROJECTPLANNER_ID_HIGHEST
+#define BFPROJECTPLANNERDLG_ID_CHECKSCHEDULE     3 + BF_PROJECTPLANNER_ID_HIGHEST
 
 BEGIN_EVENT_TABLE(BFProjectPlannerDlg, wxDialog)
   EVT_CLOSE         (                                       BFProjectPlannerDlg::OnClose)
   EVT_BUTTON        (BFPROJECTPLANNERDLG_ID_BUTTONOK,       BFProjectPlannerDlg::OnButton_Ok)
   EVT_BUTTON        (BFPROJECTPLANNERDLG_ID_BUTTONCANCEL,   BFProjectPlannerDlg::OnButton_Cancel)
-  EVT_TOGGLEBUTTON  (BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE, BFProjectPlannerDlg::OnButton_Schedule)
+  EVT_CHECKBOX      (BFPROJECTPLANNERDLG_ID_CHECKSCHEDULE,  BFProjectPlannerDlg::OnCheck_Schedule)
 END_EVENT_TABLE()
 
 
@@ -60,10 +60,10 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
 	// cron ctrl
 	pCronCtrl_ = new BFCronCtrl(this, strCrontabLine);
 
-    // schedule button
-    pButtonSchedule_ = new wxToggleButton(this,
-                                          BFPROJECTPLANNERDLG_ID_BUTTONSCHEDULE,
-                                          _("Scheduler activated"));
+    // schedule check box
+    pCheckSchedule_ = new wxCheckBox(this,
+                                     BFPROJECTPLANNERDLG_ID_CHECKSCHEDULE,
+                                     _("Scheduler activated"));
 
     // standard buttons
     BFBitmapButton* pButtonOk     = new BFBitmapButton(this,
@@ -76,14 +76,14 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
                                                        _("Cancel"));
 
     // scheduler active?
-    ToogleButton_Schedule ( !(strCrontabLine.IsEmpty()) );
+    CheckBox_Schedule ( !(strCrontabLine.IsEmpty()) );
 
     // sizer, arrange and show
     wxBoxSizer* pDlgSizer       = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* pButtonSizer    = new wxBoxSizer(wxHORIZONTAL);
     pButtonSizer->Add(pButtonOk,        wxSizerFlags(0).Border());
     pButtonSizer->Add(pButtonCancel,    wxSizerFlags(0).Border());
-	pDlgSizer->Add (pButtonSchedule_,   wxSizerFlags(0).Center().DoubleBorder());
+    pDlgSizer->Add(pCheckSchedule_,     wxSizerFlags(0).Center().DoubleBorder());
 	pDlgSizer->Add(pCronCtrl_,          wxSizerFlags(0).Border());
 	pDlgSizer->Add(pButtonSizer,        wxSizerFlags(0).Center().Border(wxALL, 10));
     SetSizerAndFit(pDlgSizer);
@@ -108,7 +108,7 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
     {
 		pCronCtrl_->SetData();
 
-        if ( pButtonSchedule_->GetValue() )
+        if ( pCheckSchedule_->GetValue() )
         {
             wxString strOld = BFBackup::Instance().GetCrontabline();
             wxString strNew = pCronCtrl_->GetCrontabline();
@@ -131,25 +131,25 @@ void BFProjectPlannerDlg::OnButton_Cancel (wxCommandEvent& rEvent)
     Close();
 }
 
-void BFProjectPlannerDlg::OnButton_Schedule (wxCommandEvent& rEvent)
+void BFProjectPlannerDlg::OnCheck_Schedule (wxCommandEvent& rEvent)
 {
-    ToogleButton_Schedule(pButtonSchedule_->GetValue());
+    CheckBox_Schedule(pCheckSchedule_->GetValue());
 }
 
-void BFProjectPlannerDlg::ToogleButton_Schedule (bool bValue)
+void BFProjectPlannerDlg::CheckBox_Schedule (bool bValue)
 {
-    if ( bValue != pButtonSchedule_->GetValue() )
-        pButtonSchedule_->SetValue (bValue);
+    if ( bValue != pCheckSchedule_->GetValue() )
+        pCheckSchedule_->SetValue (bValue);
 
     if ( bValue )
     {
-        pButtonSchedule_->SetLabel(_("Scheduler active"));
+        pCheckSchedule_->SetLabel(_("Scheduler active"));
         if (pCronCtrl_)
             pCronCtrl_->Enable();
     }
     else
     {
-        pButtonSchedule_->SetLabel(_("Scheduler inactive"));
+        pCheckSchedule_->SetLabel(_("Scheduler inactive"));
         if (pCronCtrl_)
             pCronCtrl_->Enable(false);
     }

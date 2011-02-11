@@ -28,19 +28,19 @@
 
 //
 class BFCronCtrl;
-class wxToggleButton;
+class wxCheckBox;
 
 ///
 class BFProjectPlannerDlg : public wxDialog
 {
     private:
         ///
-        wxToggleButton*     pButtonSchedule_;
+        wxCheckBox*         pCheckSchedule_;
         ///
         BFCronCtrl*         pCronCtrl_;
 
         ///
-        void ToogleButton_Schedule (bool bValue);
+        void CheckBox_Schedule (bool bValue);
 
     public:
         /// ctor
@@ -56,7 +56,7 @@ class BFProjectPlannerDlg : public wxDialog
         ///
         void OnButton_Cancel (wxCommandEvent& rEvent);
         ///
-        void OnButton_Schedule (wxCommandEvent& rEvent);
+        void OnCheck_Schedule (wxCommandEvent& rEvent);
 
     DECLARE_EVENT_TABLE();
 };
