@@ -26,6 +26,7 @@
 #include <wx/tokenzr.h>
 
 #include "BFApp.h"
+#include "BFCrontabManager.h"
 #include "blackfisk.h"
 
 #define BFPROJECT_DEFAULT_NAME _("unnamed backup")
@@ -210,7 +211,8 @@ bool BFProject::Serialize (jbSerialize& rA)
         settings_.Serialize(rA);
         rA << (int)GetTaskCount();
         rA << strOrgCrontabline_;
-        rA << bInRetryMode_;        
+        rA << bInRetryMode_;
+
         rA << strRetryCrontabline_;
         rA << lRetryHours_;
         rA << lRetryMinutes_;
@@ -249,6 +251,7 @@ bool BFProject::Serialize (jbSerialize& rA)
         {
             rA >> strOrgCrontabline_;
             rA >> bInRetryMode_;
+
         }
 
         /// implemented at version 1040
@@ -308,16 +311,34 @@ const wxString& BFProject::GetName ()
 }
 
 
-void BFProject::SetOriginalCrontabLine (const wxString& strOrgLine)
+void BFProject::SetCrontabOriginalLine (const wxString& strOrgLine)
 {
     strOrgCrontabline_ = strOrgLine;
 }
 
-const wxString& BFProject::GetOriginalCrontabLine ()
+const wxString& BFProject::CreateCrontabRetryLine ()
+{
+    strRetryCrontabline_ = BFCrontabManager::CreateRetryLine
+                           (
+                                GetCrontabOriginalLine(),
+                                GetRetryHours(),
+                                GetRetryMinutes()
+                            );
+
+    SetModified();
+
+    return strRetryCrontabline_;
+}
+
+const wxString& BFProject::GetCrontabOriginalLine ()
 {
     return strOrgCrontabline_;
 }
 
+const wxString& BFProject::GetCrontabRetryLine ()
+{
+    return strRetryCrontabline_;
+}
 
 void BFProject::SetInRetryMode (bool bInRetry)
 {
@@ -346,14 +367,6 @@ long BFProject::GetRetryHours ()
 long BFProject::GetRetryMinutes ()
 {
     return lRetryMinutes_;
-}
-
-bool BFProject::IsRetry ()
-{
-    if ( lRetryHours_ > 0 || lRetryMinutes_ > 0 )
-        return true;
-
-    return false;
 }
 
 BFProjectSettings& BFProject::GetSettings ()

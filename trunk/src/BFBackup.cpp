@@ -173,6 +173,16 @@ bool BFBackup::IsProjectModified ()
     return pProject_->IsModified();
 }
 
+bool BFBackup::IsInRetryMode ()
+{
+    return pProject_->IsInRetryMode();
+}
+
+void BFBackup::SetIsInRetryMode (bool bMode)
+{
+    pProject_->SetInRetryMode(bMode);
+}
+
 bool BFBackup::Run_Start ()
 {
     if (BFBackupProgressDlg::Instance() == NULL)
@@ -521,71 +531,47 @@ bool BFBackup::PreBackupCheck ()
     return true;
 }
 
-wxString BFBackup::GetCrontabline ()
+
+void BFBackup::ReplaceCrontablineRetryWithOriginal()
 {
-    // the crontab-file
-    wxTextFile file(BFSettings::Instance().GetCrontab());
-
-    // open it
-    if ( file.Open() == false )
-        return wxEmptyString;
-
-    // iterate over the lines
-    for (wxString strLine = file.GetFirstLine();
-         !(file.Eof());
-         strLine = file.GetNextLine())
-    {
-        if ( strLine.StartsWith("#") )
-            continue;
-
-        if ( strLine.Find(strCurrentFilename_) != wxNOT_FOUND
-		  && strLine.Find(wxTheApp->argv[0]) != wxNOT_FOUND )
-            return strLine;
-    }
-
-    return wxEmptyString;
+    BFCore::Instance().ReplaceLineInFile
+	(
+		// filename
+		BFSettings::Instance().GetCrontab(),
+		// old
+        pProject_->GetCrontabRetryLine(),
+		// new
+        pProject_->GetCrontabOriginalLine()
+	);
 }
 
-/*static*/ wxArrayString& BFBackup::ParseCrontabline (const wxString& strLine, wxArrayString& arr)
+void BFBackup::ReplaceCrontablineOriginalWithRetry()
 {
-    wxString        str(strLine);
-    wxString        strCurrent;
-    size_t          idx;
+    BFCore::Instance().ReplaceLineInFile
+	(
+		// filename
+		BFSettings::Instance().GetCrontab(),
+		// old
+        pProject_->GetCrontabOriginalLine(),
+		// new
+        pProject_->GetCrontabRetryLine()
+	);
+}
 
-    arr.Clear();
+void BFBackup::ClearCrontabOriginalLine ()
+{
+    pProject_->SetCrontabOriginalLine(wxEmptyString);
+    pProject_->SetModified();
+}
 
-    // extract the first five parameters
-    while ( !(str.IsEmpty()) && arr.GetCount() < 5 )
-    {
-        // find white spaces at the beginning
-        idx = 0;
-        while (str[idx] == ' ' || idx == str.Length())
-            ++idx;
+const wxString& BFBackup::GetCrontabOriginalLine ()
+{
+    return pProject_->GetCrontabOriginalLine();
+}
 
-        // erase white spaces at the beginning
-        str = str.Mid(idx);
-
-        //
-        strCurrent = str.BeforeFirst(' ');
-        str = str.Mid(strCurrent.Length());
-
-        //
-        arr.Add(strCurrent);
-    }
-
-    // remember the unparsed rest
-    if ( !(str.IsEmpty()) )
-        arr.Add(str);
-
-    // enough parameters
-    if (arr.GetCount() < 6)
-        arr.Clear();
-
-    // default?
-    if ( arr.IsEmpty() )
-		ParseCrontabline ( BFBackup::Instance().GetCrontablineDefault(), arr );
-
-    return arr;
+const wxString& BFBackup::CreateCrontabRetryLine ()
+{
+    return pProject_->CreateCrontabRetryLine();
 }
 
 /*static*/ wxString& BFBackup::FillBlackfiskPlaceholders (wxString& rStr)
@@ -597,12 +583,4 @@ wxString BFBackup::GetCrontabline ()
     rStr.Replace(BFTASK_PLACEHOLDER_TIME, BFCore::Instance().GetTimeString());
 
     return rStr;
-}
-
-
-wxString BFBackup::GetCrontablineDefault ()
-{
-	return wxString::Format( BF_CRONTABLINE_DEFAULT,
-							 wxTheApp->argv[0],
-							 GetCurrentFilename() );
 }

@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\BFCrontabManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\BFDestinationCtrl.h"
 				>
 			</File>
@@ -449,6 +453,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\BFCrontabManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\BFDestinationCtrl.cpp"
 				>
 			</File>
@@ -625,11 +633,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\README"
+				RelativePath=".\README"
 				>
 			</File>
 			<File
-				RelativePath=".\README"
+				RelativePath="..\README"
 				>
 			</File>
 			<File

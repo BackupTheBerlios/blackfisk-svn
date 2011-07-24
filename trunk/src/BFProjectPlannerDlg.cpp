@@ -55,7 +55,7 @@ BFProjectPlannerDlg::BFProjectPlannerDlg (wxWindow* pParent)
     SetTitle(wxString::Format("Project Planner for %s", BFBackup::Instance().GetProjectName()));
 
     // get crontabline
-    wxString        strCrontabLine = BFBackup::Instance().GetCrontabline();
+    wxString strCrontabLine = BFBackup::Instance().GetCrontabOriginalLine();
 
 	// cron ctrl
 	pCronCtrl_ = new BFCronCtrl(this, strCrontabLine);
@@ -106,20 +106,43 @@ void BFProjectPlannerDlg::OnButton_Ok (wxCommandEvent& rEvent)
 {
     if (pCronCtrl_)
     {
-		pCronCtrl_->SetData();
+        // the old crontab line
+        wxString strOld = BFBackup::Instance().GetCrontabOriginalLine();
+
+        // is in retry mode?
+        if ( BFBackup::Instance().IsInRetryMode() )
+        {
+            // set retry mode off
+            BFSystem::Info(_("The project is currently in retry mode because of an error while the last automatic backup. The retry mode is set off now."));
+            BFBackup::Instance().SetIsInRetryMode(false);
+
+            // because of retry mode
+            // we have to look for retry line to replace
+            strOld = BFBackup::Instance().CreateCrontabRetryLine();
+        }
+
+        pCronCtrl_->SetData();
+        wxString strNew = pCronCtrl_->GetCrontabline();
 
         if ( pCheckSchedule_->GetValue() )
         {
-            wxString strOld = BFBackup::Instance().GetCrontabline();
-            wxString strNew = pCronCtrl_->GetCrontabline();
-
             if (strOld != strNew)
-                BFCore::Instance().ReplaceLineInFile(BFSettings::Instance().GetCrontab(), strOld, strNew);
+            {
+                // replace the old crontab (or retry line) with a new one
+                BFCore::Instance().ReplaceLineInFile
+                (
+                    BFSettings::Instance().GetCrontab(),
+                    strOld,
+                    strNew,
+                    true
+                );
+            }
         }
         else
         {
-            BFCore::Instance().DeleteLineInFile(BFSettings::Instance().GetCrontab(),
-                                                BFBackup::Instance().GetCrontabline());
+            // delete
+            BFBackup::Instance().ClearCrontabOriginalLine ();
+            BFCore::Instance().DeleteLineInFile(BFSettings::Instance().GetCrontab(), strOld);
         }
     }
 

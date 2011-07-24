@@ -113,7 +113,8 @@ bool BFCore::IsWhileBackup ()
 
 bool BFCore::ReplaceLineInFile (const wxString& strFilename,
                                 const wxString& strOld,
-                                const wxString& strNew)
+                                const wxString& strNew,
+                                bool bAppendIfNotFound /*= false*/)
 {
     wxTextFile file(strFilename);
     bool rc = false;
@@ -125,7 +126,6 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
     if ( strOld.IsEmpty() )
     {
         // add the new line
-        //file.AddLine('\n');
         file.AddLine(strNew);
     }
     else
@@ -141,6 +141,13 @@ bool BFCore::ReplaceLineInFile (const wxString& strFilename,
                 file.InsertLine(strNew, file.GetCurrentLine());
                 rc = true;
             }
+        }
+
+        // there is nothing found to replace
+        if ( rc == false && bAppendIfNotFound == true)
+        {
+            file.AddLine(strNew);
+            rc = true;
         }
     }
 

@@ -1,3 +1,22 @@
+- BUGFIX a couple of bugs related to BFProjectPlanerDlg and BFCrontabManager
+- CREATE class BFCrontabManager and move some functionalty from other classes to there
+- DEBUG/TEST debug message boxes for testing the retry-after-fail-automatic-backup-behaviour
+- BUGFIX wrong string for setting in-build-scheduler (wxCron) to windows autostart
+
+BUG BUG
+Öffne MUSIC backup - intervall 14d
+schließen
+öffne blackfisk (automatisch MUSIC - last open)
+öffne TD - intervall 5d
+schließen
+crontab check
+
+BUG replace old org-line when planner-parameter change with new not (currently a new one is added)
+BUG no retry-behaviour when "another program instance is running" -> needed to fix?
+- TEST: crontab von Hand so ändern, dass es für blackfisk (CronCtrl) zu komplex wird
+  und eine entsprechende meldung erscheint. Die Frage nach dem Reset bestätigen!
+- TEST: more ProjectPlannerDlg!
+
 - BUG: open automaticly (zB: wxCron) a none-existing bfp-file cause in start the backup but crash
 - BUG: modify destination from Z: (not exising) to S: (existing) crash
 - implement easier read log-window (icons and colors)

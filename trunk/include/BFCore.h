@@ -103,11 +103,13 @@ class BFCore
 
         /** Open a file specified by 'strFilename', search for a line specified by 'strOld'
             and replace it with a line specified by 'strNew'.
+            If 'strOld' is not found 'strNew' can be append to the file if 'bAppendIfNotFound = true'.
             It return 'true' if a replace was done and 'false' if no replace was done
             or an error occured. */
         bool ReplaceLineInFile (const wxString& strFilename,
                                 const wxString& strOld,
-                                const wxString& strNew);
+                                const wxString& strNew,
+                                bool bAppendIfNotFound = false);
 
         /** Open a file specified by 'strFilename', search for a line specified by 'strLine'
             and delete the line.

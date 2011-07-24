@@ -42,6 +42,8 @@
 #include "BFLog.h"
 #include "BFwxLog.h"
 #include "BFEnvironment.h"
+#include "BFCrontabManager.h"
+
 
 IMPLEMENT_APP(BFApp);
 
@@ -171,10 +173,6 @@ BFApp::BFApp ()
        strCmdOpen_(wxEmptyString),
        bCmdUsage_(false)
 {
-	// XXX
-#ifdef _DEBUG
-	//_crtBreakAlloc=34742;
-#endif
 }
 
 /*virtual*/ BFApp::~BFApp ()
@@ -331,6 +329,7 @@ bool BFApp::OnInit()
     //
     BFSystem::Log(wxString::Format(_("application verbose level: %s"), BFSystem::GetTypeString(BFSettings::Instance().GetVerboseLevelLog()).c_str()));
 
+
     // run automaticly?
     if ( BFEnvironment::IsProjectScheduled() )
     {
@@ -340,9 +339,13 @@ bool BFApp::OnInit()
         if ( BFBackup::Instance().PreBackupCheck() )
         {
             // if in retrymode
-            // delete retryline
-            // add orgline if not exists
-            // set binretry = false
+            if ( BFBackup::Instance().IsInRetryMode() )
+            {
+                // delete retryline and add orgline
+                BFBackup::Instance().ReplaceCrontablineRetryWithOriginal();
+                // set binretry = false
+                BFBackup::Instance().SetIsInRetryMode(false);
+            }
 
             new BFBackupProgressDlg(BFMainFrame::Instance());
         }
@@ -350,11 +353,17 @@ bool BFApp::OnInit()
         {
             BFSystem::Warning(_("PreBackupCheck failed. Aborting ..."));
 
-            // create retryline
-            // remember orgline
-            // delete orgline if exists
-            // add retryline if it not even exists
-            // set bInRetry = true
+            //
+            BFSystem::Log(_("Error while starting the backup automaticly. Go in retry mode..."));
+
+            // create retryline and set retry-mode
+            BFBackup::Instance().CreateCrontabRetryLine ();
+            BFBackup::Instance().SetIsInRetryMode(true);
+            SaveCurrentProject();
+
+            // replace org- with retry-line
+            BFBackup::Instance().ReplaceCrontablineOriginalWithRetry();
+
             return false;
         }
     }
@@ -448,49 +457,24 @@ bool BFApp::ResetProject ()
 }
 
 #ifdef _DEBUG
+// XXX
+#include "BFCrontabManager.h"
 #include "BFProject.h"
-#include <wx/stdpaths.h>
+
 void BFApp::Test ()
 {
-	//BFSystem::Info(wxStandardPaths::Get().GetSystemAppDir());
+    /*
+    #M    S   T M W    Befehl
+    # each hour 3. minute
+    #3     *   * * *    calc.exe
+    */
 
-	/*
-	//wxApp::SetAppName("xxxBLACKFISKxxx");
+    wxString str1 = BFBackup::Instance().GetCurrentFilename();
+    wxString str2 = BFProject::Instance().GetName();
+    wxString str3 = BFBackup::Instance().GetCrontabOriginalLine();
+    wxString str4 = BFCrontabManager::CreateCrontablineDefault();
 
-	wxString str;
-	wxStandardPathsBase& rsp = wxStandardPaths::Get();
-
-	str << "\n\nGetAppDocumentsDir()\n" << rsp.GetAppDocumentsDir()
-		<< "\n\nGetConfigDir()\n" << rsp.GetConfigDir()
-		<< "\n\nGetDataDir()\n" << rsp.GetDataDir()
-		<< "\n\nGetDocumentsDir()\n" << rsp.GetDocumentsDir()
-		<< "\n\nGetExecutablePath()\n" << rsp.GetExecutablePath()
-		<< "\n\nGetLocalDataDir()\n" << rsp.GetLocalDataDir()
-		<< "\n\nGetPluginsDir()\n" << rsp.GetPluginsDir()
-		<< "\n\nGetResourcesDir()\n" << rsp.GetResourcesDir()
-		<< "\n\nGetTempDir()\n" << rsp.GetTempDir()
-		<< "\n\nGetUserConfigDir()\n" << rsp.GetUserConfigDir();
-
-	BFSystem::Info(str);*/
-
-	/* ### SHOW TASK DATA LIST ###
-	BFTaskVector vec;
-	wxString str;
-
-	BFProject::Instance().GetAllTasks(vec);
-
-	for ( BFTaskVectorIt it = vec.begin();
-		  it != vec.end();
-		  ++it)
-	{
-		str = str + wxString::Format("########\nOID:\t%d\tName:\t%s\nSrc:\t%s\nDest:\t%s\n\n",
-									 (*it)->GetOID(),
-									 (*it)->GetName(),
-									 (*it)->GetSource(),
-									 (*it)->GetDestination());
-	}
-
-	BFSystem::Info(str);*/
+    BFSystem::Debug(wxString::Format("current filename: %s\nproject name:%s\norg crontab line: %s\ndefault crontabline:%s", str1, str2, str3, str4));
 }
 #endif
 

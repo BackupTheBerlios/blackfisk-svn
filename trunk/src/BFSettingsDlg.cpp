@@ -683,6 +683,8 @@ void BFSettingsDlg::SetData ()
                 "\n\nSee \"Global Settings/Scheduler\" to change this behaviour.")
             );
             wxGetApp().SetSchedulerInAutostart();
+
+            wxExecute(BFEnvironment::GetSchedulerPath(), wxEXEC_ASYNC);
         }
     }
     else

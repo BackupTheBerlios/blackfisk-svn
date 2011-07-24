@@ -28,6 +28,7 @@
 #include <wx/spinctrl.h>
 #include <wx/statline.h>
 #include <wx/checkbox.h>
+#include "BFCrontabManager.h"
 #include "BFTimeCtrl.h"
 #include "BFSettings.h"
 #include "BFMainFrame.h"
@@ -330,7 +331,8 @@ void BFCronCtrl::GetData_Intervall()
 void BFCronCtrl::GetData()
 {
     // * RETRY *
-    if ( BFProject::Instance().IsRetry() )
+    if ( BFProject::Instance().GetRetryHours() != 0
+        || BFProject::Instance().GetRetryMinutes() != 0)
     {
         pCheckRetry_->SetValue(true);
         pSpinRetryHours_->SetValue( BFProject::Instance().GetRetryHours() );
@@ -344,7 +346,7 @@ void BFCronCtrl::GetData()
     OnCheck_R(wxCommandEvent());
 
     //
-    BFBackup::ParseCrontabline(strCrontabline_, arrCrontabline_);
+    BFCrontabManager::ParseCrontabline(strCrontabline_, arrCrontabline_);
 
 	// * DAILY * time
 	if ( IsCrontablineDaily() )
@@ -390,17 +392,17 @@ void BFCronCtrl::GetData()
 	if ( BFMainFrame::QuestionYesNo ( strQuestion ) )
 	{
 		// yes
-		BFCore::Instance().ReplaceLineInFile
+		BFCore::Instance().ReplaceLineInFile 
 		(
 			// filename
 			BFSettings::Instance().GetCrontab(),
 			// old
-			BFBackup::Instance().GetCrontabline(),
+            BFProject::Instance().GetCrontabOriginalLine(),
 			// new
-			BFBackup::Instance().GetCrontablineDefault()
+            BFCrontabManager::CreateCrontablineDefault()
 		);
 
-		strCrontabline_ = BFBackup::Instance().GetCrontabline();
+		strCrontabline_ = BFCrontabManager::CreateCrontablineDefault();
 
 		GetData();
 	}
@@ -413,18 +415,16 @@ void BFCronCtrl::GetData()
 
 
 void BFCronCtrl::SetData ()
-{
+{    
 	// * DAILY *
 	if ( pRadioDaily_->GetValue() )
 	{
 		int iHour, iMinute;
 		pDTimeCtrl_->GetValue(iHour, iMinute);
-		
-		arrCrontabline_[1] = wxString::Format("%d", iHour);
-		arrCrontabline_[0] = wxString::Format("%d", iMinute);
-		arrCrontabline_[2] = '*';
-		arrCrontabline_[3] = '*';
-		arrCrontabline_[4] = '*';
+
+        strCrontabline_ = BFCrontabManager::CreateTimePart (BFCrontabManager::DAILY,
+                                                            iHour,
+                                                            iMinute);
 	}
 
 	// * WEEKLY *
@@ -433,54 +433,46 @@ void BFCronCtrl::SetData ()
 		int iHour, iMinute;
 		pWTimeCtrl_->GetValue(iHour, iMinute);
 		
-		arrCrontabline_[1] = wxString::Format("%d", iHour);
-		arrCrontabline_[0] = wxString::Format("%d", iMinute);
-		arrCrontabline_[2] = '*';
-		arrCrontabline_[3] = '*';
-		arrCrontabline_[4] = wxString::Format("%d", pWComboDay_->GetSelection() + 1);
+        strCrontabline_ = BFCrontabManager::CreateTimePart (BFCrontabManager::WEEKLY,
+                                                            iHour,
+                                                            iMinute,
+                                                            0,
+                                                            pWComboDay_->GetSelection() + 1);
 	}
 
 	// * INTERAVALL *
 	if ( pRadioIntervall_->GetValue() )
 	{
-		wxString strVal = wxString::Format("*/%d", pISpin_->GetValue());
+        int iVal = pISpin_->GetValue();
 
 		switch ( pICombo_->GetSelection() )
 		{
 			// days
 			case 0:
-				arrCrontabline_[0] = '0';
-				arrCrontabline_[1] = '0';
-				arrCrontabline_[2] = strVal;
+                strCrontabline_ = BFCrontabManager::CreateTimePart (BFCrontabManager::INTERVALL_DAYS,
+                                                                    0,
+                                                                    0,
+                                                                    iVal);
 				break;
 
 			// hours
 			case 1:
-				arrCrontabline_[0] = '0';
-				arrCrontabline_[1] = strVal;
-				arrCrontabline_[2] = '*';
+                strCrontabline_ = BFCrontabManager::CreateTimePart (BFCrontabManager::INTERVALL_HOURS,
+                                                                    iVal);
 				break;
 
 			// minutes
 			case 2:
-				arrCrontabline_[0] = strVal;
-				arrCrontabline_[1] = '*';
-				arrCrontabline_[2] = '*';
+                strCrontabline_ = BFCrontabManager::CreateTimePart (BFCrontabManager::INTERVALL_MINUTES,
+                                                                    0,
+                                                                    iVal);
 				break;
 		}
-
-		arrCrontabline_[3] = '*';
-		arrCrontabline_[4] = '*';
 	}
 
-	// create new crontab line
-	strCrontabline_ = wxString::Format("%s %s %s %s %s %s",
-									   arrCrontabline_[0],
-									   arrCrontabline_[1],
-									   arrCrontabline_[2],
-									   arrCrontabline_[3],
-									   arrCrontabline_[4],
-									   arrCrontabline_[5] );
+    //
+    strCrontabline_ = BFCrontabManager::CreateCrontablineDefault(strCrontabline_);
+    BFProject::Instance().SetCrontabOriginalLine(strCrontabline_);
 
     // * RETRY *
     if ( pCheckRetry_->IsChecked() == false )

@@ -114,8 +114,12 @@ class BFBackup
         ///
         static wxString GetStopLevelString (BF_StopLevel stopLevel);
 
-        ///
+        /// return BFProject::bModified_
         bool IsProjectModified ();
+        /// return BFProject::bInRetryMode_
+        bool IsInRetryMode ();
+        /// set BFProject::bInRetryMode_
+        void SetIsInRetryMode (bool bMode);
 
         /// run all tasks
         bool Run_Start ();
@@ -169,24 +173,29 @@ class BFBackup
         bool PreBackupCheck ();
 
         /** Searches for the crontab-line related to the currently open
-            project and return the first match for it. */
-        wxString GetCrontabline ();
+            project and return the first match for it. *
+        wxString GetCrontabline ();*/
 
-        /** Separate each part of a crontab-line and store it as an
-            element of 'arr'. The string-array will cleared at the beginning
-            of this methode!
-            It means that the strings for minute, hour, day-of-month, month,
-            day-of-week and the command are extracted.
-            If there are not enough (<5) parameters in the line, 'arr' is empty. */
-        static wxArrayString& ParseCrontabline (const wxString& strLine, wxArrayString& arr);
+        /// set 'BFProject::strOrgCrontabline_' to 'wxEmptyString'
+        void ClearCrontabOriginalLine ();
+        ///
+        const wxString& GetCrontabOriginalLine ();
+        ///
+        const wxString& CreateCrontabRetryLine ();
+
+        /** Modify the crontab-file this way:
+            delete the retry-line
+            add the original line */
+        void ReplaceCrontablineRetryWithOriginal ();
+
+        /** Modify the crontab-file this way:
+            delete the original-line
+            add the retry line */
+        void ReplaceCrontablineOriginalWithRetry ();
 
         /** search for blackfisk-specific placeholders in 'rStr'
             and replace them with the needed value */
         static wxString& FillBlackfiskPlaceholders (wxString& rStr);
-
-		/** Create a full crontab line/entry with BF_CRONTABLINE_DEFAULT,
-			the current binary and the current projectfile. */
-		wxString GetCrontablineDefault ();
 };
 
 #endif    // BFBACKUP_H

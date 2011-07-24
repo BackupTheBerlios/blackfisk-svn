@@ -86,11 +86,6 @@ class BFProject : public Subject
 			'idxFrom' and 'idxTo'. */
 		void MoveTaskInVector (BFTask* pTask, long idxFrom, long idxTo);
 
-        /** Create the string for the s.c. retry-crontabline ('strRetryCrontabline_')
-            depending on 'lRetryHours_', 'lRetryMinutes_' and the filename of
-            the project file. */
-        void CreateRetryCrontabline (const wxString& strFilename);
-
     public:
         ///
         static BFProject& Instance ();
@@ -117,9 +112,13 @@ class BFProject : public Subject
         const wxString& GetName ();
 
         ///
-        void SetOriginalCrontabLine (const wxString& strOrgLine);
+        void SetCrontabOriginalLine (const wxString& strOrgLine);
         ///
-        const wxString& GetOriginalCrontabLine ();
+        const wxString& CreateCrontabRetryLine ();
+        ///
+        const wxString& GetCrontabOriginalLine ();
+        ///
+        const wxString& GetCrontabRetryLine ();
 
         ///
         void SetInRetryMode (bool bInRetry);
@@ -132,8 +131,6 @@ class BFProject : public Subject
         long GetRetryHours ();
         ///
         long GetRetryMinutes ();
-        /** Return 'false' if 'lRetryHours_' and 'lRetryMinutes_' == 0 */
-        bool IsRetry ();
 
         ///
         BFProjectSettings& GetSettings ();
